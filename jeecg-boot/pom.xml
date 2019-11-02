@@ -330,6 +330,13 @@
 			<version>${qc.cos.version}</version>
 		</dependency>
 
+       <dependency>  
+          <groupId>com.sun</groupId>  
+          <artifactId>tools</artifactId>  
+          <version>1.8.0</version>  
+          <scope>system</scope>         
+          <systemPath>C:/java/jdk1.8.0_192/lib/tools.jar</systemPath>  
+     </dependency>
 	</dependencies>
 
 	<dependencyManagement>
