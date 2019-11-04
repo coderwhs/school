@@ -1,17 +1,7 @@
 <template>
   <div id="userLayout" :class="['user-layout-wrapper', device]">
     <div class="container">
-      <div class="top">
-        <div class="header">
-          <a href="/">
-            <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">Jeecg Boot</span>
-          </a>
-        </div>
-        <div class="desc">
-          Jeecg Boot 是中国最具影响力的 企业级 快速开发平台
-        </div>
-      </div>
+      
 
       <route-view></route-view>
 
@@ -22,7 +12,7 @@
           <a href="https://github.com/zhangdaiscott/jeecg-boot" target="_blank">条款</a>
         </div>
         <div class="copyright">
-          Copyright &copy; 2019 <a href="http://www.jeecg.org" target="_blank">JEECG开源社区</a> 出品
+          Copyright &copy; 2019 <a href="http://www.jeecg.org" target="_blank">企业快速开发平台</a> 出品
         </div>
       </div>
     </div>
