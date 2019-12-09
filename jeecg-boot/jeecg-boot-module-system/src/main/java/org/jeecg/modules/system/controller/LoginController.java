@@ -57,6 +57,7 @@ public class LoginController {
 		Result<JSONObject> result = new Result<JSONObject>();
 		String username = sysLoginModel.getUsername();
 		String password = sysLoginModel.getPassword();
+		String userType = sysLoginModel.getUserType();
 		//update-begin--Author:scott  Date:20190805 for：暂时注释掉密码加密逻辑，有点问题
 		//前端密码加密，后端进行密码解密
 		//password = AesEncryptUtil.desEncrypt(sysLoginModel.getPassword().replaceAll("%2B", "\\+")).trim();//密码解密
@@ -77,6 +78,23 @@ public class LoginController {
 		//1. 校验用户是否有效
 		SysUser sysUser = sysUserService.getUserByName(username);
 		result = sysUserService.checkUserIsEffective(sysUser);
+		
+		//情况4:根据用户信息查询，该用户与所选的账号类型不符
+		if (!userType.equals(sysUser.getUserType().toString())) {
+			if (userType.equals("1")) {
+				sysBaseAPI.addLog("用户登录失败，用户名:" + sysUser.getUsername() + "不是教务账号！", CommonConstant.LOG_TYPE_1, null);
+				result.error500("该用户不是教务账号");
+				return result;
+			} else if (userType.equals("2")) {
+				sysBaseAPI.addLog("用户登录失败，用户名:" + sysUser.getUsername() + "不是教练账号！", CommonConstant.LOG_TYPE_1, null);
+				result.error500("该用户不是教练账号");
+				return result;
+			} else if (userType.equals("3")) {
+				sysBaseAPI.addLog("用户登录失败，用户名:" + sysUser.getUsername() + "不是学生账号！", CommonConstant.LOG_TYPE_1, null);
+				result.error500("该用户不是学生账号");
+				return result;
+			}
+		}
 		if(!result.isSuccess()) {
 			return result;
 		}

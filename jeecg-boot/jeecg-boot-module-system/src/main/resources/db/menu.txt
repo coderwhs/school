@@ -1,0 +1,77 @@
+
+
+
+在线设计
+前端组件: modules/online/cgform/auto/OnlCgformAutoList, 是否路由菜单（否）
+运动员管理
+	运动员名单: /online/cgformList/402880e56e440324016e44be3207001c
+		运动员训练经历: /online/cgformList/402880e56e46825c016e4b423f5a0008
+		运动员测试记录: /online/cgformList/402880e56e440324016e44be24e00012
+		运动员参赛记录: /online/cgformList/402880e56e440324016e44be20b50010
+		运动员输送记录: /online/cgformList/402880e56e440324016e44be261c0013
+
+教练员管理
+	教练员名单: /online/cgformList/402880e56e440324016e44be336e001d
+	
+训练管理
+	运动项目: /online/cgformList/402880e56e440324016e44be2b4e0017
+	训练班: /online/cgformList/402880e56e440324016e44be2c950018
+	训练计划: /online/cgformList/402880e56e440324016e44be2dd70019
+	训练视频: edusport/sport/class/video
+	训练考勤: /online/cgformList/402880e56e440324016e44be2f24001a
+	训练请假: /online/cgformList/402880e56e440324016e44be30bc001b
+	
+宿舍管理
+	宿舍列表: /online/cgformList/402880e56e440324016e44be27610014
+		宿舍入住名单: edusport/dorm/student/checkin
+		宿舍人员请假: edusport/dorm/student/leave
+		
+		
+
+
+运动员管理
+	运动员名单: /edusport/athlete, edusport/StudentList，是否路由菜单（是）
+		运动员训练经历: /edusport/athlete/sport/class, edusport/AthleteSportClassList
+		运动员测试记录: /edusport/athlete/sport/class/score, edusport/AthleteSportScoreList
+		运动员参赛记录: /edusport/athlete/contest, edusport/AthleteContestList
+		运动员输送记录: /edusport/athlete/transport, edusport/AthleteTransportList
+
+教练员管理
+	教练员名单: /edusport/coach, edusport/TeacherList
+	
+训练管理
+	运动项目: /edusport/sport, edusport/SportList
+	训练班: /edusport/sport/class, edusport/SportClassList
+	训练计划: /edusport/sport/class/task, edusport/SportClassTaskList
+	训练视频: /edusport/sport/class/video, modules/oss/OSSFileList
+	训练考勤: /edusport/sport/class/task/attend, edusport/SportClassTaskAttendList
+	训练请假: /edusport/sport/class/task/leave, edusport/SportClassTaskLeaveList
+	
+宿舍管理
+	宿舍列表: /edusport/dorm, edusport/DormList
+		宿舍入住名单: /edusport/dorm/student/checkin, 
+		宿舍人员请假: /edusport/dorm/student/leave, 
+
+
+		
+		
+		
+		
+运动员角度：
+
+
+我的信息
+我的教练
+我的训练
+我的宿舍
+
+请假
+	宿舍请假
+	训练请假
+	
+
+
+		
+
+
+

@@ -333,6 +333,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 			result.error500("该用户已冻结");
 			return result;
 		}
+		
 		return result;
 	}
 }

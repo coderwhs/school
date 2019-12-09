@@ -3,7 +3,7 @@ server:
   tomcat: 
     max-swallow-size: -1
   servlet:
-    context-path: /jeecg-boot
+    context-path: /edusport
     compression:
       enabled: true
       mime-types: application/javascript,application/json,application/xml,text/html,text/xml,text/plain,text/css,image/*
@@ -17,11 +17,11 @@ management:
 spring:
   servlet:
      multipart: 
-        max-file-size: 10MB
-        max-request-size: 10MB
+        max-file-size: 50MB
+        max-request-size: 50MB
   mail:
     host: smtp.163.com
-    username: jeecgos@163.com
+    username: ??
     password: ??
     properties:
       mail:
@@ -95,7 +95,7 @@ spring:
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       datasource:
         master:
-          url: jdbc:mysql://demo.ikeyleap.com:3306/jeecg-boot?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+          url: jdbc:mysql://127.0.0.1:3306/edusport?characterEncoding=UTF-8&useUnicode=true&useSSL=false
           username: root
           password: 123456
           driver-class-name: com.mysql.jdbc.Driver
@@ -108,7 +108,7 @@ spring:
   #redis 配置
   redis:
     database: 0
-    host: demo.ikeyleap.com
+    host: 127.0.0.1
     lettuce:
       pool:
         max-active: 8   #最大连接数据库连接数,设 0 为没有限制
@@ -148,10 +148,10 @@ jeecg :
   #阿里云oss存储配置
   oss:
     type: aliyun
-    endpoint: oss-cn-beijing.aliyuncs.com
-    accessKey: ??
-    secretKey: ??
-    bucketName: jeecgos
+    endpoint: oss-cn-shanghai.aliyuncs.com
+    accessKey: LTAI4FcwqkMJVQ8xNHueaPHS
+    secretKey: aiKP244ESFtKo9DQlGygtl6gjUcwC4
+    bucketName: springboot-oss
     properties:
       aliyun:
         protocol: https

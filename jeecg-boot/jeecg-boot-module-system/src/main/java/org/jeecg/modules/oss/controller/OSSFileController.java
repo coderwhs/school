@@ -1,13 +1,19 @@
 package org.jeecg.modules.oss.controller;
 
+import java.net.URL;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.config.oss.OSSProperties;
 import org.jeecg.modules.oss.entity.OSSFile;
 import org.jeecg.modules.oss.service.IOSSFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +33,10 @@ public class OSSFileController {
 
 	@Autowired
 	private IOSSFileService ossFileService;
-
+	
+	@Autowired
+	private OSSProperties properties;
+	
 	@ResponseBody
 	@GetMapping("/list")
 	public Result<IPage<OSSFile>> queryPageList(OSSFile file,
@@ -91,5 +100,41 @@ public class OSSFileController {
 		}
 		return result;
 	}
+	
+	/**
+	 * 通过id查询.
+	 */
+	@ResponseBody
+	@GetMapping("/replay")
+	public Result<OSSFile> replay(@RequestParam(name = "id") String id) {
+		Result<OSSFile> result = new Result<>();
+		OSSFile file = ossFileService.getById(id);
+		if (file == null) {
+			result.error500("未找到对应实体");
+		}
+		else {
+			// 创建OSSClient实例。
+			OSS ossClient = new OSSClientBuilder().build(properties.getEndpoint(), properties.getAccessKey(), properties.getSecretKey());
+			// 判断文件是否存在。doesObjectExist还有一个参数isOnlyInOSS，如果为true则忽略302重定向或镜像；如果为false，则考虑302重定向或镜像。
+			boolean found = ossClient.doesObjectExist(properties.getBucketName(), file.getFileName());
+			if (found) {
+				// 设置URL过期时间为24小时。
+				Date expiration = new Date(new Date().getTime() + 24 * 3600 * 1000);
+				// 生成以GET方法访问的签名URL，访客可以直接通过浏览器访问相关内容。
+				URL url = ossClient.generatePresignedUrl(properties.getBucketName(), file.getFileName(), expiration);
+				file.setUrl(url.toString());
+			    System.out.println("getUrl>>>:" + url.toString());
+			} else {
+				result.error500("未找到OSS对应实体");
+			}
+			// 关闭OSSClient。
+			ossClient.shutdown();	
+			
+			result.setResult(file);
+			result.setSuccess(true);
+		}
+		return result;
+	}
+	
 
 }

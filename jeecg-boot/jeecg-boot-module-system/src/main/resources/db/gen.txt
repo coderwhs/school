@@ -1,0 +1,61 @@
+自动生成：
+
+	Dorm
+	tb_edu_dorm
+	宿舍信息
+
+	DormStudent
+	tb_edu_dorm_student
+	宿舍学生入住信息
+
+	DormStudentLeave
+	tb_edu_dorm_student_leave
+	宿舍学生请假信息
+
+	Student
+	tb_edu_student
+	学生信息
+
+	Teacher
+	tb_edu_teacher
+	教师信息
+
+	Sport
+	tb_edu_sport
+	运动项目信息
+
+
+	SportClass
+	tb_edu_sport_class
+	运动项目训练班信息
+
+
+	SportClassTask
+	tb_edu_sport_class_task
+	运动项目训练班训练计划信息
+
+	SportClassTaskAttend
+	tb_edu_sport_class_task_attend
+	运动员训练任务出勤信息
+
+
+	SportClassTaskLeave
+	tb_edu_sport_class_task_leave
+	运动员训练任务请假信息
+
+
+	AthleteSportClass
+	tb_edu_athlete_sport_class
+	运动员训练班经历信息
+
+	AthleteSportScore
+	tb_edu_athlete_sport_score
+	运动员项目测试信息
+
+	AthleteContest
+	tb_edu_athlete_contest
+	运动员参赛信息
+
+	AthleteTransport
+	tb_edu_athlete_transport
+	运动员输送信息

@@ -45,6 +45,13 @@ public class SysUser implements Serializable {
     private String username;
 
     /**
+     * 用户账号类型（1：教务账号 2：教练账号 3：学生账号）
+     */
+    @Excel(name = "用户账号类型", width = 15,dicCode="user_type")
+    @Dict(dicCode = "user_type")
+    private Integer userType;
+    
+    /**
      * 真实姓名
      */
     @Excel(name = "真实姓名", width = 15)

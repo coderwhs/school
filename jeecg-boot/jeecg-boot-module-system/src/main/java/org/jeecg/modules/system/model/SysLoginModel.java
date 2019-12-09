@@ -19,6 +19,9 @@ public class SysLoginModel {
     private String captcha;
 	@ApiModelProperty(value = "验证码key")
     private String checkKey;
+	@ApiModelProperty(value = "账号类型")
+    private String userType;
+	
 
     public String getUsername() {
         return username;
@@ -50,6 +53,14 @@ public class SysLoginModel {
 
 	public void setCheckKey(String checkKey) {
 		this.checkKey = checkKey;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
     
 }
