@@ -14,6 +14,17 @@
           </a-col>
 
           <a-col :md="6" :sm="8">
+            <a-form-item label="账号类型">
+              <a-select v-model="queryParam.userType" placeholder="请选择账号类型查询">
+                <a-select-option value="">请选择账号类型查询</a-select-option>
+                <a-select-option value="1">教务账号</a-select-option>
+                <a-select-option value="2">教练账号</a-select-option>
+                <a-select-option value="3">学生账号</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+
+          <a-col :md="6" :sm="8">
             <a-form-item label="性别">
               <a-select v-model="queryParam.sex" placeholder="请选择性别查询">
                 <a-select-option value="">请选择性别查询</a-select-option>
@@ -213,6 +224,12 @@
             width: 120
           },
           {
+            title: '账号类型',
+            align: "center",
+            dataIndex: 'userType_dictText',
+            width: 120
+          },
+          {
             title: '真实姓名',
             align: "center",
             width: 100,
@@ -236,7 +253,7 @@
           {
             title: '生日',
             align: "center",
-            width: 180,
+            width: 140,
             dataIndex: 'birthday'
           },
           {
@@ -244,11 +261,6 @@
             align: "center",
             width: 100,
             dataIndex: 'phone'
-          },
-          {
-            title: '邮箱',
-            align: "center",
-            dataIndex: 'email'
           },
           {
             title: '状态',

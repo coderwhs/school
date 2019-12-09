@@ -3,8 +3,10 @@
     <router-link :to="{name:'dashboard'}">
 
       <!-- update-begin- author:sunjianlei --- date:20190814 --- for: logo颜色根据主题颜色变化 -->
-      <img v-if="navTheme === 'dark'" src="~@/assets/logo-white.png" alt="logo">
-      <img v-else src="~@/assets/logo.svg" alt="logo">
+      <!-- andy
+      <img v-if="navTheme === 'dark'" src="~@/assets/logo-white1.png" alt="logo">
+      <img v-else src="~@/assets/logo1.svg" alt="logo">
+      -->
       <!-- update-begin- author:sunjianlei --- date:20190814 --- for: logo颜色根据主题颜色变化 -->
 
       <h1 v-if="showTitle">{{ title }}</h1>
@@ -21,7 +23,7 @@
     props: {
       title: {
         type: String,
-        default: '演示系统',
+        default: '体育人才',
         required: false
       },
       showTitle: {

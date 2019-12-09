@@ -194,6 +194,7 @@
   import { filterMultiDictText } from '@/components/dict/JDictSelectUtil'
   import { filterObj } from '@/utils/util';
   import JImportModal from '@/components/jeecg/JImportModal'
+  import moment from "moment"
 
   export default {
     name: 'OnlCgFormAutoList',
@@ -509,13 +510,14 @@
             return
           }
           if (typeof window.navigator.msSaveBlob !== 'undefined') {
-            window.navigator.msSaveBlob(new Blob([data]), this.description+'.xls')
+            window.navigator.msSaveBlob(new Blob([data],{ type: 'application/vnd.ms-excel' }), this.description + moment(new Date()).format("YYYY-DD-MM") + '.xls')
           }else{
-            let url = window.URL.createObjectURL(new Blob([data]))
+            let url = window.URL.createObjectURL(new Blob([data],{ type: 'application/vnd.ms-excel' }))
             let link = document.createElement('a')
             link.style.display = 'none'
             link.href = url
-            link.setAttribute('download', this.description+'.xls')
+            link.setAttribute('download', this.description + moment(new Date()).format("YYYY-MM-DD") + '.xls')
+
             document.body.appendChild(link)
             link.click()
             document.body.removeChild(link); //下载完成移除元素

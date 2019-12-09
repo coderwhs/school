@@ -40,6 +40,14 @@
           <a-input placeholder="请输入用户名称" v-decorator="[ 'realname', validatorRules.realname]" />
         </a-form-item>
 
+        <a-form-item label="用户账号类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-select placeholder="请选择用户账号类型"  v-decorator="[ 'userType', validatorRules.userType]" >
+            <a-select-option :value="1">教务账号</a-select-option>
+            <a-select-option :value="2">教练账号</a-select-option>
+            <a-select-option :value="3">学生账号</a-select-option>
+          </a-select>
+        </a-form-item>
+
         <a-form-item label="工号" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input placeholder="请输入工号" v-decorator="[ 'workNo', validatorRules.workNo]" />
         </a-form-item>
@@ -193,6 +201,7 @@
             }],
           },
           realname:{rules: [{ required: true, message: '请输入用户名称!' }]},
+          userType:{rules: [{ required: true, message: '请选择用户账号类型' }]},
           phone:{rules: [{validator: this.validatePhone}]},
           email:{
             rules: [{
@@ -307,7 +316,7 @@
         that.visible = true;
         that.model = Object.assign({}, record);
         that.$nextTick(() => {
-          that.form.setFieldsValue(pick(this.model,'username','sex','realname','email','phone','activitiSync','workNo','telephone','post'))
+          that.form.setFieldsValue(pick(this.model,'username','userType','sex','realname','email','phone','activitiSync','workNo','telephone','post'))
         });
         // 调用查询用户对应的部门信息的方法
         that.checkedDepartKeys = [];

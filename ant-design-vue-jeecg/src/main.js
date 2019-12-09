@@ -21,6 +21,10 @@ import 'vue-photo-preview/dist/skin.css'
 import "@jeecg/antd-online"
 import '@jeecg/antd-online/dist/OnlineForm.css'
 
+import VueVideoPlayer from 'vue-video-player'
+require('video.js/dist/video-js.css')
+require('vue-video-player/src/custom-theme.css')
+
 import {
   ACCESS_TOKEN,
   DEFAULT_COLOR,
@@ -54,6 +58,7 @@ Vue.component('apexchart', VueApexCharts)
 Vue.use(preview)
 Vue.use(vueBus);
 Vue.use(JeecgComponents);
+Vue.use(VueVideoPlayer)
 
 new Vue({
   router,

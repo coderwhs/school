@@ -1,18 +1,25 @@
 <template>
   <div id="userLayout" :class="['user-layout-wrapper', device]">
     <div class="container">
-      
+      <div class="top">
+        <div class="header">
+          <a href="/">
+
+            <span class="title">体育人才信息管理系统</span>
+          </a>
+        </div>
+        <div class="desc">
+
+        </div>
+      </div>
 
       <route-view></route-view>
 
       <div class="footer">
         <div class="links">
-          <a href="http://jeecg-boot.mydoc.io" target="_blank">帮助</a>
-          <a href="https://github.com/zhangdaiscott/jeecg-boot" target="_blank">隐私</a>
-          <a href="https://github.com/zhangdaiscott/jeecg-boot" target="_blank">条款</a>
         </div>
         <div class="copyright">
-          Copyright &copy; 2019 <a href="http://www.jeecg.org" target="_blank">企业快速开发平台</a> 出品
+
         </div>
       </div>
     </div>

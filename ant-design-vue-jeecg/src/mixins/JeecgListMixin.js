@@ -7,6 +7,7 @@ import { filterObj } from '@/utils/util';
 import { deleteAction, getAction,downFile } from '@/api/manage'
 import Vue from 'vue'
 import { ACCESS_TOKEN } from "@/store/mutation-types"
+import moment from "moment"
 
 export const JeecgListMixin = {
   data(){
@@ -230,13 +231,13 @@ export const JeecgListMixin = {
           return
         }
         if (typeof window.navigator.msSaveBlob !== 'undefined') {
-          window.navigator.msSaveBlob(new Blob([data]), fileName+'.xls')
+            window.navigator.msSaveBlob(new Blob([data],{ type: 'application/vnd.ms-excel' }), fileName + moment(new Date()).format("YYYY-DD-MM") + '.xls')
         }else{
-          let url = window.URL.createObjectURL(new Blob([data]))
+          let url = window.URL.createObjectURL(new Blob([data],{ type: 'application/vnd.ms-excel' }))
           let link = document.createElement('a')
           link.style.display = 'none'
           link.href = url
-          link.setAttribute('download', fileName+'.xls')
+          link.setAttribute('download', fileName + moment(new Date()).format("YYYY-MM-DD") + '.xls')
           document.body.appendChild(link)
           link.click()
           document.body.removeChild(link); //下载完成移除元素

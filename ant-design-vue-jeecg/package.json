@@ -38,6 +38,7 @@
     "vue-property-decorator": "^7.3.0",
     "vue-router": "^3.0.1",
     "vue-splitpane": "^1.0.4",
+    "vue-video-player": "^5.0.2",
     "vuedraggable": "^2.20.0",
     "vuex": "^3.0.1",
     "vuex-class": "^0.3.1"

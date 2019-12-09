@@ -1,9 +1,8 @@
 <template>
   <div class="footer">
+    <div class="links">
+     </div>
     <div class="copyright">
-      Copyright
-      <a-icon type="copyright"/>
-      2019 <span>企业快速开发平台 出品</span>
     </div>
   </div>
 </template>

@@ -17,7 +17,8 @@
         :type="collapsed ? 'menu-unfold' : 'menu-fold'"
         @click.native="toggle"/>
 
-      <span v-if="device === 'desktop'">欢迎进入体育学校数据管理平台</span>
+      <span v-if="device === 'desktop'">欢迎进入 体育人才信息管理系统</span>
+      <span v-else>体育人才信息管理系统</span>
 
       <user-menu :theme="theme"/>
     </div>

@@ -1,71 +1,66 @@
 <template>
-  <a-card :bordered="false">
-    <a-form @submit="handleSubmit" :form="form">
-      <a-col :md="24" :sm="24">
-      <a-form-item label="Note" :labelCol="{ span: 7 }" :wrapperCol="{ span: 15 }">
-        <a-input v-decorator="['note',{rules: [{ required: true, message: 'Please input your note!' }]}]"/>
-      </a-form-item>
-      </a-col>
-      <a-col :md="24" :sm="24">
-      <a-form-item label="Gender" :labelCol="{ span: 7 }" :wrapperCol="{ span: 15 }">
-        <a-select v-decorator="['gender',{rules: [{ required: true, message: 'Please select your gender!' }]}]" placeholder="Select a option and change input text above" @change="this.handleSelectChange">
-          <a-select-option value="male">male</a-select-option>
-          <a-select-option value="female">female</a-select-option>
-        </a-select>
-      </a-form-item>
-      </a-col>
-      <a-col :md="24" :sm="24">
-      <a-form-item label="Gender" :labelCol="{ span: 7 }" :wrapperCol="{ span: 15 }">
-        <a-cascader :options="areaOptions" @change="onChange" :showSearch="{filter}" placeholder="Please select" />
-      </a-form-item>
-      </a-col>
-      <a-form-item :wrapperCol="{ span: 12, offset: 5 }">
-        <a-col :md="24" :sm="24">
-        <a-button type="primary" htmlType="submit">Submit</a-button>
-        </a-col>
-      </a-form-item>
-    </a-form>
-  </a-card>
+  <div class="clearfix">
+    <a-upload
+      action="uploadAction"
+      listType="picture-card"
+      :fileList="fileList"
+      @preview="handlePreview"
+      @change="handleChange"
+    >
+      <div v-if="fileList.length < 3">
+        <a-icon type="plus" />
+        <div class="ant-upload-text">Upload</div>
+      </div>
+    </a-upload>
+    <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+      <img alt="example" style="width: 100%" :src="previewImage" />
+    </a-modal>
+  </div>
 </template>
-
 <script>
-  import { getAction } from '@/api/manage'
+  import {JeecgListMixin} from '@/mixins/JeecgListMixin'
+
   export default {
-    data () {
+    name: "OSSFileList",
+    mixins: [JeecgListMixin],
+
+    data() {
       return {
-        formLayout: 'horizontal',
-        form: this.$form.createForm(this),
-        areaOptions:[]
-      }
+        previewVisible: false,
+        previewImage: '',
+        fileList: [
+          {
+            uid: '-1',
+            name: 'xxx.png',
+            status: 'done',
+            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+          },
+        ],
+      };
     },
     methods: {
-      handleSubmit (e) {
-        e.preventDefault()
-        this.form.validateFields((err, values) => {
-          if (!err) {
-            console.log('Received values of form: ', values)
-          }
-        })
+      handleCancel() {
+        this.previewVisible = false;
       },
-      handleSelectChange (value) {
-        console.log(value)
-        this.form.setFieldsValue({
-          note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
-        })
+      handlePreview(file) {
+        this.previewImage = file.url || file.thumbUrl;
+        this.previewVisible = true;
       },
-      onChange(value, selectedOptions) {
-        console.log(value, selectedOptions);
-      },
-      filter(inputValue, path) {
-        return (path.some(option => (option.label).toLowerCase().indexOf(inputValue.toLowerCase()) > -1));
+      handleChange({ fileList }) {
+        this.fileList = fileList;
       },
     },
-    created (){
-      getAction('/api/area').then((res) => {
-          console.log("------------")
-          console.log(res)
-          this.areaOptions = res;
-      })
-    }
-  }
+  };
 </script>
+<style>
+  /* you can make up upload button and sample style by using stylesheets */
+  .ant-upload-select-picture-card i {
+    font-size: 32px;
+    color: #999;
+  }
+
+  .ant-upload-select-picture-card .ant-upload-text {
+    margin-top: 8px;
+    color: #666;
+  }
+</style>

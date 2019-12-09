@@ -12,7 +12,7 @@
               size="large"
               v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
               type="text"
-              placeholder="请输入帐户名 / admin">
+              placeholder="请输入帐户名 / demo">
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -37,7 +37,7 @@
               size="large"
               v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
               type="text"
-              placeholder="请输入工号 / T009">
+              placeholder="请输入工号 / demo">
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -62,7 +62,7 @@
               size="large"
               v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
               type="text"
-              placeholder="请输入学号 / S000002">
+              placeholder="请输入学号 / demo">
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -79,7 +79,6 @@
           </a-form-item>
 
         </a-tab-pane>
-
       </a-tabs>
 
       <a-form-item>
@@ -98,22 +97,21 @@
             </a-form-item>
           </a-col>
           <a-col  :span="10">
-            <j-graphic-code @success="generateCode" ref="jgraphicCodeRef" style="float: right" remote></j-graphic-code>
+            <j-graphic-code @success="generateCode" ref="jgraphicCodeRef3" style="float: right" remote></j-graphic-code>
           </a-col>
         </a-row>
       </a-form-item>
 
-
       <a-form-item>
         <a-checkbox v-model="formLogin.rememberMe">自动登陆</a-checkbox>
-        <!--
+<!--
         <router-link :to="{ name: 'alteration'}" class="forge-password" style="float: right;">
           忘记密码
         </router-link>
         <router-link :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px" >
           注册账户
         </router-link>
-        -->
+-->
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
@@ -308,12 +306,10 @@
               that.requestFailed(err);
             });
 
-
           } else {
             that.loginBtn = false;
           }
         })
-
       },
       getCaptcha (e) {
         e.preventDefault();
