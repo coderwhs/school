@@ -10,6 +10,7 @@
 			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
 			<pattern>${COLOR_PATTERN}</pattern>
+			<pattern>LOCAL_SYSTEM_TIME=[%d{yyyy-MM-dd HH:mm:ss.SSS}],THREAD=[%thread],LOG_LEVEL=[%-5level],CLASS=[%class{35}.%M:%L],%m%n</pattern>
 		</encoder>
 	</appender>
 
