@@ -30,14 +30,18 @@
 
 
 运动员管理
-	运动员名单: /edusport/athlete, edusport/StudentList，是否路由菜单（是）
+	运动员名单: /edusport/athlete, edusport/AthleteList，是否路由菜单（是）
 		运动员训练经历: /edusport/athlete/sport/class, edusport/AthleteSportClassList
-		运动员测试记录: /edusport/athlete/sport/class/score, edusport/AthleteSportScoreList
 		运动员参赛记录: /edusport/athlete/contest, edusport/AthleteContestList
+		运动员测试记录: /edusport/athlete/sport/class/score, edusport/AthleteSportScoreList
+		带训教练员评价: /edusport/athlete/coach/evaluation, edusport/AthleteCoachEvaluation
+		其他训练事项记录: /edusport/athlete/other/trianning/info, edusport/AthleteOtherTrianningInfo
 		运动员输送记录: /edusport/athlete/transport, edusport/AthleteTransportList
+		运动员文化成绩: /edusport/athlete/literacy/score, edusport/AthleteLiteracyScore
 
 教练员管理
 	教练员名单: /edusport/coach, edusport/TeacherList
+	
 	
 训练管理
 	运动项目: /edusport/sport, edusport/SportList

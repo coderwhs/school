@@ -1,0 +1,156 @@
+自动生成：
+	
+	Dorm
+	tb_edu_dorm
+	宿舍信息表
+	
+	
+	DormAthleteLiving
+	tb_edu_dorm_athlete_living
+	宿舍运动员入住表
+	
+	
+	dorm_athlete_leave
+	tb_edu_dorm_athlete_leave
+	宿舍运动员请假表
+	
+	
+	athlete
+	tb_edu_athlete
+	运动员信息表
+	
+	
+	athlete_contest
+	tb_edu_athlete_contest
+	运动员参赛信息表
+	
+	
+	athlete_sport_score
+	tb_edu_athlete_sport_score
+	运动员项目测试表
+	
+	
+	athlete_transport
+	tb_edu_athlete_transport
+	运动员输送表
+	
+	
+	athlete_coach_evaluation
+	tb_edu_athlete_coach_evaluation
+	运动员评价信息表
+	
+	
+	athlete_other_trianning_info
+	tb_edu_athlete_other_trianning_info
+	运动员训练其他事项记录信息表
+	
+	
+	athlete_literacy_score
+	tb_edu_athlete_literacy_score
+	运动员文化课成绩信息表
+	
+	
+	coach
+	tb_edu_coach
+	教练员信息表
+	
+	
+	coach_edu_resume
+	tb_edu_coach_edu_resume
+	教练员个人简介信息表
+	
+	
+	coach_sport_resume
+	tb_edu_coach_sport_resume
+	教练员运动经历信息表
+	
+	
+	coach_performance
+	tb_edu_coach_performance
+	教练员年度业务情况表
+	
+	
+	coach_training
+	tb_edu_coach_training
+	教练员学习培训信息表
+	
+	
+	coach_paper
+	tb_edu_coach_paper
+	教练员论文发表信息表
+	
+	
+	sport
+	tb_edu_sport
+	运动项目表
+	
+	
+	sport_venue
+	tb_edu_sport_venue
+	运动场馆信息表
+	
+	
+	sport_equipment
+	tb_edu_sport_equipment
+	运动器材信息表
+	
+	
+	sport_class
+	tb_edu_sport_class
+	运动项目训练班表
+	
+	
+	sport_class_file
+	tb_edu_sport_class_file
+	运动项目训练班上传文件表
+	
+	
+	sport_class_athlete_attend
+	tb_edu_sport_class_athlete_attend
+	运动员训练出勤表
+	
+	
+	sport_class_athlete_attend
+	tb_edu_sport_class_athlete_attend
+	运动员训练请假表
+	
+	
+	sport_class_week_plan
+	tb_edu_sport_class_week_plan
+	周训练计划信息表
+	
+	
+	sport_class_course_plan
+	tb_edu_sport_class_course_plan
+	课训练计划信息表
+	
+	
+	sport_class_winter_plan
+	tb_edu_sport_class_winter_plan
+	冬训阶段训练计划信息表
+	
+	
+	sport_class_summer_plan
+	tb_edu_sport_class_summer_plan
+	夏训阶段训练计划信息表
+	
+	
+	sport_class_year_plan
+	tb_edu_sport_class_year_plan
+	年度训练计划信息表
+	
+	
+	sport_class_year_summary
+	tb_edu_sport_class_year_summary
+	年度训练工作总结信息表
+	
+	
+	sport_class_athlete_year_goal
+	tb_edu_sport_class_athlete_year_goal
+	年度训练运动员素质目标信息表
+	
+
+
+
+
+

@@ -53,24 +53,24 @@
 
       <!-- 子表单区域 -->
       <a-tabs v-model="activeKey" @change="handleChangeTabs">
-        <a-tab-pane tab="宿舍运动员入住信息" :key="refKeys[0]" :forceRender="true">
+        <a-tab-pane tab="宿舍运动员入住表" :key="refKeys[0]" :forceRender="true">
           <j-editable-table
             :ref="refKeys[0]"
-            :loading="dormStudentTable.loading"
-            :columns="dormStudentTable.columns"
-            :dataSource="dormStudentTable.dataSource"
+            :loading="dormAthleteLivingTable.loading"
+            :columns="dormAthleteLivingTable.columns"
+            :dataSource="dormAthleteLivingTable.dataSource"
             :maxHeight="300"
             :rowNumber="true"
             :rowSelection="true"
             :actionButton="true"/>
         </a-tab-pane>
         
-        <a-tab-pane tab="宿舍运动员请假信息" :key="refKeys[1]" :forceRender="true">
+        <a-tab-pane tab="宿舍运动员请假表" :key="refKeys[1]" :forceRender="true">
           <j-editable-table
             :ref="refKeys[1]"
-            :loading="dormStudentLeaveTable.loading"
-            :columns="dormStudentLeaveTable.columns"
-            :dataSource="dormStudentLeaveTable.dataSource"
+            :loading="dormAthleteLeaveTable.loading"
+            :columns="dormAthleteLeaveTable.columns"
+            :dataSource="dormAthleteLeaveTable.dataSource"
             :maxHeight="300"
             :rowNumber="true"
             :rowSelection="true"
@@ -114,24 +114,24 @@
           dormBuildingName: { rules: [{ required: true, message: '请输入宿舍楼名称!' }] },
           dormNo: { rules: [{ required: true, message: '请输入宿舍房间号!' }] },
           bedNum: { rules: [{ required: true, message: '请输入床位数!' }] },
-          dormTel:{},
+          dormTel: { rules: [{ required: true, message: '请输入宿舍电话!' }] },
           dormAddress: { rules: [{ required: true, message: '请输入宿舍地址!' }] },
-          dormAdmin:{},
-          dormAdminTel:{},
+          dormAdmin: { rules: [{ required: true, message: '请输入宿舍管理员!' }] },
+          dormAdminTel: { rules: [{ required: true, message: '请输入管理员电话!' }] },
         },
-        refKeys: ['dormStudent', 'dormStudentLeave', ],
-        tableKeys:['dormStudent', 'dormStudentLeave', ],
-        activeKey: 'dormStudent',
-        // 宿舍运动员入住信息
-        dormStudentTable: {
+        refKeys: ['dormAthleteLiving', 'dormAthleteLeave', ],
+        tableKeys:['dormAthleteLiving', 'dormAthleteLeave', ],
+        activeKey: 'dormAthleteLiving',
+        // 宿舍运动员入住表
+        dormAthleteLivingTable: {
           loading: false,
           dataSource: [],
           columns: [
             {
-              title: '运动员',
-              key: 'studentNo',
+              title: '学号',
+              key: 'athleteNo',
               type: FormTypes.sel_search,
-              dictCode:"tb_edu_student,student_name,student_no",
+              dictCode:"tb_edu_athlete,athlete_name,athlete_no",
               width:"200px",
               placeholder: '请输入${title}',
               defaultValue: '',
@@ -144,6 +144,7 @@
               width:"200px",
               placeholder: '请输入${title}',
               defaultValue: '',
+              validateRules: [{ required: true, message: '${title}不能为空' }],
             },
             {
               title: '入住开始日期',
@@ -163,16 +164,16 @@
             },
           ]
         },
-        // 宿舍运动员请假信息
-        dormStudentLeaveTable: {
+        // 宿舍运动员请假表
+        dormAthleteLeaveTable: {
           loading: false,
           dataSource: [],
           columns: [
             {
-              title: '运动员',
-              key: 'studentNo',
-              type: FormTypes.sel_search,
-              dictCode:"tb_edu_student,student_name,student_no",
+              title: '学号',
+              key: 'athleteNo',
+              type: FormTypes.select,
+              dictCode:"tb_edu_athlete,athlete_name,athlete_no",
               width:"200px",
               placeholder: '请输入${title}',
               defaultValue: '',
@@ -194,7 +195,6 @@
               width:"200px",
               placeholder: '请输入${title}',
               defaultValue: '',
-              validateRules: [{ required: true, message: '${title}不能为空' }],
             },
             {
               title: '结束日期',
@@ -203,18 +203,17 @@
               width:"200px",
               placeholder: '请输入${title}',
               defaultValue: '',
-              validateRules: [{ required: true, message: '${title}不能为空' }],
             },
           ]
         },
         url: {
           add: "/edusport/dorm/add",
           edit: "/edusport/dorm/edit",
-          dormStudent: {
-            list: '/edusport/dorm/queryDormStudentByMainId'
+          dormAthleteLiving: {
+            list: '/edusport/dorm/queryDormAthleteLivingByMainId'
           },
-          dormStudentLeave: {
-            list: '/edusport/dorm/queryDormStudentLeaveByMainId'
+          dormAthleteLeave: {
+            list: '/edusport/dorm/queryDormAthleteLeaveByMainId'
           },
         }
       }
@@ -233,8 +232,8 @@
         // 加载子表数据
         if (this.model.id) {
           let params = { id: this.model.id }
-          this.requestSubTableData(this.url.dormStudent.list, params, this.dormStudentTable)
-          this.requestSubTableData(this.url.dormStudentLeave.list, params, this.dormStudentLeaveTable)
+          this.requestSubTableData(this.url.dormAthleteLiving.list, params, this.dormAthleteLivingTable)
+          this.requestSubTableData(this.url.dormAthleteLeave.list, params, this.dormAthleteLeaveTable)
         }
       },
       /** 整理成formData */
@@ -243,8 +242,8 @@
 
         return {
           ...main, // 展开
-          dormStudentList: allValues.tablesValue[0].values,
-          dormStudentLeaveList: allValues.tablesValue[1].values,
+          dormAthleteLivingList: allValues.tablesValue[0].values,
+          dormAthleteLeaveList: allValues.tablesValue[1].values,
         }
       },
       validateError(msg){

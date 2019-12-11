@@ -2,8 +2,8 @@ package org.jeecg.modules.edusport.vo;
 
 import java.util.List;
 import org.jeecg.modules.edusport.entity.Dorm;
-import org.jeecg.modules.edusport.entity.DormStudent;
-import org.jeecg.modules.edusport.entity.DormStudentLeave;
+import org.jeecg.modules.edusport.entity.DormAthleteLiving;
+import org.jeecg.modules.edusport.entity.DormAthleteLeave;
 import lombok.Data;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelEntity;
@@ -15,7 +15,7 @@ import java.util.Date;
 /**
  * @Description: 宿舍信息表
  * @Author: jeecg-boot
- * @Date:   2019-11-23
+ * @Date:   2019-12-11
  * @Version: V1.0
  */
 @Data
@@ -44,9 +44,6 @@ public class DormPage {
 	/**管理员电话*/
 	@Excel(name = "管理员电话", width = 15)
 	private java.lang.String dormAdminTel;
-	/**乐观锁*/
-	@Excel(name = "乐观锁", width = 15)
-	private java.lang.Integer revision;
 	/**创建人*/
 	@Excel(name = "创建人", width = 15)
 	private java.lang.String createBy;
@@ -64,9 +61,9 @@ public class DormPage {
     @DateTimeFormat(pattern="yyyy-MM-dd")
 	private java.util.Date updateTime;
 	
-	@ExcelCollection(name="宿舍运动员入住信息")
-	private List<DormStudent> dormStudentList;	
-	@ExcelCollection(name="宿舍运动员请假信息")
-	private List<DormStudentLeave> dormStudentLeaveList;	
+	@ExcelCollection(name="宿舍运动员入住表")
+	private List<DormAthleteLiving> dormAthleteLivingList;	
+	@ExcelCollection(name="宿舍运动员请假表")
+	private List<DormAthleteLeave> dormAthleteLeaveList;	
 	
 }

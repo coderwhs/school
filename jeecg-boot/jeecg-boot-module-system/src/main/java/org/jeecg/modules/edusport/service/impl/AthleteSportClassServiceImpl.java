@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 /**
- * @Description: 运动员训练班经历信息
+ * @Description: 运动员训练班经历表
  * @Author: jeecg-boot
- * @Date:   2019-11-26
+ * @Date:   2019-12-11
  * @Version: V1.0
  */
 @Service

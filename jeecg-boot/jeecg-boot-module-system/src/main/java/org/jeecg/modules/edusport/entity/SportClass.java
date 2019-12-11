@@ -14,9 +14,9 @@ import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecg.common.aspect.annotation.Dict;
 
 /**
- * @Description: 运动项目训练班信息
+ * @Description: 运动项目训练班表
  * @Author: jeecg-boot
- * @Date:   2019-11-26
+ * @Date:   2019-12-11
  * @Version: V1.0
  */
 @Data
@@ -30,18 +30,27 @@ public class SportClass implements Serializable {
 	/**训练班名称*/
 	@Excel(name = "训练班名称", width = 15)
     private java.lang.String className;
-	/**教练员*/
-	@Excel(name = "教练员", width = 15)
+	/**教练员代码*/
+	@Excel(name = "教练员代码", width = 15)
     private java.lang.String coachNo;
-	/**运动项目*/
-	@Excel(name = "运动项目", width = 15)
+	/**教练员姓名*/
+	@Excel(name = "教练员姓名", width = 15)
+    private java.lang.String coachName;
+	/**运动项目代码*/
+	@Excel(name = "运动项目代码", width = 15)
     private java.lang.String sportCode;
+	/**运动项目名称*/
+	@Excel(name = "运动项目名称", width = 15)
+    private java.lang.String sportName;
 	/**训练年度*/
 	@Excel(name = "训练年度", width = 15)
     private java.lang.Integer trainingYear;
 	/**训练阶段*/
 	@Excel(name = "训练阶段", width = 15)
     private java.lang.String trainingStage;
+	/**训练形式*/
+	@Excel(name = "训练形式", width = 15)
+    private java.lang.String trainingType;
 	/**开始日期*/
 	@Excel(name = "开始日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
@@ -61,9 +70,6 @@ public class SportClass implements Serializable {
 	/**备注*/
 	@Excel(name = "备注", width = 15)
     private java.lang.String remark;
-	/**乐观锁*/
-	@Excel(name = "乐观锁", width = 15)
-    private java.lang.Integer revision;
 	/**创建人*/
 	@Excel(name = "创建人", width = 15)
     private java.lang.String createBy;

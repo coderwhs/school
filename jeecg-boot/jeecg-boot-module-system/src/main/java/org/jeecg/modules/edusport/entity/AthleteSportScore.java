@@ -14,9 +14,9 @@ import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecg.common.aspect.annotation.Dict;
 
 /**
- * @Description: 运动员项目测试信息
+ * @Description: 运动员项目测试表
  * @Author: jeecg-boot
- * @Date:   2019-11-23
+ * @Date:   2019-12-11
  * @Version: V1.0
  */
 @Data
@@ -27,12 +27,12 @@ public class AthleteSportScore implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**训练班*/
-	@Excel(name = "训练班", width = 15)
+	/**训练班主键ID*/
+	@Excel(name = "训练班主键ID", width = 15)
     private java.lang.String sportClassId;
-	/**运动员*/
-	@Excel(name = "运动员", width = 15)
-    private java.lang.String studentNo;
+	/**运动员学号*/
+	@Excel(name = "运动员学号", width = 15)
+    private java.lang.String athleteNo;
 	/**测试小项*/
 	@Excel(name = "测试小项", width = 15)
     private java.lang.String testEvent;
@@ -47,9 +47,6 @@ public class AthleteSportScore implements Serializable {
 	/**备注*/
 	@Excel(name = "备注", width = 15)
     private java.lang.String remark;
-	/**乐观锁*/
-	@Excel(name = "乐观锁", width = 15)
-    private java.lang.Integer revision;
 	/**创建人*/
 	@Excel(name = "创建人", width = 15)
     private java.lang.String createBy;

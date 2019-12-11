@@ -22,13 +22,13 @@ import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.edusport.entity.DormStudent;
-import org.jeecg.modules.edusport.entity.DormStudentLeave;
+import org.jeecg.modules.edusport.entity.DormAthleteLiving;
+import org.jeecg.modules.edusport.entity.DormAthleteLeave;
 import org.jeecg.modules.edusport.entity.Dorm;
 import org.jeecg.modules.edusport.vo.DormPage;
 import org.jeecg.modules.edusport.service.IDormService;
-import org.jeecg.modules.edusport.service.IDormStudentService;
-import org.jeecg.modules.edusport.service.IDormStudentLeaveService;
+import org.jeecg.modules.edusport.service.IDormAthleteLivingService;
+import org.jeecg.modules.edusport.service.IDormAthleteLeaveService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +44,7 @@ import com.alibaba.fastjson.JSON;
  /**
  * @Description: 宿舍信息表
  * @Author: jeecg-boot
- * @Date:   2019-11-23
+ * @Date:   2019-12-11
  * @Version: V1.0
  */
 @RestController
@@ -54,9 +54,9 @@ public class DormController {
 	@Autowired
 	private IDormService dormService;
 	@Autowired
-	private IDormStudentService dormStudentService;
+	private IDormAthleteLivingService dormAthleteLivingService;
 	@Autowired
-	private IDormStudentLeaveService dormStudentLeaveService;
+	private IDormAthleteLeaveService dormAthleteLeaveService;
 	
 	/**
 	 * 分页列表查询
@@ -88,7 +88,7 @@ public class DormController {
 	public Result<?> add(@RequestBody DormPage dormPage) {
 		Dorm dorm = new Dorm();
 		BeanUtils.copyProperties(dormPage, dorm);
-		dormService.saveMain(dorm, dormPage.getDormStudentList(),dormPage.getDormStudentLeaveList());
+		dormService.saveMain(dorm, dormPage.getDormAthleteLivingList(),dormPage.getDormAthleteLeaveList());
 		return Result.ok("添加成功！");
 	}
 	
@@ -106,7 +106,7 @@ public class DormController {
 		if(dormEntity==null) {
 			return Result.error("未找到对应数据");
 		}
-		dormService.updateMain(dorm, dormPage.getDormStudentList(),dormPage.getDormStudentLeaveList());
+		dormService.updateMain(dorm, dormPage.getDormAthleteLivingList(),dormPage.getDormAthleteLeaveList());
 		return Result.ok("编辑成功!");
 	}
 	
@@ -156,10 +156,10 @@ public class DormController {
 	 * @param id
 	 * @return
 	 */
-	@GetMapping(value = "/queryDormStudentByMainId")
-	public Result<?> queryDormStudentListByMainId(@RequestParam(name="id",required=true) String id) {
-		List<DormStudent> dormStudentList = dormStudentService.selectByMainId(id);
-		return Result.ok(dormStudentList);
+	@GetMapping(value = "/queryDormAthleteLivingByMainId")
+	public Result<?> queryDormAthleteLivingListByMainId(@RequestParam(name="id",required=true) String id) {
+		List<DormAthleteLiving> dormAthleteLivingList = dormAthleteLivingService.selectByMainId(id);
+		return Result.ok(dormAthleteLivingList);
 	}
 	/**
 	 * 通过id查询
@@ -167,10 +167,10 @@ public class DormController {
 	 * @param id
 	 * @return
 	 */
-	@GetMapping(value = "/queryDormStudentLeaveByMainId")
-	public Result<?> queryDormStudentLeaveListByMainId(@RequestParam(name="id",required=true) String id) {
-		List<DormStudentLeave> dormStudentLeaveList = dormStudentLeaveService.selectByMainId(id);
-		return Result.ok(dormStudentLeaveList);
+	@GetMapping(value = "/queryDormAthleteLeaveByMainId")
+	public Result<?> queryDormAthleteLeaveListByMainId(@RequestParam(name="id",required=true) String id) {
+		List<DormAthleteLeave> dormAthleteLeaveList = dormAthleteLeaveService.selectByMainId(id);
+		return Result.ok(dormAthleteLeaveList);
 	}
 
     /**
@@ -202,10 +202,10 @@ public class DormController {
       for (Dorm main : dormList) {
           DormPage vo = new DormPage();
           BeanUtils.copyProperties(main, vo);
-          List<DormStudent> dormStudentList = dormStudentService.selectByMainId(main.getId());
-          vo.setDormStudentList(dormStudentList);
-          List<DormStudentLeave> dormStudentLeaveList = dormStudentLeaveService.selectByMainId(main.getId());
-          vo.setDormStudentLeaveList(dormStudentLeaveList);
+          List<DormAthleteLiving> dormAthleteLivingList = dormAthleteLivingService.selectByMainId(main.getId());
+          vo.setDormAthleteLivingList(dormAthleteLivingList);
+          List<DormAthleteLeave> dormAthleteLeaveList = dormAthleteLeaveService.selectByMainId(main.getId());
+          vo.setDormAthleteLeaveList(dormAthleteLeaveList);
           pageList.add(vo);
       }
 
@@ -240,7 +240,7 @@ public class DormController {
               for (DormPage page : list) {
                   Dorm po = new Dorm();
                   BeanUtils.copyProperties(page, po);
-                  dormService.saveMain(po, page.getDormStudentList(),page.getDormStudentLeaveList());
+                  dormService.saveMain(po, page.getDormAthleteLivingList(),page.getDormAthleteLeaveList());
               }
               return Result.ok("文件导入成功！数据行数:" + list.size());
           } catch (Exception e) {

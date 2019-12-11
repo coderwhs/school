@@ -10,14 +10,11 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportClassId', validatorRules.sportClassId]" placeholder="请输入训练班"></a-input>
+        <a-form-item label="训练班主键id" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'sportClassId', validatorRules.sportClassId]" placeholder="请输入训练班主键id"></a-input>
         </a-form-item>
-        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'teacherName', validatorRules.teacherName]" placeholder="请输入教练员"></a-input>
-        </a-form-item>
-        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'studentNo', validatorRules.studentNo]" placeholder="请输入运动员"></a-input>
+        <a-form-item label="运动员学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'athleteNo', validatorRules.athleteNo]" placeholder="请输入运动员学号"></a-input>
         </a-form-item>
         <a-form-item label="参加日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择参加日期" v-decorator="[ 'attendDate', validatorRules.attendDate]" :trigger-change="true" style="width: 100%"/>
@@ -32,7 +29,7 @@
           <a-input v-decorator="[ 'aboutBreakRecord', validatorRules.aboutBreakRecord]" placeholder="请输入破纪录状况"></a-input>
         </a-form-item>
         <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['remark']" rows="4" placeholder="请输入备注"/>
+          <a-input v-decorator="[ 'remark', validatorRules.remark]" placeholder="请输入备注"></a-input>
         </a-form-item>
         
       </a-form>
@@ -73,14 +70,13 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
-        teacherName:{},
-        studentNo:{rules: [{ required: true, message: '请输入运动员!' }]},
-        attendDate:{rules: [{ required: true, message: '请输入参加日期!' }]},
-        athleteBestScore:{},
-        athleteAwardTechGrade:{},
-        aboutBreakRecord:{},
-        remark:{},
+        sportClassId:{rules: [{ required: true, message: '请输入训练班主键id!' }]},
+        athleteNo:{rules: [{ required: true, message: '请输入运动员学号!' }]},
+        attendDate:{},
+        athleteBestScore:{rules: [{ required: true, message: '请输入比赛最好成绩!' }]},
+        athleteAwardTechGrade:{rules: [{ required: true, message: '请输入获得等级!' }]},
+        aboutBreakRecord:{rules: [{ required: true, message: '请输入破纪录状况!' }]},
+        remark:{rules: [{ required: true, message: '请输入备注!' }]},
         },
         url: {
           add: "/edusport/athleteSportClass/add",
@@ -100,7 +96,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','teacherName','studentNo','attendDate','athleteBestScore','athleteAwardTechGrade','aboutBreakRecord','remark'))
+          this.form.setFieldsValue(pick(this.model,'sportClassId','athleteNo','attendDate','athleteBestScore','athleteAwardTechGrade','aboutBreakRecord','remark'))
         })
       },
       close () {
@@ -143,7 +139,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','teacherName','studentNo','attendDate','athleteBestScore','athleteAwardTechGrade','aboutBreakRecord','remark'))
+        this.form.setFieldsValue(pick(row,'sportClassId','athleteNo','attendDate','athleteBestScore','athleteAwardTechGrade','aboutBreakRecord','remark'))
       }
       
     }

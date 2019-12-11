@@ -34,9 +34,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 
  /**
- * @Description: 运动项目训练班信息
+ * @Description: 运动项目训练班表
  * @Author: jeecg-boot
- * @Date:   2019-11-26
+ * @Date:   2019-12-11
  * @Version: V1.0
  */
 @RestController
@@ -137,7 +137,7 @@ public class SportClassController extends JeecgController<SportClass, ISportClas
     */
     @RequestMapping(value = "/exportXls")
     public ModelAndView exportXls(HttpServletRequest request, SportClass sportClass) {
-        return super.exportXls(request, sportClass, SportClass.class, "运动项目训练班信息");
+        return super.exportXls(request, sportClass, SportClass.class, "运动项目训练班表");
     }
 
     /**

@@ -10,32 +10,32 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['studentNo']" dict="tb_edu_student,student_name,student_no" />
+        <a-form-item label="运动员学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['athleteNo']" dict="tb_edu_athlete,athlete_name,athlete_no" />
         </a-form-item>
-        <a-form-item label="参赛名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'contestName', validatorRules.contestName]" placeholder="请输入参赛名称"></a-input>
+        <a-form-item label="归属教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['coachNo']" dict="tb_edu_coach,coach_name,coach_no" />
         </a-form-item>
-        <a-form-item label="参赛日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-date placeholder="请选择参赛日期" v-decorator="[ 'contestDate', validatorRules.contestDate]" :trigger-change="true" style="width: 100%"/>
+        <a-form-item label="比赛名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'contestName', validatorRules.contestName]" placeholder="请输入比赛名称"></a-input>
         </a-form-item>
-        <a-form-item label="参赛地点" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'contestAddress', validatorRules.contestAddress]" placeholder="请输入参赛地点"></a-input>
+        <a-form-item label="比赛日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-date placeholder="请选择比赛日期" v-decorator="[ 'contestDate', validatorRules.contestDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
-        <a-form-item label="参赛项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="比赛地点" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'contestAddress', validatorRules.contestAddress]" placeholder="请输入比赛地点"></a-input>
+        </a-form-item>
+        <a-form-item label="比赛项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['contestSport']" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
-        <a-form-item label="参赛小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'contestEvent', validatorRules.contestEvent]" placeholder="请输入参赛小项"></a-input>
+        <a-form-item label="比赛小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'contestEvent', validatorRules.contestEvent]" placeholder="请输入比赛小项"></a-input>
         </a-form-item>
-        <a-form-item label="参赛成绩" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'contestScore', validatorRules.contestScore]" placeholder="请输入参赛成绩"></a-input>
-        </a-form-item>
-        <a-form-item label="参赛名次" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'contestResult', validatorRules.contestResult]" placeholder="请输入参赛名次"></a-input>
+        <a-form-item label="比赛名次" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'contestResult', validatorRules.contestResult]" placeholder="请输入比赛名次"></a-input>
         </a-form-item>
         <a-form-item label="所在单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'studentDepartment', validatorRules.studentDepartment]" placeholder="请输入所在单位"></a-input>
+          <a-input v-decorator="[ 'athleteDepartment', validatorRules.athleteDepartment]" placeholder="请输入所在单位"></a-input>
         </a-form-item>
         <a-form-item label="授予技术等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['awardedTechGrade']" :trigger-change="true" dictCode="athlete_tech_grade" placeholder="请选择授予技术等级"/>
@@ -45,6 +45,9 @@
         </a-form-item>
         <a-form-item label="授予日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择授予日期" v-decorator="[ 'awardedDate', validatorRules.awardedDate]" :trigger-change="true" style="width: 100%"/>
+        </a-form-item>
+        <a-form-item label="个人风采" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-editor v-decorator="['athleteNews',{trigger:'input'}]"/>
         </a-form-item>
 
       </a-form>
@@ -59,6 +62,7 @@
   import JDate from '@/components/jeecg/JDate'  
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import JEditor from '@/components/jeecg/JEditor'
 
   export default {
     name: "AthleteContestModal",
@@ -66,6 +70,7 @@
       JDate,
       JDictSelectTag,
       JSearchSelectTag,
+      JEditor,
     },
     data () {
       return {
@@ -85,18 +90,19 @@
 
         confirmLoading: false,
         validatorRules:{
-        studentNo:{rules: [{ required: true, message: '请输入运动员!' }]},
-        contestName:{rules: [{ required: true, message: '请输入参赛名称!' }]},
-        contestDate:{rules: [{ required: true, message: '请输入参赛日期!' }]},
-        contestAddress:{rules: [{ required: true, message: '请输入参赛地点!' }]},
-        contestSport:{rules: [{ required: true, message: '请输入参赛项目!' }]},
-        contestEvent:{rules: [{ required: true, message: '请输入参赛小项!' }]},
-        contestScore:{rules: [{ required: true, message: '请输入参赛成绩!' }]},
-        contestResult:{},
-        studentDepartment:{},
+        athleteNo:{rules: [{ required: true, message: '请输入运动员学号!' }]},
+        coachNo:{rules: [{ required: true, message: '请输入归属教练员!' }]},
+        contestName:{rules: [{ required: true, message: '请输入比赛名称!' }]},
+        contestDate:{},
+        contestAddress:{rules: [{ required: true, message: '请输入比赛地点!' }]},
+        contestSport:{rules: [{ required: true, message: '请输入比赛项目!' }]},
+        contestEvent:{rules: [{ required: true, message: '请输入比赛小项!' }]},
+        contestResult:{rules: [{ required: true, message: '请输入比赛名次!' }]},
+        athleteDepartment:{rules: [{ required: true, message: '请输入所在单位!' }]},
         awardedTechGrade:{rules: [{ required: true, message: '请输入授予技术等级!' }]},
-        awardedDepartment:{},
+        awardedDepartment:{rules: [{ required: true, message: '请输入授予单位!' }]},
         awardedDate:{},
+        athleteNews:{},
         },
         url: {
           add: "/edusport/athleteContest/add",
@@ -116,7 +122,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'studentNo','contestName','contestDate','contestAddress','contestSport','contestEvent','contestScore','contestResult','studentDepartment','awardedTechGrade','awardedDepartment','awardedDate'))
+          this.form.setFieldsValue(pick(this.model,'athleteNo','coachNo','contestName','contestDate','contestAddress','contestSport','contestEvent','contestResult','athleteDepartment','awardedTechGrade','awardedDepartment','awardedDate','athleteNews'))
         })
       },
       close () {
@@ -159,7 +165,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'studentNo','contestName','contestDate','contestAddress','contestSport','contestEvent','contestScore','contestResult','studentDepartment','awardedTechGrade','awardedDepartment','awardedDate'))
+        this.form.setFieldsValue(pick(row,'athleteNo','coachNo','contestName','contestDate','contestAddress','contestSport','contestEvent','contestResult','athleteDepartment','awardedTechGrade','awardedDepartment','awardedDate','athleteNews'))
       },
 
       

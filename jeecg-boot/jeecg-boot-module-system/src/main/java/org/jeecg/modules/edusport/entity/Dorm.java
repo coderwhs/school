@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 /**
  * @Description: 宿舍信息表
  * @Author: jeecg-boot
- * @Date:   2019-11-23
+ * @Date:   2019-12-11
  * @Version: V1.0
  */
 @Data
@@ -37,8 +37,6 @@ public class Dorm implements Serializable {
     private java.lang.String dormAdmin;
 	/**管理员电话*/
     private java.lang.String dormAdminTel;
-	/**乐观锁*/
-    private java.lang.Integer revision;
 	/**创建人*/
     private java.lang.String createBy;
 	/**创建时间*/
