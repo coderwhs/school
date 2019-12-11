@@ -5,8 +5,13 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动员">
-              <a-input placeholder="请输入运动员" v-model="queryParam.studentNo"></a-input>
+            <a-form-item label="训练班主键ID">
+              <a-input placeholder="请输入训练班主键ID" v-model="queryParam.sportClassId"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="运动员学号">
+              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8" >
@@ -28,7 +33,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员项目测试信息')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('运动员项目测试表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -117,7 +122,7 @@
     },
     data () {
       return {
-        description: '运动员项目测试信息管理页面',
+        description: '运动员项目测试表管理页面',
         // 表头
         columns: [
           {
@@ -131,7 +136,7 @@
             }
           },
           {
-            title:'训练班',
+            title:'训练班主键ID',
             align:"center",
             dataIndex: 'sportClassId',
             customRender:(text)=>{
@@ -143,14 +148,14 @@
             }
           },
           {
-            title:'运动员',
+            title:'运动员学号',
             align:"center",
-            dataIndex: 'studentNo',
+            dataIndex: 'athleteNo',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['studentNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
               }
             }
           },
@@ -202,9 +207,9 @@
             this.$set(this.dictOptions, 'sportClassId', res.result)
           }
         })
-        initDictOptions('tb_edu_student,student_name,student_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'studentNo', res.result)
+            this.$set(this.dictOptions, 'athleteNo', res.result)
           }
         })
       }

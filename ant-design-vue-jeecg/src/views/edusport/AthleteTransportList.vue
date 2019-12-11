@@ -5,15 +5,22 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动员">
-              <a-input placeholder="请输入运动员" v-model="queryParam.studentNo"></a-input>
+            <a-form-item label="运动员学号">
+              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动项目">
-              <a-input placeholder="请输入运动项目" v-model="queryParam.sportCode"></a-input>
+            <a-form-item label="运动项目代码">
+              <a-input placeholder="请输入运动项目代码" v-model="queryParam.sportCode"></a-input>
             </a-form-item>
           </a-col>
+          <template v-if="toggleSearchStatus">
+            <a-col :md="6" :sm="8">
+              <a-form-item label="输送教练员代码">
+                <a-input placeholder="请输入输送教练员代码" v-model="queryParam.transportCoachNo"></a-input>
+              </a-form-item>
+            </a-col>
+          </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
@@ -33,7 +40,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员输送信息')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('运动员输送表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -122,7 +129,7 @@
     },
     data () {
       return {
-        description: '运动员输送信息管理页面',
+        description: '运动员输送表管理页面',
         // 表头
         columns: [
           {
@@ -136,19 +143,19 @@
             }
           },
           {
-            title:'运动员',
+            title:'运动员学号',
             align:"center",
-            dataIndex: 'studentNo',
+            dataIndex: 'athleteNo',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['studentNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
               }
             }
           },
           {
-            title:'运动项目',
+            title:'运动项目代码',
             align:"center",
             dataIndex: 'sportCode',
             customRender:(text)=>{
@@ -172,19 +179,14 @@
             }
           },
           {
-            title:'输送单位',
+            title:'输送教练员代码',
             align:"center",
-            dataIndex: 'transportDepartment'
-          },
-          {
-            title:'输送教练员',
-            align:"center",
-            dataIndex: 'transportTeacherNo',
+            dataIndex: 'transportCoachNo',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['transportTeacherNo'], text+"")
+                return filterMultiDictText(this.dictOptions['transportCoachNo'], text+"")
               }
             }
           },
@@ -194,6 +196,18 @@
             dataIndex: 'transportDate',
             customRender:function (text) {
               return !text?"":(text.length>10?text.substr(0,10):text)
+            }
+          },
+          {
+            title:'吸收单位类别',
+            align:"center",
+            dataIndex: 'acceptDepartmentType',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['acceptDepartmentType'], text+"")
+              }
             }
           },
           {
@@ -217,6 +231,7 @@
         },
         dictOptions:{
          athleteTechGrade:[],
+         acceptDepartmentType:[],
         },
       }
     },
@@ -227,9 +242,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_student,student_name,student_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'studentNo', res.result)
+            this.$set(this.dictOptions, 'athleteNo', res.result)
           }
         })
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
@@ -242,9 +257,14 @@
             this.$set(this.dictOptions, 'athleteTechGrade', res.result)
           }
         })
-        initDictOptions('tb_edu_teacher,teacher_name,teacher_no').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'transportTeacherNo', res.result)
+            this.$set(this.dictOptions, 'transportCoachNo', res.result)
+          }
+        })
+        initDictOptions('accept_department_type').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'acceptDepartmentType', res.result)
           }
         })
       }

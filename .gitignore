@@ -9,3 +9,4 @@
 /jeecg-boot/jeecg-boot-module-system/*.classpath
 /jeecg-boot/jeecg-boot-module-system/*.factorypath
 /jeecg-boot/jeecg-boot-module-system/*.project
+/jeecg-boot/jeecg-boot-module-system/src/main/resources/application-dev.yml

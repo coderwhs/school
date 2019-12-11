@@ -13,17 +13,17 @@
         <a-form-item label="训练班名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'className', validatorRules.className]" placeholder="请输入训练班名称"></a-input>
         </a-form-item>
-        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachNo']" dict="tb_edu_teacher,teacher_name,teacher_name" />
+        <a-form-item label="教练员代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['coachNo']" dict="tb_edu_coach,coach_name,coach_no" />
         </a-form-item>
-        <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="运动项目代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
         <a-form-item label="训练年度" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'trainingYear', validatorRules.trainingYear]" placeholder="请输入训练年度" style="width: 100%"/>
         </a-form-item>
-        <a-form-item label="训练阶段" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'trainingStage', validatorRules.trainingStage]" placeholder="请输入训练阶段"></a-input>
+        <a-form-item label="训练形式" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-dict-select-tag type="list" v-decorator="['trainingType']" :trigger-change="true" dictCode="training_type" placeholder="请选择训练形式"/>
         </a-form-item>
         <a-form-item label="开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
@@ -51,12 +51,14 @@
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import JDate from '@/components/jeecg/JDate'  
+  import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "SportClassModal",
     components: { 
       JDate,
+      JDictSelectTag,
       JSearchSelectTag,
     },
     data () {
@@ -78,15 +80,15 @@
         confirmLoading: false,
         validatorRules:{
         className:{rules: [{ required: true, message: '请输入训练班名称!' }]},
-        coachNo:{rules: [{ required: true, message: '请输入教练员!' }]},
-        sportCode:{rules: [{ required: true, message: '请输入运动项目!' }]},
+        coachNo:{rules: [{ required: true, message: '请输入教练员代码!' }]},
+        sportCode:{rules: [{ required: true, message: '请输入运动项目代码!' }]},
         trainingYear:{rules: [{ required: true, message: '请输入训练年度!' }]},
-        trainingStage:{},
+        trainingType:{rules: [{ required: true, message: '请输入训练形式!' }]},
         startDate:{},
         endDate:{},
-        trainingAddress:{},
-        trainingContent:{},
-        remark:{},
+        trainingAddress:{rules: [{ required: true, message: '请输入训练地点!' }]},
+        trainingContent:{rules: [{ required: true, message: '请输入主要训练任务!' }]},
+        remark:{rules: [{ required: true, message: '请输入备注!' }]},
         },
         url: {
           add: "/edusport/sportClass/add",
@@ -106,7 +108,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'className','coachNo','sportCode','trainingYear','trainingStage','startDate','endDate','trainingAddress','trainingContent','remark'))
+          this.form.setFieldsValue(pick(this.model,'className','coachNo','sportCode','trainingYear','trainingType','startDate','endDate','trainingAddress','trainingContent','remark'))
         })
       },
       close () {
@@ -149,7 +151,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'className','coachNo','sportCode','trainingYear','trainingStage','startDate','endDate','trainingAddress','trainingContent','remark'))
+        this.form.setFieldsValue(pick(row,'className','coachNo','sportCode','trainingYear','trainingType','startDate','endDate','trainingAddress','trainingContent','remark'))
       },
 
       
