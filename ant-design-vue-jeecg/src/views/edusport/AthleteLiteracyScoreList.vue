@@ -5,19 +5,24 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="训练班主键id">
-              <a-input placeholder="请输入训练班主键id" v-model="queryParam.sportClassId"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
             <a-form-item label="运动员学号">
               <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
             </a-form-item>
           </a-col>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="年级">
+              <j-dict-select-tag placeholder="请选择年级" v-model="queryParam.grade" dictCode="edu_grade"/>
+            </a-form-item>
+          </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
-              <a-form-item label="获得等级">
-                <j-dict-select-tag placeholder="请选择获得等级" v-model="queryParam.athleteAwardTechGrade" dictCode="athlete_tech_grade"/>
+              <a-form-item label="教学年度">
+                <a-input placeholder="请输入教学年度" v-model="queryParam.academicYear"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="8">
+              <a-form-item label="学期">
+                <j-dict-select-tag placeholder="请选择学期" v-model="queryParam.semester" dictCode="edu_semester"/>
               </a-form-item>
             </a-col>
           </template>
@@ -40,7 +45,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练班经历表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('运动员文化课成绩信息表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -111,27 +116,27 @@
       </a-table>
     </div>
 
-    <athleteSportClass-modal ref="modalForm" @ok="modalFormOk"></athleteSportClass-modal>
+    <athleteLiteracyScore-modal ref="modalForm" @ok="modalFormOk"></athleteLiteracyScore-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteSportClassModal from './modules/AthleteSportClassModal'
+  import AthleteLiteracyScoreModal from './modules/AthleteLiteracyScoreModal'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "AthleteSportClassList",
+    name: "AthleteLiteracyScoreList",
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
-      AthleteSportClassModal
+      AthleteLiteracyScoreModal
     },
     data () {
       return {
-        description: '运动员训练班经历表管理页面',
+        description: '运动员文化课成绩信息表管理页面',
         // 表头
         columns: [
           {
@@ -142,18 +147,6 @@
             align:"center",
             customRender:function (t,r,index) {
               return parseInt(index)+1;
-            }
-          },
-          {
-            title:'训练班主键id',
-            align:"center",
-            dataIndex: 'sportClassId',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['sportClassId'], text+"")
-              }
             }
           },
           {
@@ -169,24 +162,78 @@
             }
           },
           {
-            title:'参加日期',
+            title:'年级',
             align:"center",
-            dataIndex: 'attendDate',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
-            }
-          },
-          {
-            title:'获得等级',
-            align:"center",
-            dataIndex: 'athleteAwardTechGrade',
+            dataIndex: 'grade',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteAwardTechGrade'], text+"")
+                return filterMultiDictText(this.dictOptions['grade'], text+"")
               }
             }
+          },
+          {
+            title:'教学年度',
+            align:"center",
+            dataIndex: 'academicYear'
+          },
+          {
+            title:'学期',
+            align:"center",
+            dataIndex: 'semester',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['semester'], text+"")
+              }
+            }
+          },
+          {
+            title:'语文',
+            align:"center",
+            dataIndex: 'chineseScore'
+          },
+          {
+            title:'数学',
+            align:"center",
+            dataIndex: 'mathsScore'
+          },
+          {
+            title:'英语',
+            align:"center",
+            dataIndex: 'englishScore'
+          },
+          {
+            title:'政治',
+            align:"center",
+            dataIndex: 'politicsScore'
+          },
+          {
+            title:'物理',
+            align:"center",
+            dataIndex: 'physicsScore'
+          },
+          {
+            title:'化学',
+            align:"center",
+            dataIndex: 'chemistryScore'
+          },
+          {
+            title:'历史',
+            align:"center",
+            dataIndex: 'historyScore'
+          },
+          {
+            title:'地理',
+            align:"center",
+            dataIndex: 'geographyScore'
+          },
+          {
+            title:'生物',
+            align:"center",
+            dataIndex: 'biologyScore'
           },
           {
             title: '操作',
@@ -196,14 +243,15 @@
           }
         ],
         url: {
-          list: "/edusport/athleteSportClass/list",
-          delete: "/edusport/athleteSportClass/delete",
-          deleteBatch: "/edusport/athleteSportClass/deleteBatch",
-          exportXlsUrl: "/edusport/athleteSportClass/exportXls",
-          importExcelUrl: "edusport/athleteSportClass/importExcel",
+          list: "/edusport/athleteLiteracyScore/list",
+          delete: "/edusport/athleteLiteracyScore/delete",
+          deleteBatch: "/edusport/athleteLiteracyScore/deleteBatch",
+          exportXlsUrl: "/edusport/athleteLiteracyScore/exportXls",
+          importExcelUrl: "edusport/athleteLiteracyScore/importExcel",
         },
         dictOptions:{
-         athleteAwardTechGrade:[],
+         grade:[],
+         semester:[],
         },
       }
     },
@@ -214,19 +262,19 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class,class_name,id').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'sportClassId', res.result)
-          }
-        })
         initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'athleteNo', res.result)
           }
         })
-        initDictOptions('athlete_tech_grade').then((res) => {
+        initDictOptions('edu_grade').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteAwardTechGrade', res.result)
+            this.$set(this.dictOptions, 'grade', res.result)
+          }
+        })
+        initDictOptions('edu_semester').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'semester', res.result)
           }
         })
       }

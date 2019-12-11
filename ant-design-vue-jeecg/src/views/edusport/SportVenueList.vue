@@ -5,19 +5,19 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="训练班主键id">
-              <a-input placeholder="请输入训练班主键id" v-model="queryParam.sportClassId"></a-input>
+            <a-form-item label="运动项目">
+              <a-input placeholder="请输入运动项目" v-model="queryParam.sportCode"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
+            <a-form-item label="场馆名称">
+              <a-input placeholder="请输入场馆名称" v-model="queryParam.venueName"></a-input>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
-              <a-form-item label="获得等级">
-                <j-dict-select-tag placeholder="请选择获得等级" v-model="queryParam.athleteAwardTechGrade" dictCode="athlete_tech_grade"/>
+              <a-form-item label="场馆类型">
+                <j-dict-select-tag placeholder="请选择场馆类型" v-model="queryParam.venueType" dictCode="venue_type"/>
               </a-form-item>
             </a-col>
           </template>
@@ -40,7 +40,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练班经历表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('运动场馆信息表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -111,27 +111,27 @@
       </a-table>
     </div>
 
-    <athleteSportClass-modal ref="modalForm" @ok="modalFormOk"></athleteSportClass-modal>
+    <sportVenue-modal ref="modalForm" @ok="modalFormOk"></sportVenue-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteSportClassModal from './modules/AthleteSportClassModal'
+  import SportVenueModal from './modules/SportVenueModal'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "AthleteSportClassList",
+    name: "SportVenueList",
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
-      AthleteSportClassModal
+      SportVenueModal
     },
     data () {
       return {
-        description: '运动员训练班经历表管理页面',
+        description: '运动场馆信息表管理页面',
         // 表头
         columns: [
           {
@@ -145,48 +145,43 @@
             }
           },
           {
-            title:'训练班主键id',
+            title:'运动项目',
             align:"center",
-            dataIndex: 'sportClassId',
+            dataIndex: 'sportCode',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['sportClassId'], text+"")
+                return filterMultiDictText(this.dictOptions['sportCode'], text+"")
               }
             }
           },
           {
-            title:'运动员学号',
+            title:'场馆名称',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'venueName'
+          },
+          {
+            title:'场馆类型',
+            align:"center",
+            dataIndex: 'venueType',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['venueType'], text+"")
               }
             }
           },
           {
-            title:'参加日期',
+            title:'容纳人数',
             align:"center",
-            dataIndex: 'attendDate',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
-            }
+            dataIndex: 'venueCapacity'
           },
           {
-            title:'获得等级',
+            title:'场馆地址',
             align:"center",
-            dataIndex: 'athleteAwardTechGrade',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['athleteAwardTechGrade'], text+"")
-              }
-            }
+            dataIndex: 'venueAddress'
           },
           {
             title: '操作',
@@ -196,14 +191,14 @@
           }
         ],
         url: {
-          list: "/edusport/athleteSportClass/list",
-          delete: "/edusport/athleteSportClass/delete",
-          deleteBatch: "/edusport/athleteSportClass/deleteBatch",
-          exportXlsUrl: "/edusport/athleteSportClass/exportXls",
-          importExcelUrl: "edusport/athleteSportClass/importExcel",
+          list: "/edusport/sportVenue/list",
+          delete: "/edusport/sportVenue/delete",
+          deleteBatch: "/edusport/sportVenue/deleteBatch",
+          exportXlsUrl: "/edusport/sportVenue/exportXls",
+          importExcelUrl: "edusport/sportVenue/importExcel",
         },
         dictOptions:{
-         athleteAwardTechGrade:[],
+         venueType:[],
         },
       }
     },
@@ -214,19 +209,14 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class,class_name,id').then((res) => {
+        initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'sportClassId', res.result)
+            this.$set(this.dictOptions, 'sportCode', res.result)
           }
         })
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('venue_type').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
-          }
-        })
-        initDictOptions('athlete_tech_grade').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'athleteAwardTechGrade', res.result)
+            this.$set(this.dictOptions, 'venueType', res.result)
           }
         })
       }

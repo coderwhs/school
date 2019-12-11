@@ -5,22 +5,10 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="训练计划名称">
-              <a-input placeholder="请输入训练计划名称" v-model="queryParam.sportClassTaskId"></a-input>
+            <a-form-item label="训练班">
+              <a-input placeholder="请输入训练班" v-model="queryParam.sportClassId"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="运动员">
-              <a-input placeholder="请输入运动员" v-model="queryParam.studentNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="考勤状态">
-                <j-dict-select-tag placeholder="请选择考勤状态" v-model="queryParam.attendStatus" dictCode="attend_status"/>
-              </a-form-item>
-            </a-col>
-          </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
@@ -40,7 +28,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练任务出勤信息')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('年度训练运动员素质目标信息表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -111,27 +99,25 @@
       </a-table>
     </div>
 
-    <sportClassTaskAttend-modal ref="modalForm" @ok="modalFormOk"></sportClassTaskAttend-modal>
+    <sportClassAthleteYearGoal-modal ref="modalForm" @ok="modalFormOk"></sportClassAthleteYearGoal-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportClassTaskAttendModal from './modules/SportClassTaskAttendModal'
-  import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
+  import SportClassAthleteYearGoalModal from './modules/SportClassAthleteYearGoalModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "SportClassTaskAttendList",
+    name: "SportClassAthleteYearGoalList",
     mixins:[JeecgListMixin],
     components: {
-      JDictSelectTag,
-      SportClassTaskAttendModal
+      SportClassAthleteYearGoalModal
     },
     data () {
       return {
-        description: '运动员训练任务出勤信息管理页面',
+        description: '年度训练运动员素质目标信息表管理页面',
         // 表头
         columns: [
           {
@@ -145,45 +131,38 @@
             }
           },
           {
-            title:'训练计划名称',
+            title:'训练班',
             align:"center",
-            dataIndex: 'sportClassTaskId',
+            dataIndex: 'sportClassId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['sportClassTaskId'], text+"")
+                return filterMultiDictText(this.dictOptions['sportClassId'], text+"")
               }
             }
           },
           {
             title:'运动员',
             align:"center",
-            dataIndex: 'studentNo',
+            dataIndex: 'athleteNo',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['studentNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
               }
             }
           },
           {
-            title:'考勤状态',
+            title:'小项',
             align:"center",
-            dataIndex: 'attendStatus',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['attendStatus'], text+"")
-              }
-            }
+            dataIndex: 'eventCode'
           },
           {
-            title:'考勤时间',
+            title:'成绩目标',
             align:"center",
-            dataIndex: 'attendTime'
+            dataIndex: 'performanceGoal'
           },
           {
             title: '操作',
@@ -193,14 +172,13 @@
           }
         ],
         url: {
-          list: "/edusport/sportClassTaskAttend/list",
-          delete: "/edusport/sportClassTaskAttend/delete",
-          deleteBatch: "/edusport/sportClassTaskAttend/deleteBatch",
-          exportXlsUrl: "/edusport/sportClassTaskAttend/exportXls",
-          importExcelUrl: "edusport/sportClassTaskAttend/importExcel",
+          list: "/edusport/sportClassAthleteYearGoal/list",
+          delete: "/edusport/sportClassAthleteYearGoal/delete",
+          deleteBatch: "/edusport/sportClassAthleteYearGoal/deleteBatch",
+          exportXlsUrl: "/edusport/sportClassAthleteYearGoal/exportXls",
+          importExcelUrl: "edusport/sportClassAthleteYearGoal/importExcel",
         },
         dictOptions:{
-         attendStatus:[],
         },
       }
     },
@@ -211,19 +189,14 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class_task,task_name,id').then((res) => {
+        initDictOptions('tb_edu_sport_class,class_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'sportClassTaskId', res.result)
+            this.$set(this.dictOptions, 'sportClassId', res.result)
           }
         })
-        initDictOptions('tb_edu_student,student_name,student_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'studentNo', res.result)
-          }
-        })
-        initDictOptions('attend_status').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'attendStatus', res.result)
+            this.$set(this.dictOptions, 'athleteNo', res.result)
           }
         })
       }

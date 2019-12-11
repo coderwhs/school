@@ -5,13 +5,13 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动员">
-              <a-input placeholder="请输入运动员" v-model="queryParam.studentNo"></a-input>
+            <a-form-item label="运动员学号">
+              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="参赛项目">
-              <a-input placeholder="请输入参赛项目" v-model="queryParam.contestSport"></a-input>
+            <a-form-item label="归属教练员">
+              <a-input placeholder="请输入归属教练员" v-model="queryParam.coachNo"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8" >
@@ -33,7 +33,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员参赛信息')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('运动员参赛信息表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -122,7 +122,7 @@
     },
     data () {
       return {
-        description: '运动员参赛信息管理页面',
+        description: '运动员参赛信息表管理页面',
         // 表头
         columns: [
           {
@@ -136,24 +136,36 @@
             }
           },
           {
-            title:'运动员',
+            title:'运动员学号',
             align:"center",
-            dataIndex: 'studentNo',
+            dataIndex: 'athleteNo',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['studentNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
               }
             }
           },
           {
-            title:'参赛名称',
+            title:'归属教练员',
+            align:"center",
+            dataIndex: 'coachNo',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
+              }
+            }
+          },
+          {
+            title:'比赛名称',
             align:"center",
             dataIndex: 'contestName'
           },
           {
-            title:'参赛日期',
+            title:'比赛日期',
             align:"center",
             dataIndex: 'contestDate',
             customRender:function (text) {
@@ -161,7 +173,7 @@
             }
           },
           {
-            title:'参赛项目',
+            title:'比赛项目',
             align:"center",
             dataIndex: 'contestSport',
             customRender:(text)=>{
@@ -173,9 +185,14 @@
             }
           },
           {
-            title:'参赛小项',
+            title:'比赛小项',
             align:"center",
             dataIndex: 'contestEvent'
+          },
+          {
+            title:'比赛名次',
+            align:"center",
+            dataIndex: 'contestResult'
           },
           {
             title:'授予技术等级',
@@ -220,9 +237,14 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_student,student_name,student_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'studentNo', res.result)
+            this.$set(this.dictOptions, 'athleteNo', res.result)
+          }
+        })
+        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'coachNo', res.result)
           }
         })
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {

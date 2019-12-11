@@ -5,24 +5,15 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="训练计划名称">
-              <a-input placeholder="请输入训练计划名称" v-model="queryParam.sportClassTaskId"></a-input>
+            <a-form-item label="训练班">
+              <a-input placeholder="请输入训练班" v-model="queryParam.sportClassId"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
             <a-form-item label="运动员">
-              <a-input placeholder="请输入运动员" v-model="queryParam.studentNo"></a-input>
+              <a-input placeholder="请输入运动员" v-model="queryParam.athleteNo"></a-input>
             </a-form-item>
           </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="12" :sm="16">
-              <a-form-item label="开始日期">
-                <j-date placeholder="请选择开始日期" class="query-group-cust" v-model="queryParam.startDate_begin"></j-date>
-                <span class="query-group-split-cust"></span>
-                <j-date placeholder="请选择结束日期" class="query-group-cust" v-model="queryParam.startDate_end"></j-date>
-              </a-form-item>
-            </a-col>
-          </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
@@ -42,7 +33,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练任务请假信息')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练出勤表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -113,27 +104,25 @@
       </a-table>
     </div>
 
-    <sportClassTaskLeave-modal ref="modalForm" @ok="modalFormOk"></sportClassTaskLeave-modal>
+    <sportClassAthleteAttend-modal ref="modalForm" @ok="modalFormOk"></sportClassAthleteAttend-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportClassTaskLeaveModal from './modules/SportClassTaskLeaveModal'
-  import JDate from '@/components/jeecg/JDate.vue'
+  import SportClassAthleteAttendModal from './modules/SportClassAthleteAttendModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "SportClassTaskLeaveList",
+    name: "SportClassAthleteAttendList",
     mixins:[JeecgListMixin],
     components: {
-      JDate,
-      SportClassTaskLeaveModal
+      SportClassAthleteAttendModal
     },
     data () {
       return {
-        description: '运动员训练任务请假信息管理页面',
+        description: '运动员训练出勤表管理页面',
         // 表头
         columns: [
           {
@@ -147,46 +136,45 @@
             }
           },
           {
-            title:'训练计划名称',
+            title:'训练班',
             align:"center",
-            dataIndex: 'sportClassTaskId',
+            dataIndex: 'sportClassId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['sportClassTaskId'], text+"")
+                return filterMultiDictText(this.dictOptions['sportClassId'], text+"")
               }
             }
           },
           {
             title:'运动员',
             align:"center",
-            dataIndex: 'studentNo',
+            dataIndex: 'athleteNo',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['studentNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
               }
             }
           },
           {
-            title:'请假原因',
+            title:'考勤状态',
             align:"center",
-            dataIndex: 'leaveCause'
-          },
-          {
-            title:'开始日期',
-            align:"center",
-            dataIndex: 'startDate',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
+            dataIndex: 'attendStatus',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['attendStatus'], text+"")
+              }
             }
           },
           {
-            title:'结束日期',
+            title:'考勤时间',
             align:"center",
-            dataIndex: 'endDate',
+            dataIndex: 'attendTime',
             customRender:function (text) {
               return !text?"":(text.length>10?text.substr(0,10):text)
             }
@@ -199,13 +187,14 @@
           }
         ],
         url: {
-          list: "/edusport/sportClassTaskLeave/list",
-          delete: "/edusport/sportClassTaskLeave/delete",
-          deleteBatch: "/edusport/sportClassTaskLeave/deleteBatch",
-          exportXlsUrl: "/edusport/sportClassTaskLeave/exportXls",
-          importExcelUrl: "edusport/sportClassTaskLeave/importExcel",
+          list: "/edusport/sportClassAthleteAttend/list",
+          delete: "/edusport/sportClassAthleteAttend/delete",
+          deleteBatch: "/edusport/sportClassAthleteAttend/deleteBatch",
+          exportXlsUrl: "/edusport/sportClassAthleteAttend/exportXls",
+          importExcelUrl: "edusport/sportClassAthleteAttend/importExcel",
         },
         dictOptions:{
+         attendStatus:[],
         },
       }
     },
@@ -216,14 +205,19 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class_task,task_name,id').then((res) => {
+        initDictOptions('tb_edu_sport_class,class_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'sportClassTaskId', res.result)
+            this.$set(this.dictOptions, 'sportClassId', res.result)
           }
         })
-        initDictOptions('tb_edu_student,student_name,student_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'studentNo', res.result)
+            this.$set(this.dictOptions, 'athleteNo', res.result)
+          }
+        })
+        initDictOptions('attend_status').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'attendStatus', res.result)
           }
         })
       }

@@ -5,22 +5,10 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="训练班主键id">
-              <a-input placeholder="请输入训练班主键id" v-model="queryParam.sportClassId"></a-input>
+            <a-form-item label="教练员代码">
+              <a-input placeholder="请输入教练员代码" v-model="queryParam.coachNo"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="获得等级">
-                <j-dict-select-tag placeholder="请选择获得等级" v-model="queryParam.athleteAwardTechGrade" dictCode="athlete_tech_grade"/>
-              </a-form-item>
-            </a-col>
-          </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
@@ -40,7 +28,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练班经历表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('教练员年度业务情况表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -111,27 +99,25 @@
       </a-table>
     </div>
 
-    <athleteSportClass-modal ref="modalForm" @ok="modalFormOk"></athleteSportClass-modal>
+    <coachPerformance-modal ref="modalForm" @ok="modalFormOk"></coachPerformance-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteSportClassModal from './modules/AthleteSportClassModal'
-  import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
+  import CoachPerformanceModal from './modules/CoachPerformanceModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "AthleteSportClassList",
+    name: "CoachPerformanceList",
     mixins:[JeecgListMixin],
     components: {
-      JDictSelectTag,
-      AthleteSportClassModal
+      CoachPerformanceModal
     },
     data () {
       return {
-        description: '运动员训练班经历表管理页面',
+        description: '教练员年度业务情况表管理页面',
         // 表头
         columns: [
           {
@@ -145,48 +131,36 @@
             }
           },
           {
-            title:'训练班主键id',
+            title:'教练员代码',
             align:"center",
-            dataIndex: 'sportClassId',
+            dataIndex: 'coachNo',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['sportClassId'], text+"")
+                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
               }
             }
           },
           {
-            title:'运动员学号',
+            title:'业务年度',
             align:"center",
-            dataIndex: 'athleteNo',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
-              }
-            }
+            dataIndex: 'performanceYear'
           },
           {
-            title:'参加日期',
+            title:'奖惩情况',
             align:"center",
-            dataIndex: 'attendDate',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
-            }
+            dataIndex: 'rewardsPunishments'
           },
           {
-            title:'获得等级',
+            title:'年度业务考核得分',
             align:"center",
-            dataIndex: 'athleteAwardTechGrade',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['athleteAwardTechGrade'], text+"")
-              }
-            }
+            dataIndex: 'appraisalScore'
+          },
+          {
+            title:'年度业务考核等级',
+            align:"center",
+            dataIndex: 'appraisalGrade'
           },
           {
             title: '操作',
@@ -196,14 +170,13 @@
           }
         ],
         url: {
-          list: "/edusport/athleteSportClass/list",
-          delete: "/edusport/athleteSportClass/delete",
-          deleteBatch: "/edusport/athleteSportClass/deleteBatch",
-          exportXlsUrl: "/edusport/athleteSportClass/exportXls",
-          importExcelUrl: "edusport/athleteSportClass/importExcel",
+          list: "/edusport/coachPerformance/list",
+          delete: "/edusport/coachPerformance/delete",
+          deleteBatch: "/edusport/coachPerformance/deleteBatch",
+          exportXlsUrl: "/edusport/coachPerformance/exportXls",
+          importExcelUrl: "edusport/coachPerformance/importExcel",
         },
         dictOptions:{
-         athleteAwardTechGrade:[],
         },
       }
     },
@@ -214,19 +187,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class,class_name,id').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'sportClassId', res.result)
-          }
-        })
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
-          }
-        })
-        initDictOptions('athlete_tech_grade').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'athleteAwardTechGrade', res.result)
+            this.$set(this.dictOptions, 'coachNo', res.result)
           }
         })
       }

@@ -5,22 +5,15 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="训练班主键id">
-              <a-input placeholder="请输入训练班主键id" v-model="queryParam.sportClassId"></a-input>
+            <a-form-item label="教练员代码">
+              <a-input placeholder="请输入教练员代码" v-model="queryParam.coachNo"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
+            <a-form-item label="姓名">
+              <a-input placeholder="请输入姓名" v-model="queryParam.coachName"></a-input>
             </a-form-item>
           </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="获得等级">
-                <j-dict-select-tag placeholder="请选择获得等级" v-model="queryParam.athleteAwardTechGrade" dictCode="athlete_tech_grade"/>
-              </a-form-item>
-            </a-col>
-          </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
@@ -40,7 +33,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练班经历表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('教练员信息表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -111,27 +104,25 @@
       </a-table>
     </div>
 
-    <athleteSportClass-modal ref="modalForm" @ok="modalFormOk"></athleteSportClass-modal>
+    <coach-modal ref="modalForm" @ok="modalFormOk"></coach-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteSportClassModal from './modules/AthleteSportClassModal'
-  import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
+  import CoachModal from './modules/CoachModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "AthleteSportClassList",
+    name: "CoachList",
     mixins:[JeecgListMixin],
     components: {
-      JDictSelectTag,
-      AthleteSportClassModal
+      CoachModal
     },
     data () {
       return {
-        description: '运动员训练班经历表管理页面',
+        description: '教练员信息表管理页面',
         // 表头
         columns: [
           {
@@ -145,48 +136,76 @@
             }
           },
           {
-            title:'训练班主键id',
+            title:'教练员代码',
             align:"center",
-            dataIndex: 'sportClassId',
+            dataIndex: 'coachNo'
+          },
+          {
+            title:'姓名',
+            align:"center",
+            dataIndex: 'coachName'
+          },
+          {
+            title:'性别',
+            align:"center",
+            dataIndex: 'gender',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['sportClassId'], text+"")
+                return filterMultiDictText(this.dictOptions['gender'], text+"")
               }
             }
           },
           {
-            title:'运动员学号',
+            title:'民族',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'nation',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['nation'], text+"")
               }
             }
           },
           {
-            title:'参加日期',
+            title:'出生日期',
             align:"center",
-            dataIndex: 'attendDate',
+            dataIndex: 'birthDate',
             customRender:function (text) {
               return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
           {
-            title:'获得等级',
+            title:'手机号码',
             align:"center",
-            dataIndex: 'athleteAwardTechGrade',
+            dataIndex: 'mobile'
+          },
+          {
+            title:'编制类型',
+            align:"center",
+            dataIndex: 'staffType',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteAwardTechGrade'], text+"")
+                return filterMultiDictText(this.dictOptions['staffType'], text+"")
               }
             }
+          },
+          {
+            title:'聘用日期',
+            align:"center",
+            dataIndex: 'hireDate',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
+            }
+          },
+          {
+            title:'聘用年限',
+            align:"center",
+            dataIndex: 'hireYears'
           },
           {
             title: '操作',
@@ -196,14 +215,16 @@
           }
         ],
         url: {
-          list: "/edusport/athleteSportClass/list",
-          delete: "/edusport/athleteSportClass/delete",
-          deleteBatch: "/edusport/athleteSportClass/deleteBatch",
-          exportXlsUrl: "/edusport/athleteSportClass/exportXls",
-          importExcelUrl: "edusport/athleteSportClass/importExcel",
+          list: "/edusport/coach/list",
+          delete: "/edusport/coach/delete",
+          deleteBatch: "/edusport/coach/deleteBatch",
+          exportXlsUrl: "/edusport/coach/exportXls",
+          importExcelUrl: "edusport/coach/importExcel",
         },
         dictOptions:{
-         athleteAwardTechGrade:[],
+         gender:[],
+         nation:[],
+         staffType:[],
         },
       }
     },
@@ -214,19 +235,19 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class,class_name,id').then((res) => {
+        initDictOptions('sex').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'sportClassId', res.result)
+            this.$set(this.dictOptions, 'gender', res.result)
           }
         })
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('nation').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'nation', res.result)
           }
         })
-        initDictOptions('athlete_tech_grade').then((res) => {
+        initDictOptions('staff_type').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteAwardTechGrade', res.result)
+            this.$set(this.dictOptions, 'staffType', res.result)
           }
         })
       }

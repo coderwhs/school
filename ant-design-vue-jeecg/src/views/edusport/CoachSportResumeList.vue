@@ -5,22 +5,10 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="训练班">
-              <a-input placeholder="请输入训练班" v-model="queryParam.sportClassId"></a-input>
+            <a-form-item label="教练员代码">
+              <a-input placeholder="请输入教练员代码" v-model="queryParam.coachNo"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="训练任务名称">
-              <a-input placeholder="请输入训练任务名称" v-model="queryParam.taskName"></a-input>
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="发布教练">
-                <a-input placeholder="请输入发布教练" v-model="queryParam.teacherNo"></a-input>
-              </a-form-item>
-            </a-col>
-          </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
@@ -40,7 +28,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动项目训练班训练计划信息')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('教练员运动经历信息表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -111,25 +99,25 @@
       </a-table>
     </div>
 
-    <sportClassTask-modal ref="modalForm" @ok="modalFormOk"></sportClassTask-modal>
+    <coachSportResume-modal ref="modalForm" @ok="modalFormOk"></coachSportResume-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportClassTaskModal from './modules/SportClassTaskModal'
+  import CoachSportResumeModal from './modules/CoachSportResumeModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "SportClassTaskList",
+    name: "CoachSportResumeList",
     mixins:[JeecgListMixin],
     components: {
-      SportClassTaskModal
+      CoachSportResumeModal
     },
     data () {
       return {
-        description: '运动项目训练班训练计划信息管理页面',
+        description: '教练员运动经历信息表管理页面',
         // 表头
         columns: [
           {
@@ -143,48 +131,46 @@
             }
           },
           {
-            title:'训练班',
+            title:'教练员代码',
             align:"center",
-            dataIndex: 'sportClassId',
+            dataIndex: 'coachNo',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['sportClassId'], text+"")
+                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
               }
             }
           },
           {
-            title:'训练任务名称',
+            title:'运动项目',
             align:"center",
-            dataIndex: 'taskName'
-          },
-          {
-            title:'发布教练',
-            align:"center",
-            dataIndex: 'teacherNo',
+            dataIndex: 'sportName',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['teacherNo'], text+"")
+                return filterMultiDictText(this.dictOptions['sportName'], text+"")
               }
             }
           },
           {
-            title:'开始日期',
+            title:'参加时间',
             align:"center",
-            dataIndex: 'taskStartDate'
+            dataIndex: 'attendDate',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
+            }
           },
           {
-            title:'结束日期',
+            title:'获得最高等级',
             align:"center",
-            dataIndex: 'taskEndDate'
+            dataIndex: 'awardedHighestGrade'
           },
           {
-            title:'训练内容',
+            title:'获得年度(年)',
             align:"center",
-            dataIndex: 'taskContent'
+            dataIndex: 'awardedDate'
           },
           {
             title: '操作',
@@ -194,11 +180,11 @@
           }
         ],
         url: {
-          list: "/edusport/sportClassTask/list",
-          delete: "/edusport/sportClassTask/delete",
-          deleteBatch: "/edusport/sportClassTask/deleteBatch",
-          exportXlsUrl: "/edusport/sportClassTask/exportXls",
-          importExcelUrl: "edusport/sportClassTask/importExcel",
+          list: "/edusport/coachSportResume/list",
+          delete: "/edusport/coachSportResume/delete",
+          deleteBatch: "/edusport/coachSportResume/deleteBatch",
+          exportXlsUrl: "/edusport/coachSportResume/exportXls",
+          importExcelUrl: "edusport/coachSportResume/importExcel",
         },
         dictOptions:{
         },
@@ -211,14 +197,14 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class,class_name,id').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'sportClassId', res.result)
+            this.$set(this.dictOptions, 'coachNo', res.result)
           }
         })
-        initDictOptions('tb_edu_teacher,teacher_name,teacher_no').then((res) => {
+        initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'teacherNo', res.result)
+            this.$set(this.dictOptions, 'sportName', res.result)
           }
         })
       }

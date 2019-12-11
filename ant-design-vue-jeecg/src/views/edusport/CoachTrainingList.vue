@@ -5,13 +5,8 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="教师代码">
-              <a-input placeholder="请输入教师代码" v-model="queryParam.teacherNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="教师姓名">
-              <a-input placeholder="请输入教师姓名" v-model="queryParam.teacherName"></a-input>
+            <a-form-item label="教练员代码">
+              <a-input placeholder="请输入教练员代码" v-model="queryParam.coachNo"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8" >
@@ -33,7 +28,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('教练员信息')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('教练员学习培训信息表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -104,25 +99,25 @@
       </a-table>
     </div>
 
-    <teacher-modal ref="modalForm" @ok="modalFormOk"></teacher-modal>
+    <coachTraining-modal ref="modalForm" @ok="modalFormOk"></coachTraining-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import TeacherModal from './modules/TeacherModal'
+  import CoachTrainingModal from './modules/CoachTrainingModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "TeacherList",
+    name: "CoachTrainingList",
     mixins:[JeecgListMixin],
     components: {
-      TeacherModal
+      CoachTrainingModal
     },
     data () {
       return {
-        description: '教练员信息管理页面',
+        description: '教练员学习培训信息表管理页面',
         // 表头
         columns: [
           {
@@ -136,68 +131,47 @@
             }
           },
           {
-            title:'教师代码',
+            title:'教练员代码',
             align:"center",
-            dataIndex: 'teacherNo'
-          },
-          {
-            title:'教师姓名',
-            align:"center",
-            dataIndex: 'teacherName'
-          },
-          {
-            title:'性别',
-            align:"center",
-            dataIndex: 'gender',
+            dataIndex: 'coachNo',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['gender'], text+"")
+                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
               }
             }
           },
           {
-            title:'出生日期',
+            title:'开始日期',
             align:"center",
-            dataIndex: 'birthDate',
+            dataIndex: 'startDate',
             customRender:function (text) {
               return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
           {
-            title:'民族',
+            title:'结束日期',
             align:"center",
-            dataIndex: 'nation',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['nation'], text+"")
-              }
+            dataIndex: 'endDate',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
           {
-            title:'手机号码',
+            title:'培训地点',
             align:"center",
-            dataIndex: 'mobile'
+            dataIndex: 'trainingPlace'
           },
           {
-            title:'职称',
+            title:'培训名称',
             align:"center",
-            dataIndex: 'title',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['title'], text+"")
-              }
-            }
+            dataIndex: 'trainingCourse'
           },
           {
-            title:'职务',
+            title:'主办单位',
             align:"center",
-            dataIndex: 'duty'
+            dataIndex: 'organizer'
           },
           {
             title: '操作',
@@ -207,16 +181,13 @@
           }
         ],
         url: {
-          list: "/edusport/teacher/list",
-          delete: "/edusport/teacher/delete",
-          deleteBatch: "/edusport/teacher/deleteBatch",
-          exportXlsUrl: "/edusport/teacher/exportXls",
-          importExcelUrl: "edusport/teacher/importExcel",
+          list: "/edusport/coachTraining/list",
+          delete: "/edusport/coachTraining/delete",
+          deleteBatch: "/edusport/coachTraining/deleteBatch",
+          exportXlsUrl: "/edusport/coachTraining/exportXls",
+          importExcelUrl: "edusport/coachTraining/importExcel",
         },
         dictOptions:{
-         gender:[],
-         nation:[],
-         title:[],
         },
       }
     },
@@ -227,19 +198,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('sex').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'gender', res.result)
-          }
-        })
-        initDictOptions('nation').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'nation', res.result)
-          }
-        })
-        initDictOptions('sports_coache_title').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'title', res.result)
+            this.$set(this.dictOptions, 'coachNo', res.result)
           }
         })
       }

@@ -14,13 +14,6 @@
               <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
             </a-form-item>
           </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="获得等级">
-                <j-dict-select-tag placeholder="请选择获得等级" v-model="queryParam.athleteAwardTechGrade" dictCode="athlete_tech_grade"/>
-              </a-form-item>
-            </a-col>
-          </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
@@ -40,7 +33,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练班经历表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练请假表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -111,27 +104,25 @@
       </a-table>
     </div>
 
-    <athleteSportClass-modal ref="modalForm" @ok="modalFormOk"></athleteSportClass-modal>
+    <sportClassAthleteLeave-modal ref="modalForm" @ok="modalFormOk"></sportClassAthleteLeave-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteSportClassModal from './modules/AthleteSportClassModal'
-  import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
+  import SportClassAthleteLeaveModal from './modules/SportClassAthleteLeaveModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "AthleteSportClassList",
+    name: "SportClassAthleteLeaveList",
     mixins:[JeecgListMixin],
     components: {
-      JDictSelectTag,
-      AthleteSportClassModal
+      SportClassAthleteLeaveModal
     },
     data () {
       return {
-        description: '运动员训练班经历表管理页面',
+        description: '运动员训练请假表管理页面',
         // 表头
         columns: [
           {
@@ -169,24 +160,25 @@
             }
           },
           {
-            title:'参加日期',
+            title:'开始日期',
             align:"center",
-            dataIndex: 'attendDate',
+            dataIndex: 'startDate',
             customRender:function (text) {
               return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
           {
-            title:'获得等级',
+            title:'结束日期',
             align:"center",
-            dataIndex: 'athleteAwardTechGrade',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['athleteAwardTechGrade'], text+"")
-              }
+            dataIndex: 'endDate',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
             }
+          },
+          {
+            title:'请假原因',
+            align:"center",
+            dataIndex: 'leaveCause'
           },
           {
             title: '操作',
@@ -196,14 +188,13 @@
           }
         ],
         url: {
-          list: "/edusport/athleteSportClass/list",
-          delete: "/edusport/athleteSportClass/delete",
-          deleteBatch: "/edusport/athleteSportClass/deleteBatch",
-          exportXlsUrl: "/edusport/athleteSportClass/exportXls",
-          importExcelUrl: "edusport/athleteSportClass/importExcel",
+          list: "/edusport/sportClassAthleteLeave/list",
+          delete: "/edusport/sportClassAthleteLeave/delete",
+          deleteBatch: "/edusport/sportClassAthleteLeave/deleteBatch",
+          exportXlsUrl: "/edusport/sportClassAthleteLeave/exportXls",
+          importExcelUrl: "edusport/sportClassAthleteLeave/importExcel",
         },
         dictOptions:{
-         athleteAwardTechGrade:[],
         },
       }
     },
@@ -222,11 +213,6 @@
         initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'athleteNo', res.result)
-          }
-        })
-        initDictOptions('athlete_tech_grade').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'athleteAwardTechGrade', res.result)
           }
         })
       }

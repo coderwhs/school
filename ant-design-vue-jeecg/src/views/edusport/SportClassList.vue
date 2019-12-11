@@ -10,19 +10,14 @@
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="教练员">
-              <a-input placeholder="请输入教练员" v-model="queryParam.coachNo"></a-input>
+            <a-form-item label="教练员代码">
+              <a-input placeholder="请输入教练员代码" v-model="queryParam.coachNo"></a-input>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
-              <a-form-item label="运动项目">
-                <a-input placeholder="请输入运动项目" v-model="queryParam.sportCode"></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="8">
-              <a-form-item label="训练年度">
-                <a-input placeholder="请输入训练年度" v-model="queryParam.trainingYear"></a-input>
+              <a-form-item label="运动项目代码">
+                <a-input placeholder="请输入运动项目代码" v-model="queryParam.sportCode"></a-input>
               </a-form-item>
             </a-col>
           </template>
@@ -45,7 +40,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动项目训练班信息')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('运动项目训练班表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -134,7 +129,7 @@
     },
     data () {
       return {
-        description: '运动项目训练班信息管理页面',
+        description: '运动项目训练班表管理页面',
         // 表头
         columns: [
           {
@@ -153,7 +148,7 @@
             dataIndex: 'className'
           },
           {
-            title:'教练员',
+            title:'教练员代码',
             align:"center",
             dataIndex: 'coachNo',
             customRender:(text)=>{
@@ -165,7 +160,7 @@
             }
           },
           {
-            title:'运动项目',
+            title:'运动项目代码',
             align:"center",
             dataIndex: 'sportCode',
             customRender:(text)=>{
@@ -182,9 +177,16 @@
             dataIndex: 'trainingYear'
           },
           {
-            title:'训练阶段',
+            title:'训练形式',
             align:"center",
-            dataIndex: 'trainingStage'
+            dataIndex: 'trainingType',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['trainingType'], text+"")
+              }
+            }
           },
           {
             title:'开始日期',
@@ -217,6 +219,7 @@
           importExcelUrl: "edusport/sportClass/importExcel",
         },
         dictOptions:{
+         trainingType:[],
         },
       }
     },
@@ -227,7 +230,7 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_teacher,teacher_name,teacher_name').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'coachNo', res.result)
           }
@@ -235,6 +238,11 @@
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'sportCode', res.result)
+          }
+        })
+        initDictOptions('training_type').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'trainingType', res.result)
           }
         })
       }

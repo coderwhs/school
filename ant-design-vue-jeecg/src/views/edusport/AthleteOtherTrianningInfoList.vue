@@ -5,22 +5,10 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="学号">
-              <a-input placeholder="请输入学号" v-model="queryParam.studentNo"></a-input>
+            <a-form-item label="运动员学号">
+              <j-dict-select-tag placeholder="请选择运动员学号" v-model="queryParam.athleteNo" dictCode="tb_edu_athlete,athlete_name,athlete_no"/>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="姓名">
-              <a-input placeholder="请输入姓名" v-model="queryParam.studentName"></a-input>
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="学籍状态">
-                <j-dict-select-tag placeholder="请选择学籍状态" v-model="queryParam.studentStatus" dictCode="student_status"/>
-              </a-form-item>
-            </a-col>
-          </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
@@ -40,7 +28,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员信息')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练其他事项记录信息表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -111,27 +99,27 @@
       </a-table>
     </div>
 
-    <student-modal ref="modalForm" @ok="modalFormOk"></student-modal>
+    <athleteOtherTrianningInfo-modal ref="modalForm" @ok="modalFormOk"></athleteOtherTrianningInfo-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import StudentModal from './modules/StudentModal'
+  import AthleteOtherTrianningInfoModal from './modules/AthleteOtherTrianningInfoModal'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "StudentList",
+    name: "AthleteOtherTrianningInfoList",
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
-      StudentModal
+      AthleteOtherTrianningInfoModal
     },
     data () {
       return {
-        description: '运动员信息管理页面',
+        description: '运动员训练其他事项记录信息表管理页面',
         // 表头
         columns: [
           {
@@ -145,73 +133,29 @@
             }
           },
           {
-            title:'学号',
+            title:'运动员学号',
             align:"center",
-            dataIndex: 'studentNo'
-          },
-          {
-            title:'姓名',
-            align:"center",
-            dataIndex: 'studentName'
-          },
-          {
-            title:'性别',
-            align:"center",
-            dataIndex: 'gender',
+            dataIndex: 'athleteNo',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['gender'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
               }
             }
           },
           {
-            title:'出生日期',
+            title:'记录时间',
             align:"center",
-            dataIndex: 'birthDate',
+            dataIndex: 'recordDate',
             customRender:function (text) {
               return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
           {
-            title:'民族',
+            title:'内容',
             align:"center",
-            dataIndex: 'nation',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['nation'], text+"")
-              }
-            }
-          },
-          {
-            title:'学籍状态',
-            align:"center",
-            dataIndex: 'studentStatus',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['studentStatus'], text+"")
-              }
-            }
-          },
-          {
-            title:'骨龄',
-            align:"center",
-            dataIndex: 'boneAge'
-          },
-          {
-            title:'身高',
-            align:"center",
-            dataIndex: 'studentHeight'
-          },
-          {
-            title:'体重',
-            align:"center",
-            dataIndex: 'studentWeight'
+            dataIndex: 'content'
           },
           {
             title: '操作',
@@ -221,16 +165,14 @@
           }
         ],
         url: {
-          list: "/edusport/student/list",
-          delete: "/edusport/student/delete",
-          deleteBatch: "/edusport/student/deleteBatch",
-          exportXlsUrl: "/edusport/student/exportXls",
-          importExcelUrl: "edusport/student/importExcel",
+          list: "/edusport/athleteOtherTrianningInfo/list",
+          delete: "/edusport/athleteOtherTrianningInfo/delete",
+          deleteBatch: "/edusport/athleteOtherTrianningInfo/deleteBatch",
+          exportXlsUrl: "/edusport/athleteOtherTrianningInfo/exportXls",
+          importExcelUrl: "edusport/athleteOtherTrianningInfo/importExcel",
         },
         dictOptions:{
-         gender:[],
-         nation:[],
-         studentStatus:[],
+         athleteNo:[],
         },
       }
     },
@@ -241,19 +183,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('sex').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'gender', res.result)
-          }
-        })
-        initDictOptions('nation').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'nation', res.result)
-          }
-        })
-        initDictOptions('student_status').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'studentStatus', res.result)
+            this.$set(this.dictOptions, 'athleteNo', res.result)
           }
         })
       }
