@@ -10,32 +10,17 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练队名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'className', validatorRules.className]" placeholder="请输入训练队名称"></a-input>
+        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-dict-select-tag type="list" v-decorator="['athleteNo']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
         </a-form-item>
-        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'coachNo', validatorRules.coachNo]" placeholder="请输入教练员"></a-input>
-        </a-form-item>
-        <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportCode', validatorRules.sportCode]" placeholder="请输入运动项目"></a-input>
-        </a-form-item>
-        <a-form-item label="训练形式" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['trainingType']" :trigger-change="true" dictCode="training_type" placeholder="请选择训练形式"/>
-        </a-form-item>
-        <a-form-item label="训练年度" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'trainingYear', validatorRules.trainingYear]" placeholder="请输入训练年度" style="width: 100%"/>
+        <a-form-item label="请假原因" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'leaveCause', validatorRules.leaveCause]" placeholder="请输入请假原因"></a-input>
         </a-form-item>
         <a-form-item label="开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="结束日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择结束日期" v-decorator="[ 'endDate', validatorRules.endDate]" :trigger-change="true" style="width: 100%"/>
-        </a-form-item>
-        <a-form-item label="训练地点" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'trainingAddress', validatorRules.trainingAddress]" placeholder="请输入训练地点"></a-input>
-        </a-form-item>
-        <a-form-item label="训练任务" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['trainingContent']" rows="4" placeholder="请输入训练任务"/>
         </a-form-item>
         
       </a-form>
@@ -53,7 +38,7 @@
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
   
   export default {
-    name: "SportClassModal",
+    name: "DormAthleteLeaveModal",
     components: { 
       JDate,
       JDictSelectTag,
@@ -76,19 +61,14 @@
 
         confirmLoading: false,
         validatorRules:{
-        className:{rules: [{ required: true, message: '请输入训练队名称!' }]},
-        coachNo:{rules: [{ required: true, message: '请输入教练员!' }]},
-        sportCode:{rules: [{ required: true, message: '请输入运动项目!' }]},
-        trainingType:{rules: [{ required: true, message: '请输入训练形式!' }]},
-        trainingYear:{rules: [{ required: true, message: '请输入训练年度!' }]},
-        startDate:{},
+        athleteNo:{rules: [{ required: true, message: '请输入运动员!' }]},
+        leaveCause:{rules: [{ required: true, message: '请输入请假原因!' }]},
+        startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
         endDate:{},
-        trainingAddress:{rules: [{ required: true, message: '请输入训练地点!' }]},
-        trainingContent:{rules: [{ required: true, message: '请输入训练任务!' }]},
         },
         url: {
-          add: "/edusport/sportClass/add",
-          edit: "/edusport/sportClass/edit",
+          add: "/edusport/dormAthleteLeave/add",
+          edit: "/edusport/dormAthleteLeave/edit",
         }
      
       }
@@ -104,7 +84,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'className','coachNo','sportCode','trainingType','trainingYear','startDate','endDate','trainingAddress','trainingContent'))
+          this.form.setFieldsValue(pick(this.model,'athleteNo','leaveCause','startDate','endDate'))
         })
       },
       close () {
@@ -147,7 +127,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'className','coachNo','sportCode','trainingType','trainingYear','startDate','endDate','trainingAddress','trainingContent'))
+        this.form.setFieldsValue(pick(row,'athleteNo','leaveCause','startDate','endDate'))
       }
       
     }

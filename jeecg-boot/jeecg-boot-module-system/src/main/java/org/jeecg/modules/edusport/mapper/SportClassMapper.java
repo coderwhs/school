@@ -7,9 +7,9 @@ import org.jeecg.modules.edusport.entity.SportClass;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * @Description: 运动项目训练班表
+ * @Description: 训练队表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-12
  * @Version: V1.0
  */
 public interface SportClassMapper extends BaseMapper<SportClass> {

@@ -10,11 +10,11 @@
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="宿舍房间号">
-              <a-input placeholder="请输入宿舍房间号" v-model="queryParam.dormNo"></a-input>
+            <a-form-item label="房间号">
+              <a-input placeholder="请输入房间号" v-model="queryParam.dormNo"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="8">
+          <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
@@ -57,12 +57,16 @@
         size="middle"
         bordered
         rowKey="id"
+        filterMultiple="filterMultiple"
         :columns="columns"
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        @change="handleTableChange">
+        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:type}"
+        :scroll="tableScroll"
+        @change="handleTableChange"
+        :customRow="clickThenCheck"
+      >
 
         <template slot="htmlSlot" slot-scope="text">
           <div v-html="text"></div>
@@ -103,6 +107,15 @@
       </a-table>
     </div>
 
+    <a-tabs defaultActiveKey="1">
+      <a-tab-pane tab="运动员入住名单" key="1">
+        <Dorm-Athlete-Living-List ref="DormAthleteLivingList"></Dorm-Athlete-Living-List>
+      </a-tab-pane>
+      <a-tab-pane tab="运动员请假" key="2" forceRender>
+        <Dorm-Athlete-LeaveList ref="DormAthleteLeaveList"></Dorm-Athlete-LeaveList>
+      </a-tab-pane>
+    </a-tabs>
+
     <dorm-modal ref="modalForm" @ok="modalFormOk"></dorm-modal>
   </a-card>
 </template>
@@ -111,16 +124,36 @@
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import DormModal from './modules/DormModal'
+  import DormAthleteLivingList from './DormAthleteLivingList'
+  import DormAthleteLeaveList from './DormAthleteLeaveList'
+  import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal'
+  import DormAthleteLivingModal from './modules/DormAthleteLivingModal'
 
   export default {
     name: "DormList",
     mixins:[JeecgListMixin],
     components: {
-      DormModal
+      DormModal,
+      DormAthleteLivingList,
+      DormAthleteLeaveList,
+      DormAthleteLeaveModal,
+      DormAthleteLivingModal
     },
     data () {
       return {
         description: '宿舍信息表管理页面',
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
         // 表头
         columns: [
           {
@@ -139,7 +172,7 @@
             dataIndex: 'dormBuildingName'
           },
           {
-            title:'宿舍房间号',
+            title:'房间号',
             align:"center",
             dataIndex: 'dormNo'
           },
@@ -154,12 +187,7 @@
             dataIndex: 'dormTel'
           },
           {
-            title:'宿舍地址',
-            align:"center",
-            dataIndex: 'dormAddress'
-          },
-          {
-            title:'宿舍管理员',
+            title:'管理员',
             align:"center",
             dataIndex: 'dormAdmin'
           },
@@ -169,12 +197,21 @@
             dataIndex: 'dormAdminTel'
           },
           {
+            title:'地址',
+            align:"center",
+            dataIndex: 'dormAddress'
+          },
+          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            scopedSlots: { customRender: 'action' },
+            fixed:"right",
+            width:147,
+            scopedSlots: { customRender: 'action' }
           }
         ],
+        // 分页参数
+        type: "radio",
         url: {
           list: "/edusport/dorm/list",
           delete: "/edusport/dorm/delete",
@@ -184,7 +221,7 @@
         },
         dictOptions:{
         },
-
+        tableScroll:{x :7*147+50}
       }
     },
     computed: {
@@ -194,6 +231,61 @@
     },
     methods: {
       initDictConfig(){
+      },
+      clickThenCheck(record) {
+        return {
+          on: {
+            click: () => {
+              this.onSelectChange(record.id.split(","), [record]);
+            }
+          }
+        };
+      },
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectionRows = selectionRows;
+        this.$refs.DormAthleteLivingList.getDorm(this.selectedRowKeys[0]);
+        console.log("DormList的选择行数据：",this.selectedRowKeys[0]);
+        this.$refs.DormAthleteLeaveList.getDorm(this.selectedRowKeys[0]);
+      },
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+        this.$refs.DormAthleteLivingList.queryParam.mainId = null;
+        this.$refs.DormAthleteLeaveList.queryParam.mainId = null;
+        this.$refs.DormAthleteLivingList.loadData();
+        this.$refs.DormAthleteLeaveList.loadData();
+        this.$refs.DormAthleteLivingList.selectedRowKeys = [];
+        this.$refs.DormAthleteLivingList.selectionRows = [];
+        this.$refs.DormAthleteLeaveList.selectedRowKeys = [];
+        this.$refs.DormAthleteLeaveList.selectionRows = [];
+      },
+
+      handleDelete: function (id) {
+        var that = this;
+        deleteAction(that.url.delete, {id: id}).then((res) => {
+          if (res.success) {
+            that.$message.success(res.message);
+            that.loadData();
+            this.$refs.DormAthleteLivingList.loadData();
+            this.$refs.DormAthleteLeaveList.loadData();
+          } else {
+            that.$message.warning(res.message);
+          }
+        });
+      },
+      searchQuery:function(){
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+        this.$refs.DormAthleteLivingList.queryParam.mainId = null;
+        this.$refs.DormAthleteLeaveList.queryParam.mainId = null;
+        this.$refs.DormAthleteLivingList.loadData();
+        this.$refs.DormAthleteLeaveList.loadData();
+        this.$refs.DormAthleteLivingList.selectedRowKeys = [];
+        this.$refs.DormAthleteLivingList.selectionRows = [];
+        this.$refs.DormAthleteLeaveList.selectedRowKeys = [];
+        this.$refs.DormAthleteLeaveList.selectionRows = [];
+        this.loadData();
       }
        
     }

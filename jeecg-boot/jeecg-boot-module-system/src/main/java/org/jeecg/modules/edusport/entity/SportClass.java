@@ -14,9 +14,9 @@ import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecg.common.aspect.annotation.Dict;
 
 /**
- * @Description: 运动项目训练班表
+ * @Description: 训练队表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-12
  * @Version: V1.0
  */
 @Data
@@ -27,30 +27,24 @@ public class SportClass implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**训练班名称*/
-	@Excel(name = "训练班名称", width = 15)
+	/**训练队名称*/
+	@Excel(name = "训练队名称", width = 15)
     private java.lang.String className;
-	/**教练员代码*/
-	@Excel(name = "教练员代码", width = 15)
+	/**教练员*/
+	@Excel(name = "教练员", width = 15)
     private java.lang.String coachNo;
-	/**教练员姓名*/
-	@Excel(name = "教练员姓名", width = 15)
-    private java.lang.String coachName;
-	/**运动项目代码*/
-	@Excel(name = "运动项目代码", width = 15)
+	/**运动项目*/
+	@Excel(name = "运动项目", width = 15)
     private java.lang.String sportCode;
-	/**运动项目名称*/
-	@Excel(name = "运动项目名称", width = 15)
-    private java.lang.String sportName;
-	/**训练年度*/
-	@Excel(name = "训练年度", width = 15)
-    private java.lang.Integer trainingYear;
 	/**训练阶段*/
 	@Excel(name = "训练阶段", width = 15)
     private java.lang.String trainingStage;
 	/**训练形式*/
 	@Excel(name = "训练形式", width = 15)
     private java.lang.String trainingType;
+	/**训练年度*/
+	@Excel(name = "训练年度", width = 15)
+    private java.lang.Integer trainingYear;
 	/**开始日期*/
 	@Excel(name = "开始日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
@@ -64,8 +58,8 @@ public class SportClass implements Serializable {
 	/**训练地点*/
 	@Excel(name = "训练地点", width = 15)
     private java.lang.String trainingAddress;
-	/**主要训练任务*/
-	@Excel(name = "主要训练任务", width = 15)
+	/**训练任务*/
+	@Excel(name = "训练任务", width = 15)
     private java.lang.String trainingContent;
 	/**备注*/
 	@Excel(name = "备注", width = 15)

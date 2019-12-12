@@ -4,33 +4,6 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="训练队名称">
-              <a-input placeholder="请输入训练队名称" v-model="queryParam.className"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="教练员">
-              <a-input placeholder="请输入教练员" v-model="queryParam.coachNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="运动项目">
-                <a-input placeholder="请输入运动项目" v-model="queryParam.sportCode"></a-input>
-              </a-form-item>
-            </a-col>
-          </template>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
 
         </a-row>
       </a-form>
@@ -40,7 +13,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('训练队表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('宿舍运动员请假表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -111,25 +84,26 @@
       </a-table>
     </div>
 
-    <sportClass-modal ref="modalForm" @ok="modalFormOk"></sportClass-modal>
+    <dormAthleteLeave-modal ref="modalForm" @ok="modalFormOk"></dormAthleteLeave-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportClassModal from './modules/SportClassModal'
+  import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import {getAction} from '@/api/manage'
 
   export default {
-    name: "SportClassList",
+    name: "DormAthleteLeaveList",
     mixins:[JeecgListMixin],
     components: {
-      SportClassModal
+      DormAthleteLeaveModal
     },
     data () {
       return {
-        description: '训练队表管理页面',
+        description: '宿舍运动员请假表管理页面',
         // 表头
         columns: [
           {
@@ -143,50 +117,21 @@
             }
           },
           {
-            title:'训练队名称',
+            title:'运动员',
             align:"center",
-            dataIndex: 'className'
-          },
-          {
-            title:'教练员',
-            align:"center",
-            dataIndex: 'coachNo',
+            dataIndex: 'athleteNo',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
               }
             }
           },
           {
-            title:'运动项目',
+            title:'请假原因',
             align:"center",
-            dataIndex: 'sportCode',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['sportCode'], text+"")
-              }
-            }
-          },
-          {
-            title:'训练形式',
-            align:"center",
-            dataIndex: 'trainingType',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['trainingType'], text+"")
-              }
-            }
-          },
-          {
-            title:'训练年度',
-            align:"center",
-            dataIndex: 'trainingYear'
+            dataIndex: 'leaveCause'
           },
           {
             title:'开始日期',
@@ -212,14 +157,14 @@
           }
         ],
         url: {
-          list: "/edusport/sportClass/list",
-          delete: "/edusport/sportClass/delete",
-          deleteBatch: "/edusport/sportClass/deleteBatch",
-          exportXlsUrl: "/edusport/sportClass/exportXls",
-          importExcelUrl: "edusport/sportClass/importExcel",
+          list: "/edusport/dormAthleteLeave/list",
+          delete: "/edusport/dormAthleteLeave/delete",
+          deleteBatch: "/edusport/dormAthleteLeave/deleteBatch",
+          exportXlsUrl: "/edusport/dormAthleteLeave/exportXls",
+          importExcelUrl: "edusport/dormAthleteLeave/importExcel",
         },
         dictOptions:{
-         trainingType:[],
+         athleteNo:[],
         },
       }
     },
@@ -230,23 +175,38 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'coachNo', res.result)
+            this.$set(this.dictOptions, 'athleteNo', res.result)
           }
         })
-        initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
+      },
+      loadData(arg) {
+        if (arg === 1) {
+          this.ipagination.current = 1;
+        }
+        //update-begin--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
+        var params = this.getQueryParams();
+        getAction(this.url.list, {dormId: params.mainId, pageNo : this.ipagination.current,
+          pageSize :this.ipagination.pageSize}).then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'sportCode', res.result)
+            this.dataSource = res.result.records;
+            this.ipagination.total = res.result.total;
+          } else {
+            this.dataSource = null;
           }
         })
-        initDictOptions('training_type').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'trainingType', res.result)
-          }
-        })
-      }
-       
+        //update-end--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
+
+      },
+      getDorm(dormId) {
+        this.queryParam.mainId = dormId;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.mainId);
+        this.$refs.modalForm.title = "添加请假运动员信息";
+      },
     }
   }
 </script>

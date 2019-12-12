@@ -1,12 +1,12 @@
 <template>
-  <a-modal
+  <a-drawer
     :title="title"
     :width="width"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭">
+    placement="right"
+    :closable="false"
+    @close="close"
+    :visible="visible">
+  
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
@@ -31,17 +31,19 @@
         <a-form-item label="地址" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'dormAddress', validatorRules.dormAddress]" placeholder="请输入地址"></a-input>
         </a-form-item>
-
+        
       </a-form>
     </a-spin>
-  </a-modal>
+    <a-button type="primary" @click="handleOk">确定</a-button>
+    <a-button type="primary" @click="handleCancel">取消</a-button>
+  </a-drawer>
 </template>
 
 <script>
 
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
-
+  
   export default {
     name: "DormModal",
     components: { 
@@ -134,9 +136,17 @@
       },
       popupCallback(row){
         this.form.setFieldsValue(pick(row,'dormBuildingName','dormNo','bedNum','dormTel','dormAdmin','dormAdminTel','dormAddress'))
-      },
-
+      }
       
     }
   }
 </script>
+
+<style lang="less" scoped>
+/** Button按钮间距 */
+  .ant-btn {
+    margin-left: 30px;
+    margin-bottom: 30px;
+    float: right;
+  }
+</style>
