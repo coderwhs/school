@@ -87,6 +87,7 @@
               <j-editor v-decorator="['athleteNews',{trigger:'input'}]"/>
             </a-form-item>
           </a-col>
+          <a-col></a-col>
         </a-row>
       </a-form>
     </a-spin>
