@@ -31,31 +31,50 @@
 
 运动员管理
 	运动员名单: /edusport/athlete, edusport/AthleteList，是否路由菜单（是）
-		运动员训练经历: /edusport/athlete/sport/class, edusport/AthleteSportClassList
 		运动员参赛记录: /edusport/athlete/contest, edusport/AthleteContestList
 		运动员测试记录: /edusport/athlete/sport/class/score, edusport/AthleteSportScoreList
-		带训教练员评价: /edusport/athlete/coach/evaluation, edusport/AthleteCoachEvaluation
-		其他训练事项记录: /edusport/athlete/other/trianning/info, edusport/AthleteOtherTrianningInfo
+		其他训练事项记录: /edusport/athlete/other/trianning/info, edusport/AthleteOtherTrianningInfoList
 		运动员输送记录: /edusport/athlete/transport, edusport/AthleteTransportList
-		运动员文化成绩: /edusport/athlete/literacy/score, edusport/AthleteLiteracyScore
+	训练队成员: /edusport/athlete/sport/class, edusport/AthleteSportClassList
+		带训教练员评价: /edusport/athlete/coach/evaluation, edusport/AthleteCoachEvaluationList
+	运动员文化成绩: /edusport/athlete/literacy/score, edusport/AthleteLiteracyScoreList
 
 教练员管理
-	教练员名单: /edusport/coach, edusport/TeacherList
-	
+	教练员名单: /edusport/coach, edusport/CoachList
+		教练员个人简历: /edusport/coach/edu/resume, edusport/CoachEduResumeList
+		教练员个人运动经历: /edusport/coach/sport/resume, edusport/CoachSportResumeList
+		教练员学习培训经历: /edusport/coach/training, edusport/CoachTrainingList
+		教练员论文发表: /edusport/coach/paper, edusport/CoachPaperList
+	教练员年度业务记录: /edusport/coach/performance, edusport/CoachPerformanceList
 	
 训练管理
 	运动项目: /edusport/sport, edusport/SportList
-	训练班: /edusport/sport/class, edusport/SportClassList
-	训练计划: /edusport/sport/class/task, edusport/SportClassTaskList
+	训练场馆: /edusport/sport/venue, edusport/SportVenueList
+	训练器械: /edusport/sport/equipment, edusport/SportEquipmentList
+	训练队: /edusport/sport/class, edusport/SportClassList
+		训练考勤: /edusport/sport/class/athlete/attend, edusport/SportClassAthleteAttendList
+		训练请假: /edusport/sport/class/athlete/leave, edusport/SportClassAthleteLeaveList
+
+	年度训练计划: /edusport/sport/class/year/plan, edusport/SportClassYearPlanList
+		运动员年度成绩目标: /edusport/sport/class/athlete/year/goal, edusport/SportClassAthleteYearGoalList
+		年度工作总结: /edusport/sport/class/year/summary, edusport/SportClassYearSummaryList
+	夏训计划: /edusport/sport/class/summer/plan, edusport/SportClassSummerPlanList
+	冬训计划: /edusport/sport/class/winter/plan, edusport/SportClassWinterPlanList
+	周训练计划: /edusport/sport/class/week/plan, edusport/SportClassWeekPlanList
+	课训练计划: /edusport/sport/class/course/plan, edusport/SportClassCoursePlanList
 	训练视频: /edusport/sport/class/video, modules/oss/OSSFileList
-	训练考勤: /edusport/sport/class/task/attend, edusport/SportClassTaskAttendList
-	训练请假: /edusport/sport/class/task/leave, edusport/SportClassTaskLeaveList
 	
 宿舍管理
 	宿舍列表: /edusport/dorm, edusport/DormList
-		宿舍入住名单: /edusport/dorm/student/checkin, 
-		宿舍人员请假: /edusport/dorm/student/leave, 
+		宿舍入住名单: /edusport/dorm/athlete/living, edusport/DormList
+		宿舍人员请假: /edusport/dorm/athlete/leave, edusport/DormList
 
+
+国民体质检测报告
+	富文本内容管理(http://jxstykys.com/news/20171122/n61351115.html)
+大纲测试管理
+基地评定（待定）
+办公管理
 
 		
 		

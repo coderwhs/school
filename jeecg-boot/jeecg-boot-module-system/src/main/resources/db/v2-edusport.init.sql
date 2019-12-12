@@ -107,7 +107,7 @@ CREATE TABLE tb_edu_athlete_sport_class(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
     sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
     athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员学号' ,
-    attend_date DATE    COMMENT '参加日期' ,
+    attend_date DATE    COMMENT '入队日期' ,
     athlete_best_score VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '比赛最好成绩' ,
     athlete_award_tech_grade VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '获得等级' ,
     about_break_record VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '破纪录状况' ,
@@ -117,7 +117,7 @@ CREATE TABLE tb_edu_athlete_sport_class(
     update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
     update_time DATETIME    COMMENT '更新时间' ,
     PRIMARY KEY (id)
-) COMMENT = '运动员训练班经历表 ';;
+) COMMENT = '训练队成员表（运动员训练班经历） ';;
 
 
 
@@ -495,7 +495,7 @@ CREATE TABLE tb_edu_sport_class(
     update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
     update_time DATETIME    COMMENT '更新时间' ,
     PRIMARY KEY (id)
-) COMMENT = '运动项目训练班表 ';;
+) COMMENT = '训练队表 ';;
 
 
 
