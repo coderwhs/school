@@ -1,4 +1,7 @@
-Ant Design Jeecg Vue
+江西省体育运动学校前端工程
+====
+
+（基于Ant Design Jeecg Vue）
 ====
 
 当前最新版本： 2.0.2（发布日期：20190708）
@@ -6,14 +9,16 @@ Ant Design Jeecg Vue
 Overview
 ----
 
-基于 [Ant Design of Vue](https://vuecomponent.github.io/ant-design-vue/docs/vue/introduce-cn/) 实现的 Ant Design Pro  Vue 版
+本项目基于Ant Design Jeecg Vue的前端页面二次开发
+
+Ant Design Jeecg Vue基于 [Ant Design of Vue](https://vuecomponent.github.io/ant-design-vue/docs/vue/introduce-cn/) 实现的 Ant Design Pro  Vue 版
 Jeecg-boot 的前段UI框架，采用前后端分离方案，提供强大代码生成器的快速开发平台。
 前端页面代码和后端功能代码一键生成，不需要写任何代码，保持jeecg一贯的强大！！
 
 
 
 #### 前端技术
- 
+
 - 基础框架：[ant-design-vue](https://github.com/vueComponent/ant-design-vue) - Ant Design Of Vue 实现
 - JavaScript框架：Vue
 - Webpack
@@ -32,7 +37,7 @@ Jeecg-boot 的前段UI框架，采用前后端分离方案，提供强大代码�
 
 - 拉取项目代码
 ```bash
-git clone https://github.com/zhangdaiscott/jeecg-boot.git
+git clone http://git.ikeyleap.com:9100/nc/jeecg-boot.git
 cd  jeecg-boot/ant-design-jeecg-vue
 ```
 
