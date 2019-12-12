@@ -81,7 +81,7 @@
       /*add () {
         this.edit({});
       },*/
-      add(dormId){
+      add(dormId){/* Tab修改@2019-12-12 */
         this.hiding = true;
         if (dormId) {
           this.dormId = dormId;

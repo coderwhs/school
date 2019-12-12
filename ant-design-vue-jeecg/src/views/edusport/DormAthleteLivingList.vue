@@ -92,16 +92,16 @@
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import DormAthleteLivingModal from './modules/DormAthleteLivingModal'
-  import DormList from './DormList'
+  import DormList from './DormList'/* Tab修改@2019-12-12 */
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-  import {getAction} from '@/api/manage'
+  import {getAction} from '@/api/manage'/* Tab修改@2019-12-12 */
 
   export default {
     name: "DormAthleteLivingList",
     mixins:[JeecgListMixin],
     components: {
       DormList,
-      DormAthleteLivingModal
+      DormAthleteLivingModal/* Tab修改@2019-12-12 */
     },
     data () {
       return {
@@ -182,7 +182,7 @@
           }
         })
       },
-      loadData(arg) {
+      loadData(arg) {/* Tab修改@2019-12-12 */
         if (arg === 1) {
           this.ipagination.current = 1;
         }
@@ -200,7 +200,7 @@
         //update-end--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
 
       },
-      getDorm(dormId) {
+      getDorm(dormId) {/* Tab修改@2019-12-12 */
         this.queryParam.mainid = dormId;
         this.loadData(1);
       },

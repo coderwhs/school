@@ -46,7 +46,7 @@ public class AthleteContest implements Serializable {
     private java.lang.String contestAddress;
 	/**比赛项目*/
 	@Excel(name = "比赛项目", width = 15)
-    private java.lang.String contestSport;
+    private java.lang.String contestSportCode;
 	/**比赛小项*/
 	@Excel(name = "比赛小项", width = 15)
     private java.lang.String contestEvent;

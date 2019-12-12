@@ -1,7 +1,7 @@
 <template>
   <a-card :bordered="false">
     <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
+    <!--<div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
@@ -22,16 +22,16 @@
 
         </a-row>
       </a-form>
-    </div>
+    </div>-->
     <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练其他事项记录信息表')">导出</a-button>
+      <!--<a-button type="primary" icon="download" @click="handleExportXls('运动员训练其他事项记录信息表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+      </a-upload>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -109,13 +109,16 @@
   import AthleteOtherTrianningInfoModal from './modules/AthleteOtherTrianningInfoModal'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import AthleteList from './DormList'
+  import {getAction} from '@/api/manage'/* Tab修改@2019-12-12 */
 
   export default {
     name: "AthleteOtherTrianningInfoList",
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
-      AthleteOtherTrianningInfoModal
+      AthleteOtherTrianningInfoModal,
+      AthleteList/* Tab修改@2019-12-12 */
     },
     data () {
       return {
@@ -133,7 +136,7 @@
             }
           },
           {
-            title:'运动员学号',
+            title:'运动员',
             align:"center",
             dataIndex: 'athleteNo',
             customRender:(text)=>{
@@ -188,8 +191,33 @@
             this.$set(this.dictOptions, 'athleteNo', res.result)
           }
         })
-      }
-       
+      },
+      loadData(arg) {/* Tab修改@2019-12-12 */
+        if (arg === 1) {
+          this.ipagination.current = 1;
+        }
+        //update-begin--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
+        var params = this.getQueryParams();
+        getAction(this.url.list, {
+          athleteNo: params.mainid, pageNo: this.ipagination.current,
+          pageSize: this.ipagination.pageSize
+        }).then((res) => {
+          if (res.success) {
+            this.dataSource = res.result.records;
+            this.ipagination.total = res.result.total;
+          } else {
+            this.dataSource = null;
+          }
+        })
+      },
+      getAthlete(athleteNo) {/* Tab修改@2019-12-12 */
+        this.queryParam.mainid = athleteNo;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.mainid);
+        this.$refs.modalForm.title = "添加运动员训练其他事项记录信息";
+      },
     }
   }
 </script>

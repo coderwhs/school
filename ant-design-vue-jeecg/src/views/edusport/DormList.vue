@@ -66,7 +66,7 @@
         :scroll="tableScroll"
         @change="handleTableChange"
         :customRow="clickThenCheck"
-      >
+      >/* Tab修改@2019-12-12 */
 
         <template slot="htmlSlot" slot-scope="text">
           <div v-html="text"></div>
@@ -127,7 +127,8 @@
   import DormAthleteLivingList from './DormAthleteLivingList'
   import DormAthleteLeaveList from './DormAthleteLeaveList'
   import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal'
-  import DormAthleteLivingModal from './modules/DormAthleteLivingModal'
+  import DormAthleteLivingModal from './modules/DormAthleteLivingModal'/* Tab修改@2019-12-12 */
+  import {deleteAction} from '@/api/manage'
 
   export default {
     name: "DormList",
@@ -137,7 +138,7 @@
       DormAthleteLivingList,
       DormAthleteLeaveList,
       DormAthleteLeaveModal,
-      DormAthleteLivingModal
+      DormAthleteLivingModal/* Tab修改@2019-12-12 */
     },
     data () {
       return {
@@ -211,7 +212,7 @@
           }
         ],
         // 分页参数
-        type: "radio",
+        type: "radio",/* Tab修改@2019-12-12 */
         url: {
           list: "/edusport/dorm/list",
           delete: "/edusport/dorm/delete",
@@ -245,10 +246,9 @@
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
         this.$refs.DormAthleteLivingList.getDorm(this.selectedRowKeys[0]);
-        console.log("DormList的选择行数据：",this.selectedRowKeys[0]);
-        this.$refs.DormAthleteLeaveList.getDorm(this.selectedRowKeys[0]);
+        this.$refs.DormAthleteLeaveList.getDorm(this.selectedRowKeys[0]);/* Tab修改@2019-12-12 */
       },
-      onClearSelected() {
+      onClearSelected() {/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
         this.$refs.DormAthleteLivingList.queryParam.mainId = null;
@@ -261,7 +261,7 @@
         this.$refs.DormAthleteLeaveList.selectionRows = [];
       },
 
-      handleDelete: function (id) {
+      handleDelete: function (id) {/* Tab修改@2019-12-12 */
         var that = this;
         deleteAction(that.url.delete, {id: id}).then((res) => {
           if (res.success) {
@@ -274,7 +274,7 @@
           }
         });
       },
-      searchQuery:function(){
+      searchQuery:function(){/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
         this.$refs.DormAthleteLivingList.queryParam.mainId = null;
@@ -292,5 +292,5 @@
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  /*@import '~@assets/less/common.less';*/
 </style>

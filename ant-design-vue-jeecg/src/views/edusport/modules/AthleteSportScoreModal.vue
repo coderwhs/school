@@ -10,10 +10,10 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班主键ID" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
         </a-form-item>
-        <a-form-item label="运动员学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['athleteNo']" dict="tb_edu_athlete,athlete_name,athlete_no" />
         </a-form-item>
         <a-form-item label="测试小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -65,8 +65,8 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练班主键ID!' }]},
-        athleteNo:{rules: [{ required: true, message: '请输入运动员学号!' }]},
+        sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
+        athleteNo:{rules: [{ required: true, message: '请输入运动员!' }]},
         testEvent:{rules: [{ required: true, message: '请输入测试小项!' }]},
         testScore:{rules: [{ required: true, message: '请输入测试成绩!' }]},
         testDate:{},
@@ -82,8 +82,17 @@
     created () {
     },
     methods: {
-      add () {
+      /*add () {
         this.edit({});
+      },*/
+      add(athleteNo){/* Tab修改@2019-12-12 */
+        this.hiding = true;
+        if (athleteNo) {
+          this.athleteNo = athleteNo;
+          this.edit({athleteNo},'');
+        } else {
+          this.$message.warning("请选择一条运动员信息");
+        }
       },
       edit (record) {
         this.form.resetFields();

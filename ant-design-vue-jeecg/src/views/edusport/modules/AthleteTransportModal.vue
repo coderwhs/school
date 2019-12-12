@@ -10,10 +10,10 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="运动员学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['athleteNo']" dict="tb_edu_athlete,athlete_name,athlete_no" />
         </a-form-item>
-        <a-form-item label="运动项目代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
         <a-form-item label="运动员等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -22,7 +22,7 @@
         <a-form-item label="输送单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'transportDepartment', validatorRules.transportDepartment]" placeholder="请输入输送单位"></a-input>
         </a-form-item>
-        <a-form-item label="输送教练员代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="输送教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['transportCoachNo']" dict="tb_edu_coach,coach_name,coach_no" />
         </a-form-item>
         <a-form-item label="输送时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -73,8 +73,8 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteNo:{rules: [{ required: true, message: '请输入运动员学号!' }]},
-        sportCode:{rules: [{ required: true, message: '请输入运动项目代码!' }]},
+        athleteNo:{rules: [{ required: true, message: '请输入运动员!' }]},
+        sportCode:{rules: [{ required: true, message: '请输入运动项目!' }]},
         athleteTechGrade:{rules: [{ required: true, message: '请输入运动员等级!' }]},
         transportDepartment:{rules: [{ required: true, message: '请输入输送单位!' }]},
         transportCoachNo:{rules: [{ required: true, message: '请输入输送教练员代码!' }]},
@@ -92,8 +92,17 @@
     created () {
     },
     methods: {
-      add () {
+      /*add () {
         this.edit({});
+      },*/
+      add(athleteNo){/* Tab修改@2019-12-12 */
+        this.hiding = true;
+        if (athleteNo) {
+          this.athleteNo = athleteNo;
+          this.edit({athleteNo},'');
+        } else {
+          this.$message.warning("请选择一条运动员信息");
+        }
       },
       edit (record) {
         this.form.resetFields();
