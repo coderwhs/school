@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员项目测试表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,12 +27,12 @@ public class AthleteSportScore implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**训练班主键ID*/
-	@Excel(name = "训练班主键ID", width = 15)
+	/**训练队*/
+	@Excel(name = "训练队", width = 15)
     private java.lang.String sportClassId;
-	/**运动员学号*/
-	@Excel(name = "运动员学号", width = 15)
-    private java.lang.String athleteNo;
+	/**运动员*/
+	@Excel(name = "运动员", width = 15)
+    private java.lang.String athleteId;
 	/**测试小项*/
 	@Excel(name = "测试小项", width = 15)
     private java.lang.String testEvent;

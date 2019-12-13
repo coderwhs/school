@@ -1,49 +1,22 @@
 <template>
   <a-card :bordered="false">
     <!-- 查询区域 -->
-    <!--<div class="table-page-search-wrapper">
+    <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="运动项目代码">
-              <a-input placeholder="请输入运动项目代码" v-model="queryParam.sportCode"></a-input>
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="输送教练员代码">
-                <a-input placeholder="请输入输送教练员代码" v-model="queryParam.transportCoachNo"></a-input>
-              </a-form-item>
-            </a-col>
-          </template>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
 
         </a-row>
       </a-form>
-    </div>-->
+    </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <!--<a-button type="primary" icon="download" @click="handleExportXls('运动员输送表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('运动员输送表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>-->
+      </a-upload>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -69,7 +42,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+        :scroll="tableScroll"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -123,6 +96,7 @@
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import {getAction} from '@/api/manage'/* Tab修改@2019-12-12 */
 
+
   export default {
     name: "AthleteTransportList",
     mixins:[JeecgListMixin],
@@ -148,12 +122,12 @@
           {
             title:'运动员',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'athleteId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
               }
             }
           },
@@ -184,12 +158,12 @@
           {
             title:'输送教练员',
             align:"center",
-            dataIndex: 'transportCoachNo',
+            dataIndex: 'transportCoachId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['transportCoachNo'], text+"")
+                return filterMultiDictText(this.dictOptions['transportCoachId'], text+"")
               }
             }
           },
@@ -222,6 +196,8 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
+            fixed:"right",
+            width:147,
             scopedSlots: { customRender: 'action' }
           }
         ],
@@ -233,9 +209,10 @@
           importExcelUrl: "edusport/athleteTransport/importExcel",
         },
         dictOptions:{
-         athleteTechGrade:[],
-         acceptDepartmentType:[],
+          athleteTechGrade:[],
+          acceptDepartmentType:[],
         },
+        tableScroll:{x :7*147+50}
       }
     },
     computed: {
@@ -245,9 +222,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'athleteId', res.result)
           }
         })
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
@@ -260,9 +237,9 @@
             this.$set(this.dictOptions, 'athleteTechGrade', res.result)
           }
         })
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'transportCoachNo', res.result)
+            this.$set(this.dictOptions, 'transportCoachId', res.result)
           }
         })
         initDictOptions('accept_department_type').then((res) => {
@@ -277,7 +254,7 @@
         }
         //update-begin--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
         var params = this.getQueryParams();
-        getAction(this.url.list, {id: params.mainid, athleteNo: params.athleteNo, pageNo : this.ipagination.current,
+        getAction(this.url.list, {athleteId: params.athleteId, pageNo : this.ipagination.current,
           pageSize :this.ipagination.pageSize}).then((res) => {
           if (res.success) {
             this.dataSource = res.result.records;
@@ -289,16 +266,15 @@
         //update-end--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
 
       },
-      getAthlete(id,athleteNo) {/* Tab修改@2019-12-12 */
-        this.queryParam.mainid = id;
-        this.queryParam.athleteNo = athleteNo;
+      getAthlete(id) {/* Tab修改@2019-12-12 */
+        this.queryParam.athleteId = id;
         this.loadData(1);
       },
       handleAdd: function () {
-        this.$refs.modalForm.add(this.queryParam.mainid, this.queryParam.athleteNo);
+        this.$refs.modalForm.add(this.queryParam.athleteId);
         this.$refs.modalForm.title = "运动员输送信息";
       },
-       
+
     }
   }
 </script>

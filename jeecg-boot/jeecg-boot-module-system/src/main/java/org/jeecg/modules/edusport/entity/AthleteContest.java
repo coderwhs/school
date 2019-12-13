@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员参赛信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,15 +27,18 @@ public class AthleteContest implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**运动员学号*/
-	@Excel(name = "运动员学号", width = 15)
-    private java.lang.String athleteNo;
-	/**归属教练员*/
-	@Excel(name = "归属教练员", width = 15)
-    private java.lang.String coachNo;
+	/**运动员*/
+	@Excel(name = "运动员", width = 15)
+    private java.lang.String athleteId;
+	/**教练员*/
+	@Excel(name = "教练员", width = 15)
+    private java.lang.String coachId;
 	/**比赛名称*/
 	@Excel(name = "比赛名称", width = 15)
     private java.lang.String contestName;
+	/**比赛项目*/
+	@Excel(name = "比赛项目", width = 15)
+    private java.lang.String contestSportCode;
 	/**比赛日期*/
 	@Excel(name = "比赛日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
@@ -44,14 +47,11 @@ public class AthleteContest implements Serializable {
 	/**比赛地点*/
 	@Excel(name = "比赛地点", width = 15)
     private java.lang.String contestAddress;
-	/**比赛项目*/
-	@Excel(name = "比赛项目", width = 15)
-    private java.lang.String contestSportCode;
 	/**比赛小项*/
 	@Excel(name = "比赛小项", width = 15)
     private java.lang.String contestEvent;
-	/**比赛名次*/
-	@Excel(name = "比赛名次", width = 15)
+	/**名次*/
+	@Excel(name = "名次", width = 15)
     private java.lang.String contestResult;
 	/**所在单位*/
 	@Excel(name = "所在单位", width = 15)

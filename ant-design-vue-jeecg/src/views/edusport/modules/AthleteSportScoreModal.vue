@@ -10,11 +10,11 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="训练队" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
         </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteNo']" dict="tb_edu_athlete,athlete_name,id" />
+          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
         <a-form-item label="测试小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'testEvent', validatorRules.testEvent]" placeholder="请输入测试小项"></a-input>
@@ -26,7 +26,7 @@
           <j-date placeholder="请选择测试日期" v-decorator="[ 'testDate', validatorRules.testDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'remark', validatorRules.remark]" placeholder="请输入备注"></a-input>
+          <a-textarea v-decorator="['remark']" rows="4" placeholder="请输入备注"/>
         </a-form-item>
 
       </a-form>
@@ -38,12 +38,12 @@
 
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
-  import JDate from '@/components/jeecg/JDate'  
+  import JDate from '@/components/jeecg/JDate'
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "AthleteSportScoreModal",
-    components: { 
+    components: {
       JDate,
       JSearchSelectTag,
     },
@@ -65,18 +65,18 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
-        athleteNo:{rules: [{ required: true, message: '请输入运动员!' }]},
-        testEvent:{rules: [{ required: true, message: '请输入测试小项!' }]},
-        testScore:{rules: [{ required: true, message: '请输入测试成绩!' }]},
-        testDate:{},
-        remark:{rules: [{ required: true, message: '请输入备注!' }]},
+          sportClassId:{rules: [{ required: true, message: '请输入训练队!' }]},
+          athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
+          testEvent:{rules: [{ required: true, message: '请输入测试小项!' }]},
+          testScore:{rules: [{ required: true, message: '请输入测试成绩!' }]},
+          testDate:{rules: [{ required: true, message: '请输入测试日期!' }]},
+          remark:{rules: [{ required: true, message: '请输入备注!' }]},
         },
         url: {
           add: "/edusport/athleteSportScore/add",
           edit: "/edusport/athleteSportScore/edit",
         }
-     
+
       }
     },
     created () {
@@ -85,12 +85,12 @@
       /*add () {
         this.edit({});
       },*/
-      add(id,athleteNo){/* Tab修改@2019-12-12 */
+      add(athleteId){/* Tab修改@2019-12-12 */
         this.hiding = true;
 
-        if (id) {
-          this.athleteNo = id;
-          this.edit({athleteNo:id},'');
+        if (athleteId) {
+          this.athleteId = athleteId;
+          this.edit({athleteId:athleteId},'');
         } else {
           this.$message.warning("请选择一条运动员信息");
         }
@@ -100,7 +100,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','athleteNo','testEvent','testScore','testDate','remark'))
+          this.form.setFieldsValue(pick(this.model,'sportClassId','athleteId','testEvent','testScore','testDate','remark'))
         })
       },
       close () {
@@ -120,7 +120,7 @@
               method = 'post';
             }else{
               httpurl+=this.url.edit;
-               method = 'put';
+              method = 'put';
             }
             let formData = Object.assign(this.model, values);
             console.log("表单提交数据",formData)
@@ -136,17 +136,17 @@
               that.close();
             })
           }
-         
+
         })
       },
       handleCancel () {
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','athleteNo','testEvent','testScore','testDate','remark'))
+        this.form.setFieldsValue(pick(row,'sportClassId','athleteId','testEvent','testScore','testDate','remark'))
       },
 
-      
+
     }
   }
 </script>

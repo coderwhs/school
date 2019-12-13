@@ -11,7 +11,7 @@
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['athleteNo']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,id" placeholder="请选择运动员"/>
+          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
         <a-form-item label="记录时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择记录时间" v-decorator="[ 'recordDate', validatorRules.recordDate]" :trigger-change="true" style="width: 100%"/>
@@ -29,14 +29,14 @@
 
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
-  import JDate from '@/components/jeecg/JDate'  
-  import JDictSelectTag from "@/components/dict/JDictSelectTag"
+  import JDate from '@/components/jeecg/JDate'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "AthleteOtherTrianningInfoModal",
-    components: { 
+    components: {
       JDate,
-      JDictSelectTag,
+      JSearchSelectTag,
     },
     data () {
       return {
@@ -56,15 +56,15 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteNo:{rules: [{ required: true, message: '请输入运动员!' }]},
-        recordDate:{},
-        content:{rules: [{ required: true, message: '请输入内容!' }]},
+          athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
+          recordDate:{rules: [{ required: true, message: '请输入记录时间!' }]},
+          content:{rules: [{ required: true, message: '请输入内容!' }]},
         },
         url: {
           add: "/edusport/athleteOtherTrianningInfo/add",
           edit: "/edusport/athleteOtherTrianningInfo/edit",
         }
-     
+
       }
     },
     created () {
@@ -73,12 +73,12 @@
       /*add () {
         this.edit({});
       },*/
-      add(id,athleteNo){/* Tab修改@2019-12-12 */
+      add(athleteId){/* Tab修改@2019-12-12 */
         this.hiding = true;
 
-        if (id) {
-          this.athleteNo = id;
-          this.edit({athleteNo:id},'');
+        if (athleteId) {
+          this.athleteId = athleteId;
+          this.edit({athleteId:athleteId},'');
         } else {
           this.$message.warning("请选择一条运动员信息");
         }
@@ -88,7 +88,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteNo','recordDate','content'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','recordDate','content'))
         })
       },
       close () {
@@ -108,7 +108,7 @@
               method = 'post';
             }else{
               httpurl+=this.url.edit;
-               method = 'put';
+              method = 'put';
             }
             let formData = Object.assign(this.model, values);
             console.log("表单提交数据",formData)
@@ -124,17 +124,17 @@
               that.close();
             })
           }
-         
+
         })
       },
       handleCancel () {
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteNo','recordDate','content'))
+        this.form.setFieldsValue(pick(row,'athleteId','recordDate','content'))
       },
 
-      
+
     }
   }
 </script>

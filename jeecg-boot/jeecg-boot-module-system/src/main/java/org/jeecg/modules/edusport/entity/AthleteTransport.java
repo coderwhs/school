@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员输送表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,11 +27,11 @@ public class AthleteTransport implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**运动员学号*/
-	@Excel(name = "运动员学号", width = 15)
-    private java.lang.String athleteNo;
-	/**运动项目代码*/
-	@Excel(name = "运动项目代码", width = 15)
+	/**运动员*/
+	@Excel(name = "运动员", width = 15)
+    private java.lang.String athleteId;
+	/**运动项目*/
+	@Excel(name = "运动项目", width = 15)
     private java.lang.String sportCode;
 	/**运动员等级*/
 	@Excel(name = "运动员等级", width = 15)
@@ -39,9 +39,9 @@ public class AthleteTransport implements Serializable {
 	/**输送单位*/
 	@Excel(name = "输送单位", width = 15)
     private java.lang.String transportDepartment;
-	/**输送教练员代码*/
-	@Excel(name = "输送教练员代码", width = 15)
-    private java.lang.String transportCoachNo;
+	/**输送教练员*/
+	@Excel(name = "输送教练员", width = 15)
+    private java.lang.String transportCoachId;
 	/**输送时间*/
 	@Excel(name = "输送时间", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
