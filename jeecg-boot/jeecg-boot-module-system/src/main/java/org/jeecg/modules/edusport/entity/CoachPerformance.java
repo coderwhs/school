@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 教练员年度业务情况表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,9 +27,9 @@ public class CoachPerformance implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**教练员代码*/
-	@Excel(name = "教练员代码", width = 15)
-    private java.lang.String coachNo;
+	/**教练员*/
+	@Excel(name = "教练员", width = 15)
+    private java.lang.String coachId;
 	/**业务年度*/
 	@Excel(name = "业务年度", width = 15)
     private java.lang.Integer performanceYear;

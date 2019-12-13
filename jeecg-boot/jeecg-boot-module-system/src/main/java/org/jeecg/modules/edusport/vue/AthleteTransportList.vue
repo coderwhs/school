@@ -5,19 +5,19 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
+            <a-form-item label="运动员">
+              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动项目代码">
-              <a-input placeholder="请输入运动项目代码" v-model="queryParam.sportCode"></a-input>
+            <a-form-item label="运动项目">
+              <a-input placeholder="请输入运动项目" v-model="queryParam.sportCode"></a-input>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
-              <a-form-item label="输送教练员代码">
-                <a-input placeholder="请输入输送教练员代码" v-model="queryParam.transportCoachNo"></a-input>
+              <a-form-item label="输送教练员">
+                <a-input placeholder="请输入输送教练员" v-model="queryParam.transportCoachId"></a-input>
               </a-form-item>
             </a-col>
           </template>
@@ -143,19 +143,19 @@
             }
           },
           {
-            title:'运动员学号',
+            title:'运动员',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'athleteId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
               }
             }
           },
           {
-            title:'运动项目代码',
+            title:'运动项目',
             align:"center",
             dataIndex: 'sportCode',
             customRender:(text)=>{
@@ -179,14 +179,14 @@
             }
           },
           {
-            title:'输送教练员代码',
+            title:'输送教练员',
             align:"center",
-            dataIndex: 'transportCoachNo',
+            dataIndex: 'transportCoachId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['transportCoachNo'], text+"")
+                return filterMultiDictText(this.dictOptions['transportCoachId'], text+"")
               }
             }
           },
@@ -242,9 +242,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'athleteId', res.result)
           }
         })
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
@@ -257,9 +257,9 @@
             this.$set(this.dictOptions, 'athleteTechGrade', res.result)
           }
         })
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'transportCoachNo', res.result)
+            this.$set(this.dictOptions, 'transportCoachId', res.result)
           }
         })
         initDictOptions('accept_department_type').then((res) => {

@@ -4,9 +4,9 @@ import org.jeecg.modules.edusport.entity.AthleteSportClass;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * @Description: 运动员训练班经历表
+ * @Description: 训练队成员表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 public interface IAthleteSportClassService extends IService<AthleteSportClass> {

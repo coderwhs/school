@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 教练员信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -30,8 +30,8 @@ public class Coach implements Serializable {
 	/**教练员代码*/
 	@Excel(name = "教练员代码", width = 15)
     private java.lang.String coachNo;
-	/**姓名*/
-	@Excel(name = "姓名", width = 15)
+	/**教练员姓名*/
+	@Excel(name = "教练员姓名", width = 15)
     private java.lang.String coachName;
 	/**性别*/
 	@Excel(name = "性别", width = 15)

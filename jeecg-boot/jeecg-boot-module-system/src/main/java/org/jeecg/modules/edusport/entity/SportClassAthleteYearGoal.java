@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 年度训练运动员素质目标信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,18 +27,12 @@ public class SportClassAthleteYearGoal implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**训练班*/
-	@Excel(name = "训练班", width = 15)
-    private java.lang.String sportClassId;
-	/**训练计划名称*/
-	@Excel(name = "训练计划名称", width = 15)
-    private java.lang.String taskName;
-	/**发布人*/
-	@Excel(name = "发布人", width = 15)
-    private java.lang.String coachNo;
+	/**年度计划*/
+	@Excel(name = "年度计划", width = 15)
+    private java.lang.String yearPlanId;
 	/**运动员*/
 	@Excel(name = "运动员", width = 15)
-    private java.lang.String athleteNo;
+    private java.lang.String athleteId;
 	/**小项*/
 	@Excel(name = "小项", width = 15)
     private java.lang.String eventCode;

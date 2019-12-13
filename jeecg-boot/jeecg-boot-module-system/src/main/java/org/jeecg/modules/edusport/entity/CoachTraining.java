@@ -14,9 +14,9 @@ import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecg.common.aspect.annotation.Dict;
 
 /**
- * @Description: 教练员学习培训信息表
+ * @Description: 教练员学习培训经历表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,9 +27,12 @@ public class CoachTraining implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**教练员代码*/
-	@Excel(name = "教练员代码", width = 15)
-    private java.lang.String coachNo;
+	/**教练员*/
+	@Excel(name = "教练员", width = 15)
+    private java.lang.String coachId;
+	/**培训名称*/
+	@Excel(name = "培训名称", width = 15)
+    private java.lang.String trainingCourse;
 	/**开始日期*/
 	@Excel(name = "开始日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
@@ -43,9 +46,6 @@ public class CoachTraining implements Serializable {
 	/**培训地点*/
 	@Excel(name = "培训地点", width = 15)
     private java.lang.String trainingPlace;
-	/**培训名称*/
-	@Excel(name = "培训名称", width = 15)
-    private java.lang.String trainingCourse;
 	/**主办单位*/
 	@Excel(name = "主办单位", width = 15)
     private java.lang.String organizer;

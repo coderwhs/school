@@ -179,6 +179,7 @@ export const JeecgListMixin = {
       });
     },
     handleEdit: function (record) {
+      console.log("record: ",JSON.stringify(record));
       this.$refs.modalForm.edit(record);
       this.$refs.modalForm.title = "编辑";
       this.$refs.modalForm.disableSubmit = false;

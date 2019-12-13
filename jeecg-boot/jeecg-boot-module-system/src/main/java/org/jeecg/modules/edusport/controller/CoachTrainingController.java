@@ -34,9 +34,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 
  /**
- * @Description: 教练员学习培训信息表
+ * @Description: 教练员学习培训经历表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @RestController
@@ -137,7 +137,7 @@ public class CoachTrainingController extends JeecgController<CoachTraining, ICoa
     */
     @RequestMapping(value = "/exportXls")
     public ModelAndView exportXls(HttpServletRequest request, CoachTraining coachTraining) {
-        return super.exportXls(request, coachTraining, CoachTraining.class, "教练员学习培训信息表");
+        return super.exportXls(request, coachTraining, CoachTraining.class, "教练员学习培训经历表");
     }
 
     /**

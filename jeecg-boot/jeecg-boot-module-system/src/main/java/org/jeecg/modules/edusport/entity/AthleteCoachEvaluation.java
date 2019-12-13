@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员评价信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,12 +27,12 @@ public class AthleteCoachEvaluation implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**运动员学号*/
-	@Excel(name = "运动员学号", width = 15)
-    private java.lang.String athleteNo;
-	/**教练员代码*/
-	@Excel(name = "教练员代码", width = 15)
-    private java.lang.String coachNo;
+	/**运动员*/
+	@Excel(name = "运动员", width = 15)
+    private java.lang.String athleteId;
+	/**教练员*/
+	@Excel(name = "教练员", width = 15)
+    private java.lang.String coachId;
 	/**开始日期*/
 	@Excel(name = "开始日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")

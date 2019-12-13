@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 年度训练计划信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,15 +27,12 @@ public class SportClassYearPlan implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**训练班*/
-	@Excel(name = "训练班", width = 15)
+	/**训练队*/
+	@Excel(name = "训练队", width = 15)
     private java.lang.String sportClassId;
 	/**训练计划名称*/
 	@Excel(name = "训练计划名称", width = 15)
-    private java.lang.String taskName;
-	/**发布人*/
-	@Excel(name = "发布人", width = 15)
-    private java.lang.String coachNo;
+    private java.lang.String planName;
 	/**初始情况*/
 	@Excel(name = "初始情况", width = 15)
     private java.lang.String teamSituation;
@@ -257,4 +254,10 @@ public class SportClassYearPlan implements Serializable {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private java.util.Date updateTime;
+	/**竞赛科领导*/
+	@Excel(name = "竞赛科领导", width = 15)
+    private java.lang.String deptEvaluationer;
+	/**校领导*/
+	@Excel(name = "校领导", width = 15)
+    private java.lang.String schoolEvaluationer;
 }

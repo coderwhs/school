@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员训练其他事项记录信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,9 +27,9 @@ public class AthleteOtherTrianningInfo implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**运动员学号*/
-	@Excel(name = "运动员学号", width = 15)
-    private java.lang.String athleteNo;
+	/**运动员*/
+	@Excel(name = "运动员", width = 15)
+    private java.lang.String athleteId;
 	/**记录时间*/
 	@Excel(name = "记录时间", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")

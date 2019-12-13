@@ -10,8 +10,8 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="教练员代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'coachNo', validatorRules.coachNo]" placeholder="请输入教练员代码"></a-input>
+        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'coachId', validatorRules.coachId]" placeholder="请输入教练员"></a-input>
         </a-form-item>
         <a-form-item label="开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
@@ -59,8 +59,8 @@
 
         confirmLoading: false,
         validatorRules:{
-        coachNo:{rules: [{ required: true, message: '请输入教练员代码!' }]},
-        startDate:{},
+        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+        startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
         endDate:{},
         resume:{rules: [{ required: true, message: '请输入从事何种工作!' }]},
         },
@@ -82,7 +82,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'coachNo','startDate','endDate','resume'))
+          this.form.setFieldsValue(pick(this.model,'coachId','startDate','endDate','resume'))
         })
       },
       close () {
@@ -125,7 +125,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'coachNo','startDate','endDate','resume'))
+        this.form.setFieldsValue(pick(row,'coachId','startDate','endDate','resume'))
       }
       
     }

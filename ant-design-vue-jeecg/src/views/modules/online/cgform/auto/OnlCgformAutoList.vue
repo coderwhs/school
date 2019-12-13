@@ -480,6 +480,8 @@
       handleAdd(){
         this.cgButtonJsHandler('beforeAdd')
         this.$refs.modal.add(this.formTemplate);
+        console.log("onl-cgform-auto-modal.formTemplate: " + JSON.stringify(this.formTemplate));
+
       },
       handleImportXls(){
         this.$refs.importModal.show()

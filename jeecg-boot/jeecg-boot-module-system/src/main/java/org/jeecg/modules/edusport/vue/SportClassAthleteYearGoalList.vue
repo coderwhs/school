@@ -4,21 +4,6 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="训练班">
-              <a-input placeholder="请输入训练班" v-model="queryParam.sportClassId"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
 
         </a-row>
       </a-form>
@@ -131,26 +116,26 @@
             }
           },
           {
-            title:'训练班',
+            title:'年度计划',
             align:"center",
-            dataIndex: 'sportClassId',
+            dataIndex: 'yearPlanId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['sportClassId'], text+"")
+                return filterMultiDictText(this.dictOptions['yearPlanId'], text+"")
               }
             }
           },
           {
             title:'运动员',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'athleteId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
               }
             }
           },
@@ -189,14 +174,14 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class,class_name,id').then((res) => {
+        initDictOptions('tb_edu_sport_class_athlete_year_goal,year_plan_id,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'sportClassId', res.result)
+            this.$set(this.dictOptions, 'yearPlanId', res.result)
           }
         })
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'athleteId', res.result)
           }
         })
       }

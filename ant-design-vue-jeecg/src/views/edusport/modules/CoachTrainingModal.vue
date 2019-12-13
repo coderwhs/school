@@ -10,27 +10,51 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="教练员代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachNo']" dict="tb_edu_coach,coach_name,coach_no" />
-        </a-form-item>
-        <a-form-item label="开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
-        </a-form-item>
-        <a-form-item label="结束日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-date placeholder="请选择结束日期" v-decorator="[ 'endDate', validatorRules.endDate]" :trigger-change="true" style="width: 100%"/>
-        </a-form-item>
-        <a-form-item label="培训地点" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'trainingPlace', validatorRules.trainingPlace]" placeholder="请输入培训地点"></a-input>
-        </a-form-item>
-        <a-form-item label="培训名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'trainingCourse', validatorRules.trainingCourse]" placeholder="请输入培训名称"></a-input>
-        </a-form-item>
-        <a-form-item label="主办单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'organizer', validatorRules.organizer]" placeholder="请输入主办单位"></a-input>
-        </a-form-item>
-        <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['remark']" rows="4" placeholder="请输入备注"/>
-        </a-form-item>
+        <a-row>
+          <a-col :span="24" :gutter="8">
+            <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="12" :gutter="8">
+            <a-form-item label="培训名称" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+              <a-input v-decorator="[ 'trainingCourse', validatorRules.trainingCourse]" placeholder="请输入培训名称"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :span="12" :gutter="8">
+            <a-form-item label="主办单位" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+              <a-input v-decorator="[ 'organizer', validatorRules.organizer]" placeholder="请输入主办单位"></a-input>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="12" :gutter="8">
+            <a-form-item label="开始日期" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+              <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
+            </a-form-item>
+          </a-col>
+          <a-col :span="12" :gutter="8">
+            <a-form-item label="结束日期" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+              <j-date placeholder="请选择结束日期" v-decorator="[ 'endDate', validatorRules.endDate]" :trigger-change="true" style="width: 100%"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24" :gutter="8">
+            <a-form-item label="培训地点" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input v-decorator="[ 'trainingPlace', validatorRules.trainingPlace]" placeholder="请输入培训地点"></a-input>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24" :gutter="8">
+            <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-textarea v-decorator="['remark']" rows="4" placeholder="请输入备注"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
 
       </a-form>
     </a-spin>
@@ -57,22 +81,36 @@
         width:800,
         visible: false,
         model: {},
+
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
+          md: { span: 4 },
         },
         wrapperCol: {
           xs: { span: 24 },
           sm: { span: 16 },
+          md: { span: 18 },
+        },
+
+        labelCol2: {
+          xs: { span: 24 },
+          sm: { span: 8 },
+          md: { span: 8 },
+        },
+        wrapperCol2: {
+          xs: { span: 24 },
+          sm: { span: 14 },
+          md: { span: 14 },
         },
 
         confirmLoading: false,
         validatorRules:{
-        coachNo:{rules: [{ required: true, message: '请输入教练员代码!' }]},
-        startDate:{},
+        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+        trainingCourse:{rules: [{ required: true, message: '请输入培训名称!' }]},
+        startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
         endDate:{},
         trainingPlace:{rules: [{ required: true, message: '请输入培训地点!' }]},
-        trainingCourse:{rules: [{ required: true, message: '请输入培训名称!' }]},
         organizer:{rules: [{ required: true, message: '请输入主办单位!' }]},
         remark:{rules: [{ required: true, message: '请输入备注!' }]},
         },
@@ -86,15 +124,21 @@
     created () {
     },
     methods: {
-      add () {
-        this.edit({});
+      add(coachId) {
+        this.hiding = true;
+        if (coachId) {
+          this.coachId = coachId;
+          this.edit({coachId}, '');
+        } else {
+          this.$message.warning("请选择一个教练员信息");
+        }
       },
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'coachNo','startDate','endDate','trainingPlace','trainingCourse','organizer','remark'))
+          this.form.setFieldsValue(pick(this.model,'coachId','trainingCourse','startDate','endDate','trainingPlace','organizer','remark'))
         })
       },
       close () {
@@ -137,7 +181,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'coachNo','startDate','endDate','trainingPlace','trainingCourse','organizer','remark'))
+        this.form.setFieldsValue(pick(row,'coachId','trainingCourse','startDate','endDate','trainingPlace','organizer','remark'))
       },
 
       

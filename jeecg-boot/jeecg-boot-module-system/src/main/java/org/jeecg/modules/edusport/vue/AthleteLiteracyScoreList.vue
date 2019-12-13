@@ -6,7 +6,7 @@
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
             <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
+              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteId"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
@@ -74,7 +74,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+        :scroll="tableScroll"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -152,12 +152,12 @@
           {
             title:'运动员学号',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'athleteId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
               }
             }
           },
@@ -239,6 +239,8 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
+            fixed:"right",
+            width:147,
             scopedSlots: { customRender: 'action' }
           }
         ],
@@ -253,6 +255,7 @@
          grade:[],
          semester:[],
         },
+        tableScroll:{x :13*147+50}
       }
     },
     computed: {
@@ -262,9 +265,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'athleteId', res.result)
           }
         })
         initDictOptions('edu_grade').then((res) => {

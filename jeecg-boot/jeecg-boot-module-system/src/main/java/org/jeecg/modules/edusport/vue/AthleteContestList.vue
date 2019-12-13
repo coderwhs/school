@@ -5,13 +5,13 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
+            <a-form-item label="运动员">
+              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="归属教练员">
-              <a-input placeholder="请输入归属教练员" v-model="queryParam.coachNo"></a-input>
+            <a-form-item label="教练员">
+              <a-input placeholder="请输入教练员" v-model="queryParam.coachId"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8" >
@@ -62,7 +62,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+        :scroll="tableScroll"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -136,26 +136,26 @@
             }
           },
           {
-            title:'运动员学号',
+            title:'运动员',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'athleteId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
               }
             }
           },
           {
-            title:'归属教练员',
+            title:'教练员',
             align:"center",
-            dataIndex: 'coachNo',
+            dataIndex: 'coachId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
+                return filterMultiDictText(this.dictOptions['coachId'], text+"")
               }
             }
           },
@@ -163,6 +163,18 @@
             title:'比赛名称',
             align:"center",
             dataIndex: 'contestName'
+          },
+          {
+            title:'比赛项目',
+            align:"center",
+            dataIndex: 'contestSportCode',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['contestSportCode'], text+"")
+              }
+            }
           },
           {
             title:'比赛日期',
@@ -173,24 +185,12 @@
             }
           },
           {
-            title:'比赛项目',
-            align:"center",
-            dataIndex: 'contestSport',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['contestSport'], text+"")
-              }
-            }
-          },
-          {
             title:'比赛小项',
             align:"center",
             dataIndex: 'contestEvent'
           },
           {
-            title:'比赛名次',
+            title:'名次',
             align:"center",
             dataIndex: 'contestResult'
           },
@@ -215,6 +215,8 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
+            fixed:"right",
+            width:147,
             scopedSlots: { customRender: 'action' }
           }
         ],
@@ -228,6 +230,7 @@
         dictOptions:{
          awardedTechGrade:[],
         },
+        tableScroll:{x :9*147+50}
       }
     },
     computed: {
@@ -237,19 +240,19 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'athleteId', res.result)
           }
         })
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'coachNo', res.result)
+            this.$set(this.dictOptions, 'coachId', res.result)
           }
         })
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'contestSport', res.result)
+            this.$set(this.dictOptions, 'contestSportCode', res.result)
           }
         })
         initDictOptions('athlete_tech_grade').then((res) => {

@@ -10,8 +10,8 @@
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="姓名">
-              <a-input placeholder="请输入姓名" v-model="queryParam.coachName"></a-input>
+            <a-form-item label="教练员姓名">
+              <a-input placeholder="请输入教练员姓名" v-model="queryParam.coachName"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8" >
@@ -141,7 +141,7 @@
             dataIndex: 'coachNo'
           },
           {
-            title:'姓名',
+            title:'教练员姓名',
             align:"center",
             dataIndex: 'coachName'
           },

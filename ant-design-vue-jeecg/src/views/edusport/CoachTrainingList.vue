@@ -4,21 +4,6 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="教练员代码">
-              <a-input placeholder="请输入教练员代码" v-model="queryParam.coachNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
 
         </a-row>
       </a-form>
@@ -26,12 +11,8 @@
     <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
+    <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('教练员学习培训信息表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -117,7 +98,7 @@
     },
     data () {
       return {
-        description: '教练员学习培训信息表管理页面',
+        description: '教练员学习培训经历表管理页面',
         // 表头
         columns: [
           {
@@ -131,16 +112,21 @@
             }
           },
           {
-            title:'教练员代码',
+            title:'教练员',
             align:"center",
-            dataIndex: 'coachNo',
+            dataIndex: 'coachId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
+                return filterMultiDictText(this.dictOptions['coachId'], text+"")
               }
             }
+          },
+          {
+            title:'培训名称',
+            align:"center",
+            dataIndex: 'trainingCourse'
           },
           {
             title:'开始日期',
@@ -162,11 +148,6 @@
             title:'培训地点',
             align:"center",
             dataIndex: 'trainingPlace'
-          },
-          {
-            title:'培训名称',
-            align:"center",
-            dataIndex: 'trainingCourse'
           },
           {
             title:'主办单位',
@@ -198,16 +179,28 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'coachNo', res.result)
+            this.$set(this.dictOptions, 'coachId', res.result)
           }
         })
-      }
-       
+      },
+      getListByCoachId(coachId) {
+        this.queryParam.coachId = coachId;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.coachId);
+        this.$refs.modalForm.title = "添加培训经历";
+        this.$refs.modalForm.disableSubmit = false;
+      },
+
     }
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

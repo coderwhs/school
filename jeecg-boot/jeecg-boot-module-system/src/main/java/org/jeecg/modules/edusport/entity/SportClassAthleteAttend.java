@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员训练出勤表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -32,12 +32,12 @@ public class SportClassAthleteAttend implements Serializable {
     private java.lang.String sportClassId;
 	/**运动员*/
 	@Excel(name = "运动员", width = 15)
-    private java.lang.String athleteNo;
+    private java.lang.String athleteId;
 	/**考勤状态*/
 	@Excel(name = "考勤状态", width = 15)
     private java.lang.String attendStatus;
-	/**考勤时间*/
-	@Excel(name = "考勤时间", width = 15, format = "yyyy-MM-dd")
+	/**考勤日期*/
+	@Excel(name = "考勤日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private java.util.Date attendTime;

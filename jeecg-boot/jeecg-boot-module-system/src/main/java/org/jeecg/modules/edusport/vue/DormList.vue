@@ -10,11 +10,11 @@
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="宿舍房间号">
-              <a-input placeholder="请输入宿舍房间号" v-model="queryParam.dormNo"></a-input>
+            <a-form-item label="房间号">
+              <a-input placeholder="请输入房间号" v-model="queryParam.dormNo"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="8">
+          <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
@@ -61,7 +61,8 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        :scroll="tableScroll"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -139,7 +140,7 @@
             dataIndex: 'dormBuildingName'
           },
           {
-            title:'宿舍房间号',
+            title:'房间号',
             align:"center",
             dataIndex: 'dormNo'
           },
@@ -154,12 +155,7 @@
             dataIndex: 'dormTel'
           },
           {
-            title:'宿舍地址',
-            align:"center",
-            dataIndex: 'dormAddress'
-          },
-          {
-            title:'宿舍管理员',
+            title:'管理员',
             align:"center",
             dataIndex: 'dormAdmin'
           },
@@ -169,10 +165,17 @@
             dataIndex: 'dormAdminTel'
           },
           {
+            title:'地址',
+            align:"center",
+            dataIndex: 'dormAddress'
+          },
+          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            scopedSlots: { customRender: 'action' },
+            fixed:"right",
+            width:147,
+            scopedSlots: { customRender: 'action' }
           }
         ],
         url: {
@@ -184,7 +187,7 @@
         },
         dictOptions:{
         },
-
+        tableScroll:{x :7*147+50}
       }
     },
     computed: {

@@ -59,8 +59,8 @@
         validatorRules:{
         sportCode:{rules: [{ required: true, message: '请输入项目代码!' }]},
         sportName:{rules: [{ required: true, message: '请输入大项名称!' }]},
-        disciplinesName:{rules: [{ required: true, message: '请输入分项名称!' }]},
-        eventName:{rules: [{ required: true, message: '请输入小项名称!' }]},
+        disciplinesName:{},
+        eventName:{},
         },
         url: {
           add: "/edusport/sport/add",

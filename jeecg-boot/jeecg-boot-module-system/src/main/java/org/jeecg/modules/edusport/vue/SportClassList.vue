@@ -5,19 +5,19 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="训练班名称">
-              <a-input placeholder="请输入训练班名称" v-model="queryParam.className"></a-input>
+            <a-form-item label="训练队名称">
+              <a-input placeholder="请输入训练队名称" v-model="queryParam.className"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="教练员代码">
-              <a-input placeholder="请输入教练员代码" v-model="queryParam.coachNo"></a-input>
+            <a-form-item label="教练员">
+              <a-input placeholder="请输入教练员" v-model="queryParam.coachId"></a-input>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
-              <a-form-item label="运动项目代码">
-                <a-input placeholder="请输入运动项目代码" v-model="queryParam.sportCode"></a-input>
+              <a-form-item label="运动项目">
+                <a-input placeholder="请输入运动项目" v-model="queryParam.sportCode"></a-input>
               </a-form-item>
             </a-col>
           </template>
@@ -40,7 +40,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动项目训练班表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('训练队表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -129,7 +129,7 @@
     },
     data () {
       return {
-        description: '运动项目训练班表管理页面',
+        description: '训练队表管理页面',
         // 表头
         columns: [
           {
@@ -143,24 +143,24 @@
             }
           },
           {
-            title:'训练班名称',
+            title:'训练队名称',
             align:"center",
             dataIndex: 'className'
           },
           {
-            title:'教练员代码',
+            title:'教练员',
             align:"center",
-            dataIndex: 'coachNo',
+            dataIndex: 'coachId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
+                return filterMultiDictText(this.dictOptions['coachId'], text+"")
               }
             }
           },
           {
-            title:'运动项目代码',
+            title:'运动项目',
             align:"center",
             dataIndex: 'sportCode',
             customRender:(text)=>{
@@ -170,11 +170,6 @@
                 return filterMultiDictText(this.dictOptions['sportCode'], text+"")
               }
             }
-          },
-          {
-            title:'训练年度',
-            align:"center",
-            dataIndex: 'trainingYear'
           },
           {
             title:'训练形式',
@@ -187,6 +182,11 @@
                 return filterMultiDictText(this.dictOptions['trainingType'], text+"")
               }
             }
+          },
+          {
+            title:'训练年度',
+            align:"center",
+            dataIndex: 'trainingYear'
           },
           {
             title:'开始日期',
@@ -230,9 +230,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'coachNo', res.result)
+            this.$set(this.dictOptions, 'coachId', res.result)
           }
         })
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {

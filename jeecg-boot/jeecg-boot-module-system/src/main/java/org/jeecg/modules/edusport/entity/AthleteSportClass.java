@@ -14,9 +14,9 @@ import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecg.common.aspect.annotation.Dict;
 
 /**
- * @Description: 运动员训练班经历表
+ * @Description: 训练队成员表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,14 +27,14 @@ public class AthleteSportClass implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**训练班主键id*/
-	@Excel(name = "训练班主键id", width = 15)
+	/**训练队*/
+	@Excel(name = "训练队", width = 15)
     private java.lang.String sportClassId;
-	/**运动员学号*/
-	@Excel(name = "运动员学号", width = 15)
-    private java.lang.String athleteNo;
-	/**参加日期*/
-	@Excel(name = "参加日期", width = 15, format = "yyyy-MM-dd")
+	/**运动员*/
+	@Excel(name = "运动员", width = 15)
+    private java.lang.String athleteId;
+	/**入队日期*/
+	@Excel(name = "入队日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private java.util.Date attendDate;
