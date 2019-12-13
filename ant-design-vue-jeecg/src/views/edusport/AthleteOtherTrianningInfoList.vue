@@ -210,8 +210,9 @@
           }
         })
       },
-      getAthlete(athleteNo) {/* Tab修改@2019-12-12 */
-        this.queryParam.mainid = athleteNo;
+      getAthlete(id,athleteNo) {/* Tab修改@2019-12-12 */
+        this.queryParam.mainid = id;
+        this.queryParam.athleteNo = athleteNo;
         this.loadData(1);
       },
       handleAdd: function () {

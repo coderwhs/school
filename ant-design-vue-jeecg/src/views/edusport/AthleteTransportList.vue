@@ -277,7 +277,7 @@
         }
         //update-begin--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
         var params = this.getQueryParams();
-        getAction(this.url.list, {athleteNo: params.mainid, pageNo : this.ipagination.current,
+        getAction(this.url.list, {id: params.mainid, athleteNo: params.athleteNo, pageNo : this.ipagination.current,
           pageSize :this.ipagination.pageSize}).then((res) => {
           if (res.success) {
             this.dataSource = res.result.records;
@@ -289,13 +289,14 @@
         //update-end--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
 
       },
-      getAthlete(athleteNo) {/* Tab修改@2019-12-12 */
-        this.queryParam.mainid = athleteNo;
+      getAthlete(id,athleteNo) {/* Tab修改@2019-12-12 */
+        this.queryParam.mainid = id;
+        this.queryParam.athleteNo = athleteNo;
         this.loadData(1);
       },
       handleAdd: function () {
-        this.$refs.modalForm.add(this.queryParam.mainid);
-        this.$refs.modalForm.title = "添加运动员输送信息";
+        this.$refs.modalForm.add(this.queryParam.mainid, this.queryParam.athleteNo);
+        this.$refs.modalForm.title = "运动员输送信息";
       },
        
     }

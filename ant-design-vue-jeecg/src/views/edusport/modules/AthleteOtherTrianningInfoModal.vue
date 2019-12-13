@@ -11,7 +11,7 @@
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['athleteNo']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
+          <j-dict-select-tag type="list" v-decorator="['athleteNo']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,id" placeholder="请选择运动员"/>
         </a-form-item>
         <a-form-item label="记录时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择记录时间" v-decorator="[ 'recordDate', validatorRules.recordDate]" :trigger-change="true" style="width: 100%"/>
@@ -73,11 +73,12 @@
       /*add () {
         this.edit({});
       },*/
-      add(athleteNo){/* Tab修改@2019-12-12 */
+      add(id,athleteNo){/* Tab修改@2019-12-12 */
         this.hiding = true;
-        if (athleteNo) {
-          this.dormId = athleteNo;
-          this.edit({athleteNo},'');
+
+        if (id) {
+          this.athleteNo = id;
+          this.edit({athleteNo:id},'');
         } else {
           this.$message.warning("请选择一条运动员信息");
         }

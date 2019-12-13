@@ -14,7 +14,7 @@
           <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
         </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteNo']" dict="tb_edu_athlete,athlete_name,athlete_no" />
+          <j-search-select-tag v-decorator="['athleteNo']" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
         <a-form-item label="测试小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'testEvent', validatorRules.testEvent]" placeholder="请输入测试小项"></a-input>
@@ -85,11 +85,12 @@
       /*add () {
         this.edit({});
       },*/
-      add(athleteNo){/* Tab修改@2019-12-12 */
+      add(id,athleteNo){/* Tab修改@2019-12-12 */
         this.hiding = true;
-        if (athleteNo) {
-          this.athleteNo = athleteNo;
-          this.edit({athleteNo},'');
+
+        if (id) {
+          this.athleteNo = id;
+          this.edit({athleteNo:id},'');
         } else {
           this.$message.warning("请选择一条运动员信息");
         }

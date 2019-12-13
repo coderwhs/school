@@ -120,6 +120,9 @@ public class ShiroConfig {
 		//websocket排除
 		filterChainDefinitionMap.put("/websocket/**", "anon");
 
+		// 功能模块
+		filterChainDefinitionMap.put("/edusport/**", "anon");
+		
 		// 添加自己的过滤器并且取名为jwt
 		Map<String, Filter> filterMap = new HashMap<String, Filter>(1);
 		filterMap.put("jwt", new JwtFilter());

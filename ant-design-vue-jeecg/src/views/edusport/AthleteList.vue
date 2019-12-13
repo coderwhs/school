@@ -335,10 +335,12 @@
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
         let athleteNo = this.selectionRows[0].athleteNo;
-        this.$refs.AthleteContestList.getAthlete(athleteNo);
-        this.$refs.AthleteSportScoreList.getAthlete(athleteNo);
-        this.$refs.AthleteTransportList.getAthlete(athleteNo);
-        this.$refs.AthleteOtherTrianningInfoList.getAthlete(athleteNo);
+        /*let id = this.selectedRowKeys[0].mainId;*/
+        let id = this.selectionRows[0].id;
+        this.$refs.AthleteContestList.getAthlete(id,athleteNo);
+        this.$refs.AthleteSportScoreList.getAthlete(id,athleteNo);
+        this.$refs.AthleteTransportList.getAthlete(id,athleteNo);
+        this.$refs.AthleteOtherTrianningInfoList.getAthlete(id,athleteNo);
         /* Tab修改@2019-12-12 */
       },
       onClearSelected() {/* Tab修改@2019-12-12 */
