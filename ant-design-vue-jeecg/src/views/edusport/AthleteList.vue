@@ -338,10 +338,10 @@
       onClearSelected() {/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
-        this.$refs.AthleteTransportList.queryParam.mainId = null;
-        this.$refs.AthleteSportScoreList.queryParam.mainId = null;
-        this.$refs.AthleteOtherTrianningInfoList.queryParam.mainId = null;
-        this.$refs.AthleteContestList.queryParam.mainId = null;
+        this.$refs.AthleteTransportList.queryParam.athleteId = null;
+        this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
+        this.$refs.AthleteOtherTrianningInfoList.queryParam.athleteId = null;
+        this.$refs.AthleteContestList.queryParam.athleteId = null;
         this.$refs.AthleteTransportList.loadData();
         this.$refs.AthleteSportScoreList.loadData();
         this.$refs.AthleteOtherTrianningInfoList.loadData();
