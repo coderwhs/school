@@ -29,7 +29,7 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
@@ -251,8 +251,8 @@
       onClearSelected() {/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
-        this.$refs.DormAthleteLivingList.queryParam.mainId = null;
-        this.$refs.DormAthleteLeaveList.queryParam.mainId = null;
+        this.$refs.DormAthleteLivingList.queryParam.dormId = null;
+        this.$refs.DormAthleteLeaveList.queryParam.dormId = null;
         this.$refs.DormAthleteLivingList.loadData();
         this.$refs.DormAthleteLeaveList.loadData();
         this.$refs.DormAthleteLivingList.selectedRowKeys = [];
@@ -287,10 +287,10 @@
         this.$refs.DormAthleteLeaveList.selectionRows = [];
         this.loadData();
       }
-       
+
     }
   }
 </script>
 <style scoped>
-  /*@import '~@assets/less/common.less';*/
+  @import '~@assets/less/common.less'
 </style>

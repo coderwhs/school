@@ -11,7 +11,7 @@
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['athleteNo']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
+          <a-input v-decorator="[ 'athleteId', validatorRules.athleteId]" placeholder="请输入运动员"></a-input>
         </a-form-item>
         <a-form-item label="请假原因" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'leaveCause', validatorRules.leaveCause]" placeholder="请输入请假原因"></a-input>
@@ -35,13 +35,11 @@
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import JDate from '@/components/jeecg/JDate'  
-  import JDictSelectTag from "@/components/dict/JDictSelectTag"
   
   export default {
     name: "DormAthleteLeaveModal",
     components: { 
       JDate,
-      JDictSelectTag,
     },
     data () {
       return {
@@ -61,10 +59,10 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteNo:{rules: [{ required: true, message: '请输入运动员!' }]},
+        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
         leaveCause:{rules: [{ required: true, message: '请输入请假原因!' }]},
         startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
-        endDate:{},
+        endDate:{rules: [{ required: true, message: '请输入结束日期!' }]},
         },
         url: {
           add: "/edusport/dormAthleteLeave/add",
@@ -84,7 +82,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteNo','leaveCause','startDate','endDate'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','leaveCause','startDate','endDate'))
         })
       },
       close () {
@@ -127,7 +125,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteNo','leaveCause','startDate','endDate'))
+        this.form.setFieldsValue(pick(row,'athleteId','leaveCause','startDate','endDate'))
       }
       
     }

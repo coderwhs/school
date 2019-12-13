@@ -11,7 +11,7 @@
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'athleteNo', validatorRules.athleteNo]" placeholder="请输入运动员"></a-input>
+          <a-input v-decorator="[ 'athleteId', validatorRules.athleteId]" placeholder="请输入运动员"></a-input>
         </a-form-item>
         <a-form-item label="床位号" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'bedNo', validatorRules.bedNo]" placeholder="请输入床位号"></a-input>
@@ -59,8 +59,8 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteNo:{rules: [{ required: true, message: '请输入运动员!' }]},
-        bedNo:{rules: [{ required: true, message: '请输入床位号!' }]},
+        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
+        bedNo:{},
         startDate:{rules: [{ required: true, message: '请输入入住开始日期!' }]},
         endDate:{},
         },
@@ -82,7 +82,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteNo','bedNo','startDate','endDate'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','bedNo','startDate','endDate'))
         })
       },
       close () {
@@ -125,7 +125,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteNo','bedNo','startDate','endDate'))
+        this.form.setFieldsValue(pick(row,'athleteId','bedNo','startDate','endDate'))
       }
       
     }
