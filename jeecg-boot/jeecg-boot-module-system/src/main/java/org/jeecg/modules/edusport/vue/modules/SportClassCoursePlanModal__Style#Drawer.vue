@@ -10,14 +10,11 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportClassId', validatorRules.sportClassId]" placeholder="请输入训练班"></a-input>
+        <a-form-item label="训练队" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'sportClassId', validatorRules.sportClassId]" placeholder="请输入训练队"></a-input>
         </a-form-item>
         <a-form-item label="训练计划名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'taskName', validatorRules.taskName]" placeholder="请输入训练计划名称"></a-input>
-        </a-form-item>
-        <a-form-item label="发布人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'coachNo', validatorRules.coachNo]" placeholder="请输入发布人"></a-input>
+          <a-input v-decorator="[ 'planName', validatorRules.planName]" placeholder="请输入训练计划名称"></a-input>
         </a-form-item>
         <a-form-item label="课训日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择课训日期" v-decorator="[ 'courseDate', validatorRules.courseDate]" :trigger-change="true" style="width: 100%"/>
@@ -101,24 +98,23 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
-        taskName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
-        coachNo:{rules: [{ required: true, message: '请输入发布人!' }]},
-        courseDate:{},
+        sportClassId:{rules: [{ required: true, message: '请输入训练队!' }]},
+        planName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
+        courseDate:{rules: [{ required: true, message: '请输入课训日期!' }]},
         taskGoal:{rules: [{ required: true, message: '请输入目的任务!' }]},
-        prepareWorkload:{rules: [{ required: true, message: '请输入准备训练量!' }]},
-        prepareIntensity:{rules: [{ required: true, message: '请输入准备训练强度!' }]},
-        prepareTime:{rules: [{ required: true, message: '请输入准备训练时间!' }]},
-        prepareContent:{rules: [{ required: true, message: '请输入准备训练内容!' }]},
-        basicWorkload:{rules: [{ required: true, message: '请输入基本训练量!' }]},
-        basicIntensity:{rules: [{ required: true, message: '请输入基本训练强度!' }]},
-        basicTime:{rules: [{ required: true, message: '请输入基本训练时间!' }]},
-        basicContent:{rules: [{ required: true, message: '请输入基本训练内容!' }]},
-        finishWorkload:{rules: [{ required: true, message: '请输入结束训练量!' }]},
-        finishIntensity:{rules: [{ required: true, message: '请输入结束训练强度!' }]},
-        finishTime:{rules: [{ required: true, message: '请输入结束训练时间!' }]},
-        finishContent:{rules: [{ required: true, message: '请输入结束训练内容!' }]},
-        courseSummary:{rules: [{ required: true, message: '请输入课后小结!' }]},
+        prepareWorkload:{},
+        prepareIntensity:{},
+        prepareTime:{},
+        prepareContent:{},
+        basicWorkload:{},
+        basicIntensity:{},
+        basicTime:{},
+        basicContent:{},
+        finishWorkload:{},
+        finishIntensity:{},
+        finishTime:{},
+        finishContent:{},
+        courseSummary:{},
         },
         url: {
           add: "/edusport/sportClassCoursePlan/add",
@@ -138,7 +134,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','taskName','coachNo','courseDate','taskGoal','prepareWorkload','prepareIntensity','prepareTime','prepareContent','basicWorkload','basicIntensity','basicTime','basicContent','finishWorkload','finishIntensity','finishTime','finishContent','courseSummary'))
+          this.form.setFieldsValue(pick(this.model,'sportClassId','planName','courseDate','taskGoal','prepareWorkload','prepareIntensity','prepareTime','prepareContent','basicWorkload','basicIntensity','basicTime','basicContent','finishWorkload','finishIntensity','finishTime','finishContent','courseSummary'))
         })
       },
       close () {
@@ -181,7 +177,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','taskName','coachNo','courseDate','taskGoal','prepareWorkload','prepareIntensity','prepareTime','prepareContent','basicWorkload','basicIntensity','basicTime','basicContent','finishWorkload','finishIntensity','finishTime','finishContent','courseSummary'))
+        this.form.setFieldsValue(pick(row,'sportClassId','planName','courseDate','taskGoal','prepareWorkload','prepareIntensity','prepareTime','prepareContent','basicWorkload','basicIntensity','basicTime','basicContent','finishWorkload','finishIntensity','finishTime','finishContent','courseSummary'))
       }
       
     }

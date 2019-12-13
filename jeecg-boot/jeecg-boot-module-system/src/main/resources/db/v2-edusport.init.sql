@@ -24,8 +24,8 @@ CREATE TABLE tb_edu_dorm(
 DROP TABLE IF EXISTS tb_edu_dorm_athlete_living;;/*SkipError*/
 CREATE TABLE tb_edu_dorm_athlete_living(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    drom_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '宿舍主键id' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '学号' ,
+    dorm_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '宿舍' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
     bed_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '床位号' ,
     start_date DATE    COMMENT '入住开始日期' ,
     end_date DATE    COMMENT '入住结束日期' ,
@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS tb_edu_dorm_athlete_leave;;/*SkipError*/
 CREATE TABLE tb_edu_dorm_athlete_leave(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
     dorm_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '宿舍主键id' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '学号' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
     leave_cause VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '请假原因' ,
     start_date DATETIME    COMMENT '开始日期' ,
     end_date DATETIME    COMMENT '结束日期' ,
@@ -105,8 +105,8 @@ CREATE TABLE tb_edu_athlete(
 DROP TABLE IF EXISTS tb_edu_athlete_sport_class;;/*SkipError*/
 CREATE TABLE tb_edu_athlete_sport_class(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员学号' ,
+    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练队' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
     attend_date DATE    COMMENT '入队日期' ,
     athlete_best_score VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '比赛最好成绩' ,
     athlete_award_tech_grade VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '获得等级' ,
@@ -124,8 +124,8 @@ CREATE TABLE tb_edu_athlete_sport_class(
 DROP TABLE IF EXISTS tb_edu_athlete_sport_score;;/*SkipError*/
 CREATE TABLE tb_edu_athlete_sport_score(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键ID' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员学号' ,
+    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练队' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
     test_event VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '测试小项' ,
     test_score VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试成绩' ,
     test_date DATE    COMMENT '测试日期' ,
@@ -143,8 +143,8 @@ CREATE TABLE tb_edu_athlete_sport_score(
 DROP TABLE IF EXISTS tb_edu_athlete_contest;;/*SkipError*/
 CREATE TABLE tb_edu_athlete_contest(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员学号' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '归属教练员' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
+    coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员' ,
     contest_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '比赛名称' ,
     contest_date DATE    COMMENT '比赛日期' ,
     contest_address VARCHAR(256) NOT NULL  DEFAULT '' COMMENT '比赛地点' ,
@@ -168,11 +168,11 @@ CREATE TABLE tb_edu_athlete_contest(
 DROP TABLE IF EXISTS tb_edu_athlete_transport;;/*SkipError*/
 CREATE TABLE tb_edu_athlete_transport(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员学号' ,
-    sport_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动项目代码' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
+    sport_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动项目' ,
     athlete_tech_grade VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员等级' ,
     transport_department VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '输送单位' ,
-    transport_coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '输送教练员代码' ,
+    transport_coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '输送教练员' ,
     transport_date DATE    COMMENT '输送时间' ,
     accept_department_type VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '吸收单位类别' ,
     accept_department VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '吸收单位' ,
@@ -188,8 +188,8 @@ CREATE TABLE tb_edu_athlete_transport(
 DROP TABLE IF EXISTS tb_edu_athlete_coach_evaluation;;/*SkipError*/
 CREATE TABLE tb_edu_athlete_coach_evaluation(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员学号' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员代码' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
+    coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员' ,
     start_date DATE    COMMENT '开始日期' ,
     end_date DATE    COMMENT '结束日期' ,
     evaluation VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '总体评价' ,
@@ -205,7 +205,7 @@ CREATE TABLE tb_edu_athlete_coach_evaluation(
 DROP TABLE IF EXISTS tb_edu_athlete_other_trianning_info;;/*SkipError*/
 CREATE TABLE tb_edu_athlete_other_trianning_info(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员学号' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
     record_date DATE    COMMENT '记录时间' ,
     content VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '内容' ,
     create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
@@ -221,7 +221,7 @@ CREATE TABLE tb_edu_athlete_other_trianning_info(
 DROP TABLE IF EXISTS tb_edu_athlete_literacy_score;;/*SkipError*/
 CREATE TABLE tb_edu_athlete_literacy_score(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员学号' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
     grade VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '年级' ,
     academic_year VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教学年度' ,
     semester VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '学期' ,
@@ -297,7 +297,7 @@ CREATE TABLE tb_edu_coach(
 DROP TABLE IF EXISTS tb_edu_coach_edu_resume;;/*SkipError*/
 CREATE TABLE tb_edu_coach_edu_resume(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员代码' ,
+    coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员' ,
     start_date DATE    COMMENT '开始日期' ,
     end_date DATE    COMMENT '结束日期' ,
     resume VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '从事何种工作' ,
@@ -313,7 +313,7 @@ CREATE TABLE tb_edu_coach_edu_resume(
 DROP TABLE IF EXISTS tb_edu_coach_sport_resume;;/*SkipError*/
 CREATE TABLE tb_edu_coach_sport_resume(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员代码' ,
+    coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员' ,
     sport_name VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动项目' ,
     attend_date DATE    COMMENT '参加时间' ,
     awarded_highest_grade VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '获得最高等级' ,
@@ -335,7 +335,7 @@ CREATE TABLE tb_edu_coach_sport_resume(
 DROP TABLE IF EXISTS tb_edu_coach_performance;;/*SkipError*/
 CREATE TABLE tb_edu_coach_performance(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员代码' ,
+    coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员' ,
     performance_year INT NOT NULL  DEFAULT 0 COMMENT '业务年度' ,
     athlete_num INT NOT NULL  DEFAULT 0 COMMENT '现带训(人)' ,
     attend_num INT NOT NULL  DEFAULT 0 COMMENT '年度进队(人)' ,
@@ -376,7 +376,7 @@ CREATE TABLE tb_edu_coach_performance(
 DROP TABLE IF EXISTS tb_edu_coach_training;;/*SkipError*/
 CREATE TABLE tb_edu_coach_training(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员代码' ,
+    coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员' ,
     start_date DATE    COMMENT '开始日期' ,
     end_date DATE    COMMENT '结束日期' ,
     training_place VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '培训地点' ,
@@ -397,7 +397,7 @@ CREATE TABLE tb_edu_coach_training(
 DROP TABLE IF EXISTS tb_edu_coach_paper;;/*SkipError*/
 CREATE TABLE tb_edu_coach_paper(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员代码' ,
+    coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员' ,
     paper_title VARCHAR(128)    COMMENT '论文名称' ,
     publication_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '刊物名称' ,
     publication_level VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '刊物等级' ,
@@ -433,7 +433,6 @@ DROP TABLE IF EXISTS tb_edu_sport_venue;;/*SkipError*/
 CREATE TABLE tb_edu_sport_venue(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
     sport_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动项目' ,
-    sport_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '运动项目' ,
     venue_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '场馆名称' ,
     venue_type VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '场馆类型' ,
     venue_capacity VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '容纳人数' ,
@@ -455,7 +454,6 @@ DROP TABLE IF EXISTS tb_edu_sport_equipment;;/*SkipError*/
 CREATE TABLE tb_edu_sport_equipment(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
     sport_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动项目' ,
-    sport_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '运动项目' ,
     equipment_type VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '器材分类' ,
     equipment_sn VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '器材序列号' ,
     equipment_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '器材名称' ,
@@ -478,10 +476,8 @@ DROP TABLE IF EXISTS tb_edu_sport_class;;/*SkipError*/
 CREATE TABLE tb_edu_sport_class(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
     class_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练班名称' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员代码' ,
-    coach_name VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员姓名' ,
-    sport_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动项目代码' ,
-    sport_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '运动项目名称' ,
+    coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员' ,
+    sport_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动项目' ,
     training_year INT NOT NULL  DEFAULT 0 COMMENT '训练年度' ,
     training_stage VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练阶段' ,
     training_type VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练形式' ,
@@ -503,7 +499,7 @@ CREATE TABLE tb_edu_sport_class(
 DROP TABLE IF EXISTS tb_edu_sport_class_file;;/*SkipError*/
 CREATE TABLE tb_edu_sport_class_file(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
+    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练队' ,
     pub_title VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '发布标题' ,
     pub_content VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '内容描述' ,
     file_type VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '文件类型' ,
@@ -523,8 +519,8 @@ CREATE TABLE tb_edu_sport_class_file(
 DROP TABLE IF EXISTS tb_edu_sport_class_athlete_attend;;/*SkipError*/
 CREATE TABLE tb_edu_sport_class_athlete_attend(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员学号' ,
+    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练队' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
     attend_status VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '考勤状态' ,
     attend_time DATETIME    COMMENT '考勤时间' ,
     create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
@@ -542,8 +538,8 @@ CREATE TABLE tb_edu_sport_class_athlete_attend(
 DROP TABLE IF EXISTS tb_edu_sport_class_athlete_leave;;/*SkipError*/
 CREATE TABLE tb_edu_sport_class_athlete_leave(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员学号' ,
+    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练队' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
     start_date DATETIME    COMMENT '开始日期' ,
     end_date DATETIME    COMMENT '结束日期' ,
     leave_cause VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '请假原因' ,
@@ -561,9 +557,8 @@ CREATE TABLE tb_edu_sport_class_athlete_leave(
 DROP TABLE IF EXISTS tb_edu_sport_class_week_plan;;/*SkipError*/
 CREATE TABLE tb_edu_sport_class_week_plan(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
-    task_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '发布人' ,
+    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练队' ,
+    plan_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
     start_date DATE    COMMENT '周开始日期' ,
     end_time DATE    COMMENT '周结束日期' ,
     task_goal VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '目的任务' ,
@@ -614,9 +609,8 @@ CREATE TABLE tb_edu_sport_class_week_plan(
 DROP TABLE IF EXISTS tb_edu_sport_class_course_plan;;/*SkipError*/
 CREATE TABLE tb_edu_sport_class_course_plan(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
-    task_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '发布人' ,
+    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练队' ,
+    plan_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
     course_date DATE    COMMENT '课训日期' ,
     task_goal VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '目的任务' ,
     prepare_workload VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '准备训练量' ,
@@ -646,9 +640,8 @@ CREATE TABLE tb_edu_sport_class_course_plan(
 DROP TABLE IF EXISTS tb_edu_sport_class_winter_plan;;/*SkipError*/
 CREATE TABLE tb_edu_sport_class_winter_plan(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
-    task_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '发布人' ,
+    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练队' ,
+    plan_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
     prepare_start_date DATE    COMMENT '准备期开始日期' ,
     prepare_end_date DATE    COMMENT '准备期结束日期' ,
     prepare_goal VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '准备期训练任务' ,
@@ -697,9 +690,8 @@ CREATE TABLE tb_edu_sport_class_winter_plan(
 DROP TABLE IF EXISTS tb_edu_sport_class_summer_plan;;/*SkipError*/
 CREATE TABLE tb_edu_sport_class_summer_plan(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
-    task_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '发布人' ,
+    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练队' ,
+    plan_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
     prepare_start_date DATE    COMMENT '准备期开始日期' ,
     prepare_end_date DATE    COMMENT '准备期结束日期' ,
     prepare_goal VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '准备期训练任务' ,
@@ -747,9 +739,8 @@ CREATE TABLE tb_edu_sport_class_summer_plan(
 DROP TABLE IF EXISTS tb_edu_sport_class_year_plan;;/*SkipError*/
 CREATE TABLE tb_edu_sport_class_year_plan(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
-    task_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '发布人' ,
+    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练队' ,
+    plan_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
     team_situation TEXT    COMMENT '初始情况' ,
     year_goal TEXT    COMMENT '全年任务' ,
     prepare_start_date DATE    COMMENT '准备期开始日期' ,
@@ -826,9 +817,8 @@ CREATE TABLE tb_edu_sport_class_year_plan(
 DROP TABLE IF EXISTS tb_edu_sport_class_year_summary;;/*SkipError*/
 CREATE TABLE tb_edu_sport_class_year_summary(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
-    task_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '发布人' ,
+    year_plan_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练计划' ,
+    coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '发布人' ,
     year_performance TEXT    COMMENT '执行情况' ,
     year_weakness TEXT    COMMENT '全年任务' ,
     improvement VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '改进方向' ,
@@ -850,10 +840,8 @@ CREATE TABLE tb_edu_sport_class_year_summary(
 DROP TABLE IF EXISTS tb_edu_sport_class_athlete_year_goal;;/*SkipError*/
 CREATE TABLE tb_edu_sport_class_athlete_year_goal(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    sport_class_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练班主键id' ,
-    task_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '训练计划名称' ,
-    coach_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '发布人' ,
-    athlete_no VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员学号' ,
+    year_plan_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '训练计划' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
     event_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '小项代码' ,
     performance_goal VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '成绩目标' ,
     create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,

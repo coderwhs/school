@@ -10,8 +10,8 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="教练员代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachNo']" dict="tb_edu_coach,coach_name,coach_no" />
+        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
         </a-form-item>
         <a-form-item label="论文名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'paperTitle', validatorRules.paperTitle]" placeholder="请输入论文名称"></a-input>
@@ -64,11 +64,11 @@
 
         confirmLoading: false,
         validatorRules:{
-        coachNo:{rules: [{ required: true, message: '请输入教练员代码!' }]},
-        paperTitle:{},
+        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+        paperTitle:{rules: [{ required: true, message: '请输入论文名称!' }]},
         publicationName:{rules: [{ required: true, message: '请输入刊物名称!' }]},
         publicationLevel:{rules: [{ required: true, message: '请输入刊物等级!' }]},
-        publishDate:{},
+        publishDate:{rules: [{ required: true, message: '请输入发表日期!' }]},
         },
         url: {
           add: "/edusport/coachPaper/add",
@@ -80,15 +80,21 @@
     created () {
     },
     methods: {
-      add () {
-        this.edit({});
+      add(coachId) {
+        this.hiding = true;
+        if (coachId) {
+          this.coachId = coachId;
+          this.edit({coachId}, '');
+        } else {
+          this.$message.warning("请选择一个教练员信息");
+        }
       },
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'coachNo','paperTitle','publicationName','publicationLevel','publishDate'))
+          this.form.setFieldsValue(pick(this.model,'coachId','paperTitle','publicationName','publicationLevel','publishDate'))
         })
       },
       close () {
@@ -131,7 +137,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'coachNo','paperTitle','publicationName','publicationLevel','publishDate'))
+        this.form.setFieldsValue(pick(row,'coachId','paperTitle','publicationName','publicationLevel','publishDate'))
       },
 
       

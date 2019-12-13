@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 /**
  * @Description: 年度训练运动员素质目标信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 public interface ISportClassAthleteYearGoalService extends IService<SportClassAthleteYearGoal> {

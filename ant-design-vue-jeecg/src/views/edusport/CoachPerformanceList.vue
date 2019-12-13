@@ -5,8 +5,8 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="教练员代码">
-              <a-input placeholder="请输入教练员代码" v-model="queryParam.coachNo"></a-input>
+            <a-form-item label="教练员">
+              <a-input placeholder="请输入教练员" v-model="queryParam.coachId"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8" >
@@ -131,14 +131,14 @@
             }
           },
           {
-            title:'教练员代码',
+            title:'教练员',
             align:"center",
-            dataIndex: 'coachNo',
+            dataIndex: 'coachId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
+                return filterMultiDictText(this.dictOptions['coachId'], text+"")
               }
             }
           },
@@ -187,9 +187,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'coachNo', res.result)
+            this.$set(this.dictOptions, 'coachId', res.result)
           }
         })
       }

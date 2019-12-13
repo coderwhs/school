@@ -10,14 +10,8 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportClassId', validatorRules.sportClassId]" placeholder="请输入训练班"></a-input>
-        </a-form-item>
-        <a-form-item label="训练计划名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'taskName', validatorRules.taskName]" placeholder="请输入训练计划名称"></a-input>
-        </a-form-item>
-        <a-form-item label="发布人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'coachNo', validatorRules.coachNo]" placeholder="请输入发布人"></a-input>
+        <a-form-item label="年度计划" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'yearPlanId', validatorRules.yearPlanId]" placeholder="请输入年度计划"></a-input>
         </a-form-item>
         <a-form-item label="执行情况" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'yearPerformance', validatorRules.yearPerformance]" placeholder="请输入执行情况"></a-input>
@@ -77,9 +71,7 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
-        taskName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
-        coachNo:{rules: [{ required: true, message: '请输入发布人!' }]},
+        yearPlanId:{rules: [{ required: true, message: '请输入年度计划!' }]},
         yearPerformance:{},
         yearWeakness:{},
         improvement:{},
@@ -106,7 +98,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','taskName','coachNo','yearPerformance','yearWeakness','improvement','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
+          this.form.setFieldsValue(pick(this.model,'yearPlanId','yearPerformance','yearWeakness','improvement','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
         })
       },
       close () {
@@ -149,7 +141,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','taskName','coachNo','yearPerformance','yearWeakness','improvement','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
+        this.form.setFieldsValue(pick(row,'yearPlanId','yearPerformance','yearWeakness','improvement','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
       }
       
     }

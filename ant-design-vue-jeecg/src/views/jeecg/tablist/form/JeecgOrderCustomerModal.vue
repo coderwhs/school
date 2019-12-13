@@ -311,10 +311,12 @@
         this.previewImage=''
       },
       handlePicView(url){
+        console.log("handlePicView.file.url: ",url);
         this.previewImage = this.url.imgerver + "/" + url
         this.previewVisible = true
       },
       handlePreview(file) {
+        console.log("handlePicPreview.file.url: ",file.url);
         this.previewImage = file.url || file.thumbUrl
         this.previewVisible = true
       },
@@ -322,6 +324,7 @@
        // let pics = this.model.idcardPic.split(",");
         //let pics_len = pics.length;
         // 显示上传的最后一个图片
+        console.log("getIdCardView.file.url: ",url);
         return this.url.imgerver + "/" + url
       }
     }

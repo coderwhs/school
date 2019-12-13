@@ -116,32 +116,23 @@
             }
           },
           {
-            title:'训练班',
+            title:'年度计划',
             align:"center",
-            dataIndex: 'sportClassId',
+            dataIndex: 'yearPlanId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['sportClassId'], text+"")
+                return filterMultiDictText(this.dictOptions['yearPlanId'], text+"")
               }
             }
           },
           {
-            title:'训练计划名称',
+            title:'竞赛科评价日期',
             align:"center",
-            dataIndex: 'taskName'
-          },
-          {
-            title:'发布人',
-            align:"center",
-            dataIndex: 'coachNo',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
-              }
+            dataIndex: 'deptEvaluationDate',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
           {
@@ -177,14 +168,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class,class_name,id').then((res) => {
+        initDictOptions('tb_edu_sport_class_year_plan,plan_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'sportClassId', res.result)
-          }
-        })
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'coachNo', res.result)
+            this.$set(this.dictOptions, 'yearPlanId', res.result)
           }
         })
       }

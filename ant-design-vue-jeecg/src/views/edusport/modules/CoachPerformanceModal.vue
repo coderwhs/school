@@ -10,8 +10,8 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="教练员代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachNo']" dict="tb_edu_coach,coach_name,coach_no" />
+        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
         </a-form-item>
         <a-form-item label="业务年度" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'performanceYear', validatorRules.performanceYear]" placeholder="请输入业务年度" style="width: 100%"/>
@@ -129,7 +129,7 @@
 
         confirmLoading: false,
         validatorRules:{
-        coachNo:{rules: [{ required: true, message: '请输入教练员代码!' }]},
+        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
         performanceYear:{rules: [{ required: true, message: '请输入业务年度!' }]},
         athleteNum:{},
         attendNum:{},
@@ -176,7 +176,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'coachNo','performanceYear','athleteNum','attendNum','leaveNum','citySchoolNum','provinceSchoolNum','provinceTeamNum','bayiTeamNum','toNationalTeam','toNationalYouthTeam','toProvinceTeam','toProvinceSchool','toCitySchool','toCollege','toRemark','contestFirst','contestSecond','contestThird','contestExcellence','contestGood','contestTotalPoints','contestRemark','isScTeam','rewardsPunishments','appraisalScore','appraisalGrade','auditOpinion'))
+          this.form.setFieldsValue(pick(this.model,'coachId','performanceYear','athleteNum','attendNum','leaveNum','citySchoolNum','provinceSchoolNum','provinceTeamNum','bayiTeamNum','toNationalTeam','toNationalYouthTeam','toProvinceTeam','toProvinceSchool','toCitySchool','toCollege','toRemark','contestFirst','contestSecond','contestThird','contestExcellence','contestGood','contestTotalPoints','contestRemark','isScTeam','rewardsPunishments','appraisalScore','appraisalGrade','auditOpinion'))
         })
       },
       close () {
@@ -219,7 +219,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'coachNo','performanceYear','athleteNum','attendNum','leaveNum','citySchoolNum','provinceSchoolNum','provinceTeamNum','bayiTeamNum','toNationalTeam','toNationalYouthTeam','toProvinceTeam','toProvinceSchool','toCitySchool','toCollege','toRemark','contestFirst','contestSecond','contestThird','contestExcellence','contestGood','contestTotalPoints','contestRemark','isScTeam','rewardsPunishments','appraisalScore','appraisalGrade','auditOpinion'))
+        this.form.setFieldsValue(pick(row,'coachId','performanceYear','athleteNum','attendNum','leaveNum','citySchoolNum','provinceSchoolNum','provinceTeamNum','bayiTeamNum','toNationalTeam','toNationalYouthTeam','toProvinceTeam','toProvinceSchool','toCitySchool','toCollege','toRemark','contestFirst','contestSecond','contestThird','contestExcellence','contestGood','contestTotalPoints','contestRemark','isScTeam','rewardsPunishments','appraisalScore','appraisalGrade','auditOpinion'))
       },
 
       

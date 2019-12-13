@@ -4,21 +4,6 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="教练员代码">
-              <a-input placeholder="请输入教练员代码" v-model="queryParam.coachNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
 
         </a-row>
       </a-form>
@@ -28,7 +13,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('教练员运动经历信息表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('教练员个人运动经历表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -117,7 +102,7 @@
     },
     data () {
       return {
-        description: '教练员运动经历信息表管理页面',
+        description: '教练员个人运动经历表管理页面',
         // 表头
         columns: [
           {
@@ -131,26 +116,26 @@
             }
           },
           {
-            title:'教练员代码',
+            title:'教练员',
             align:"center",
-            dataIndex: 'coachNo',
+            dataIndex: 'coachId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
+                return filterMultiDictText(this.dictOptions['coachId'], text+"")
               }
             }
           },
           {
             title:'运动项目',
             align:"center",
-            dataIndex: 'sportName',
+            dataIndex: 'sportCode',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['sportName'], text+"")
+                return filterMultiDictText(this.dictOptions['sportCode'], text+"")
               }
             }
           },
@@ -165,7 +150,14 @@
           {
             title:'获得最高等级',
             align:"center",
-            dataIndex: 'awardedHighestGrade'
+            dataIndex: 'awardedHighestGrade',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['awardedHighestGrade'], text+"")
+              }
+            }
           },
           {
             title:'获得年度(年)',
@@ -187,6 +179,7 @@
           importExcelUrl: "edusport/coachSportResume/importExcel",
         },
         dictOptions:{
+         awardedHighestGrade:[],
         },
       }
     },
@@ -197,14 +190,19 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'coachNo', res.result)
+            this.$set(this.dictOptions, 'coachId', res.result)
           }
         })
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'sportName', res.result)
+            this.$set(this.dictOptions, 'sportCode', res.result)
+          }
+        })
+        initDictOptions('athlete_tech_grade').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'awardedHighestGrade', res.result)
           }
         })
       }

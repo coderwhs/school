@@ -10,8 +10,8 @@
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="姓名">
-              <a-input placeholder="请输入姓名" v-model="queryParam.coachName"></a-input>
+            <a-form-item label="教练员姓名">
+              <a-input placeholder="请输入教练员姓名" v-model="queryParam.coachName"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8" >
@@ -37,12 +37,8 @@
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
-      </a-dropdown>
+      <a-button @click="handleSignUp" type="primary" icon="unlock">开通账号</a-button>
+      <a-button @click="handleSignLock" type="primary" icon="lock">冻结账号</a-button>
     </div>
 
     <!-- table区域-begin -->
@@ -57,13 +53,16 @@
         size="middle"
         bordered
         rowKey="id"
+        filterMultiple="filterMultiple"
         :columns="columns"
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:type}"
+        :customRow="clickThenCheck"
         @change="handleTableChange">
+
+        <!-- :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"-->
 
         <template slot="htmlSlot" slot-scope="text">
           <div v-html="text"></div>
@@ -103,6 +102,22 @@
 
       </a-table>
     </div>
+    <!-- table区域-end -->
+
+    <a-tabs defaultActiveKey="1">
+      <a-tab-pane tab="个人简历" key="1">
+        <Coach-Edu-Resume-List ref="CoachEduResumeList"></Coach-Edu-Resume-List>
+      </a-tab-pane>
+      <a-tab-pane tab="运动经历" key="2" forceRender>
+        <Coach-Sport-Resume-List ref="CoachSportResumeList"></Coach-Sport-Resume-List>
+      </a-tab-pane>
+      <a-tab-pane tab="培训经历" key="3" forceRender>
+        <Coach-Training-List ref="CoachTrainingList"></Coach-Training-List>
+      </a-tab-pane>
+      <a-tab-pane tab="论文发表" key="4" forceRender>
+        <Coach-Paper-List ref="CoachPaperList"></Coach-Paper-List>
+      </a-tab-pane>
+    </a-tabs>
 
     <coach-modal ref="modalForm" @ok="modalFormOk"></coach-modal>
   </a-card>
@@ -111,18 +126,47 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import CoachEduResumeList from './CoachEduResumeList'
+  import CoachSportResumeList from './CoachSportResumeList'
+  import CoachTrainingList from './CoachTrainingList'
+  import CoachPaperList from './CoachPaperList'
   import CoachModal from './modules/CoachModal'
+  import CoachEduResumeModal from './modules/CoachEduResumeModal'
+  import CoachSportResumeModal from './modules/CoachSportResumeModal'
+  import CoachTrainingModal from './modules/CoachTrainingModal'
+  import CoachPaperModal from './modules/CoachPaperModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
     name: "CoachList",
     mixins:[JeecgListMixin],
     components: {
-      CoachModal
+      CoachEduResumeList,
+      CoachSportResumeList,
+      CoachTrainingList,
+      CoachPaperList,
+      CoachModal,
+      CoachEduResumeModal,
+      CoachSportResumeModal,
+      CoachTrainingModal,
+      CoachPaperModal,
     },
     data () {
       return {
-        description: '教练员信息表管理页面',
+        description: '教练员名单管理页面',
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+
         // 表头
         columns: [
           {
@@ -141,7 +185,7 @@
             dataIndex: 'coachNo'
           },
           {
-            title:'姓名',
+            title:'教练员姓名',
             align:"center",
             dataIndex: 'coachName'
           },
@@ -214,12 +258,15 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
+        type: "radio",
         url: {
           list: "/edusport/coach/list",
           delete: "/edusport/coach/delete",
           deleteBatch: "/edusport/coach/deleteBatch",
           exportXlsUrl: "/edusport/coach/exportXls",
           importExcelUrl: "edusport/coach/importExcel",
+          signUpUrl: "edusport/coach/signUp",
+          signLockUrl: "edusport/coach/signLock",
         },
         dictOptions:{
          gender:[],
@@ -250,8 +297,93 @@
             this.$set(this.dictOptions, 'staffType', res.result)
           }
         })
+      },
+
+      handleSignUp: function () {
+      },
+      handleSignLock: function () {
+      },
+
+      clickThenCheck(record) {
+        return {
+          on: {
+            click: () => {
+              this.onSelectChange(record.id.split(","), [record]);
+            }
+          }
+        };
+      },
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectionRows = selectionRows;
+        let coachId = this.selectedRowKeys[0];
+        console.log("selectedRowKeys: " + selectedRowKeys);
+        console.log("selectionRows: " + JSON.stringify(selectionRows));
+        console.log("selectionRows.coachId: " + JSON.stringify(coachId));
+
+        this.$refs.CoachEduResumeList.getListByCoachId(coachId);
+        this.$refs.CoachSportResumeList.getListByCoachId(coachId);
+        this.$refs.CoachTrainingList.getListByCoachId(coachId);
+        this.$refs.CoachPaperList.getListByCoachId(coachId);
+      },
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+
+        this.$refs.CoachEduResumeList.queryParam.coachNo = null;
+        this.$refs.CoachSportResumeList.queryParam.coachNo = null;
+        this.$refs.CoachTrainingList.queryParam.coachNo = null;
+        this.$refs.CoachPaperList.queryParam.coachNo = null;
+
+        this.$refs.CoachEduResumeList.loadData();
+        this.$refs.CoachSportResumeList.loadData();
+        this.$refs.CoachTrainingList.loadData();
+        this.$refs.CoachPaperList.loadData();
+
+        this.$refs.CoachEduResumeList.selectedRowKeys = [];
+        this.$refs.CoachEduResumeList.selectionRows = [];
+
+        this.$refs.CoachSportResumeList.selectedRowKeys = [];
+        this.$refs.CoachSportResumeList.selectionRows = [];
+
+        this.$refs.CoachTrainingList.selectedRowKeys = [];
+        this.$refs.CoachTrainingList.selectionRows = [];
+
+        this.$refs.CoachPaperList.selectedRowKeys = [];
+        this.$refs.CoachPaperList.selectionRows = [];
+      },
+      searchQuery:function(){
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+
+        this.$refs.CoachEduResumeList.queryParam.coachNo = null;
+        this.$refs.CoachSportResumeList.queryParam.coachNo = null;
+        this.$refs.CoachTrainingList.queryParam.coachNo = null;
+        this.$refs.CoachPaperList.queryParam.coachNo = null;
+
+        this.$refs.CoachEduResumeList.loadData();
+        this.$refs.CoachSportResumeList.loadData();
+        this.$refs.CoachTrainingList.loadData();
+        this.$refs.CoachPaperList.loadData();
+
+        this.$refs.CoachEduResumeList.selectedRowKeys = [];
+        this.$refs.CoachEduResumeList.selectionRows = [];
+
+        this.$refs.CoachSportResumeList.selectedRowKeys = [];
+        this.$refs.CoachSportResumeList.selectionRows = [];
+
+        this.$refs.CoachTrainingList.selectedRowKeys = [];
+        this.$refs.CoachTrainingList.selectionRows = [];
+
+        this.$refs.CoachPaperList.selectedRowKeys = [];
+        this.$refs.CoachPaperList.selectionRows = [];
+
+        this.loadData();
       }
-       
+
+
+
+
     }
   }
 </script>

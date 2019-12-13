@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 /**
  * @Description: 教练员年度业务情况表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 public interface ICoachPerformanceService extends IService<CoachPerformance> {

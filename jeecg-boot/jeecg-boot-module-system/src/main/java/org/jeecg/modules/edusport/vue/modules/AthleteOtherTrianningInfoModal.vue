@@ -10,8 +10,8 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="运动员学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['athleteNo']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员学号"/>
+        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
         <a-form-item label="记录时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择记录时间" v-decorator="[ 'recordDate', validatorRules.recordDate]" :trigger-change="true" style="width: 100%"/>
@@ -30,13 +30,13 @@
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import JDate from '@/components/jeecg/JDate'  
-  import JDictSelectTag from "@/components/dict/JDictSelectTag"
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "AthleteOtherTrianningInfoModal",
     components: { 
       JDate,
-      JDictSelectTag,
+      JSearchSelectTag,
     },
     data () {
       return {
@@ -56,8 +56,8 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteNo:{rules: [{ required: true, message: '请输入运动员学号!' }]},
-        recordDate:{},
+        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
+        recordDate:{rules: [{ required: true, message: '请输入记录时间!' }]},
         content:{rules: [{ required: true, message: '请输入内容!' }]},
         },
         url: {
@@ -78,7 +78,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteNo','recordDate','content'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','recordDate','content'))
         })
       },
       close () {
@@ -121,7 +121,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteNo','recordDate','content'))
+        this.form.setFieldsValue(pick(row,'athleteId','recordDate','content'))
       },
 
       

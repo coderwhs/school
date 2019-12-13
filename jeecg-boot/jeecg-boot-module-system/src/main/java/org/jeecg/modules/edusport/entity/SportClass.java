@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 训练队表
  * @Author: jeecg-boot
- * @Date:   2019-12-12
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -32,7 +32,7 @@ public class SportClass implements Serializable {
     private java.lang.String className;
 	/**教练员*/
 	@Excel(name = "教练员", width = 15)
-    private java.lang.String coachNo;
+    private java.lang.String coachId;
 	/**运动项目*/
 	@Excel(name = "运动项目", width = 15)
     private java.lang.String sportCode;

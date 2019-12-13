@@ -10,17 +10,17 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="教练员代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachNo']" dict="tb_edu_coach,coach_name,coach_no" />
+        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
         </a-form-item>
         <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportName']" dict="tb_edu_sport,sport_name,sport_code" />
+          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
         <a-form-item label="参加时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择参加时间" v-decorator="[ 'attendDate', validatorRules.attendDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="获得最高等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'awardedHighestGrade', validatorRules.awardedHighestGrade]" placeholder="请输入获得最高等级"></a-input>
+          <j-dict-select-tag type="list" v-decorator="['awardedHighestGrade']" :trigger-change="true" dictCode="athlete_tech_grade" placeholder="请选择获得最高等级"/>
         </a-form-item>
         <a-form-item label="获得年度(年)" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'awardedDate', validatorRules.awardedDate]" placeholder="请输入获得年度(年)"></a-input>
@@ -48,12 +48,14 @@
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import JDate from '@/components/jeecg/JDate'  
+  import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "CoachSportResumeModal",
     components: { 
       JDate,
+      JDictSelectTag,
       JSearchSelectTag,
     },
     data () {
@@ -74,15 +76,15 @@
 
         confirmLoading: false,
         validatorRules:{
-        coachNo:{rules: [{ required: true, message: '请输入教练员代码!' }]},
-        sportName:{rules: [{ required: true, message: '请输入运动项目!' }]},
-        attendDate:{},
-        awardedHighestGrade:{rules: [{ required: true, message: '请输入获得最高等级!' }]},
-        awardedDate:{rules: [{ required: true, message: '请输入获得年度(年)!' }]},
-        highestTrainingUnit:{rules: [{ required: true, message: '请输入最高训练单位!' }]},
-        trainingDate:{rules: [{ required: true, message: '请输入训练年度(年)!' }]},
-        contestEvent:{rules: [{ required: true, message: '请输入比赛小项!' }]},
-        contestScore:{rules: [{ required: true, message: '请输入最好成绩!' }]},
+        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+        sportCode:{rules: [{ required: true, message: '请输入运动项目!' }]},
+        attendDate:{rules: [{ required: true, message: '请输入参加时间!' }]},
+        awardedHighestGrade:{},
+        awardedDate:{},
+        highestTrainingUnit:{},
+        trainingDate:{},
+        contestEvent:{},
+        contestScore:{},
         },
         url: {
           add: "/edusport/coachSportResume/add",
@@ -102,7 +104,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'coachNo','sportName','attendDate','awardedHighestGrade','awardedDate','highestTrainingUnit','trainingDate','contestEvent','contestScore'))
+          this.form.setFieldsValue(pick(this.model,'coachId','sportCode','attendDate','awardedHighestGrade','awardedDate','highestTrainingUnit','trainingDate','contestEvent','contestScore'))
         })
       },
       close () {
@@ -145,7 +147,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'coachNo','sportName','attendDate','awardedHighestGrade','awardedDate','highestTrainingUnit','trainingDate','contestEvent','contestScore'))
+        this.form.setFieldsValue(pick(row,'coachId','sportCode','attendDate','awardedHighestGrade','awardedDate','highestTrainingUnit','trainingDate','contestEvent','contestScore'))
       },
 
       

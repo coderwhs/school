@@ -116,19 +116,14 @@
             }
           },
           {
-            title:'训练班',
+            title:'训练队',
             align:"center",
             dataIndex: 'sportClassId'
           },
           {
             title:'训练计划名称',
             align:"center",
-            dataIndex: 'taskName'
-          },
-          {
-            title:'发布人',
-            align:"center",
-            dataIndex: 'coachNo'
+            dataIndex: 'planName'
           },
           {
             title: '操作',

@@ -10,11 +10,11 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="运动员学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'athleteNo', validatorRules.athleteNo]" placeholder="请输入运动员学号"></a-input>
+        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'athleteId', validatorRules.athleteId]" placeholder="请输入运动员"></a-input>
         </a-form-item>
-        <a-form-item label="运动项目代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportCode', validatorRules.sportCode]" placeholder="请输入运动项目代码"></a-input>
+        <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'sportCode', validatorRules.sportCode]" placeholder="请输入运动项目"></a-input>
         </a-form-item>
         <a-form-item label="运动员等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['athleteTechGrade']" :trigger-change="true" dictCode="athlete_tech_grade" placeholder="请选择运动员等级"/>
@@ -22,8 +22,8 @@
         <a-form-item label="输送单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'transportDepartment', validatorRules.transportDepartment]" placeholder="请输入输送单位"></a-input>
         </a-form-item>
-        <a-form-item label="输送教练员代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'transportCoachNo', validatorRules.transportCoachNo]" placeholder="请输入输送教练员代码"></a-input>
+        <a-form-item label="输送教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'transportCoachId', validatorRules.transportCoachId]" placeholder="请输入输送教练员"></a-input>
         </a-form-item>
         <a-form-item label="输送时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择输送时间" v-decorator="[ 'transportDate', validatorRules.transportDate]" :trigger-change="true" style="width: 100%"/>
@@ -73,12 +73,12 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteNo:{rules: [{ required: true, message: '请输入运动员学号!' }]},
-        sportCode:{rules: [{ required: true, message: '请输入运动项目代码!' }]},
+        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
+        sportCode:{rules: [{ required: true, message: '请输入运动项目!' }]},
         athleteTechGrade:{rules: [{ required: true, message: '请输入运动员等级!' }]},
         transportDepartment:{rules: [{ required: true, message: '请输入输送单位!' }]},
-        transportCoachNo:{rules: [{ required: true, message: '请输入输送教练员代码!' }]},
-        transportDate:{},
+        transportCoachId:{rules: [{ required: true, message: '请输入输送教练员!' }]},
+        transportDate:{rules: [{ required: true, message: '请输入输送时间!' }]},
         acceptDepartmentType:{rules: [{ required: true, message: '请输入吸收单位类别!' }]},
         acceptDepartment:{rules: [{ required: true, message: '请输入吸收单位!' }]},
         },
@@ -100,7 +100,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteNo','sportCode','athleteTechGrade','transportDepartment','transportCoachNo','transportDate','acceptDepartmentType','acceptDepartment'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','sportCode','athleteTechGrade','transportDepartment','transportCoachId','transportDate','acceptDepartmentType','acceptDepartment'))
         })
       },
       close () {
@@ -143,7 +143,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteNo','sportCode','athleteTechGrade','transportDepartment','transportCoachNo','transportDate','acceptDepartmentType','acceptDepartment'))
+        this.form.setFieldsValue(pick(row,'athleteId','sportCode','athleteTechGrade','transportDepartment','transportCoachId','transportDate','acceptDepartmentType','acceptDepartment'))
       }
       
     }

@@ -10,11 +10,11 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportClassId', validatorRules.sportClassId]" placeholder="请输入训练班"></a-input>
+        <a-form-item label="年度计划" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'yearPlanId', validatorRules.yearPlanId]" placeholder="请输入年度计划"></a-input>
         </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'athleteNo', validatorRules.athleteNo]" placeholder="请输入运动员"></a-input>
+          <a-input v-decorator="[ 'athleteId', validatorRules.athleteId]" placeholder="请输入运动员"></a-input>
         </a-form-item>
         <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'eventCode', validatorRules.eventCode]" placeholder="请输入小项"></a-input>
@@ -57,8 +57,8 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
-        athleteNo:{rules: [{ required: true, message: '请输入运动员!' }]},
+        yearPlanId:{rules: [{ required: true, message: '请输入年度计划!' }]},
+        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
         eventCode:{rules: [{ required: true, message: '请输入小项!' }]},
         performanceGoal:{rules: [{ required: true, message: '请输入成绩目标!' }]},
         },
@@ -80,7 +80,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','athleteNo','eventCode','performanceGoal'))
+          this.form.setFieldsValue(pick(this.model,'yearPlanId','athleteId','eventCode','performanceGoal'))
         })
       },
       close () {
@@ -123,7 +123,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','athleteNo','eventCode','performanceGoal'))
+        this.form.setFieldsValue(pick(row,'yearPlanId','athleteId','eventCode','performanceGoal'))
       }
       
     }

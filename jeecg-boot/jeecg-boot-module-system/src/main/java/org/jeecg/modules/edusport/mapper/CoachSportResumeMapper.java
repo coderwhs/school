@@ -7,9 +7,9 @@ import org.jeecg.modules.edusport.entity.CoachSportResume;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * @Description: 教练员运动经历信息表
+ * @Description: 教练员个人运动经历表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 public interface CoachSportResumeMapper extends BaseMapper<CoachSportResume> {

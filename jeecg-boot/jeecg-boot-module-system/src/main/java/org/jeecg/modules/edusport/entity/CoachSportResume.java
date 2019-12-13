@@ -14,9 +14,9 @@ import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecg.common.aspect.annotation.Dict;
 
 /**
- * @Description: 教练员运动经历信息表
+ * @Description: 教练员个人运动经历表
  * @Author: jeecg-boot
- * @Date:   2019-12-11
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,12 +27,12 @@ public class CoachSportResume implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**教练员代码*/
-	@Excel(name = "教练员代码", width = 15)
-    private java.lang.String coachNo;
+	/**教练员*/
+	@Excel(name = "教练员", width = 15)
+    private java.lang.String coachId;
 	/**运动项目*/
 	@Excel(name = "运动项目", width = 15)
-    private java.lang.String sportName;
+    private java.lang.String sportCode;
 	/**参加时间*/
 	@Excel(name = "参加时间", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")

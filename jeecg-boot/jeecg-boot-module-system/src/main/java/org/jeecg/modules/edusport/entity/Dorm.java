@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 宿舍信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-12
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data

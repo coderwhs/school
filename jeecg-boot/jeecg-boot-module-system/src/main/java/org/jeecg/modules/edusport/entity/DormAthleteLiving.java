@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 宿舍运动员入住表
  * @Author: jeecg-boot
- * @Date:   2019-12-12
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 @Data
@@ -27,12 +27,12 @@ public class DormAthleteLiving implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**宿舍主键id*/
-	@Excel(name = "宿舍主键id", width = 15)
+	/**宿舍*/
+	@Excel(name = "宿舍", width = 15)
     private java.lang.String dormId;
 	/**运动员*/
 	@Excel(name = "运动员", width = 15)
-    private java.lang.String athleteNo;
+    private java.lang.String athleteId;
 	/**床位号*/
 	@Excel(name = "床位号", width = 15)
     private java.lang.String bedNo;

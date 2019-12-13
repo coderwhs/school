@@ -10,14 +10,11 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="训练队" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
         </a-form-item>
         <a-form-item label="训练计划名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'taskName', validatorRules.taskName]" placeholder="请输入训练计划名称"></a-input>
-        </a-form-item>
-        <a-form-item label="发布人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachNo']" dict="tb_edu_coach,coach_name,coach_no" />
+          <a-input v-decorator="[ 'planName', validatorRules.planName]" placeholder="请输入训练计划名称"></a-input>
         </a-form-item>
         <a-form-item label="周开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择周开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
@@ -164,45 +161,44 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
-        taskName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
-        coachNo:{rules: [{ required: true, message: '请输入发布人!' }]},
-        startDate:{},
-        endTime:{},
+        sportClassId:{rules: [{ required: true, message: '请输入训练队!' }]},
+        planName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
+        startDate:{rules: [{ required: true, message: '请输入周开始日期!' }]},
+        endTime:{rules: [{ required: true, message: '请输入周结束日期!' }]},
         taskGoal:{rules: [{ required: true, message: '请输入目的任务!' }]},
-        monWorkload:{rules: [{ required: true, message: '请输入周一训练量!' }]},
-        monIntensity:{rules: [{ required: true, message: '请输入周一训练强度!' }]},
-        monTime:{rules: [{ required: true, message: '请输入周一训练时间!' }]},
-        monContent:{rules: [{ required: true, message: '请输入周一训练内容!' }]},
-        tueWorkload:{rules: [{ required: true, message: '请输入周二训练量!' }]},
-        tueIntensity:{rules: [{ required: true, message: '请输入周二训练强度!' }]},
-        tueTime:{rules: [{ required: true, message: '请输入周二训练时间!' }]},
-        tueContent:{rules: [{ required: true, message: '请输入周二训练内容!' }]},
-        wedWorkload:{rules: [{ required: true, message: '请输入周三训练量!' }]},
-        wedIntensity:{rules: [{ required: true, message: '请输入周三训练强度!' }]},
-        wedTime:{rules: [{ required: true, message: '请输入周三训练时间!' }]},
-        wedContent:{rules: [{ required: true, message: '请输入周三训练内容!' }]},
-        thuWorkload:{rules: [{ required: true, message: '请输入周四训练量!' }]},
-        thuIntensity:{rules: [{ required: true, message: '请输入周四训练强度!' }]},
-        thuTime:{rules: [{ required: true, message: '请输入周四训练时间!' }]},
-        thuContent:{rules: [{ required: true, message: '请输入周四训练内容!' }]},
-        friWorkload:{rules: [{ required: true, message: '请输入周五训练量!' }]},
-        friIntensity:{rules: [{ required: true, message: '请输入周五训练强度!' }]},
-        friTime:{rules: [{ required: true, message: '请输入周五训练时间!' }]},
-        friContent:{rules: [{ required: true, message: '请输入周五训练内容!' }]},
-        satWorkload:{rules: [{ required: true, message: '请输入周六训练量!' }]},
-        satIntensity:{rules: [{ required: true, message: '请输入周六训练强度!' }]},
-        satTime:{rules: [{ required: true, message: '请输入周六训练时间!' }]},
-        satContent:{rules: [{ required: true, message: '请输入周六训练内容!' }]},
-        sunWorkload:{rules: [{ required: true, message: '请输入周日训练量!' }]},
-        sunIntensity:{rules: [{ required: true, message: '请输入周日训练强度!' }]},
-        sunTime:{rules: [{ required: true, message: '请输入周日训练时间!' }]},
-        sunContent:{rules: [{ required: true, message: '请输入周日训练内容!' }]},
-        weekDays:{rules: [{ required: true, message: '请输入本周完成训练天数!' }]},
-        weekCourses:{rules: [{ required: true, message: '请输入本周完成训练课数!' }]},
-        weekHours:{rules: [{ required: true, message: '请输入本周完成训练时数!' }]},
-        weekWorkload:{rules: [{ required: true, message: '请输入本周运动量完成情况!' }]},
-        weekSummary:{rules: [{ required: true, message: '请输入本周训练小结!' }]},
+        monWorkload:{},
+        monIntensity:{},
+        monTime:{},
+        monContent:{},
+        tueWorkload:{},
+        tueIntensity:{},
+        tueTime:{},
+        tueContent:{},
+        wedWorkload:{},
+        wedIntensity:{},
+        wedTime:{},
+        wedContent:{},
+        thuWorkload:{},
+        thuIntensity:{},
+        thuTime:{},
+        thuContent:{},
+        friWorkload:{},
+        friIntensity:{},
+        friTime:{},
+        friContent:{},
+        satWorkload:{},
+        satIntensity:{},
+        satTime:{},
+        satContent:{},
+        sunWorkload:{},
+        sunIntensity:{},
+        sunTime:{},
+        sunContent:{},
+        weekDays:{},
+        weekCourses:{},
+        weekHours:{},
+        weekWorkload:{},
+        weekSummary:{},
         },
         url: {
           add: "/edusport/sportClassWeekPlan/add",
@@ -222,7 +218,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','taskName','coachNo','startDate','endTime','taskGoal','monWorkload','monIntensity','monTime','monContent','tueWorkload','tueIntensity','tueTime','tueContent','wedWorkload','wedIntensity','wedTime','wedContent','thuWorkload','thuIntensity','thuTime','thuContent','friWorkload','friIntensity','friTime','friContent','satWorkload','satIntensity','satTime','satContent','sunWorkload','sunIntensity','sunTime','sunContent','weekDays','weekCourses','weekHours','weekWorkload','weekSummary'))
+          this.form.setFieldsValue(pick(this.model,'sportClassId','planName','startDate','endTime','taskGoal','monWorkload','monIntensity','monTime','monContent','tueWorkload','tueIntensity','tueTime','tueContent','wedWorkload','wedIntensity','wedTime','wedContent','thuWorkload','thuIntensity','thuTime','thuContent','friWorkload','friIntensity','friTime','friContent','satWorkload','satIntensity','satTime','satContent','sunWorkload','sunIntensity','sunTime','sunContent','weekDays','weekCourses','weekHours','weekWorkload','weekSummary'))
         })
       },
       close () {
@@ -265,7 +261,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','taskName','coachNo','startDate','endTime','taskGoal','monWorkload','monIntensity','monTime','monContent','tueWorkload','tueIntensity','tueTime','tueContent','wedWorkload','wedIntensity','wedTime','wedContent','thuWorkload','thuIntensity','thuTime','thuContent','friWorkload','friIntensity','friTime','friContent','satWorkload','satIntensity','satTime','satContent','sunWorkload','sunIntensity','sunTime','sunContent','weekDays','weekCourses','weekHours','weekWorkload','weekSummary'))
+        this.form.setFieldsValue(pick(row,'sportClassId','planName','startDate','endTime','taskGoal','monWorkload','monIntensity','monTime','monContent','tueWorkload','tueIntensity','tueTime','tueContent','wedWorkload','wedIntensity','wedTime','wedContent','thuWorkload','thuIntensity','thuTime','thuContent','friWorkload','friIntensity','friTime','friContent','satWorkload','satIntensity','satTime','satContent','sunWorkload','sunIntensity','sunTime','sunContent','weekDays','weekCourses','weekHours','weekWorkload','weekSummary'))
       },
 
       

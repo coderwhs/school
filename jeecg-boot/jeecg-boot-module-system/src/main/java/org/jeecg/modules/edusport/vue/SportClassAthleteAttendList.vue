@@ -11,7 +11,7 @@
           </a-col>
           <a-col :md="6" :sm="8">
             <a-form-item label="运动员">
-              <a-input placeholder="请输入运动员" v-model="queryParam.athleteNo"></a-input>
+              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8" >
@@ -150,12 +150,12 @@
           {
             title:'运动员',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'athleteId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
               }
             }
           },
@@ -172,7 +172,7 @@
             }
           },
           {
-            title:'考勤时间',
+            title:'考勤日期',
             align:"center",
             dataIndex: 'attendTime',
             customRender:function (text) {
@@ -210,9 +210,9 @@
             this.$set(this.dictOptions, 'sportClassId', res.result)
           }
         })
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'athleteId', res.result)
           }
         })
         initDictOptions('attend_status').then((res) => {

@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 /**
  * @Description: 宿舍运动员请假表
  * @Author: jeecg-boot
- * @Date:   2019-12-12
+ * @Date:   2019-12-13
  * @Version: V1.0
  */
 public interface DormAthleteLeaveMapper extends BaseMapper<DormAthleteLeave> {
