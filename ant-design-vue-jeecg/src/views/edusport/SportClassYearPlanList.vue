@@ -115,7 +115,7 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportClassYearPlanModal from './modules/SportClassYearPlanStepModal'
+  import SportClassYearPlanModal from './modules/SportClassYearPlanModal__Style#Drawer'
   import SportClassAthleteYearGoalList from './SportClassAthleteYearGoalList'
   import SportClassAthleteYearGoalModal from './modules/SportClassAthleteYearGoalModal'
   import SportClassYearSummaryList from './SportClassYearSummaryList'
