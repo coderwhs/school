@@ -123,7 +123,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import DormModal from './modules/DormModal'
+  // import DormModal from './modules/DormModal'
+  import DormModal from './modules/DormModal__Style#Drawer'
   import DormAthleteLivingList from './DormAthleteLivingList'
   import DormAthleteLeaveList from './DormAthleteLeaveList'
   import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal'

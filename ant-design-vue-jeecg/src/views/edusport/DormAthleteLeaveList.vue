@@ -91,7 +91,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal'
+  // import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal'
+  import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import {getAction} from '@/api/manage'
 

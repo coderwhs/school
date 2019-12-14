@@ -1,12 +1,13 @@
 <template>
-  <a-modal
+  <a-drawer
     :title="title"
-    :width="width"
+    :width="drawerWidth"
+    :maskClosable="true"
+    placement="right"
+    :closable="true"
+    @close="close"
     :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭">
+    style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
@@ -34,7 +35,13 @@
 
       </a-form>
     </a-spin>
-  </a-modal>
+    <div class="drawer-bootom-button" v-show="!disableSubmit">
+      <a-popconfirm title="确定放弃编辑？" @confirm="handleCancel" okText="确定" cancelText="取消">
+        <a-button style="margin-right: .8rem">取消</a-button>
+      </a-popconfirm>
+      <a-button type="primary" @click="handleOk" :loading="confirmLoading">提交</a-button>
+    </div>
+  </a-drawer>
 </template>
 
 <script>
@@ -52,6 +59,8 @@
         title:"操作",
         width:800,
         visible: false,
+        drawerWidth:800,
+        disableSubmit:false,
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -96,7 +105,19 @@
       close () {
         this.$emit('close');
         this.visible = false;
+        this.disableSubmit = false;
       },
+
+      // 根据屏幕变化,设置抽屉尺寸
+      resetScreenSize(){
+        let screenWidth = document.body.clientWidth;
+        if(screenWidth < 500){
+          this.drawerWidth = screenWidth;
+        }else{
+          this.drawerWidth = 700;
+        }
+      },
+
       handleOk () {
         const that = this;
         // 触发表单验证
@@ -140,3 +161,17 @@
     }
   }
 </script>
+
+<style lang="less" scoped>
+  .drawer-bootom-button {
+    position: absolute;
+    bottom: -8px;
+    width: 100%;
+    border-top: 1px solid #e8e8e8;
+    padding: 10px 16px;
+    text-align: right;
+    left: 0;
+    background: #fff;
+    border-radius: 0 0 2px 2px;
+  }
+</style>

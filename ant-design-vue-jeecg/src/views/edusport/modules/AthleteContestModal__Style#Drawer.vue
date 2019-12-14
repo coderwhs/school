@@ -1,26 +1,28 @@
 <template>
   <a-drawer
     :title="title"
-    :width="width"
+    :width="drawerWidth"
+    :maskClosable="true"
     placement="right"
-    :closable="false"
+    :closable="true"
     @close="close"
-    :visible="visible">
-  
-    <a-spin :spinning="confirmLoading">
+    :visible="visible"
+    style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
+
+  <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'athleteId', validatorRules.athleteId]" placeholder="请输入运动员"></a-input>
+          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
         <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'coachId', validatorRules.coachId]" placeholder="请输入教练员"></a-input>
+          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
         </a-form-item>
         <a-form-item label="比赛名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'contestName', validatorRules.contestName]" placeholder="请输入比赛名称"></a-input>
         </a-form-item>
         <a-form-item label="比赛项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'contestSportCode', validatorRules.contestSportCode]" placeholder="请输入比赛项目"></a-input>
+          <j-search-select-tag v-decorator="['contestSportCode']" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
         <a-form-item label="比赛日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择比赛日期" v-decorator="[ 'contestDate', validatorRules.contestDate]" :trigger-change="true" style="width: 100%"/>
@@ -47,28 +49,37 @@
           <j-date placeholder="请选择授予日期" v-decorator="[ 'awardedDate', validatorRules.awardedDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="个人风采" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'athleteNews', validatorRules.athleteNews]" placeholder="请输入个人风采"></a-input>
+          <j-editor v-decorator="['athleteNews',{trigger:'input'}]"/>
         </a-form-item>
-        
+
       </a-form>
     </a-spin>
-    <a-button type="primary" @click="handleOk">确定</a-button>
-    <a-button type="primary" @click="handleCancel">取消</a-button>
+    <div class="drawer-bootom-button" v-show="!disableSubmit">
+      <a-popconfirm title="确定放弃编辑？" @confirm="handleCancel" okText="确定" cancelText="取消">
+        <a-button style="margin-right: .8rem">取消</a-button>
+      </a-popconfirm>
+      <a-button type="primary" @click="handleOk" :loading="confirmLoading">提交</a-button>
+    </div>
   </a-drawer>
+</template>
 </template>
 
 <script>
 
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
-  import JDate from '@/components/jeecg/JDate'  
+  import JDate from '@/components/jeecg/JDate'
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
-  
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import JEditor from '@/components/jeecg/JEditor'
+
   export default {
     name: "AthleteContestModal",
-    components: { 
+    components: {
       JDate,
       JDictSelectTag,
+      JSearchSelectTag,
+      JEditor,
     },
     data () {
       return {
@@ -76,6 +87,8 @@
         title:"操作",
         width:800,
         visible: false,
+        drawerWidth:800,
+        disableSubmit:false,
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -88,32 +101,41 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
-        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
-        contestName:{rules: [{ required: true, message: '请输入比赛名称!' }]},
-        contestSportCode:{rules: [{ required: true, message: '请输入比赛项目!' }]},
-        contestDate:{},
-        contestAddress:{},
-        contestEvent:{},
-        contestResult:{},
-        athleteDepartment:{},
-        awardedTechGrade:{},
-        awardedDepartment:{},
-        awardedDate:{},
-        athleteNews:{},
+          athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
+          coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+          contestName:{rules: [{ required: true, message: '请输入比赛名称!' }]},
+          contestSportCode:{rules: [{ required: true, message: '请输入比赛项目!' }]},
+          contestDate:{},
+          contestAddress:{},
+          contestEvent:{},
+          contestResult:{},
+          athleteDepartment:{},
+          awardedTechGrade:{},
+          awardedDepartment:{},
+          awardedDate:{},
+          athleteNews:{},
         },
         url: {
           add: "/edusport/athleteContest/add",
           edit: "/edusport/athleteContest/edit",
         }
-     
+
       }
     },
     created () {
     },
     methods: {
-      add () {
-        this.edit({});
+      /*   add () {
+           this.edit({});
+         },*/
+      add(athleteId){/* Tab修改@2019-12-12 */
+        this.hiding = true;
+        if (athleteId) {
+          this.athleteId = athleteId;
+          this.edit({athleteId:athleteId},'');
+        } else {
+          this.$message.warning("请选择一条运动员信息");
+        }
       },
       edit (record) {
         this.form.resetFields();
@@ -126,6 +148,16 @@
       close () {
         this.$emit('close');
         this.visible = false;
+        this.disableSubmit = false;
+      },
+      // 根据屏幕变化,设置抽屉尺寸
+      resetScreenSize(){
+        let screenWidth = document.body.clientWidth;
+        if(screenWidth < 500){
+          this.drawerWidth = screenWidth;
+        }else{
+          this.drawerWidth = 700;
+        }
       },
       handleOk () {
         const that = this;
@@ -140,7 +172,7 @@
               method = 'post';
             }else{
               httpurl+=this.url.edit;
-               method = 'put';
+              method = 'put';
             }
             let formData = Object.assign(this.model, values);
             console.log("表单提交数据",formData)
@@ -156,7 +188,7 @@
               that.close();
             })
           }
-         
+
         })
       },
       handleCancel () {
@@ -164,17 +196,23 @@
       },
       popupCallback(row){
         this.form.setFieldsValue(pick(row,'athleteId','coachId','contestName','contestSportCode','contestDate','contestAddress','contestEvent','contestResult','athleteDepartment','awardedTechGrade','awardedDepartment','awardedDate','athleteNews'))
-      }
-      
+      },
+
+
     }
   }
 </script>
 
 <style lang="less" scoped>
-/** Button按钮间距 */
-  .ant-btn {
-    margin-left: 30px;
-    margin-bottom: 30px;
-    float: right;
+  .drawer-bootom-button {
+    position: absolute;
+    bottom: -8px;
+    width: 100%;
+    border-top: 1px solid #e8e8e8;
+    padding: 10px 16px;
+    text-align: right;
+    left: 0;
+    background: #fff;
+    border-radius: 0 0 2px 2px;
   }
 </style>

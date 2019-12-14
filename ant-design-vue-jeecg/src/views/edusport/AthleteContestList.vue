@@ -91,7 +91,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteContestModal from './modules/AthleteContestModal'
+  // import AthleteContestModal from './modules/AthleteContestModal'
+  import AthleteContestModal from './modules/AthleteContestModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import AthleteList from './AthleteList'
   import {getAction} from '@/api/manage'/* Tab修改@2019-12-12 */

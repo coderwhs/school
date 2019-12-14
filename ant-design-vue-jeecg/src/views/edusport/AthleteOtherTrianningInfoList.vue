@@ -91,7 +91,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteOtherTrianningInfoModal from './modules/AthleteOtherTrianningInfoModal'
+  // import AthleteOtherTrianningInfoModal from './modules/AthleteOtherTrianningInfoModal'
+  import AthleteOtherTrianningInfoModal from './modules/AthleteOtherTrianningInfoModal__Style#Drawer'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import AthleteList from './DormList'
