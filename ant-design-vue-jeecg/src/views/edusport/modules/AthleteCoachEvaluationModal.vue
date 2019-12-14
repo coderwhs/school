@@ -10,11 +10,11 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="运动员学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteNo']" dict="tb_edu_athlete,athlete_name,athlete_no" />
+        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
-        <a-form-item label="教练员代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachNo']" dict="tb_edu_coach,coach_name,coach_no" />
+        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
         </a-form-item>
         <a-form-item label="开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
@@ -62,10 +62,10 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteNo:{rules: [{ required: true, message: '请输入运动员学号!' }]},
-        coachNo:{rules: [{ required: true, message: '请输入教练员代码!' }]},
-        startDate:{},
-        endDate:{},
+        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
+        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+        startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
+        endDate:{rules: [{ required: true, message: '请输入结束日期!' }]},
         evaluation:{rules: [{ required: true, message: '请输入总体评价!' }]},
         },
         url: {
@@ -86,7 +86,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteNo','coachNo','startDate','endDate','evaluation'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','coachId','startDate','endDate','evaluation'))
         })
       },
       close () {
@@ -129,7 +129,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteNo','coachNo','startDate','endDate','evaluation'))
+        this.form.setFieldsValue(pick(row,'athleteId','coachId','startDate','endDate','evaluation'))
       },
 
       

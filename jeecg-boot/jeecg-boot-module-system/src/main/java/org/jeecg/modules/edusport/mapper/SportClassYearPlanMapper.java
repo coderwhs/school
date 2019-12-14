@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 /**
  * @Description: 年度训练计划信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-13
+ * @Date:   2019-12-14
  * @Version: V1.0
  */
 public interface SportClassYearPlanMapper extends BaseMapper<SportClassYearPlan> {

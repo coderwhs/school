@@ -41,8 +41,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        :scroll="tableScroll"
+        :rowSelection="{fixed:false,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">

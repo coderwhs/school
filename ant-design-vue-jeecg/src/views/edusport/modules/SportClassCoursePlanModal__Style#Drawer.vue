@@ -1,17 +1,19 @@
 <template>
   <a-drawer
     :title="title"
-    :width="width"
+    :width="drawerWidth"
+    :maskClosable="true"
     placement="right"
-    :closable="false"
+    :closable="true"
     @close="close"
-    :visible="visible">
-  
+    :visible="visible"
+    style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
+
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
         <a-form-item label="训练队" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportClassId', validatorRules.sportClassId]" placeholder="请输入训练队"></a-input>
+          <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
         </a-form-item>
         <a-form-item label="训练计划名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'planName', validatorRules.planName]" placeholder="请输入训练计划名称"></a-input>
@@ -61,11 +63,16 @@
         <a-form-item label="课后小结" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-textarea v-decorator="['courseSummary']" rows="4" placeholder="请输入课后小结"/>
         </a-form-item>
-        
+
       </a-form>
     </a-spin>
-    <a-button type="primary" @click="handleOk">确定</a-button>
-    <a-button type="primary" @click="handleCancel">取消</a-button>
+
+    <div class="drawer-bootom-button" v-show="!disableSubmit">
+      <a-popconfirm title="确定放弃编辑？" @confirm="handleCancel" okText="确定" cancelText="取消">
+        <a-button style="margin-right: .8rem">取消</a-button>
+      </a-popconfirm>
+      <a-button type="primary" @click="handleOk" :loading="confirmLoading">提交</a-button>
+    </div>
   </a-drawer>
 </template>
 
@@ -73,18 +80,22 @@
 
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
-  import JDate from '@/components/jeecg/JDate'  
-  
+  import JDate from '@/components/jeecg/JDate'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+
   export default {
     name: "SportClassCoursePlanModal",
-    components: { 
+    components: {
       JDate,
+      JSearchSelectTag,
     },
     data () {
       return {
         form: this.$form.createForm(this),
         title:"操作",
         width:800,
+        drawerWidth:800,
+        disableSubmit:false,
         visible: false,
         model: {},
         labelCol: {
@@ -98,29 +109,29 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练队!' }]},
-        planName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
-        courseDate:{rules: [{ required: true, message: '请输入课训日期!' }]},
-        taskGoal:{rules: [{ required: true, message: '请输入目的任务!' }]},
-        prepareWorkload:{},
-        prepareIntensity:{},
-        prepareTime:{},
-        prepareContent:{},
-        basicWorkload:{},
-        basicIntensity:{},
-        basicTime:{},
-        basicContent:{},
-        finishWorkload:{},
-        finishIntensity:{},
-        finishTime:{},
-        finishContent:{},
-        courseSummary:{},
+          sportClassId:{rules: [{ required: true, message: '请输入训练队!' }]},
+          planName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
+          courseDate:{rules: [{ required: true, message: '请输入课训日期!' }]},
+          taskGoal:{rules: [{ required: true, message: '请输入目的任务!' }]},
+          prepareWorkload:{},
+          prepareIntensity:{},
+          prepareTime:{},
+          prepareContent:{},
+          basicWorkload:{},
+          basicIntensity:{},
+          basicTime:{},
+          basicContent:{},
+          finishWorkload:{},
+          finishIntensity:{},
+          finishTime:{},
+          finishContent:{},
+          courseSummary:{},
         },
         url: {
           add: "/edusport/sportClassCoursePlan/add",
           edit: "/edusport/sportClassCoursePlan/edit",
         }
-     
+
       }
     },
     created () {
@@ -130,6 +141,7 @@
         this.edit({});
       },
       edit (record) {
+        this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
@@ -140,6 +152,7 @@
       close () {
         this.$emit('close');
         this.visible = false;
+        this.disableSubmit = false;
       },
       handleOk () {
         const that = this;
@@ -154,7 +167,7 @@
               method = 'post';
             }else{
               httpurl+=this.url.edit;
-               method = 'put';
+              method = 'put';
             }
             let formData = Object.assign(this.model, values);
             console.log("表单提交数据",formData)
@@ -170,7 +183,7 @@
               that.close();
             })
           }
-         
+
         })
       },
       handleCancel () {
@@ -178,17 +191,31 @@
       },
       popupCallback(row){
         this.form.setFieldsValue(pick(row,'sportClassId','planName','courseDate','taskGoal','prepareWorkload','prepareIntensity','prepareTime','prepareContent','basicWorkload','basicIntensity','basicTime','basicContent','finishWorkload','finishIntensity','finishTime','finishContent','courseSummary'))
-      }
-      
+      },
+      // 根据屏幕变化,设置抽屉尺寸
+      resetScreenSize(){
+        let screenWidth = document.body.clientWidth;
+        if(screenWidth < 500){
+          this.drawerWidth = screenWidth;
+        }else{
+          this.drawerWidth = 700;
+        }
+      },
+
     }
   }
 </script>
 
 <style lang="less" scoped>
-/** Button按钮间距 */
-  .ant-btn {
-    margin-left: 30px;
-    margin-bottom: 30px;
-    float: right;
+  .drawer-bootom-button {
+    position: absolute;
+    bottom: -8px;
+    width: 100%;
+    border-top: 1px solid #e8e8e8;
+    padding: 10px 16px;
+    text-align: right;
+    left: 0;
+    background: #fff;
+    border-radius: 0 0 2px 2px;
   }
 </style>

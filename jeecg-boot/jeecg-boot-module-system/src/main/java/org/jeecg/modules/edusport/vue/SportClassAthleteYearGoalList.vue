@@ -174,7 +174,7 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class_athlete_year_goal,year_plan_id,id').then((res) => {
+        initDictOptions('tb_edu_sport_class_year_plan,plan_name,id').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'yearPlanId', res.result)
           }

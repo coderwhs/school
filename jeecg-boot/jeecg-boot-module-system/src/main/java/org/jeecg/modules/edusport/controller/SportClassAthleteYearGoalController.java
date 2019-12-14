@@ -36,7 +36,7 @@ import com.alibaba.fastjson.JSON;
  /**
  * @Description: 年度训练运动员素质目标信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-13
+ * @Date:   2019-12-14
  * @Version: V1.0
  */
 @RestController

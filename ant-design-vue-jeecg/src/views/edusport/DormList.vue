@@ -62,8 +62,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:type}"
-        :scroll="tableScroll"
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:type}"
         @change="handleTableChange"
         :customRow="clickThenCheck"
       >/* Tab修改@2019-12-12 */
@@ -206,7 +205,6 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            fixed:"right",
             width:147,
             scopedSlots: { customRender: 'action' }
           }

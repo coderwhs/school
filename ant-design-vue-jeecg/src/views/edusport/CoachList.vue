@@ -62,8 +62,6 @@
         :customRow="clickThenCheck"
         @change="handleTableChange">
 
-        <!-- :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"-->
-
         <template slot="htmlSlot" slot-scope="text">
           <div v-html="text"></div>
         </template>

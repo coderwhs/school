@@ -56,7 +56,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         
         @change="handleTableChange">
 
@@ -106,7 +106,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import CoachPerformanceModal from './modules/CoachPerformanceModal'
+  // import CoachPerformanceModal from './modules/CoachPerformanceModal'
+  import CoachPerformanceModal from './modules/CoachPerformanceModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {

@@ -11,7 +11,7 @@
       <a-form :form="form">
 
         <a-form-item label="年度计划" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['yearPlanId']" dict="tb_edu_sport_class_athlete_year_goal,year_plan_id,id" />
+          <j-search-select-tag v-decorator="['yearPlanId']" dict="tb_edu_sport_class_year_plan,plan_name,id" />
         </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
