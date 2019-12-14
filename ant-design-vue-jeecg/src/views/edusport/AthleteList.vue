@@ -133,7 +133,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteModal from './modules/AthleteModal'
+  // import AthleteModal from './modules/AthleteModal'
+  import AthleteModal from './modules/AthleteModal__Style#Drawer'
   import AthleteContestList from './AthleteContestList'
   import AthleteSportScoreList from './AthleteSportScoreList'
   import AthleteTransportList from './AthleteTransportList'

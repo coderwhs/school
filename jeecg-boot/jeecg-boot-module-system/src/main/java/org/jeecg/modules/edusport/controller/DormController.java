@@ -14,6 +14,7 @@ import org.jeecg.modules.edusport.service.IDormAthleteLeaveService;
 import org.jeecg.modules.edusport.service.IDormAthleteLivingService;
 import org.jeecg.modules.edusport.service.IDormService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -99,6 +100,7 @@ public class DormController extends JeecgController<Dorm, IDormService> {
 	 * @return
 	 */
 	@DeleteMapping(value = "/delete")
+	@Transactional
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		// 宿舍管理子表(运动员住宿表、运动员请假表)一同删除。
 		HashMap<String, Object> map = new HashMap<String, Object>();

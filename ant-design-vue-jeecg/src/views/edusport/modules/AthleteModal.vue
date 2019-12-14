@@ -12,26 +12,26 @@
         <a-row>
           <a-col :span="17">
             <a-row>
-              <a-col :span="12">
+              <a-col :span="14">
                 <a-form-item label="学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input v-decorator="[ 'athleteNo', validatorRules.athleteNo]" placeholder="请输入学号"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :span="12">
+              <a-col :span="10">
                 <a-form-item label="姓名" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input v-decorator="[ 'athleteName', validatorRules.athleteName]" placeholder="请输入姓名"></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row>
-              <a-col :span="12">
-                <a-form-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
-                </a-form-item>
-              </a-col>
-              <a-col :span="12">
+              <a-col :span="14">
                 <a-form-item label="出生日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <j-date placeholder="请选择出生日期" v-decorator="[ 'birthDate', validatorRules.birthDate]" :trigger-change="true" style="width: 100%"/>
+                </a-form-item>
+              </a-col>
+              <a-col :span="10">
+                <a-form-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
                 </a-form-item>
               </a-col>
             </a-row>
