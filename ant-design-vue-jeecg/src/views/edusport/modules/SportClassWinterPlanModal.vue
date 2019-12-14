@@ -10,14 +10,11 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="训练队" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
         </a-form-item>
         <a-form-item label="训练计划名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'taskName', validatorRules.taskName]" placeholder="请输入训练计划名称"></a-input>
-        </a-form-item>
-        <a-form-item label="发布人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachNo']" dict="tb_edu_coach,coach_name,coach_no" />
+          <a-input v-decorator="[ 'planName', validatorRules.planName]" placeholder="请输入训练计划名称"></a-input>
         </a-form-item>
         <a-form-item label="准备期开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择准备期开始日期" v-decorator="[ 'prepareStartDate', validatorRules.prepareStartDate]" :trigger-change="true" style="width: 100%"/>
@@ -158,42 +155,41 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
-        taskName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
-        coachNo:{rules: [{ required: true, message: '请输入发布人!' }]},
+        sportClassId:{rules: [{ required: true, message: '请输入训练队!' }]},
+        planName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
         prepareStartDate:{},
         prepareEndDate:{},
-        prepareGoal:{rules: [{ required: true, message: '请输入准备期训练任务!' }]},
-        prepareQualityPercent:{rules: [{ required: true, message: '请输入准备期素质训练!' }]},
-        prepareTechPercent:{rules: [{ required: true, message: '请输入准备期技术训练!' }]},
-        prepareTacticalPercent:{rules: [{ required: true, message: '请输入准备期战术训练!' }]},
-        prepareMentalPercent:{rules: [{ required: true, message: '请输入准备期心理训练!' }]},
-        prepareMethod:{rules: [{ required: true, message: '请输入准备期训练手段!' }]},
-        prepareWorkload:{rules: [{ required: true, message: '请输入准备期训练量!' }]},
-        prepareIntensity:{rules: [{ required: true, message: '请输入准备期训练强度!' }]},
+        prepareGoal:{},
+        prepareQualityPercent:{},
+        prepareTechPercent:{},
+        prepareTacticalPercent:{},
+        prepareMentalPercent:{},
+        prepareMethod:{},
+        prepareWorkload:{},
+        prepareIntensity:{},
         basicStartDate:{},
         basicEndDate:{},
-        basicGoal:{rules: [{ required: true, message: '请输入基本期训练任务!' }]},
-        basicQualityPercent:{rules: [{ required: true, message: '请输入基本期素质训练!' }]},
-        basicTechPercent:{rules: [{ required: true, message: '请输入基本期技术训练!' }]},
-        basicTacticalPercent:{rules: [{ required: true, message: '请输入基本期战术训练!' }]},
-        basicMentalPercent:{rules: [{ required: true, message: '请输入基本期心理训练!' }]},
-        basicMethod:{rules: [{ required: true, message: '请输入基本期训练手段!' }]},
-        basicWorkload:{rules: [{ required: true, message: '请输入基本期训练量!' }]},
-        basicIntensity:{rules: [{ required: true, message: '请输入基本期训练强度!' }]},
+        basicGoal:{},
+        basicQualityPercent:{},
+        basicTechPercent:{},
+        basicTacticalPercent:{},
+        basicMentalPercent:{},
+        basicMethod:{},
+        basicWorkload:{},
+        basicIntensity:{},
         finishStartDate:{},
         finishEndDate:{},
-        finishGoal:{rules: [{ required: true, message: '请输入结束期训练任务!' }]},
-        finishQualityPercent:{rules: [{ required: true, message: '请输入结束期素质训练!' }]},
-        finishTechPercent:{rules: [{ required: true, message: '请输入结束期技术训练!' }]},
-        finishTacticalPercent:{rules: [{ required: true, message: '请输入结束期战术训练!' }]},
-        finishMentalPercent:{rules: [{ required: true, message: '请输入结束期心理训练!' }]},
-        finishMethod:{rules: [{ required: true, message: '请输入结束期训练手段!' }]},
-        finishWorkload:{rules: [{ required: true, message: '请输入结束期训练量!' }]},
-        finishIntensity:{rules: [{ required: true, message: '请输入结束期训练强度!' }]},
-        deptEvaluation:{rules: [{ required: true, message: '请输入竞赛科评价!' }]},
+        finishGoal:{},
+        finishQualityPercent:{},
+        finishTechPercent:{},
+        finishTacticalPercent:{},
+        finishMentalPercent:{},
+        finishMethod:{},
+        finishWorkload:{},
+        finishIntensity:{},
+        deptEvaluation:{},
         deptEvaluationDate:{},
-        schoolEvaluation:{rules: [{ required: true, message: '请输入校领导评价!' }]},
+        schoolEvaluation:{},
         schoolEvaluationDate:{},
         },
         url: {
@@ -214,7 +210,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','taskName','coachNo','prepareStartDate','prepareEndDate','prepareGoal','prepareQualityPercent','prepareTechPercent','prepareTacticalPercent','prepareMentalPercent','prepareMethod','prepareWorkload','prepareIntensity','basicStartDate','basicEndDate','basicGoal','basicQualityPercent','basicTechPercent','basicTacticalPercent','basicMentalPercent','basicMethod','basicWorkload','basicIntensity','finishStartDate','finishEndDate','finishGoal','finishQualityPercent','finishTechPercent','finishTacticalPercent','finishMentalPercent','finishMethod','finishWorkload','finishIntensity','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
+          this.form.setFieldsValue(pick(this.model,'sportClassId','planName','prepareStartDate','prepareEndDate','prepareGoal','prepareQualityPercent','prepareTechPercent','prepareTacticalPercent','prepareMentalPercent','prepareMethod','prepareWorkload','prepareIntensity','basicStartDate','basicEndDate','basicGoal','basicQualityPercent','basicTechPercent','basicTacticalPercent','basicMentalPercent','basicMethod','basicWorkload','basicIntensity','finishStartDate','finishEndDate','finishGoal','finishQualityPercent','finishTechPercent','finishTacticalPercent','finishMentalPercent','finishMethod','finishWorkload','finishIntensity','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
         })
       },
       close () {
@@ -257,7 +253,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','taskName','coachNo','prepareStartDate','prepareEndDate','prepareGoal','prepareQualityPercent','prepareTechPercent','prepareTacticalPercent','prepareMentalPercent','prepareMethod','prepareWorkload','prepareIntensity','basicStartDate','basicEndDate','basicGoal','basicQualityPercent','basicTechPercent','basicTacticalPercent','basicMentalPercent','basicMethod','basicWorkload','basicIntensity','finishStartDate','finishEndDate','finishGoal','finishQualityPercent','finishTechPercent','finishTacticalPercent','finishMentalPercent','finishMethod','finishWorkload','finishIntensity','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
+        this.form.setFieldsValue(pick(row,'sportClassId','planName','prepareStartDate','prepareEndDate','prepareGoal','prepareQualityPercent','prepareTechPercent','prepareTacticalPercent','prepareMentalPercent','prepareMethod','prepareWorkload','prepareIntensity','basicStartDate','basicEndDate','basicGoal','basicQualityPercent','basicTechPercent','basicTacticalPercent','basicMentalPercent','basicMethod','basicWorkload','basicIntensity','finishStartDate','finishEndDate','finishGoal','finishQualityPercent','finishTechPercent','finishTacticalPercent','finishMentalPercent','finishMethod','finishWorkload','finishIntensity','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
       },
 
       

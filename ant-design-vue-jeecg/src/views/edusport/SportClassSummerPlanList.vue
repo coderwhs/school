@@ -116,7 +116,7 @@
             }
           },
           {
-            title:'训练班',
+            title:'训练队',
             align:"center",
             dataIndex: 'sportClassId',
             customRender:(text)=>{
@@ -130,19 +130,7 @@
           {
             title:'训练计划名称',
             align:"center",
-            dataIndex: 'taskName'
-          },
-          {
-            title:'发布人',
-            align:"center",
-            dataIndex: 'coachNo',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
-              }
-            }
+            dataIndex: 'planName'
           },
           {
             title:'准备期开始日期',
@@ -220,11 +208,6 @@
         initDictOptions('tb_edu_sport_class,class_name,id').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'sportClassId', res.result)
-          }
-        })
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'coachNo', res.result)
           }
         })
       }

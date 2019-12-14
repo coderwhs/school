@@ -10,14 +10,11 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportClassId', validatorRules.sportClassId]" placeholder="请输入训练班"></a-input>
+        <a-form-item label="训练队" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
         </a-form-item>
         <a-form-item label="训练计划名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'taskName', validatorRules.taskName]" placeholder="请输入训练计划名称"></a-input>
-        </a-form-item>
-        <a-form-item label="发布人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'coachNo', validatorRules.coachNo]" placeholder="请输入发布人"></a-input>
+          <a-input v-decorator="[ 'planName', validatorRules.planName]" placeholder="请输入训练计划名称"></a-input>
         </a-form-item>
         <a-form-item label="初始情况" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-editor v-decorator="['teamSituation',{trigger:'input'}]"/>
@@ -25,6 +22,7 @@
         <a-form-item label="全年任务" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-editor v-decorator="['yearGoal',{trigger:'input'}]"/>
         </a-form-item>
+        <a-divider orientation="left">准备期</a-divider>
         <a-form-item label="准备期开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择准备期开始日期" v-decorator="[ 'prepareStartDate', validatorRules.prepareStartDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
@@ -35,7 +33,7 @@
           <a-input v-decorator="[ 'prepareWeeks', validatorRules.prepareWeeks]" placeholder="请输入准备期周数"></a-input>
         </a-form-item>
         <a-form-item label="准备期天数" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'prepareDays', validatorRules.prepareDays]" placeholder="请输入准备期天数"></a-input>
+          <a-input addonBefore="天数" v-decorator="[ 'prepareDays', validatorRules.prepareDays]" placeholder="请输入准备期天数"></a-input>
         </a-form-item>
         <a-form-item label="准备期训练任务" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-textarea v-decorator="['prepareGoal']" rows="4" placeholder="请输入准备期训练任务"/>
@@ -119,7 +117,7 @@
           <a-input-number v-decorator="[ 'm1Workload', validatorRules.m1Workload]" placeholder="请输入1月训练量" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="2月训练量" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'm2Workload', validatorRules.m2Workload]" placeholder="请输入2月训练量" style="width: 100%"/>
+          <a-input-number addonBefore="2月" v-decorator="[ 'm2Workload', validatorRules.m2Workload]" placeholder="请输入2月训练量" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="3月训练量" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'm3Workload', validatorRules.m3Workload]" placeholder="请输入3月训练量" style="width: 100%"/>
@@ -219,12 +217,14 @@
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import JDate from '@/components/jeecg/JDate'  
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   import JEditor from '@/components/jeecg/JEditor'
 
   export default {
     name: "SportClassYearPlanModal",
     components: { 
       JDate,
+      JSearchSelectTag,
       JEditor,
     },
     data () {
@@ -245,71 +245,70 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
-        taskName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
-        coachNo:{rules: [{ required: true, message: '请输入发布人!' }]},
+        sportClassId:{rules: [{ required: true, message: '请输入训练队!' }]},
+        planName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
         teamSituation:{},
         yearGoal:{},
         prepareStartDate:{},
         prepareEndDate:{},
-        prepareWeeks:{rules: [{ required: true, message: '请输入准备期周数!' }]},
-        prepareDays:{rules: [{ required: true, message: '请输入准备期天数!' }]},
-        prepareGoal:{rules: [{ required: true, message: '请输入准备期训练任务!' }]},
-        prepareBodyPercent:{rules: [{ required: true, message: '请输入准备期身体训练!' }]},
-        prepareQualityPercent:{rules: [{ required: true, message: '请输入准备期素质训练!' }]},
-        prepareTechPercent:{rules: [{ required: true, message: '请输入准备期技术训练!' }]},
-        prepareOtherPercent:{rules: [{ required: true, message: '请输入准备期其他训练!' }]},
-        prepareMethod:{rules: [{ required: true, message: '请输入准备期训练手段!' }]},
+        prepareWeeks:{},
+        prepareDays:{},
+        prepareGoal:{},
+        prepareBodyPercent:{},
+        prepareQualityPercent:{},
+        prepareTechPercent:{},
+        prepareOtherPercent:{},
+        prepareMethod:{},
         contestStartDate:{},
         contestEndDate:{},
-        contestWeeks:{rules: [{ required: true, message: '请输入比赛期周数!' }]},
-        contestDays:{rules: [{ required: true, message: '请输入比赛期天数!' }]},
-        contestGoal:{rules: [{ required: true, message: '请输入比赛期训练任务!' }]},
-        contestBodyPercent:{rules: [{ required: true, message: '请输入比赛期身体训练!' }]},
-        contestQualityPercent:{rules: [{ required: true, message: '请输入比赛期素质训练!' }]},
-        contestTechPercent:{rules: [{ required: true, message: '请输入比赛期技术训练!' }]},
-        contestOtherPercent:{rules: [{ required: true, message: '请输入比赛期其他训练!' }]},
-        contestMethod:{rules: [{ required: true, message: '请输入比赛期训练手段!' }]},
+        contestWeeks:{},
+        contestDays:{},
+        contestGoal:{},
+        contestBodyPercent:{},
+        contestQualityPercent:{},
+        contestTechPercent:{},
+        contestOtherPercent:{},
+        contestMethod:{},
         transitionStartDate:{},
         transitionEndDate:{},
-        transitionWeeks:{rules: [{ required: true, message: '请输入过渡期周数!' }]},
-        transitionDays:{rules: [{ required: true, message: '请输入过渡期天数!' }]},
-        transitionGoal:{rules: [{ required: true, message: '请输入过渡期训练任务!' }]},
-        transitionBodyPercent:{rules: [{ required: true, message: '请输入过渡期身体训练!' }]},
-        transitionQualityPercent:{rules: [{ required: true, message: '请输入过渡期素质训练!' }]},
-        transitionTechPercent:{rules: [{ required: true, message: '请输入过渡期技术训练!' }]},
-        transitionOtherPercent:{rules: [{ required: true, message: '请输入过渡期其他训练!' }]},
-        transitionMethod:{rules: [{ required: true, message: '请输入过渡期训练手段!' }]},
-        m1Workload:{rules: [{ required: true, message: '请输入1月训练量!' }]},
-        m2Workload:{rules: [{ required: true, message: '请输入2月训练量!' }]},
-        m3Workload:{rules: [{ required: true, message: '请输入3月训练量!' }]},
-        m4Workload:{rules: [{ required: true, message: '请输入4月训练量!' }]},
-        m5Workload:{rules: [{ required: true, message: '请输入5月训练量!' }]},
-        m6Workload:{rules: [{ required: true, message: '请输入6月训练量!' }]},
-        m7Workload:{rules: [{ required: true, message: '请输入7月训练量!' }]},
-        m8Workload:{rules: [{ required: true, message: '请输入8月训练量!' }]},
-        m9Workload:{rules: [{ required: true, message: '请输入9月训练量!' }]},
-        m10Workload:{rules: [{ required: true, message: '请输入10月训练量!' }]},
-        m11Workload:{rules: [{ required: true, message: '请输入11月训练量!' }]},
-        m12Workload:{rules: [{ required: true, message: '请输入12月训练量!' }]},
-        m1Intensity:{rules: [{ required: true, message: '请输入1月训练强度!' }]},
-        m2Intensity:{rules: [{ required: true, message: '请输入2月训练强度!' }]},
-        m3Intensity:{rules: [{ required: true, message: '请输入3月训练强度!' }]},
-        m4Intensity:{rules: [{ required: true, message: '请输入4月训练强度!' }]},
-        m5Intensity:{rules: [{ required: true, message: '请输入5月训练强度!' }]},
-        m6Intensity:{rules: [{ required: true, message: '请输入6月训练强度!' }]},
-        m7Intensity:{rules: [{ required: true, message: '请输入7月训练强度!' }]},
-        m8Intensity:{rules: [{ required: true, message: '请输入8月训练强度!' }]},
-        m9Intensity:{rules: [{ required: true, message: '请输入9月训练强度!' }]},
-        m10Intensity:{rules: [{ required: true, message: '请输入10月训练强度!' }]},
-        m11Intensity:{rules: [{ required: true, message: '请输入11月训练强度!' }]},
-        m12Intensity:{rules: [{ required: true, message: '请输入12月训练强度!' }]},
-        performanceCheck:{rules: [{ required: true, message: '请输入考核安排!' }]},
-        targetCheck:{rules: [{ required: true, message: '请输入指标检查标准!' }]},
-        actionSteps:{rules: [{ required: true, message: '请输入实施措施!' }]},
-        deptEvaluation:{rules: [{ required: true, message: '请输入竞赛科评价!' }]},
+        transitionWeeks:{},
+        transitionDays:{},
+        transitionGoal:{},
+        transitionBodyPercent:{},
+        transitionQualityPercent:{},
+        transitionTechPercent:{},
+        transitionOtherPercent:{},
+        transitionMethod:{},
+        m1Workload:{},
+        m2Workload:{},
+        m3Workload:{},
+        m4Workload:{},
+        m5Workload:{},
+        m6Workload:{},
+        m7Workload:{},
+        m8Workload:{},
+        m9Workload:{},
+        m10Workload:{},
+        m11Workload:{},
+        m12Workload:{},
+        m1Intensity:{},
+        m2Intensity:{},
+        m3Intensity:{},
+        m4Intensity:{},
+        m5Intensity:{},
+        m6Intensity:{},
+        m7Intensity:{},
+        m8Intensity:{},
+        m9Intensity:{},
+        m10Intensity:{},
+        m11Intensity:{},
+        m12Intensity:{},
+        performanceCheck:{},
+        targetCheck:{},
+        actionSteps:{},
+        deptEvaluation:{},
         deptEvaluationDate:{},
-        schoolEvaluation:{rules: [{ required: true, message: '请输入校领导评价!' }]},
+        schoolEvaluation:{},
         schoolEvaluationDate:{},
         },
         url: {
@@ -330,7 +329,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','taskName','coachNo','teamSituation','yearGoal','prepareStartDate','prepareEndDate','prepareWeeks','prepareDays','prepareGoal','prepareBodyPercent','prepareQualityPercent','prepareTechPercent','prepareOtherPercent','prepareMethod','contestStartDate','contestEndDate','contestWeeks','contestDays','contestGoal','contestBodyPercent','contestQualityPercent','contestTechPercent','contestOtherPercent','contestMethod','transitionStartDate','transitionEndDate','transitionWeeks','transitionDays','transitionGoal','transitionBodyPercent','transitionQualityPercent','transitionTechPercent','transitionOtherPercent','transitionMethod','m1Workload','m2Workload','m3Workload','m4Workload','m5Workload','m6Workload','m7Workload','m8Workload','m9Workload','m10Workload','m11Workload','m12Workload','m1Intensity','m2Intensity','m3Intensity','m4Intensity','m5Intensity','m6Intensity','m7Intensity','m8Intensity','m9Intensity','m10Intensity','m11Intensity','m12Intensity','performanceCheck','targetCheck','actionSteps','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
+          this.form.setFieldsValue(pick(this.model,'sportClassId','planName','teamSituation','yearGoal','prepareStartDate','prepareEndDate','prepareWeeks','prepareDays','prepareGoal','prepareBodyPercent','prepareQualityPercent','prepareTechPercent','prepareOtherPercent','prepareMethod','contestStartDate','contestEndDate','contestWeeks','contestDays','contestGoal','contestBodyPercent','contestQualityPercent','contestTechPercent','contestOtherPercent','contestMethod','transitionStartDate','transitionEndDate','transitionWeeks','transitionDays','transitionGoal','transitionBodyPercent','transitionQualityPercent','transitionTechPercent','transitionOtherPercent','transitionMethod','m1Workload','m2Workload','m3Workload','m4Workload','m5Workload','m6Workload','m7Workload','m8Workload','m9Workload','m10Workload','m11Workload','m12Workload','m1Intensity','m2Intensity','m3Intensity','m4Intensity','m5Intensity','m6Intensity','m7Intensity','m8Intensity','m9Intensity','m10Intensity','m11Intensity','m12Intensity','performanceCheck','targetCheck','actionSteps','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
         })
       },
       close () {
@@ -373,7 +372,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','taskName','coachNo','teamSituation','yearGoal','prepareStartDate','prepareEndDate','prepareWeeks','prepareDays','prepareGoal','prepareBodyPercent','prepareQualityPercent','prepareTechPercent','prepareOtherPercent','prepareMethod','contestStartDate','contestEndDate','contestWeeks','contestDays','contestGoal','contestBodyPercent','contestQualityPercent','contestTechPercent','contestOtherPercent','contestMethod','transitionStartDate','transitionEndDate','transitionWeeks','transitionDays','transitionGoal','transitionBodyPercent','transitionQualityPercent','transitionTechPercent','transitionOtherPercent','transitionMethod','m1Workload','m2Workload','m3Workload','m4Workload','m5Workload','m6Workload','m7Workload','m8Workload','m9Workload','m10Workload','m11Workload','m12Workload','m1Intensity','m2Intensity','m3Intensity','m4Intensity','m5Intensity','m6Intensity','m7Intensity','m8Intensity','m9Intensity','m10Intensity','m11Intensity','m12Intensity','performanceCheck','targetCheck','actionSteps','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
+        this.form.setFieldsValue(pick(row,'sportClassId','planName','teamSituation','yearGoal','prepareStartDate','prepareEndDate','prepareWeeks','prepareDays','prepareGoal','prepareBodyPercent','prepareQualityPercent','prepareTechPercent','prepareOtherPercent','prepareMethod','contestStartDate','contestEndDate','contestWeeks','contestDays','contestGoal','contestBodyPercent','contestQualityPercent','contestTechPercent','contestOtherPercent','contestMethod','transitionStartDate','transitionEndDate','transitionWeeks','transitionDays','transitionGoal','transitionBodyPercent','transitionQualityPercent','transitionTechPercent','transitionOtherPercent','transitionMethod','m1Workload','m2Workload','m3Workload','m4Workload','m5Workload','m6Workload','m7Workload','m8Workload','m9Workload','m10Workload','m11Workload','m12Workload','m1Intensity','m2Intensity','m3Intensity','m4Intensity','m5Intensity','m6Intensity','m7Intensity','m8Intensity','m9Intensity','m10Intensity','m11Intensity','m12Intensity','performanceCheck','targetCheck','actionSteps','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
       },
 
       

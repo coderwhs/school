@@ -11,7 +11,7 @@
       <a-form :form="form">
 
         <a-form-item label="训练队" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportClassId', validatorRules.sportClassId]" placeholder="请输入训练队"></a-input>
+          <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
         </a-form-item>
         <a-form-item label="训练计划名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'planName', validatorRules.planName]" placeholder="请输入训练计划名称"></a-input>
@@ -216,12 +216,14 @@
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import JDate from '@/components/jeecg/JDate'  
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   import JEditor from '@/components/jeecg/JEditor'
 
   export default {
     name: "SportClassYearPlanModal",
     components: { 
       JDate,
+      JSearchSelectTag,
       JEditor,
     },
     data () {

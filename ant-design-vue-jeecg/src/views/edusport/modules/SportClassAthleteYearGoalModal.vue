@@ -10,11 +10,11 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
+        <a-form-item label="年度计划" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['yearPlanId']" dict="tb_edu_sport_class_athlete_year_goal,year_plan_id,id" />
         </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteNo']" dict="tb_edu_athlete,athlete_name,athlete_no" />
+          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
         <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'eventCode', validatorRules.eventCode]" placeholder="请输入小项"></a-input>
@@ -57,8 +57,8 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
-        athleteNo:{rules: [{ required: true, message: '请输入运动员!' }]},
+        yearPlanId:{rules: [{ required: true, message: '请输入年度计划!' }]},
+        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
         eventCode:{rules: [{ required: true, message: '请输入小项!' }]},
         performanceGoal:{rules: [{ required: true, message: '请输入成绩目标!' }]},
         },
@@ -75,12 +75,21 @@
       add () {
         this.edit({});
       },
+      add(yearPlanId) {
+        this.hiding = true;
+        if (yearPlanId) {
+          this.yearPlanId = yearPlanId;
+          this.edit({yearPlanId}, '');
+        } else {
+          this.$message.warning("请选择一个年度训练计划信息");
+        }
+      },
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','athleteNo','eventCode','performanceGoal'))
+          this.form.setFieldsValue(pick(this.model,'yearPlanId','athleteId','eventCode','performanceGoal'))
         })
       },
       close () {
@@ -123,7 +132,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','athleteNo','eventCode','performanceGoal'))
+        this.form.setFieldsValue(pick(row,'yearPlanId','athleteId','eventCode','performanceGoal'))
       },
 
       

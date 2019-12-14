@@ -10,14 +10,11 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportClassId', validatorRules.sportClassId]" placeholder="请输入训练班"></a-input>
+        <a-form-item label="训练队" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'sportClassId', validatorRules.sportClassId]" placeholder="请输入训练队"></a-input>
         </a-form-item>
         <a-form-item label="训练计划名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'taskName', validatorRules.taskName]" placeholder="请输入训练计划名称"></a-input>
-        </a-form-item>
-        <a-form-item label="发布人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'coachNo', validatorRules.coachNo]" placeholder="请输入发布人"></a-input>
+          <a-input v-decorator="[ 'planName', validatorRules.planName]" placeholder="请输入训练计划名称"></a-input>
         </a-form-item>
         <a-form-item label="准备期开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择准备期开始日期" v-decorator="[ 'prepareStartDate', validatorRules.prepareStartDate]" :trigger-change="true" style="width: 100%"/>
@@ -158,42 +155,41 @@
 
         confirmLoading: false,
         validatorRules:{
-        sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
-        taskName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
-        coachNo:{rules: [{ required: true, message: '请输入发布人!' }]},
+        sportClassId:{rules: [{ required: true, message: '请输入训练队!' }]},
+        planName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
         prepareStartDate:{},
         prepareEndDate:{},
-        prepareGoal:{rules: [{ required: true, message: '请输入准备期训练任务!' }]},
-        prepareQualityPercent:{rules: [{ required: true, message: '请输入准备期素质训练!' }]},
-        prepareTechPercent:{rules: [{ required: true, message: '请输入准备期技术训练!' }]},
-        prepareTacticalPercent:{rules: [{ required: true, message: '请输入准备期战术训练!' }]},
-        prepareMentalPercent:{rules: [{ required: true, message: '请输入准备期心理训练!' }]},
-        prepareMethod:{rules: [{ required: true, message: '请输入准备期训练手段!' }]},
-        prepareWorkload:{rules: [{ required: true, message: '请输入准备期训练量!' }]},
-        prepareIntensity:{rules: [{ required: true, message: '请输入准备期训练强度!' }]},
+        prepareGoal:{},
+        prepareQualityPercent:{},
+        prepareTechPercent:{},
+        prepareTacticalPercent:{},
+        prepareMentalPercent:{},
+        prepareMethod:{},
+        prepareWorkload:{},
+        prepareIntensity:{},
         contestStartDate:{},
         contestEndDate:{},
-        contestGoal:{rules: [{ required: true, message: '请输入比赛期训练任务!' }]},
-        contestQualityPercent:{rules: [{ required: true, message: '请输入比赛期素质训练!' }]},
-        contestTechPercent:{rules: [{ required: true, message: '请输入比赛期技术训练!' }]},
-        contestTacticalPercent:{rules: [{ required: true, message: '请输入比赛期战术训练!' }]},
-        contestMentalPercent:{rules: [{ required: true, message: '请输入比赛期心理训练!' }]},
-        contestMethod:{rules: [{ required: true, message: '请输入比赛期训练手段!' }]},
-        contestWorkload:{rules: [{ required: true, message: '请输入比赛期训练量!' }]},
-        contestIntensity:{rules: [{ required: true, message: '请输入比赛期训练强度!' }]},
+        contestGoal:{},
+        contestQualityPercent:{},
+        contestTechPercent:{},
+        contestTacticalPercent:{},
+        contestMentalPercent:{},
+        contestMethod:{},
+        contestWorkload:{},
+        contestIntensity:{},
         transitionStartDate:{},
         transitionEndDate:{},
-        transitionGoal:{rules: [{ required: true, message: '请输入过渡期训练任务!' }]},
-        transitionQualityPercent:{rules: [{ required: true, message: '请输入过渡期素质训练!' }]},
-        transitionTechPercent:{rules: [{ required: true, message: '请输入过渡期技术训练!' }]},
-        transitionTacticalPercent:{rules: [{ required: true, message: '请输入过渡期战术训练!' }]},
-        transitionMentalPercent:{rules: [{ required: true, message: '请输入过渡期心理训练!' }]},
-        transitionMethod:{rules: [{ required: true, message: '请输入过渡期训练手段!' }]},
-        transitionWorkload:{rules: [{ required: true, message: '请输入过渡期训练量!' }]},
-        transitionIntensity:{rules: [{ required: true, message: '请输入过渡期训练强度!' }]},
-        deptEvaluation:{rules: [{ required: true, message: '请输入竞赛科评价!' }]},
+        transitionGoal:{},
+        transitionQualityPercent:{},
+        transitionTechPercent:{},
+        transitionTacticalPercent:{},
+        transitionMentalPercent:{},
+        transitionMethod:{},
+        transitionWorkload:{},
+        transitionIntensity:{},
+        deptEvaluation:{},
         deptEvaluationDate:{},
-        schoolEvaluation:{rules: [{ required: true, message: '请输入校领导评价!' }]},
+        schoolEvaluation:{},
         schoolEvaluationDate:{},
         },
         url: {
@@ -214,7 +210,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','taskName','coachNo','prepareStartDate','prepareEndDate','prepareGoal','prepareQualityPercent','prepareTechPercent','prepareTacticalPercent','prepareMentalPercent','prepareMethod','prepareWorkload','prepareIntensity','contestStartDate','contestEndDate','contestGoal','contestQualityPercent','contestTechPercent','contestTacticalPercent','contestMentalPercent','contestMethod','contestWorkload','contestIntensity','transitionStartDate','transitionEndDate','transitionGoal','transitionQualityPercent','transitionTechPercent','transitionTacticalPercent','transitionMentalPercent','transitionMethod','transitionWorkload','transitionIntensity','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
+          this.form.setFieldsValue(pick(this.model,'sportClassId','planName','prepareStartDate','prepareEndDate','prepareGoal','prepareQualityPercent','prepareTechPercent','prepareTacticalPercent','prepareMentalPercent','prepareMethod','prepareWorkload','prepareIntensity','contestStartDate','contestEndDate','contestGoal','contestQualityPercent','contestTechPercent','contestTacticalPercent','contestMentalPercent','contestMethod','contestWorkload','contestIntensity','transitionStartDate','transitionEndDate','transitionGoal','transitionQualityPercent','transitionTechPercent','transitionTacticalPercent','transitionMentalPercent','transitionMethod','transitionWorkload','transitionIntensity','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
         })
       },
       close () {
@@ -257,7 +253,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','taskName','coachNo','prepareStartDate','prepareEndDate','prepareGoal','prepareQualityPercent','prepareTechPercent','prepareTacticalPercent','prepareMentalPercent','prepareMethod','prepareWorkload','prepareIntensity','contestStartDate','contestEndDate','contestGoal','contestQualityPercent','contestTechPercent','contestTacticalPercent','contestMentalPercent','contestMethod','contestWorkload','contestIntensity','transitionStartDate','transitionEndDate','transitionGoal','transitionQualityPercent','transitionTechPercent','transitionTacticalPercent','transitionMentalPercent','transitionMethod','transitionWorkload','transitionIntensity','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
+        this.form.setFieldsValue(pick(row,'sportClassId','planName','prepareStartDate','prepareEndDate','prepareGoal','prepareQualityPercent','prepareTechPercent','prepareTacticalPercent','prepareMentalPercent','prepareMethod','prepareWorkload','prepareIntensity','contestStartDate','contestEndDate','contestGoal','contestQualityPercent','contestTechPercent','contestTacticalPercent','contestMentalPercent','contestMethod','contestWorkload','contestIntensity','transitionStartDate','transitionEndDate','transitionGoal','transitionQualityPercent','transitionTechPercent','transitionTacticalPercent','transitionMentalPercent','transitionMethod','transitionWorkload','transitionIntensity','deptEvaluation','deptEvaluationDate','schoolEvaluation','schoolEvaluationDate'))
       }
       
     }

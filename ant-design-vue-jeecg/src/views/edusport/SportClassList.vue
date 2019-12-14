@@ -5,19 +5,19 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="训练队名称">
-              <a-input placeholder="请输入训练队名称" v-model="queryParam.className"></a-input>
+            <a-form-item label="训练队名">
+              <a-input placeholder="请输入训练队名" v-model="queryParam.className"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
             <a-form-item label="教练员">
-              <a-input placeholder="请输入教练员" v-model="queryParam.coachNo"></a-input>
+              <j-search-select-tag placeholder="请选择教练员" v-model="queryParam.coachId" dict="tb_edu_coach,coach_name,id" />
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
               <a-form-item label="运动项目">
-                <a-input placeholder="请输入运动项目" v-model="queryParam.sportCode"></a-input>
+                <j-search-select-tag placeholder="请选择运动项目" v-model="queryParam.sportCode" dict="tb_edu_sport,sport_name,sport_code" />
               </a-form-item>
             </a-col>
           </template>
@@ -40,16 +40,6 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('训练队表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
-      </a-dropdown>
     </div>
 
     <!-- table区域-begin -->
@@ -68,8 +58,8 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:tabSelectType}"
+        :customRow="clickThenCheck"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -110,6 +100,16 @@
 
       </a-table>
     </div>
+    <!-- table区域-end -->
+
+    <a-tabs defaultActiveKey="1">
+      <a-tab-pane tab="训练考勤" key="1">
+        <Sport-Class-Athlete-Attend-List ref="SportClassAthleteAttendList"></Sport-Class-Athlete-Attend-List>
+      </a-tab-pane>
+      <a-tab-pane tab="训练请假" key="2" forceRender>
+        <Sport-Class-Athlete-Leave-List ref="SportClassAthleteLeaveList"></Sport-Class-Athlete-Leave-List>
+      </a-tab-pane>
+    </a-tabs>
 
     <sportClass-modal ref="modalForm" @ok="modalFormOk"></sportClass-modal>
   </a-card>
@@ -119,17 +119,40 @@
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SportClassModal from './modules/SportClassModal'
+  import SportClassAthleteAttendList from './SportClassAthleteAttendList'
+  import SportClassAthleteAttendModal from './modules/SportClassAthleteAttendModal'
+  import SportClassAthleteLeaveList from './SportClassAthleteLeaveList'
+  import SportClassAthleteLeaveModal from './modules/SportClassAthleteLeaveModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag.vue'
 
   export default {
     name: "SportClassList",
     mixins:[JeecgListMixin],
     components: {
-      SportClassModal
+      SportClassModal,
+      SportClassAthleteAttendList,
+      SportClassAthleteAttendModal,
+      SportClassAthleteLeaveList,
+      SportClassAthleteLeaveModal,
+      JSearchSelectTag
     },
     data () {
       return {
         description: '训练队表管理页面',
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+
         // 表头
         columns: [
           {
@@ -143,19 +166,19 @@
             }
           },
           {
-            title:'训练队名称',
+            title:'训练队名',
             align:"center",
             dataIndex: 'className'
           },
           {
             title:'教练员',
             align:"center",
-            dataIndex: 'coachNo',
+            dataIndex: 'coachId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
+                return filterMultiDictText(this.dictOptions['coachId'], text+"")
               }
             }
           },
@@ -211,6 +234,7 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
+        tabSelectType: "radio",
         url: {
           list: "/edusport/sportClass/list",
           delete: "/edusport/sportClass/delete",
@@ -230,9 +254,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'coachNo', res.result)
+            this.$set(this.dictOptions, 'coachId', res.result)
           }
         })
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
@@ -245,6 +269,56 @@
             this.$set(this.dictOptions, 'trainingType', res.result)
           }
         })
+      },
+      clickThenCheck(record) {
+        return {
+          on: {
+            click: () => {
+              this.onSelectChange(record.id.split(","), [record]);
+            }
+          }
+        };
+      },
+
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectionRows = selectionRows;
+        let sportClassId = this.selectedRowKeys[0];
+
+        this.$refs.SportClassAthleteAttendList.getListBySportClassId(sportClassId);
+        this.$refs.SportClassAthleteLeaveList.getListBySportClassId(sportClassId);
+      },
+
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+
+        this.$refs.SportClassAthleteAttendList.queryParam.sportClassId = null;
+        this.$refs.SportClassAthleteAttendList.loadData();
+        this.$refs.SportClassAthleteAttendList.selectedRowKeys = [];
+        this.$refs.SportClassAthleteAttendList.selectionRows = [];
+
+        this.$refs.SportClassAthleteLeaveList.queryParam.sportClassId = null;
+        this.$refs.SportClassAthleteLeaveList.loadData();
+        this.$refs.SportClassAthleteLeaveList.selectedRowKeys = [];
+        this.$refs.SportClassAthleteLeaveList.selectionRows = [];
+      },
+
+      searchQuery:function(){
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+
+        this.$refs.SportClassAthleteAttendList.queryParam.sportClassId = null;
+        this.$refs.SportClassAthleteAttendList.loadData();
+        this.$refs.SportClassAthleteAttendList.selectedRowKeys = [];
+        this.$refs.SportClassAthleteAttendList.selectionRows = [];
+
+        this.$refs.SportClassAthleteLeaveList.queryParam.sportClassId = null;
+        this.$refs.SportClassAthleteLeaveList.loadData();
+        this.$refs.SportClassAthleteLeaveList.selectedRowKeys = [];
+        this.$refs.SportClassAthleteLeaveList.selectionRows = [];
+
+        this.loadData();
       }
        
     }

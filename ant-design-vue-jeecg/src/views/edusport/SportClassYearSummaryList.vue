@@ -1,22 +1,9 @@
 <template>
   <a-card :bordered="false">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-
-        </a-row>
-      </a-form>
-    </div>
-    <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
+    <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('年度训练工作总结信息表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -116,32 +103,23 @@
             }
           },
           {
-            title:'训练班',
+            title:'年度计划',
             align:"center",
-            dataIndex: 'sportClassId',
+            dataIndex: 'yearPlanId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['sportClassId'], text+"")
+                return filterMultiDictText(this.dictOptions['yearPlanId'], text+"")
               }
             }
           },
           {
-            title:'训练计划名称',
+            title:'竞赛科评价日期',
             align:"center",
-            dataIndex: 'taskName'
-          },
-          {
-            title:'发布人',
-            align:"center",
-            dataIndex: 'coachNo',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
-              }
+            dataIndex: 'deptEvaluationDate',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
           {
@@ -177,21 +155,28 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class,class_name,id').then((res) => {
+        initDictOptions('tb_edu_sport_class_year_plan,plan_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'sportClassId', res.result)
+            this.$set(this.dictOptions, 'yearPlanId', res.result)
           }
         })
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'coachNo', res.result)
-          }
-        })
-      }
+      },
+      getListByYearPlanId(yearPlanId) {
+        this.queryParam.yearPlanId = yearPlanId;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.yearPlanId);
+        this.$refs.modalForm.title = "添加年度工作总结";
+        this.$refs.modalForm.disableSubmit = false;
+      },
        
     }
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

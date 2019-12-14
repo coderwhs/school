@@ -46,11 +46,9 @@
 		教练员学习培训经历: /edusport/coach/training, edusport/CoachTrainingList
 		教练员论文发表: /edusport/coach/paper, edusport/CoachPaperList
 	教练员年度业务记录: /edusport/coach/performance, edusport/CoachPerformanceList
-	
-训练管理
-	运动项目: /edusport/sport, edusport/SportList
-	训练场馆: /edusport/sport/venue, edusport/SportVenueList
-	训练器械: /edusport/sport/equipment, edusport/SportEquipmentList
+
+
+训练队管理
 	训练队: /edusport/sport/class, edusport/SportClassList
 		训练考勤: /edusport/sport/class/athlete/attend, edusport/SportClassAthleteAttendList
 		训练请假: /edusport/sport/class/athlete/leave, edusport/SportClassAthleteLeaveList
@@ -63,6 +61,12 @@
 	周训练计划: /edusport/sport/class/week/plan, edusport/SportClassWeekPlanList
 	课训练计划: /edusport/sport/class/course/plan, edusport/SportClassCoursePlanList
 	训练视频: /edusport/sport/class/video, modules/oss/OSSFileList
+
+	
+训练基础信息管理
+	运动项目: /edusport/sport, edusport/SportList
+	训练场馆: /edusport/sport/venue, edusport/SportVenueList
+	训练器械: /edusport/sport/equipment, edusport/SportEquipmentList
 	
 宿舍管理
 	宿舍列表: /edusport/dorm, edusport/DormList
@@ -95,6 +99,54 @@
 
 
 		
+
+
+
+年度
+第1部分
+第2部分
+第4部分(准备期)
+第4部分(竞赛期)
+第4部分(修整期)
+第5部分
+第6-7部分
+SportClassYearPlanStepModal
+SportClassYearPlanStep1Modal
+SportClassYearPlanStep2Modal
+SportClassYearPlanStep41Modal
+SportClassYearPlanStep42Modal
+SportClassYearPlanStep43Modal
+SportClassYearPlanStep5Modal
+SportClassYearPlanStep67Modal
+
+
+
+
+冬训
+准备期
+基本期
+结束期
+WinterPlanStepModal
+WinterPlanStep1Modal
+WinterPlanStep2Modal
+WinterPlanStep3Modal
+
+夏训
+准备期
+比赛期
+过渡期
+SummerPlanStepModal
+SummerPlanStep1Modal
+SummerPlanStep2Modal
+SummerPlanStep3Modal
+
+
+周训
+
+
+
+课训
+
 
 
 

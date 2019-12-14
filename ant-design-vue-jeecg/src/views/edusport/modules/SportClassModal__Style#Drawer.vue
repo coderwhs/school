@@ -14,7 +14,7 @@
           <a-input v-decorator="[ 'className', validatorRules.className]" placeholder="请输入训练队名称"></a-input>
         </a-form-item>
         <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'coachNo', validatorRules.coachNo]" placeholder="请输入教练员"></a-input>
+          <a-input v-decorator="[ 'coachId', validatorRules.coachId]" placeholder="请输入教练员"></a-input>
         </a-form-item>
         <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'sportCode', validatorRules.sportCode]" placeholder="请输入运动项目"></a-input>
@@ -77,14 +77,14 @@
         confirmLoading: false,
         validatorRules:{
         className:{rules: [{ required: true, message: '请输入训练队名称!' }]},
-        coachNo:{rules: [{ required: true, message: '请输入教练员!' }]},
+        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
         sportCode:{rules: [{ required: true, message: '请输入运动项目!' }]},
         trainingType:{rules: [{ required: true, message: '请输入训练形式!' }]},
         trainingYear:{rules: [{ required: true, message: '请输入训练年度!' }]},
         startDate:{},
         endDate:{},
-        trainingAddress:{rules: [{ required: true, message: '请输入训练地点!' }]},
-        trainingContent:{rules: [{ required: true, message: '请输入训练任务!' }]},
+        trainingAddress:{},
+        trainingContent:{},
         },
         url: {
           add: "/edusport/sportClass/add",
@@ -104,7 +104,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'className','coachNo','sportCode','trainingType','trainingYear','startDate','endDate','trainingAddress','trainingContent'))
+          this.form.setFieldsValue(pick(this.model,'className','coachId','sportCode','trainingType','trainingYear','startDate','endDate','trainingAddress','trainingContent'))
         })
       },
       close () {
@@ -147,7 +147,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'className','coachNo','sportCode','trainingType','trainingYear','startDate','endDate','trainingAddress','trainingContent'))
+        this.form.setFieldsValue(pick(row,'className','coachId','sportCode','trainingType','trainingYear','startDate','endDate','trainingAddress','trainingContent'))
       }
       
     }

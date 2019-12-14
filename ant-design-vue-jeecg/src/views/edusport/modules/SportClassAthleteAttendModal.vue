@@ -14,13 +14,13 @@
           <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
         </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteNo']" dict="tb_edu_athlete,athlete_name,athlete_no" />
+          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
         <a-form-item label="考勤状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['attendStatus']" :trigger-change="true" dictCode="attend_status" placeholder="请选择考勤状态"/>
         </a-form-item>
-        <a-form-item label="考勤时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-date placeholder="请选择考勤时间" v-decorator="[ 'attendTime', validatorRules.attendTime]" :trigger-change="true" style="width: 100%"/>
+        <a-form-item label="考勤日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-date placeholder="请选择考勤日期" v-decorator="[ 'attendTime', validatorRules.attendTime]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
 
       </a-form>
@@ -62,9 +62,9 @@
         confirmLoading: false,
         validatorRules:{
         sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
-        athleteNo:{rules: [{ required: true, message: '请输入运动员!' }]},
+        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
         attendStatus:{rules: [{ required: true, message: '请输入考勤状态!' }]},
-        attendTime:{},
+        attendTime:{rules: [{ required: true, message: '请输入考勤日期!' }]},
         },
         url: {
           add: "/edusport/sportClassAthleteAttend/add",
@@ -79,12 +79,21 @@
       add () {
         this.edit({});
       },
+      add(sportClassId) {
+        this.hiding = true;
+        if (sportClassId) {
+          this.sportClassId = sportClassId;
+          this.edit({sportClassId}, '');
+        } else {
+          this.$message.warning("请选择一个训练队信息");
+        }
+      },
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','athleteNo','attendStatus','attendTime'))
+          this.form.setFieldsValue(pick(this.model,'sportClassId','athleteId','attendStatus','attendTime'))
         })
       },
       close () {
@@ -127,7 +136,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','athleteNo','attendStatus','attendTime'))
+        this.form.setFieldsValue(pick(row,'sportClassId','athleteId','attendStatus','attendTime'))
       },
 
       
