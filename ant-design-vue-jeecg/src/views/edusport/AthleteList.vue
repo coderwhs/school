@@ -36,7 +36,7 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
@@ -44,12 +44,12 @@
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
+      <!--<a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
-      </a-dropdown>
+      </a-dropdown>-->
     </div>
 
     <!-- table区域-begin -->
@@ -69,8 +69,8 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:type}"
-        
-        @change="handleTableChange">/* Tab修改@2019-12-12 */
+        :scroll="tableScroll"
+        @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
           <div v-html="text"></div>
@@ -234,9 +234,14 @@
             }
           },
           {
-            title:'手机号码',
+            title:'身高(cm)',
             align:"center",
-            dataIndex: 'mobile'
+            dataIndex: 'studentHeight'
+          },
+          {
+            title:'体重(kg)',
+            align:"center",
+            dataIndex: 'studentWeight'
           },
           {
             title:'专业项目',
@@ -251,6 +256,11 @@
             }
           },
           {
+            title:'手机号码',
+            align:"center",
+            dataIndex: 'mobile'
+          },
+          {
             title:'入队时间',
             align:"center",
             dataIndex: 'majorSportAttendDate',
@@ -259,29 +269,11 @@
             }
           },
           {
-            title:'带训教练姓名',
-            align:"center",
-            dataIndex: 'majorSportTeacherName'
-          },
-          {
-            title:'身高',
-            align:"center",
-            dataIndex: 'studentHeight'
-          },
-          {
-            title:'体重',
-            align:"center",
-            dataIndex: 'studentWeight'
-          },
-          {
-            title:'退役时间',
-            align:"center",
-            dataIndex: 'retireDate'
-          },
-          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
+            fixed:"right",
+            width:147,
             scopedSlots: { customRender: 'action' }
           }
         ],
@@ -294,9 +286,10 @@
           importExcelUrl: "edusport/athlete/importExcel",
         },
         dictOptions:{
-         gender:[],
-         nation:[],
+          gender:[],
+          nation:[],
         },
+        tableScroll:{x :10*147+50}
       }
     },
     computed: {
@@ -334,22 +327,21 @@
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
-        let athleteNo = this.selectionRows[0].athleteNo;
         /*let id = this.selectedRowKeys[0].mainId;*/
         let id = this.selectionRows[0].id;
-        this.$refs.AthleteContestList.getAthlete(id,athleteNo);
-        this.$refs.AthleteSportScoreList.getAthlete(id,athleteNo);
-        this.$refs.AthleteTransportList.getAthlete(id,athleteNo);
-        this.$refs.AthleteOtherTrianningInfoList.getAthlete(id,athleteNo);
+        this.$refs.AthleteContestList.getAthlete(id);
+        this.$refs.AthleteSportScoreList.getAthlete(id);
+        this.$refs.AthleteTransportList.getAthlete(id);
+        this.$refs.AthleteOtherTrianningInfoList.getAthlete(id);
         /* Tab修改@2019-12-12 */
       },
       onClearSelected() {/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
-        this.$refs.AthleteTransportList.queryParam.mainId = null;
-        this.$refs.AthleteSportScoreList.queryParam.mainId = null;
-        this.$refs.AthleteOtherTrianningInfoList.queryParam.mainId = null;
-        this.$refs.AthleteContestList.queryParam.mainId = null;
+        this.$refs.AthleteTransportList.queryParam.athleteId = null;
+        this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
+        this.$refs.AthleteOtherTrianningInfoList.queryParam.athleteId = null;
+        this.$refs.AthleteContestList.queryParam.athleteId = null;
         this.$refs.AthleteTransportList.loadData();
         this.$refs.AthleteSportScoreList.loadData();
         this.$refs.AthleteOtherTrianningInfoList.loadData();
@@ -400,6 +392,7 @@
         this.$refs.AthleteContestList.selectionRows = [];
         this.loadData();
       }
+
     }
   }
 </script>

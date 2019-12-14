@@ -25,11 +25,17 @@
         <a-form-item label="出生日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择出生日期" v-decorator="[ 'birthDate', validatorRules.birthDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
-        <a-form-item label="身份证号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'idNo', validatorRules.idNo]" placeholder="请输入身份证号"></a-input>
+        <a-form-item label="身高(cm)" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input-number v-decorator="[ 'studentHeight', validatorRules.studentHeight]" placeholder="请输入身高(cm)" style="width: 100%"/>
         </a-form-item>
-        <a-form-item label="手机号码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'mobile', validatorRules.mobile]" placeholder="请输入手机号码"></a-input>
+        <a-form-item label="体重(kg)" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input-number v-decorator="[ 'studentWeight', validatorRules.studentWeight]" placeholder="请输入体重(kg)" style="width: 100%"/>
+        </a-form-item>
+        <a-form-item label="专业项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'majorSport', validatorRules.majorSport]" placeholder="请输入专业项目"></a-input>
+        </a-form-item>
+        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'majorSportTeacherCode', validatorRules.majorSportTeacherCode]" placeholder="请输入教练员"></a-input>
         </a-form-item>
         <a-form-item label="籍贯省" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'nativeProvince', validatorRules.nativeProvince]" placeholder="请输入籍贯省"></a-input>
@@ -37,14 +43,20 @@
         <a-form-item label="籍贯市" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'nativeCity', validatorRules.nativeCity]" placeholder="请输入籍贯市"></a-input>
         </a-form-item>
+        <a-form-item label="身份证号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'idNo', validatorRules.idNo]" placeholder="请输入身份证号"></a-input>
+        </a-form-item>
+        <a-form-item label="手机号码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'mobile', validatorRules.mobile]" placeholder="请输入手机号码"></a-input>
+        </a-form-item>
+        <a-form-item label="家庭住址" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'homeAddress', validatorRules.homeAddress]" placeholder="请输入家庭住址"></a-input>
+        </a-form-item>
         <a-form-item label="邮政编码" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'zipcode', validatorRules.zipcode]" placeholder="请输入邮政编码"></a-input>
         </a-form-item>
         <a-form-item label="户籍所在派出所" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'policeStation', validatorRules.policeStation]" placeholder="请输入户籍所在派出所"></a-input>
-        </a-form-item>
-        <a-form-item label="家庭住址" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'homeAddress', validatorRules.homeAddress]" placeholder="请输入家庭住址"></a-input>
         </a-form-item>
         <a-form-item label="父亲姓名" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'father', validatorRules.father]" placeholder="请输入父亲姓名"></a-input>
@@ -76,23 +88,8 @@
         <a-form-item label="就读年级" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'grade', validatorRules.grade]" placeholder="请输入就读年级"></a-input>
         </a-form-item>
-        <a-form-item label="专业项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'majorSport', validatorRules.majorSport]" placeholder="请输入专业项目"></a-input>
-        </a-form-item>
         <a-form-item label="入队时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择入队时间" v-decorator="[ 'majorSportAttendDate', validatorRules.majorSportAttendDate]" :trigger-change="true" style="width: 100%"/>
-        </a-form-item>
-        <a-form-item label="带训教练代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'majorSportTeacherCode', validatorRules.majorSportTeacherCode]" placeholder="请输入带训教练代码"></a-input>
-        </a-form-item>
-        <a-form-item label="带训教练姓名" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'majorSportTeacherName', validatorRules.majorSportTeacherName]" placeholder="请输入带训教练姓名"></a-input>
-        </a-form-item>
-        <a-form-item label="身高" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'studentHeight', validatorRules.studentHeight]" placeholder="请输入身高" style="width: 100%"/>
-        </a-form-item>
-        <a-form-item label="体重" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'studentWeight', validatorRules.studentWeight]" placeholder="请输入体重" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="退役时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'retireDate', validatorRules.retireDate]" placeholder="请输入退役时间"></a-input>
@@ -107,7 +104,7 @@
           <a-input v-decorator="[ 'photoPath', validatorRules.photoPath]" placeholder="请输入照片路径"></a-input>
         </a-form-item>
         <a-form-item label="简介" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'resume', validatorRules.resume]" placeholder="请输入简介"></a-input>
+          <a-textarea v-decorator="['resume']" rows="4" placeholder="请输入简介"/>
         </a-form-item>
         
       </a-form>
@@ -152,14 +149,18 @@
         athleteName:{rules: [{ required: true, message: '请输入姓名!' }]},
         gender:{rules: [{ required: true, message: '请输入性别!' }]},
         nation:{rules: [{ required: true, message: '请输入民族!' }]},
-        birthDate:{},
-        idNo:{rules: [{ required: true, message: '请输入身份证号!' }]},
-        mobile:{rules: [{ required: true, message: '请输入手机号码!' }]},
+        birthDate:{rules: [{ required: true, message: '请输入出生日期!' }]},
+        studentHeight:{rules: [{ required: true, message: '请输入身高(cm)!' }]},
+        studentWeight:{rules: [{ required: true, message: '请输入体重(kg)!' }]},
+        majorSport:{rules: [{ required: true, message: '请输入专业项目!' }]},
+        majorSportTeacherCode:{rules: [{ required: true, message: '请输入教练员!' }]},
         nativeProvince:{rules: [{ required: true, message: '请输入籍贯省!' }]},
         nativeCity:{rules: [{ required: true, message: '请输入籍贯市!' }]},
+        idNo:{rules: [{ required: true, message: '请输入身份证号!' }]},
+        mobile:{rules: [{ required: true, message: '请输入手机号码!' }]},
+        homeAddress:{rules: [{ required: true, message: '请输入家庭住址!' }]},
         zipcode:{rules: [{ required: true, message: '请输入邮政编码!' }]},
         policeStation:{rules: [{ required: true, message: '请输入户籍所在派出所!' }]},
-        homeAddress:{rules: [{ required: true, message: '请输入家庭住址!' }]},
         father:{rules: [{ required: true, message: '请输入父亲姓名!' }]},
         fatherHeight:{rules: [{ required: true, message: '请输入父亲身高!' }]},
         fatherMobile:{rules: [{ required: true, message: '请输入父亲电话!' }]},
@@ -170,12 +171,7 @@
         transportDepartmentSchool:{rules: [{ required: true, message: '请输入输送单位名称!' }]},
         admissionDate:{},
         grade:{rules: [{ required: true, message: '请输入就读年级!' }]},
-        majorSport:{rules: [{ required: true, message: '请输入专业项目!' }]},
         majorSportAttendDate:{},
-        majorSportTeacherCode:{rules: [{ required: true, message: '请输入带训教练代码!' }]},
-        majorSportTeacherName:{rules: [{ required: true, message: '请输入带训教练姓名!' }]},
-        studentHeight:{rules: [{ required: true, message: '请输入身高!' }]},
-        studentWeight:{rules: [{ required: true, message: '请输入体重!' }]},
         retireDate:{rules: [{ required: true, message: '请输入退役时间!' }]},
         acceptDepartmentType:{rules: [{ required: true, message: '请输入吸收单位类别!' }]},
         acceptDepartment:{rules: [{ required: true, message: '请输入吸收单位!' }]},
@@ -200,7 +196,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteNo','athleteName','gender','nation','birthDate','idNo','mobile','nativeProvince','nativeCity','zipcode','policeStation','homeAddress','father','fatherHeight','fatherMobile','mother','motherHeight','motherMobile','transportDepartmentCity','transportDepartmentSchool','admissionDate','grade','majorSport','majorSportAttendDate','majorSportTeacherCode','majorSportTeacherName','studentHeight','studentWeight','retireDate','acceptDepartmentType','acceptDepartment','photoPath','resume'))
+          this.form.setFieldsValue(pick(this.model,'athleteNo','athleteName','gender','nation','birthDate','studentHeight','studentWeight','majorSport','majorSportTeacherCode','nativeProvince','nativeCity','idNo','mobile','homeAddress','zipcode','policeStation','father','fatherHeight','fatherMobile','mother','motherHeight','motherMobile','transportDepartmentCity','transportDepartmentSchool','admissionDate','grade','majorSportAttendDate','retireDate','acceptDepartmentType','acceptDepartment','photoPath','resume'))
         })
       },
       close () {
@@ -243,7 +239,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteNo','athleteName','gender','nation','birthDate','idNo','mobile','nativeProvince','nativeCity','zipcode','policeStation','homeAddress','father','fatherHeight','fatherMobile','mother','motherHeight','motherMobile','transportDepartmentCity','transportDepartmentSchool','admissionDate','grade','majorSport','majorSportAttendDate','majorSportTeacherCode','majorSportTeacherName','studentHeight','studentWeight','retireDate','acceptDepartmentType','acceptDepartment','photoPath','resume'))
+        this.form.setFieldsValue(pick(row,'athleteNo','athleteName','gender','nation','birthDate','studentHeight','studentWeight','majorSport','majorSportTeacherCode','nativeProvince','nativeCity','idNo','mobile','homeAddress','zipcode','policeStation','father','fatherHeight','fatherMobile','mother','motherHeight','motherMobile','transportDepartmentCity','transportDepartmentSchool','admissionDate','grade','majorSportAttendDate','retireDate','acceptDepartmentType','acceptDepartment','photoPath','resume'))
       }
       
     }

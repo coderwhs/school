@@ -1,6 +1,6 @@
 <template>
   <a-card :bordered="false">
-    <!-- 查询区域 -->
+    <!-- ��询区域 -->
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
@@ -9,20 +9,20 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('宿舍运动员请假表')">导出</a-button>
+      <!--<a-button type="primary" icon="download" @click="handleExportXls('宿舍运动员请假表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
+      </a-upload>-->
+      <!--<a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
-      </a-dropdown>
+      </a-dropdown>-->
     </div>
 
     <!-- table区域-begin -->
@@ -42,7 +42,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -119,12 +119,12 @@
           {
             title:'运动员',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'athleteId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
               }
             }
           },
@@ -164,7 +164,6 @@
           importExcelUrl: "edusport/dormAthleteLeave/importExcel",
         },
         dictOptions:{
-         athleteNo:[],
         },
       }
     },
@@ -175,9 +174,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'athleteId', res.result)
           }
         })
       },
@@ -187,7 +186,7 @@
         }
         //update-begin--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
         var params = this.getQueryParams();
-        getAction(this.url.list, {dormId: params.mainId, pageNo : this.ipagination.current,
+        getAction(this.url.list, {dormId: params.dormId, pageNo : this.ipagination.current,
           pageSize :this.ipagination.pageSize}).then((res) => {
           if (res.success) {
             this.dataSource = res.result.records;
@@ -200,12 +199,12 @@
 
       },
       getDorm(dormId) {
-        this.queryParam.mainId = dormId;
+        this.queryParam.dormId = dormId;
         this.loadData(1);
       },
       handleAdd: function () {
-        this.$refs.modalForm.add(this.queryParam.mainId);
-        this.$refs.modalForm.title = "添加请假运动员信息";
+        this.$refs.modalForm.add(this.queryParam.dormId);
+        this.$refs.modalForm.title = "请假运动员信息";
       },
     }
   }

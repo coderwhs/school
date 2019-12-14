@@ -1,30 +1,15 @@
 <template>
   <a-card :bordered="false">
     <!-- 查询区域 -->
-    <!--<div class="table-page-search-wrapper">
+    <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <j-dict-select-tag placeholder="请选择运动员学号" v-model="queryParam.athleteNo" dictCode="tb_edu_athlete,athlete_name,athlete_no"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
 
         </a-row>
       </a-form>
-    </div>-->
+    </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
@@ -32,12 +17,12 @@
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>-->
-      <a-dropdown v-if="selectedRowKeys.length > 0">
+      <!--<a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
-      </a-dropdown>
+      </a-dropdown>-->
     </div>
 
     <!-- table区域-begin -->
@@ -57,7 +42,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -138,12 +123,12 @@
           {
             title:'运动员',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'athleteId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
               }
             }
           },
@@ -175,7 +160,6 @@
           importExcelUrl: "edusport/athleteOtherTrianningInfo/importExcel",
         },
         dictOptions:{
-         athleteNo:[],
         },
       }
     },
@@ -186,9 +170,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'athleteId', res.result)
           }
         })
       },
@@ -199,7 +183,7 @@
         //update-begin--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
         var params = this.getQueryParams();
         getAction(this.url.list, {
-          athleteNo: params.mainid, pageNo: this.ipagination.current,
+          athleteId: params.athleteId, pageNo: this.ipagination.current,
           pageSize: this.ipagination.pageSize
         }).then((res) => {
           if (res.success) {
@@ -210,14 +194,13 @@
           }
         })
       },
-      getAthlete(id,athleteNo) {/* Tab修改@2019-12-12 */
-        this.queryParam.mainid = id;
-        this.queryParam.athleteNo = athleteNo;
+      getAthlete(id) {/* Tab修改@2019-12-12 */
+        this.queryParam.athleteId = id;
         this.loadData(1);
       },
       handleAdd: function () {
-        this.$refs.modalForm.add(this.queryParam.mainid);
-        this.$refs.modalForm.title = "添加运动员训练其他事项记录信息";
+        this.$refs.modalForm.add(this.queryParam.athleteId);
+        this.$refs.modalForm.title = "运动员训练其他事项记录信息";
       },
     }
   }

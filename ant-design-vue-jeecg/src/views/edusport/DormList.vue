@@ -29,7 +29,7 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
@@ -37,12 +37,12 @@
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
+      <!--<a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
-      </a-dropdown>
+      </a-dropdown>-->
     </div>
 
     <!-- table区域-begin -->
@@ -251,8 +251,8 @@
       onClearSelected() {/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
-        this.$refs.DormAthleteLivingList.queryParam.mainId = null;
-        this.$refs.DormAthleteLeaveList.queryParam.mainId = null;
+        this.$refs.DormAthleteLivingList.queryParam.dormId = null;
+        this.$refs.DormAthleteLeaveList.queryParam.dormId = null;
         this.$refs.DormAthleteLivingList.loadData();
         this.$refs.DormAthleteLeaveList.loadData();
         this.$refs.DormAthleteLivingList.selectedRowKeys = [];
@@ -287,10 +287,10 @@
         this.$refs.DormAthleteLeaveList.selectionRows = [];
         this.loadData();
       }
-       
+
     }
   }
 </script>
 <style scoped>
-  /*@import '~@assets/less/common.less';*/
+  @import '~@assets/less/common.less'
 </style>

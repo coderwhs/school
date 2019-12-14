@@ -1,35 +1,15 @@
 <template>
   <a-card :bordered="false">
     <!-- 查询区域 -->
-    <!--<div class="table-page-search-wrapper">
+    <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="归属教练员">
-              <a-input placeholder="请输入归属教练员" v-model="queryParam.coachNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
 
         </a-row>
       </a-form>
-    </div>-->
+    </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
@@ -37,12 +17,12 @@
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>-->
-      <a-dropdown v-if="selectedRowKeys.length > 0">
+      <!--<a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
-      </a-dropdown>
+      </a-dropdown>-->
     </div>
 
     <!-- table区域-begin -->
@@ -141,24 +121,24 @@
           {
             title:'运动员',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'athleteId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
               }
             }
           },
           {
             title:'教练员',
             align:"center",
-            dataIndex: 'coachNo',
+            dataIndex: 'coachId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
+                return filterMultiDictText(this.dictOptions['coachId'], text+"")
               }
             }
           },
@@ -166,14 +146,6 @@
             title:'比赛名称',
             align:"center",
             dataIndex: 'contestName'
-          },
-          {
-            title:'比赛日期',
-            align:"center",
-            dataIndex: 'contestDate',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
-            }
           },
           {
             title:'比赛项目',
@@ -188,12 +160,20 @@
             }
           },
           {
+            title:'比赛日期',
+            align:"center",
+            dataIndex: 'contestDate',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
+            }
+          },
+          {
             title:'比赛小项',
             align:"center",
             dataIndex: 'contestEvent'
           },
           {
-            title:'比赛名次',
+            title:'名次',
             align:"center",
             dataIndex: 'contestResult'
           },
@@ -215,9 +195,19 @@
             dataIndex: 'awardedDepartment'
           },
           {
+            title:'授予日期',
+            align:"center",
+            dataIndex: 'awardedDate',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
+            }
+          },
+          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
+            fixed:"right",
+            width:147,
             scopedSlots: { customRender: 'action' }
           }
         ],
@@ -229,9 +219,9 @@
           importExcelUrl: "edusport/athleteContest/importExcel",
         },
         dictOptions:{
-         awardedTechGrade:[],
+          awardedTechGrade:[],
         },
-        tableScroll:{x :9*147+50}
+        tableScroll:{x :10*147+50}
       }
     },
     computed: {
@@ -241,14 +231,14 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'athleteId', res.result)
           }
         })
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'coachNo', res.result)
+            this.$set(this.dictOptions, 'coachId', res.result)
           }
         })
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
@@ -268,7 +258,7 @@
         }
         //update-begin--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
         var params = this.getQueryParams();
-        getAction(this.url.list, {athleteNo: params.mainid, pageNo : this.ipagination.current,
+        getAction(this.url.list, {athleteId: params.athleteId, pageNo : this.ipagination.current,
           pageSize :this.ipagination.pageSize}).then((res) => {
           if (res.success) {
             this.dataSource = res.result.records;
@@ -280,16 +270,15 @@
         //update-end--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
 
       },
-      getAthlete(id,athleteNo) {/* Tab修改@2019-12-12 */
-        this.queryParam.mainid = id;
-        this.queryParam.athleteNo = athleteNo;
+      getAthlete(id) {/* Tab修改@2019-12-12 */
+        this.queryParam.athleteId = id;
         this.loadData(1);
       },
       handleAdd: function () {
-        this.$refs.modalForm.add(this.queryParam.mainid);
-        this.$refs.modalForm.title = "添加运动员参赛信息";
+        this.$refs.modalForm.add(this.queryParam.athleteId);
+        this.$refs.modalForm.title = "运动员参赛信息";
       },
-       
+
     }
   }
 </script>

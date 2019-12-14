@@ -11,7 +11,7 @@
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteNo']" dict="tb_edu_athlete,athlete_name,athlete_no" />
+          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
         <a-form-item label="床位号" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'bedNo', validatorRules.bedNo]" placeholder="请输入床位号"></a-input>
@@ -32,14 +32,12 @@
 
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
-  import JDate from '@/components/jeecg/JDate'  
+  import JDate from '@/components/jeecg/JDate'
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
-  import Vue from 'vue'
-  import {ACCESS_TOKEN} from "@/store/mutation-types"
 
   export default {
-    name: "DormAthleteLivingModal",
-    components: { 
+    name: "DormAthleteLeaveModal",
+    components: {
       JDate,
       JSearchSelectTag,
     },
@@ -61,41 +59,40 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteNo:{rules: [{ required: true, message: '请输入运动员!' }]},
-        bedNo:{rules: [{ required: true, message: '请输入床位号!' }]},
-        startDate:{rules: [{ required: true, message: '请输入入住开始日期!' }]},
-        endDate:{},
+          athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
+          bedNo:{},
+          startDate:{rules: [{ required: true, message: '请输入入住开始日期!' }]},
+          endDate:{},
         },
         url: {
           add: "/edusport/dormAthleteLiving/add",
           edit: "/edusport/dormAthleteLiving/edit",
         }
-     
+
       }
     },
-    created() {
-      const token = Vue.ls.get(ACCESS_TOKEN);
-      this.headers = {"X-Access-Token": token}
+    created () {
     },
     methods: {
-      /*add () {
-        this.edit({});
-      },*/
-      add(dormId){/* Tab修改@2019-12-12 */
+      //add () {
+      //  this.edit({});
+      //},
+      add(dormId){
         this.hiding = true;
         if (dormId) {
           this.dormId = dormId;
-          this.edit({dormId},'');
+          this.edit({dormId}, '');
         } else {
           this.$message.warning("请选择一个宿舍信息");
         }
       },
       edit (record) {
         this.form.resetFields();
+        this.dormId = record.dormId;
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteNo','bedNo','startDate','endDate'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','bedNo','startDate','endDate'))
         })
       },
       close () {
@@ -110,13 +107,12 @@
             that.confirmLoading = true;
             let httpurl = '';
             let method = '';
-            console.log("表单提交数据",this.model.id);
             if(!this.model.id){
               httpurl+=this.url.add;
               method = 'post';
             }else{
               httpurl+=this.url.edit;
-               method = 'put';
+              method = 'put';
             }
             let formData = Object.assign(this.model, values);
             console.log("表单提交数据",formData);
@@ -133,15 +129,16 @@
               that.close();
             })
           }
-         
+
         })
       },
       handleCancel () {
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteNo','bedNo','startDate','endDate'))
+        this.form.setFieldsValue(pick(row,'athleteId','bedNo','startDate','endDate'))
       },
+
 
     }
   }
