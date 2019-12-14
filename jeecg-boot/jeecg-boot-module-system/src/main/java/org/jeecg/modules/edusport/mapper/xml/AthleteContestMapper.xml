@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.edusport.mapper.AthleteContestMapper">
-
+	<!-- 运动员ID查询 -->
+	<select id="getContestByAthleteId" resultType="org.jeecg.modules.edusport.entity.AthleteContest">
+		select * from  tb_edu_athlete_contest  where athlete_id = #{athleteId}
+	</select>
 </mapper>
