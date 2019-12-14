@@ -13,5 +13,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Version: V1.0
  */
 public interface AthleteContestMapper extends BaseMapper<AthleteContest> {
-
+	public List<AthleteContest> getContestByAthleteId(@Param("athleteId") String athleteId);
 }
