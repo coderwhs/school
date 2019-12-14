@@ -188,11 +188,11 @@ CREATE TABLE tb_edu_athlete_transport(
 DROP TABLE IF EXISTS tb_edu_athlete_coach_evaluation;;/*SkipError*/
 CREATE TABLE tb_edu_athlete_coach_evaluation(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
-    coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员' ,
+    athlete_sport_class_id VARCHAR(32) NOT NULL   COMMENT '训练队成员' ,
     start_date DATE    COMMENT '开始日期' ,
     end_date DATE    COMMENT '结束日期' ,
     evaluation VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '总体评价' ,
+    evaluator VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '评价教练' ,
     create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
     create_time DATETIME    COMMENT '创建时间' ,
     update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,

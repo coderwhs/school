@@ -68,8 +68,8 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:false,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+        :rowSelection="{fixed:false, selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type:tabSelectType}"
+        :customRow="clickThenCheck"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -110,6 +110,13 @@
 
       </a-table>
     </div>
+    <!-- table区域-end -->
+
+    <a-tabs defaultActiveKey="1">
+      <a-tab-pane tab="带训教练员评价" key="1">
+        <Athlete-Coach-Evaluation-List ref="AthleteCoachEvaluationList"></Athlete-Coach-Evaluation-List>
+      </a-tab-pane>
+    </a-tabs>
 
     <athleteSportClass-modal ref="modalForm" @ok="modalFormOk"></athleteSportClass-modal>
   </a-card>
@@ -119,6 +126,8 @@
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import AthleteSportClassModal from './modules/AthleteSportClassModal'
+  import AthleteCoachEvaluationList from './AthleteCoachEvaluationList'
+  import AthleteCoachEvaluationModal from './modules/AthleteCoachEvaluationModal'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
@@ -127,11 +136,26 @@
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
-      AthleteSportClassModal
+      AthleteSportClassModal,
+      AthleteCoachEvaluationList,
+      AthleteCoachEvaluationModal
     },
     data () {
       return {
         description: '训练队成员表管理页面',
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+
         // 表头
         columns: [
           {
@@ -195,6 +219,7 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
+        tabSelectType: "radio",
         url: {
           list: "/edusport/athleteSportClass/list",
           delete: "/edusport/athleteSportClass/delete",
@@ -229,6 +254,44 @@
             this.$set(this.dictOptions, 'athleteAwardTechGrade', res.result)
           }
         })
+      },
+      clickThenCheck(record) {
+        return {
+          on: {
+            click: () => {
+              this.onSelectChange(record.id.split(","), [record]);
+            }
+          }
+        };
+      },
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectionRows = selectionRows;
+        let athleteSportClassId = this.selectedRowKeys[0];
+
+        this.$refs.AthleteCoachEvaluationList.getListByAthleteSportClassId(athleteSportClassId);
+      },
+
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+
+        this.$refs.AthleteCoachEvaluationList.queryParam.athleteSportClassId = null;
+        this.$refs.AthleteCoachEvaluationList.loadData();
+        this.$refs.AthleteCoachEvaluationList.selectedRowKeys = [];
+        this.$refs.AthleteCoachEvaluationList.selectionRows = [];
+      },
+
+      searchQuery:function(){
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+
+        this.$refs.AthleteCoachEvaluationList.queryParam.athleteSportClassId = null;
+        this.$refs.AthleteCoachEvaluationList.loadData();
+        this.$refs.AthleteCoachEvaluationList.selectedRowKeys = [];
+        this.$refs.AthleteCoachEvaluationList.selectionRows = [];
+
+        this.loadData();
       }
        
     }

@@ -178,14 +178,14 @@
             }
           },
           {
+            title:'姓名',
+            align:"center",
+            dataIndex: 'coachName'
+          },
+          {
             title:'教练员代码',
             align:"center",
             dataIndex: 'coachNo'
-          },
-          {
-            title:'教练员姓名',
-            align:"center",
-            dataIndex: 'coachName'
           },
           {
             title:'性别',

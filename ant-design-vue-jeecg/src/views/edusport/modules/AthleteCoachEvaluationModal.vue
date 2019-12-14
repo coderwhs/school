@@ -10,11 +10,12 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+        <a-form-item label="训练队成员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          {{athleteName}}
         </a-form-item>
-        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
+
+        <a-form-item label="训练队成员" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="false">
+          <j-search-select-tag v-decorator="['athleteSportClassId']" dict="tb_edu_athlete_sport_class,athlete_id,id" />
         </a-form-item>
         <a-form-item label="开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
@@ -24,6 +25,9 @@
         </a-form-item>
         <a-form-item label="总体评价" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-textarea v-decorator="['evaluation']" rows="4" placeholder="请输入总体评价"/>
+        </a-form-item>
+        <a-form-item label="评价教练" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['evaluator']" dict="tb_edu_coach,coach_name,id" />
         </a-form-item>
 
       </a-form>
@@ -37,6 +41,7 @@
   import pick from 'lodash.pick'
   import JDate from '@/components/jeecg/JDate'  
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
     name: "AthleteCoachEvaluationModal",
@@ -60,34 +65,74 @@
           sm: { span: 16 },
         },
 
+        athleteName:'',
         confirmLoading: false,
         validatorRules:{
-        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
-        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+        athleteSportClassId:{rules: [{ required: true, message: '请输入训练队成员!' }]},
         startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
         endDate:{rules: [{ required: true, message: '请输入结束日期!' }]},
         evaluation:{rules: [{ required: true, message: '请输入总体评价!' }]},
+        evaluator:{rules: [{ required: true, message: '请输入评价教练!' }]},
         },
         url: {
           add: "/edusport/athleteCoachEvaluation/add",
           edit: "/edusport/athleteCoachEvaluation/edit",
-        }
-     
+        },
+        dictOptions:{
+        },
       }
     },
     created () {
     },
     methods: {
+      // 初始化字典并获取训练队成员
+      initDictConfig(){
+        initDictOptions('tb_edu_athlete_sport_class,athlete_id,id').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'athleteSportClassId', res.result)
+          }
+        })
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'athlete_id', res.result)
+          }
+        })
+
+        // initDictOptions 因方法耗时，因此延时500ms获取 训练队成员姓名
+        // 最稳妥的方法
+        let callback = (function ()  {
+          let athleteSportClassId = this.model.athleteSportClassId
+          if(!athleteSportClassId){
+            return ''
+          }else {
+            let athlete_id = filterMultiDictText(this.dictOptions['athleteSportClassId'], athleteSportClassId+"")
+            this.athleteName = filterMultiDictText(this.dictOptions['athlete_id'], athlete_id + "")
+          }
+        }).bind(this)
+        setTimeout(callback, 500)
+      },
       add () {
         this.edit({});
+      },
+      add(athleteSportClassId) {
+        this.hiding = true;
+        if (athleteSportClassId) {
+          this.athleteSportClassId = athleteSportClassId;
+          this.edit({athleteSportClassId}, '');
+        } else {
+          this.$message.warning("请选择一个训练队成员信息");
+        }
       },
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteId','coachId','startDate','endDate','evaluation'))
+          this.form.setFieldsValue(pick(this.model,'athleteSportClassId','startDate','endDate','evaluation','evaluator'))
         })
+
+        // 初始化字典并获取训练队成员
+        this.initDictConfig()
       },
       close () {
         this.$emit('close');
@@ -129,7 +174,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteId','coachId','startDate','endDate','evaluation'))
+        this.form.setFieldsValue(pick(row,'athleteSportClassId','startDate','endDate','evaluation','evaluator'))
       },
 
       

@@ -1,42 +1,9 @@
 <template>
   <a-card :bordered="false">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="运动员">
-              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="教练员">
-              <a-input placeholder="请输入教练员" v-model="queryParam.coachId"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
-
-        </a-row>
-      </a-form>
-    </div>
-    <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
+    <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员评价信息表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -61,7 +28,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:false,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         
         @change="handleTableChange">
 
@@ -111,7 +78,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteCoachEvaluationModal from './modules/AthleteCoachEvaluationModal'
+  // import AthleteCoachEvaluationModal from './modules/AthleteCoachEvaluationModal'
+  import AthleteCoachEvaluationModal from './modules/AthleteCoachEvaluationModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
@@ -122,7 +90,7 @@
     },
     data () {
       return {
-        description: '运动员评价信息表管理页面',
+        description: '训练队成员评价信息表管理页面',
         // 表头
         columns: [
           {
@@ -136,26 +104,15 @@
             }
           },
           {
-            title:'运动员',
+            title:'训练队成员',
             align:"center",
-            dataIndex: 'athleteId',
+            dataIndex: 'athleteSportClassId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
-              }
-            }
-          },
-          {
-            title:'教练员',
-            align:"center",
-            dataIndex: 'coachId',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['coachId'], text+"")
+                let athlete_id = filterMultiDictText(this.dictOptions['athleteSportClassId'], text+"")
+                return filterMultiDictText(this.dictOptions['athlete_id'], athlete_id+"")
               }
             }
           },
@@ -179,6 +136,18 @@
             title:'总体评价',
             align:"center",
             dataIndex: 'evaluation'
+          },
+          {
+            title:'评价教练',
+            align:"center",
+            dataIndex: 'evaluator',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['evaluator'], text+"")
+              }
+            }
           },
           {
             title: '操作',
@@ -205,21 +174,38 @@
     },
     methods: {
       initDictConfig(){
+        initDictOptions('tb_edu_athlete_sport_class,athlete_id,id').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'athleteSportClassId', res.result)
+          }
+        })
         initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteId', res.result)
+            this.$set(this.dictOptions, 'athlete_id', res.result)
           }
         })
         initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'coachId', res.result)
+            this.$set(this.dictOptions, 'evaluator', res.result)
           }
         })
-      }
+      },
+      getListByAthleteSportClassId(athleteSportClassId) {
+        this.queryParam.athleteSportClassId = athleteSportClassId;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.athleteSportClassId);
+        this.$refs.modalForm.title = "添加带训教练员评价";
+        this.$refs.modalForm.disableSubmit = false;
+      },
        
     }
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

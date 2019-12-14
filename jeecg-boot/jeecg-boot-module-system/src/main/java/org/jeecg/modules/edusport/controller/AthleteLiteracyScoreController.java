@@ -36,7 +36,7 @@ import com.alibaba.fastjson.JSON;
  /**
  * @Description: 运动员文化课成绩信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-13
+ * @Date:   2019-12-15
  * @Version: V1.0
  */
 @RestController

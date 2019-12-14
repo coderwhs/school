@@ -10,11 +10,8 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'athleteId', validatorRules.athleteId]" placeholder="请输入运动员"></a-input>
-        </a-form-item>
-        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'coachId', validatorRules.coachId]" placeholder="请输入教练员"></a-input>
+        <a-form-item label="训练队成员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'athleteSportClassId', validatorRules.athleteSportClassId]" placeholder="请输入训练队成员"></a-input>
         </a-form-item>
         <a-form-item label="开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
@@ -24,6 +21,9 @@
         </a-form-item>
         <a-form-item label="总体评价" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-textarea v-decorator="['evaluation']" rows="4" placeholder="请输入总体评价"/>
+        </a-form-item>
+        <a-form-item label="评价教练" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'evaluator', validatorRules.evaluator]" placeholder="请输入评价教练"></a-input>
         </a-form-item>
         
       </a-form>
@@ -62,11 +62,11 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
-        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+        athleteSportClassId:{rules: [{ required: true, message: '请输入训练队成员!' }]},
         startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
         endDate:{rules: [{ required: true, message: '请输入结束日期!' }]},
         evaluation:{rules: [{ required: true, message: '请输入总体评价!' }]},
+        evaluator:{rules: [{ required: true, message: '请输入评价教练!' }]},
         },
         url: {
           add: "/edusport/athleteCoachEvaluation/add",
@@ -86,7 +86,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteId','coachId','startDate','endDate','evaluation'))
+          this.form.setFieldsValue(pick(this.model,'athleteSportClassId','startDate','endDate','evaluation','evaluator'))
         })
       },
       close () {
@@ -129,7 +129,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteId','coachId','startDate','endDate','evaluation'))
+        this.form.setFieldsValue(pick(row,'athleteSportClassId','startDate','endDate','evaluation','evaluator'))
       }
       
     }

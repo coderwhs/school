@@ -14,9 +14,9 @@ import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecg.common.aspect.annotation.Dict;
 
 /**
- * @Description: 运动员评价信息表
+ * @Description: 训练队成员评价信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-13
+ * @Date:   2019-12-14
  * @Version: V1.0
  */
 @Data
@@ -27,12 +27,9 @@ public class AthleteCoachEvaluation implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**运动员*/
-	@Excel(name = "运动员", width = 15)
-    private java.lang.String athleteId;
-	/**教练员*/
-	@Excel(name = "教练员", width = 15)
-    private java.lang.String coachId;
+	/**训练队成员*/
+	@Excel(name = "训练队成员", width = 15)
+    private java.lang.String athleteSportClassId;
 	/**开始日期*/
 	@Excel(name = "开始日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
@@ -46,6 +43,9 @@ public class AthleteCoachEvaluation implements Serializable {
 	/**总体评价*/
 	@Excel(name = "总体评价", width = 15)
     private java.lang.String evaluation;
+	/**评价教练*/
+	@Excel(name = "评价教练", width = 15)
+    private java.lang.String evaluator;
 	/**创建人*/
 	@Excel(name = "创建人", width = 15)
     private java.lang.String createBy;

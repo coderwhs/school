@@ -34,9 +34,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 
  /**
- * @Description: 运动员评价信息表
+ * @Description: 训练队成员评价信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-13
+ * @Date:   2019-12-14
  * @Version: V1.0
  */
 @RestController
@@ -137,7 +137,7 @@ public class AthleteCoachEvaluationController extends JeecgController<AthleteCoa
     */
     @RequestMapping(value = "/exportXls")
     public ModelAndView exportXls(HttpServletRequest request, AthleteCoachEvaluation athleteCoachEvaluation) {
-        return super.exportXls(request, athleteCoachEvaluation, AthleteCoachEvaluation.class, "运动员评价信息表");
+        return super.exportXls(request, athleteCoachEvaluation, AthleteCoachEvaluation.class, "训练队成员评价信息表");
     }
 
     /**

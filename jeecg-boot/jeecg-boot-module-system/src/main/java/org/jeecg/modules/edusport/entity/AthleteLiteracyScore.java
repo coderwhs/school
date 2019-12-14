@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员文化课成绩信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-13
+ * @Date:   2019-12-15
  * @Version: V1.0
  */
 @Data
@@ -27,8 +27,8 @@ public class AthleteLiteracyScore implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**运动员学号*/
-	@Excel(name = "运动员学号", width = 15)
+	/**运动员*/
+	@Excel(name = "运动员", width = 15)
     private java.lang.String athleteId;
 	/**年级*/
 	@Excel(name = "年级", width = 15)
