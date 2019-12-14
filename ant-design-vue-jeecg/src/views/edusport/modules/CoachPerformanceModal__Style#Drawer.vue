@@ -1,17 +1,19 @@
 <template>
   <a-drawer
     :title="title"
-    :width="width"
+    :width="drawerWidth"
+    :maskClosable="true"
     placement="right"
-    :closable="false"
+    :closable="true"
     @close="close"
-    :visible="visible">
-  
+    :visible="visible"
+    style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
+
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="教练员代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'coachNo', validatorRules.coachNo]" placeholder="请输入教练员代码"></a-input>
+        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
         </a-form-item>
         <a-form-item label="业务年度" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'performanceYear', validatorRules.performanceYear]" placeholder="请输入业务年度" style="width: 100%"/>
@@ -91,31 +93,39 @@
         <a-form-item label="年度业务考核等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'appraisalGrade', validatorRules.appraisalGrade]" placeholder="请输入年度业务考核等级"></a-input>
         </a-form-item>
-        <a-form-item label="学校训练部门审核意见" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['auditOpinion']" rows="4" placeholder="请输入学校训练部门审核意见"/>
+        <a-form-item label="训练部门审核意见" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-textarea v-decorator="['auditOpinion']" rows="4" placeholder="请输入训练部门审核意见"/>
         </a-form-item>
-        
+
       </a-form>
     </a-spin>
-    <a-button type="primary" @click="handleOk">确定</a-button>
-    <a-button type="primary" @click="handleCancel">取消</a-button>
-  </a-drawer>
+    <div class="drawer-bootom-button" v-show="!disableSubmit">
+      <a-popconfirm title="确定放弃编辑？" @confirm="handleCancel" okText="确定" cancelText="取消">
+        <a-button style="margin-right: .8rem">取消</a-button>
+      </a-popconfirm>
+      <a-button type="primary" @click="handleOk" :loading="confirmLoading">提交</a-button>
+    </div>
+    </a-drawer>
 </template>
 
 <script>
 
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
-  
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+
   export default {
     name: "CoachPerformanceModal",
-    components: { 
+    components: {
+      JSearchSelectTag,
     },
     data () {
       return {
         form: this.$form.createForm(this),
         title:"操作",
         width:800,
+        drawerWidth:800,
+        disableSubmit:false,
         visible: false,
         model: {},
         labelCol: {
@@ -129,40 +139,40 @@
 
         confirmLoading: false,
         validatorRules:{
-        coachNo:{rules: [{ required: true, message: '请输入教练员代码!' }]},
-        performanceYear:{rules: [{ required: true, message: '请输入业务年度!' }]},
-        athleteNum:{},
-        attendNum:{},
-        leaveNum:{},
-        citySchoolNum:{},
-        provinceSchoolNum:{},
-        provinceTeamNum:{},
-        bayiTeamNum:{},
-        toNationalTeam:{},
-        toNationalYouthTeam:{},
-        toProvinceTeam:{},
-        toProvinceSchool:{},
-        toCitySchool:{},
-        toCollege:{},
-        toRemark:{},
-        contestFirst:{},
-        contestSecond:{},
-        contestThird:{},
-        contestExcellence:{},
-        contestGood:{},
-        contestTotalPoints:{},
-        contestRemark:{},
-        isScTeam:{},
-        rewardsPunishments:{rules: [{ required: true, message: '请输入奖惩情况!' }]},
-        appraisalScore:{rules: [{ required: true, message: '请输入年度业务考核得分!' }]},
-        appraisalGrade:{rules: [{ required: true, message: '请输入年度业务考核等级!' }]},
-        auditOpinion:{rules: [{ required: true, message: '请输入学校训练部门审核意见!' }]},
+          coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+          performanceYear:{rules: [{ required: true, message: '请输入业务年度!' }]},
+          athleteNum:{},
+          attendNum:{},
+          leaveNum:{},
+          citySchoolNum:{},
+          provinceSchoolNum:{},
+          provinceTeamNum:{},
+          bayiTeamNum:{},
+          toNationalTeam:{},
+          toNationalYouthTeam:{},
+          toProvinceTeam:{},
+          toProvinceSchool:{},
+          toCitySchool:{},
+          toCollege:{},
+          toRemark:{},
+          contestFirst:{},
+          contestSecond:{},
+          contestThird:{},
+          contestExcellence:{},
+          contestGood:{},
+          contestTotalPoints:{},
+          contestRemark:{},
+          isScTeam:{},
+          rewardsPunishments:{rules: [{  message: '请输入奖惩情况!' }]},
+          appraisalScore:{rules: [{ message: '请输入年度业务考核得分!' }]},
+          appraisalGrade:{rules: [{ message: '请输入年度业务考核等级!' }]},
+          auditOpinion:{rules: [{  message: '请输入训练部门审核意见!' }]},
         },
         url: {
           add: "/edusport/coachPerformance/add",
           edit: "/edusport/coachPerformance/edit",
         }
-     
+
       }
     },
     created () {
@@ -172,16 +182,18 @@
         this.edit({});
       },
       edit (record) {
+        this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'coachNo','performanceYear','athleteNum','attendNum','leaveNum','citySchoolNum','provinceSchoolNum','provinceTeamNum','bayiTeamNum','toNationalTeam','toNationalYouthTeam','toProvinceTeam','toProvinceSchool','toCitySchool','toCollege','toRemark','contestFirst','contestSecond','contestThird','contestExcellence','contestGood','contestTotalPoints','contestRemark','isScTeam','rewardsPunishments','appraisalScore','appraisalGrade','auditOpinion'))
+          this.form.setFieldsValue(pick(this.model,'coachId','performanceYear','athleteNum','attendNum','leaveNum','citySchoolNum','provinceSchoolNum','provinceTeamNum','bayiTeamNum','toNationalTeam','toNationalYouthTeam','toProvinceTeam','toProvinceSchool','toCitySchool','toCollege','toRemark','contestFirst','contestSecond','contestThird','contestExcellence','contestGood','contestTotalPoints','contestRemark','isScTeam','rewardsPunishments','appraisalScore','appraisalGrade','auditOpinion'))
         })
       },
       close () {
         this.$emit('close');
         this.visible = false;
+        this.disableSubmit = false;
       },
       handleOk () {
         const that = this;
@@ -196,7 +208,7 @@
               method = 'post';
             }else{
               httpurl+=this.url.edit;
-               method = 'put';
+              method = 'put';
             }
             let formData = Object.assign(this.model, values);
             console.log("表单提交数据",formData)
@@ -212,25 +224,40 @@
               that.close();
             })
           }
-         
+
         })
       },
       handleCancel () {
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'coachNo','performanceYear','athleteNum','attendNum','leaveNum','citySchoolNum','provinceSchoolNum','provinceTeamNum','bayiTeamNum','toNationalTeam','toNationalYouthTeam','toProvinceTeam','toProvinceSchool','toCitySchool','toCollege','toRemark','contestFirst','contestSecond','contestThird','contestExcellence','contestGood','contestTotalPoints','contestRemark','isScTeam','rewardsPunishments','appraisalScore','appraisalGrade','auditOpinion'))
-      }
-      
+        this.form.setFieldsValue(pick(row,'coachId','performanceYear','athleteNum','attendNum','leaveNum','citySchoolNum','provinceSchoolNum','provinceTeamNum','bayiTeamNum','toNationalTeam','toNationalYouthTeam','toProvinceTeam','toProvinceSchool','toCitySchool','toCollege','toRemark','contestFirst','contestSecond','contestThird','contestExcellence','contestGood','contestTotalPoints','contestRemark','isScTeam','rewardsPunishments','appraisalScore','appraisalGrade','auditOpinion'))
+      },
+
+      // 根据屏幕变化,设置抽屉尺寸
+      resetScreenSize(){
+        let screenWidth = document.body.clientWidth;
+        if(screenWidth < 500){
+          this.drawerWidth = screenWidth;
+        }else{
+          this.drawerWidth = 700;
+        }
+      },
+
     }
   }
 </script>
 
 <style lang="less" scoped>
-/** Button按钮间距 */
-  .ant-btn {
-    margin-left: 30px;
-    margin-bottom: 30px;
-    float: right;
+  .drawer-bootom-button {
+    position: absolute;
+    bottom: -8px;
+    width: 100%;
+    border-top: 1px solid #e8e8e8;
+    padding: 10px 16px;
+    text-align: right;
+    left: 0;
+    background: #fff;
+    border-radius: 0 0 2px 2px;
   }
 </style>

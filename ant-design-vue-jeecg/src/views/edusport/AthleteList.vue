@@ -68,8 +68,8 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:type}"
-        :scroll="tableScroll"
+        :rowSelection="{fixed:false,selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:tabSelectType}"
+
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -193,14 +193,14 @@
             }
           },
           {
-            title:'学号',
-            align:"center",
-            dataIndex: 'athleteNo'
-          },
-          {
             title:'姓名',
             align:"center",
             dataIndex: 'athleteName'
+          },
+          {
+            title:'学号',
+            align:"center",
+            dataIndex: 'athleteNo'
           },
           {
             title:'性别',
@@ -211,18 +211,6 @@
                 return ''
               }else{
                 return filterMultiDictText(this.dictOptions['gender'], text+"")
-              }
-            }
-          },
-          {
-            title:'民族',
-            align:"center",
-            dataIndex: 'nation',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['nation'], text+"")
               }
             }
           },
@@ -257,11 +245,6 @@
             }
           },
           {
-            title:'手机号码',
-            align:"center",
-            dataIndex: 'mobile'
-          },
-          {
             title:'入队时间',
             align:"center",
             dataIndex: 'majorSportAttendDate',
@@ -273,12 +256,11 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            fixed:"right",
             width:147,
             scopedSlots: { customRender: 'action' }
           }
         ],
-        type: "radio",/* Tab修改@2019-12-12 */
+        tabSelectType: "radio",/* Tab修改@2019-12-12 */
         url: {
           list: "/edusport/athlete/list",
           delete: "/edusport/athlete/delete",
@@ -328,12 +310,11 @@
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
-        /*let id = this.selectedRowKeys[0].mainId;*/
-        let id = this.selectionRows[0].id;
-        this.$refs.AthleteContestList.getAthlete(id);
-        this.$refs.AthleteSportScoreList.getAthlete(id);
-        this.$refs.AthleteTransportList.getAthlete(id);
-        this.$refs.AthleteOtherTrianningInfoList.getAthlete(id);
+        let athleteId = this.selectedRowKeys[0];
+        this.$refs.AthleteContestList.getAthleteByAthleteId(athleteId);
+        this.$refs.AthleteSportScoreList.getAthleteByAthleteId(athleteId);
+        this.$refs.AthleteTransportList.getAthleteByAthleteId(athleteId);
+        this.$refs.AthleteOtherTrianningInfoList.getAthleteByAthleteId(athleteId);
         /* Tab修改@2019-12-12 */
       },
       onClearSelected() {/* Tab修改@2019-12-12 */
@@ -375,10 +356,10 @@
       searchQuery:function(){/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
-        this.$refs.AthleteTransportList.queryParam.mainId = null;
-        this.$refs.AthleteSportScoreList.queryParam.mainId = null;
-        this.$refs.AthleteOtherTrianningInfoList.queryParam.mainId = null;
-        this.$refs.AthleteContestList.queryParam.mainId = null;
+        this.$refs.AthleteTransportList.queryParam.athleteId = null;
+        this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
+        this.$refs.AthleteOtherTrianningInfoList.queryParam.athleteId = null;
+        this.$refs.AthleteContestList.queryParam.athleteId = null;
         this.$refs.AthleteTransportList.loadData();
         this.$refs.AthleteSportScoreList.loadData();
         this.$refs.AthleteOtherTrianningInfoList.loadData();

@@ -91,8 +91,8 @@
         <a-form-item label="年度业务考核等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'appraisalGrade', validatorRules.appraisalGrade]" placeholder="请输入年度业务考核等级"></a-input>
         </a-form-item>
-        <a-form-item label="学校训练部门审核意见" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['auditOpinion']" rows="4" placeholder="请输入学校训练部门审核意见"/>
+        <a-form-item label="训练部门审核意见" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-textarea v-decorator="['auditOpinion']" rows="4" placeholder="请输入训练部门审核意见"/>
         </a-form-item>
 
       </a-form>
@@ -153,10 +153,10 @@
         contestTotalPoints:{},
         contestRemark:{},
         isScTeam:{},
-        rewardsPunishments:{rules: [{ required: true, message: '请输入奖惩情况!' }]},
-        appraisalScore:{rules: [{ required: true, message: '请输入年度业务考核得分!' }]},
-        appraisalGrade:{rules: [{ required: true, message: '请输入年度业务考核等级!' }]},
-        auditOpinion:{rules: [{ required: true, message: '请输入学校训练部门审核意见!' }]},
+        rewardsPunishments:{rules: [{  message: '请输入奖惩情况!' }]},
+        appraisalScore:{rules: [{ message: '请输入年度业务考核得分!' }]},
+        appraisalGrade:{rules: [{ message: '请输入年度业务考核等级!' }]},
+        auditOpinion:{rules: [{  message: '请输入训练部门审核意见!' }]},
         },
         url: {
           add: "/edusport/coachPerformance/add",

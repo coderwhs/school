@@ -5,7 +5,7 @@
         <div class="header">
           <a href="/">
 
-            <span class="title">体育人才信息管理系统</span>
+            <span class="title">江西省高水平体育人才信息管理平台</span>
           </a>
         </div>
         <div class="desc">

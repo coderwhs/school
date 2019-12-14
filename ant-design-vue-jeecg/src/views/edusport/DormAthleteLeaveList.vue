@@ -91,7 +91,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal'
+  // import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal'
+  import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import {getAction} from '@/api/manage'
 
@@ -210,5 +211,8 @@
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

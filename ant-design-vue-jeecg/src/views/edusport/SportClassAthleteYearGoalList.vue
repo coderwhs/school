@@ -78,7 +78,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportClassAthleteYearGoalModal from './modules/SportClassAthleteYearGoalModal'
+  // import SportClassAthleteYearGoalModal from './modules/SportClassAthleteYearGoalModal'
+  import SportClassAthleteYearGoalModal from './modules/SportClassAthleteYearGoalModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {

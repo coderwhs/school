@@ -85,7 +85,6 @@
         }
       },
       edit (record) {
-        this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
