@@ -35,14 +35,6 @@
       <a-button type="primary" @click="handleOk" :loading="confirmLoading">提交</a-button>
     </div>
     </a-drawer>
-
-    <div class="drawer-bootom-button" v-show="!disableSubmit">
-      <a-popconfirm title="确定放弃编辑？" @confirm="handleCancel" okText="确定" cancelText="取消">
-        <a-button style="margin-right: .8rem">取消</a-button>
-      </a-popconfirm>
-      <a-button type="primary" @click="handleOk" :loading="confirmLoading">提交</a-button>
-    </div>
-    </a-drawer>
 </template>
 
 <script>
@@ -171,20 +163,8 @@
       },
       popupCallback(row){
         this.form.setFieldsValue(pick(row,'athleteId','leaveCause','startDate','endDate'))
-<<<<<<< .mine
       },
 
-
-
-
-
-
-
-
-
-
-=======
-      },
       // 根据屏幕变化,设置抽屉尺寸
       resetScreenSize(){
         let screenWidth = document.body.clientWidth;
@@ -194,8 +174,6 @@
           this.drawerWidth = 700;
         }
       },
-
->>>>>>> .theirs
     }
   }
 </script>
