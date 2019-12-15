@@ -5,8 +5,8 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
+            <a-form-item label="运动员">
+              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
@@ -73,7 +73,11 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
+<<<<<<< .mine
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+=======
+        :rowSelection="{fixed:false,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+>>>>>>> .theirs
         
         @change="handleTableChange">
 
@@ -123,7 +127,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteLiteracyScoreModal from './modules/AthleteLiteracyScoreModal'
+  // import AthleteLiteracyScoreModal from './modules/AthleteLiteracyScoreModal'
+  import AthleteLiteracyScoreModal from './modules/AthleteLiteracyScoreModal__Style#Drawer'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
@@ -150,14 +155,14 @@
             }
           },
           {
-            title:'运动员学号',
+            title:'运动员',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'athleteId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
               }
             }
           },
@@ -262,9 +267,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'athleteId', res.result)
           }
         })
         initDictOptions('edu_grade').then((res) => {

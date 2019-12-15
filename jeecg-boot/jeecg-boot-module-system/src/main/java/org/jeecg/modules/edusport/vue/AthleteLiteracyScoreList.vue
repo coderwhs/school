@@ -5,8 +5,8 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteId"></a-input>
+            <a-form-item label="运动员">
+              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
@@ -74,7 +74,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        :scroll="tableScroll"
+        
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -150,7 +150,7 @@
             }
           },
           {
-            title:'运动员学号',
+            title:'运动员',
             align:"center",
             dataIndex: 'athleteId',
             customRender:(text)=>{
@@ -239,8 +239,6 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            fixed:"right",
-            width:147,
             scopedSlots: { customRender: 'action' }
           }
         ],
@@ -255,7 +253,6 @@
          grade:[],
          semester:[],
         },
-        tableScroll:{x :13*147+50}
       }
     },
     computed: {

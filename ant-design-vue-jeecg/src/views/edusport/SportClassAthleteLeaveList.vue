@@ -78,7 +78,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportClassAthleteLeaveModal from './modules/SportClassAthleteLeaveModal'
+  // import SportClassAthleteLeaveModal from './modules/SportClassAthleteLeaveModal'
+  import SportClassAthleteLeaveModal from './modules/SportClassAthleteLeaveModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {

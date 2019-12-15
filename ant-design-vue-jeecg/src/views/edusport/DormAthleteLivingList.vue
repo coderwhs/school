@@ -214,5 +214,8 @@
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

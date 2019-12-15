@@ -58,7 +58,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:type}"
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:tabSelectType}"
         :customRow="clickThenCheck"
         @change="handleTableChange">
 
@@ -126,11 +126,12 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  // import CoachModal from './modules/CoachModal'
+  import CoachModal from './modules/CoachModal__Style#Drawer'
   import CoachEduResumeList from './CoachEduResumeList'
   import CoachSportResumeList from './CoachSportResumeList'
   import CoachTrainingList from './CoachTrainingList'
   import CoachPaperList from './CoachPaperList'
-  import CoachModal from './modules/CoachModal'
   import CoachEduResumeModal from './modules/CoachEduResumeModal'
   import CoachSportResumeModal from './modules/CoachSportResumeModal'
   import CoachTrainingModal from './modules/CoachTrainingModal'
@@ -180,14 +181,14 @@
             }
           },
           {
+            title:'姓名',
+            align:"center",
+            dataIndex: 'coachName'
+          },
+          {
             title:'教练员代码',
             align:"center",
             dataIndex: 'coachNo'
-          },
-          {
-            title:'教练员姓名',
-            align:"center",
-            dataIndex: 'coachName'
           },
           {
             title:'性别',
@@ -258,7 +259,7 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
-        type: "radio",
+        tabSelectType: "radio",
         url: {
           list: "/edusport/coach/list",
           delete: "/edusport/coach/delete",

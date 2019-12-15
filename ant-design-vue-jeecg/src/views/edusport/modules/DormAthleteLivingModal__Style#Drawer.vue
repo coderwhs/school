@@ -8,6 +8,7 @@
     @close="close"
     :visible="visible"
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
+
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
@@ -26,6 +27,7 @@
 
       </a-form>
     </a-spin>
+
     <div class="drawer-bootom-button" v-show="!disableSubmit">
       <a-popconfirm title="确定放弃编辑？" @confirm="handleCancel" okText="确定" cancelText="取消">
         <a-button style="margin-right: .8rem">取消</a-button>
@@ -33,7 +35,6 @@
       <a-button type="primary" @click="handleOk" :loading="confirmLoading">提交</a-button>
     </div>
     </a-drawer>
-</template>
 </template>
 
 <script>
@@ -54,9 +55,9 @@
         form: this.$form.createForm(this),
         title:"操作",
         width:800,
-        visible: false,
         drawerWidth:800,
         disableSubmit:false,
+        visible: false,
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -97,6 +98,7 @@
         }
       },
       edit (record) {
+        this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
         this.form.resetFields();
         this.dormId = record.dormId;
         this.model = Object.assign({}, record);
@@ -106,21 +108,11 @@
         })
       },
       close () {
+        this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
         this.$emit('close');
         this.visible = false;
         this.disableSubmit = false;
       },
-
-      // 根据屏幕变化,设置抽屉尺寸
-      resetScreenSize(){
-        let screenWidth = document.body.clientWidth;
-        if(screenWidth < 500){
-          this.drawerWidth = screenWidth;
-        }else{
-          this.drawerWidth = 700;
-        }
-      },
-
       handleOk () {
         const that = this;
         // 触发表单验证
@@ -160,7 +152,15 @@
       popupCallback(row){
         this.form.setFieldsValue(pick(row,'athleteId','bedNo','startDate','endDate'))
       },
-
+      // 根据屏幕变化,设置抽屉尺寸
+      resetScreenSize(){
+        let screenWidth = document.body.clientWidth;
+        if(screenWidth < 500){
+          this.drawerWidth = screenWidth;
+        }else{
+          this.drawerWidth = 700;
+        }
+      },
 
     }
   }

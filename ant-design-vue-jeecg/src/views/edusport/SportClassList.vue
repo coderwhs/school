@@ -118,7 +118,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportClassModal from './modules/SportClassModal'
+  // import SportClassModal from './modules/SportClassModal'
+  import SportClassModal from './modules/SportClassModal__Style#Drawer'
   import SportClassAthleteAttendList from './SportClassAthleteAttendList'
   import SportClassAthleteAttendModal from './modules/SportClassAthleteAttendModal'
   import SportClassAthleteLeaveList from './SportClassAthleteLeaveList'

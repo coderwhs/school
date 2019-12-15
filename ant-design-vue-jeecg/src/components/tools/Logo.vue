@@ -23,7 +23,7 @@
     props: {
       title: {
         type: String,
-        default: '体育人才',
+        default: '体育人才管理',
         required: false
       },
       showTitle: {

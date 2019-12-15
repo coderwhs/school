@@ -43,6 +43,7 @@
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         :scroll="tableScroll"
+
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -144,11 +145,6 @@
             }
           },
           {
-            title:'比赛名称',
-            align:"center",
-            dataIndex: 'contestName'
-          },
-          {
             title:'比赛项目',
             align:"center",
             dataIndex: 'contestSportCode',
@@ -191,23 +187,9 @@
             }
           },
           {
-            title:'授予单位',
-            align:"center",
-            dataIndex: 'awardedDepartment'
-          },
-          {
-            title:'授予日期',
-            align:"center",
-            dataIndex: 'awardedDate',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
-            }
-          },
-          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            fixed:"right",
             width:147,
             scopedSlots: { customRender: 'action' }
           }
@@ -271,8 +253,8 @@
         //update-end--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
 
       },
-      getAthlete(id) {/* Tab修改@2019-12-12 */
-        this.queryParam.athleteId = id;
+      getAthleteByAthleteId(athleteId) {/* Tab修改@2019-12-12 */
+        this.queryParam.athleteId = athleteId;
         this.loadData(1);
       },
       handleAdd: function () {
@@ -284,5 +266,8 @@
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

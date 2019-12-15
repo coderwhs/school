@@ -87,7 +87,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import CoachEduResumeModal from './modules/CoachEduResumeModal'
+  // import CoachEduResumeModal from './modules/CoachEduResumeModal'
+  import CoachEduResumeModal from './modules/CoachEduResumeModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {

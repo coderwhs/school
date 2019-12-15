@@ -12,7 +12,7 @@
               size="large"
               v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
               type="text"
-              placeholder="请输入帐户名 / admin">
+              placeholder="请输入帐户名">
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -23,7 +23,7 @@
               size="large"
               type="password"
               autocomplete="false"
-              placeholder="密码 / demo#123">
+              placeholder="请输入密码">
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -37,7 +37,7 @@
               size="large"
               v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
               type="text"
-              placeholder="请输入工号 / T009">
+              placeholder="请输入工号">
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -48,7 +48,7 @@
               size="large"
               type="password"
               autocomplete="false"
-              placeholder="密码 / demo#123">
+              placeholder="请输入密码">
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -56,13 +56,13 @@
         </a-tab-pane>
 
 
-        <a-tab-pane key="tab3" tab="学生登陆">
+        <a-tab-pane key="tab3" tab="运动员登陆">
           <a-form-item>
             <a-input
               size="large"
               v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
               type="text"
-              placeholder="请输入学号 / S000002">
+              placeholder="请输入学号">
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -73,7 +73,7 @@
               size="large"
               type="password"
               autocomplete="false"
-              placeholder="密码 / demo#123">
+              placeholder="请输入密码">
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>

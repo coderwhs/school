@@ -1,5 +1,6 @@
 <template>
   <a-card :bordered="false">
+<<<<<<< .mine
     <!-- 查询区域 -->
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
@@ -29,14 +30,41 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> .theirs
     
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
+    <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员评价信息表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -111,7 +139,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteCoachEvaluationModal from './modules/AthleteCoachEvaluationModal'
+  // import AthleteCoachEvaluationModal from './modules/AthleteCoachEvaluationModal'
+  import AthleteCoachEvaluationModal from './modules/AthleteCoachEvaluationModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
@@ -122,7 +151,7 @@
     },
     data () {
       return {
-        description: '运动员评价信息表管理页面',
+        description: '训练队成员评价信息表管理页面',
         // 表头
         columns: [
           {
@@ -136,18 +165,33 @@
             }
           },
           {
+<<<<<<< .mine
             title:'运动员学号',
+=======
+            title:'训练队成员',
+>>>>>>> .theirs
             align:"center",
+<<<<<<< .mine
             dataIndex: 'athleteNo',
+=======
+            dataIndex: 'athleteSportClassId',
+>>>>>>> .theirs
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
+<<<<<<< .mine
                 return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+
+=======
+                let athlete_id = filterMultiDictText(this.dictOptions['athleteSportClassId'], text+"")
+                return filterMultiDictText(this.dictOptions['athlete_id'], athlete_id+"")
+>>>>>>> .theirs
               }
             }
           },
           {
+<<<<<<< .mine
             title:'教练员代码',
             align:"center",
             dataIndex: 'coachNo',
@@ -160,6 +204,20 @@
             }
           },
           {
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> .theirs
             title:'开始日期',
             align:"center",
             dataIndex: 'startDate',
@@ -179,6 +237,18 @@
             title:'总体评价',
             align:"center",
             dataIndex: 'evaluation'
+          },
+          {
+            title:'评价教练',
+            align:"center",
+            dataIndex: 'evaluator',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['evaluator'], text+"")
+              }
+            }
           },
           {
             title: '操作',
@@ -205,21 +275,55 @@
     },
     methods: {
       initDictConfig(){
+<<<<<<< .mine
         initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+
+
+
+
+
+=======
+        initDictOptions('tb_edu_athlete_sport_class,athlete_id,id').then((res) => {
           if (res.success) {
+            this.$set(this.dictOptions, 'athleteSportClassId', res.result)
+          }
+        })
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
+>>>>>>> .theirs
+          if (res.success) {
+<<<<<<< .mine
             this.$set(this.dictOptions, 'athleteNo', res.result)
+=======
+            this.$set(this.dictOptions, 'athlete_id', res.result)
+>>>>>>> .theirs
           }
         })
         initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
           if (res.success) {
+<<<<<<< .mine
             this.$set(this.dictOptions, 'coachNo', res.result)
+=======
+            this.$set(this.dictOptions, 'evaluator', res.result)
+>>>>>>> .theirs
           }
         })
-      }
+      },
+      getListByAthleteSportClassId(athleteSportClassId) {
+        this.queryParam.athleteSportClassId = athleteSportClassId;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.athleteSportClassId);
+        this.$refs.modalForm.title = "添加带训教练员评价";
+        this.$refs.modalForm.disableSubmit = false;
+      },
        
     }
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

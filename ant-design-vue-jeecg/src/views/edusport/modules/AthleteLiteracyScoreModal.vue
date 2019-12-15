@@ -10,8 +10,8 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="运动员学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteNo']" dict="tb_edu_athlete,athlete_name,athlete_no" />
+        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
         <a-form-item label="年级" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['grade']" :trigger-change="true" dictCode="edu_grade" placeholder="请选择年级"/>
@@ -107,26 +107,26 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteNo:{rules: [{ required: true, message: '请输入运动员学号!' }]},
+        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
         grade:{rules: [{ required: true, message: '请输入年级!' }]},
         academicYear:{rules: [{ required: true, message: '请输入教学年度!' }]},
         semester:{rules: [{ required: true, message: '请输入学期!' }]},
-        chineseScore:{rules: [{ required: true, message: '请输入语文!' }]},
-        mathsScore:{rules: [{ required: true, message: '请输入数学!' }]},
-        englishScore:{rules: [{ required: true, message: '请输入英语!' }]},
-        politicsScore:{rules: [{ required: true, message: '请输入政治!' }]},
-        physicsScore:{rules: [{ required: true, message: '请输入物理!' }]},
-        chemistryScore:{rules: [{ required: true, message: '请输入化学!' }]},
-        historyScore:{rules: [{ required: true, message: '请输入历史!' }]},
-        geographyScore:{rules: [{ required: true, message: '请输入地理!' }]},
-        biologyScore:{rules: [{ required: true, message: '请输入生物!' }]},
-        musicScore:{rules: [{ required: true, message: '请输入音乐!' }]},
-        artScore:{rules: [{ required: true, message: '请输入美术!' }]},
-        peScore:{rules: [{ required: true, message: '请输入体育与健康!' }]},
-        itScore:{rules: [{ required: true, message: '请输入信息技术!' }]},
-        gtScore:{rules: [{ required: true, message: '请输入通用技术!' }]},
-        societyScore:{rules: [{ required: true, message: '请输入历史与社会!' }]},
-        scienceScore:{rules: [{ required: true, message: '请输入科学!' }]},
+        chineseScore:{},
+        mathsScore:{},
+        englishScore:{},
+        politicsScore:{},
+        physicsScore:{},
+        chemistryScore:{},
+        historyScore:{},
+        geographyScore:{},
+        biologyScore:{},
+        musicScore:{},
+        artScore:{},
+        peScore:{},
+        itScore:{},
+        gtScore:{},
+        societyScore:{},
+        scienceScore:{},
         },
         url: {
           add: "/edusport/athleteLiteracyScore/add",
@@ -146,7 +146,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteNo','grade','academicYear','semester','chineseScore','mathsScore','englishScore','politicsScore','physicsScore','chemistryScore','historyScore','geographyScore','biologyScore','musicScore','artScore','peScore','itScore','gtScore','societyScore','scienceScore'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','grade','academicYear','semester','chineseScore','mathsScore','englishScore','politicsScore','physicsScore','chemistryScore','historyScore','geographyScore','biologyScore','musicScore','artScore','peScore','itScore','gtScore','societyScore','scienceScore'))
         })
       },
       close () {
@@ -189,7 +189,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteNo','grade','academicYear','semester','chineseScore','mathsScore','englishScore','politicsScore','physicsScore','chemistryScore','historyScore','geographyScore','biologyScore','musicScore','artScore','peScore','itScore','gtScore','societyScore','scienceScore'))
+        this.form.setFieldsValue(pick(row,'athleteId','grade','academicYear','semester','chineseScore','mathsScore','englishScore','politicsScore','physicsScore','chemistryScore','historyScore','geographyScore','biologyScore','musicScore','artScore','peScore','itScore','gtScore','societyScore','scienceScore'))
       },
 
       

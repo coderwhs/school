@@ -13,6 +13,10 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+<!--      <a-button type="primary" icon="download" @click="handleExportXls('冬训阶段训练计划信息表')">导出</a-button>-->
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -87,7 +91,8 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import CoachTrainingModal from './modules/CoachTrainingModal'
+  // import CoachTrainingModal from './modules/CoachTrainingModal'
+  import CoachTrainingModal from './modules/CoachTrainingModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {

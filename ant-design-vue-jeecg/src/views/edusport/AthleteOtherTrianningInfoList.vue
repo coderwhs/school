@@ -41,7 +41,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        :rowSelection="{fixed:false,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
 
         @change="handleTableChange">
 
@@ -195,8 +195,8 @@
           }
         })
       },
-      getAthlete(id) {/* Tab修改@2019-12-12 */
-        this.queryParam.athleteId = id;
+      getAthleteByAthleteId(athleteId) {/* Tab修改@2019-12-12 */
+        this.queryParam.athleteId = athleteId;
         this.loadData(1);
       },
       handleAdd: function () {
@@ -207,5 +207,8 @@
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>
