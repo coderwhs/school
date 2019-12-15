@@ -1,67 +1,6 @@
 <template>
   <a-card :bordered="false">
-<<<<<<< .mine
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="教练员代码">
-              <a-input placeholder="请输入教练员代码" v-model="queryParam.coachNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
 
-        </a-row>
-      </a-form>
-    </div>
-    <!-- 查询区域-END -->
-=======
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
-    
     <!-- 操作按钮区域 -->
     <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
@@ -90,7 +29,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -165,59 +104,19 @@
             }
           },
           {
-<<<<<<< .mine
-            title:'运动员学号',
-=======
             title:'训练队成员',
->>>>>>> .theirs
             align:"center",
-<<<<<<< .mine
-            dataIndex: 'athleteNo',
-=======
             dataIndex: 'athleteSportClassId',
->>>>>>> .theirs
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-<<<<<<< .mine
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
-
-=======
                 let athlete_id = filterMultiDictText(this.dictOptions['athleteSportClassId'], text+"")
                 return filterMultiDictText(this.dictOptions['athlete_id'], athlete_id+"")
->>>>>>> .theirs
               }
             }
           },
           {
-<<<<<<< .mine
-            title:'教练员代码',
-            align:"center",
-            dataIndex: 'coachNo',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['coachNo'], text+"")
-              }
-            }
-          },
-          {
-=======
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
             title:'开始日期',
             align:"center",
             dataIndex: 'startDate',
@@ -275,36 +174,19 @@
     },
     methods: {
       initDictConfig(){
-<<<<<<< .mine
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
-
-
-
-
-
-=======
         initDictOptions('tb_edu_athlete_sport_class,athlete_id,id').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'athleteSportClassId', res.result)
           }
         })
         initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
->>>>>>> .theirs
           if (res.success) {
-<<<<<<< .mine
-            this.$set(this.dictOptions, 'athleteNo', res.result)
-=======
             this.$set(this.dictOptions, 'athlete_id', res.result)
->>>>>>> .theirs
           }
         })
-        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+        initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
-<<<<<<< .mine
-            this.$set(this.dictOptions, 'coachNo', res.result)
-=======
             this.$set(this.dictOptions, 'evaluator', res.result)
->>>>>>> .theirs
           }
         })
       },
@@ -317,7 +199,7 @@
         this.$refs.modalForm.title = "添加带训教练员评价";
         this.$refs.modalForm.disableSubmit = false;
       },
-       
+
     }
   }
 </script>

@@ -41,7 +41,7 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
@@ -73,12 +73,8 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-<<<<<<< .mine
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-=======
         :rowSelection="{fixed:false,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
->>>>>>> .theirs
-        
+
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -255,8 +251,8 @@
           importExcelUrl: "edusport/athleteLiteracyScore/importExcel",
         },
         dictOptions:{
-         grade:[],
-         semester:[],
+          grade:[],
+          semester:[],
         },
       }
     },
@@ -283,7 +279,7 @@
           }
         })
       }
-       
+
     }
   }
 </script>
