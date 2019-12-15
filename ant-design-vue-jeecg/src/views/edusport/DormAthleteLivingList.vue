@@ -96,7 +96,7 @@
   import DormList from './DormList'/* Tab修改@2019-12-12 */
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import {getAction} from '@/api/manage'/* Tab修改@2019-12-12 */
-
+ 
   export default {
     name: "DormAthleteLivingList",
     mixins:[JeecgListMixin],

@@ -97,7 +97,7 @@
   import {getAction} from '@/api/manage'
 
   export default {
-    name: "DormAthleteLeaveList",
+    name:"DormAthleteLeaveList",
     mixins:[JeecgListMixin],
     components: {
       DormAthleteLeaveModal

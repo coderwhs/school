@@ -260,7 +260,7 @@
         this.$refs.DormAthleteLivingList.selectionRows = [];
         this.$refs.DormAthleteLeaveList.selectedRowKeys = [];
         this.$refs.DormAthleteLeaveList.selectionRows = [];
-      },
+      }, 
 
       handleDelete: function (id) {/* Tab修改@2019-12-12 */
         var that = this;
