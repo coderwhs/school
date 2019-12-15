@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>jeecg-boot-module-system</artifactId>
 	<version>2.1.1</version>
-  	<!-- 打包方式 -->
-  	<packaging>war</packaging>
+	<!-- 打包方式 -->
+	<packaging>war</packaging>
 
 	<parent>
 		<groupId>org.jeecgframework.boot</groupId>
@@ -31,14 +31,24 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.jeecgframework.boot</groupId>
 			<artifactId>jeecg-boot-base-common</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.flowable</groupId>
+			<artifactId>flowable-spring-boot-starter</artifactId>
+			<version>6.4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.12.0</version>
+		</dependency>
 	</dependencies>
-		
+
 	<build>
 		<plugins>
 			<plugin>
