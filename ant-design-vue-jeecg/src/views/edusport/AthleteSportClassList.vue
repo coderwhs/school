@@ -5,13 +5,13 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="训练班主键id">
-              <a-input placeholder="请输入训练班主键id" v-model="queryParam.sportClassId"></a-input>
+            <a-form-item label="训练队">
+              <a-input placeholder="请输入训练队" v-model="queryParam.sportClassId"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="运动员学号">
-              <a-input placeholder="请输入运动员学号" v-model="queryParam.athleteNo"></a-input>
+            <a-form-item label="运动员">
+              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
@@ -36,11 +36,11 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练班经历表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('训练队成员表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -68,8 +68,8 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+        :rowSelection="{fixed:false, selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type:tabSelectType}"
+        :customRow="clickThenCheck"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -110,6 +110,13 @@
 
       </a-table>
     </div>
+    <!-- table区域-end -->
+
+    <a-tabs defaultActiveKey="1">
+      <a-tab-pane tab="带训教练员评价" key="1">
+        <Athlete-Coach-Evaluation-List ref="AthleteCoachEvaluationList"></Athlete-Coach-Evaluation-List>
+      </a-tab-pane>
+    </a-tabs>
 
     <athleteSportClass-modal ref="modalForm" @ok="modalFormOk"></athleteSportClass-modal>
   </a-card>
@@ -118,7 +125,10 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteSportClassModal from './modules/AthleteSportClassModal'
+  // import AthleteSportClassModal from './modules/AthleteSportClassModal'
+  import AthleteSportClassModal from './modules/AthleteSportClassModal__Style#Drawer'
+  import AthleteCoachEvaluationList from './AthleteCoachEvaluationList'
+  import AthleteCoachEvaluationModal from './modules/AthleteCoachEvaluationModal'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
@@ -127,11 +137,26 @@
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
-      AthleteSportClassModal
+      AthleteSportClassModal,
+      AthleteCoachEvaluationList,
+      AthleteCoachEvaluationModal
     },
     data () {
       return {
-        description: '运动员训练班经历表管理页面',
+        description: '训练队成员表管理页面',
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+
         // 表头
         columns: [
           {
@@ -145,7 +170,7 @@
             }
           },
           {
-            title:'训练班主键id',
+            title:'训练队',
             align:"center",
             dataIndex: 'sportClassId',
             customRender:(text)=>{
@@ -157,19 +182,19 @@
             }
           },
           {
-            title:'运动员学号',
+            title:'运动员',
             align:"center",
-            dataIndex: 'athleteNo',
+            dataIndex: 'athleteId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteNo'], text+"")
+                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
               }
             }
           },
           {
-            title:'参加日期',
+            title:'入队日期',
             align:"center",
             dataIndex: 'attendDate',
             customRender:function (text) {
@@ -195,6 +220,7 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
+        tabSelectType: "radio",
         url: {
           list: "/edusport/athleteSportClass/list",
           delete: "/edusport/athleteSportClass/delete",
@@ -203,7 +229,7 @@
           importExcelUrl: "edusport/athleteSportClass/importExcel",
         },
         dictOptions:{
-         athleteAwardTechGrade:[],
+          athleteAwardTechGrade:[],
         },
       }
     },
@@ -219,9 +245,9 @@
             this.$set(this.dictOptions, 'sportClassId', res.result)
           }
         })
-        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteNo', res.result)
+            this.$set(this.dictOptions, 'athleteId', res.result)
           }
         })
         initDictOptions('athlete_tech_grade').then((res) => {
@@ -229,8 +255,46 @@
             this.$set(this.dictOptions, 'athleteAwardTechGrade', res.result)
           }
         })
+      },
+      clickThenCheck(record) {
+        return {
+          on: {
+            click: () => {
+              this.onSelectChange(record.id.split(","), [record]);
+            }
+          }
+        };
+      },
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectionRows = selectionRows;
+        let athleteSportClassId = this.selectedRowKeys[0];
+
+        this.$refs.AthleteCoachEvaluationList.getListByAthleteSportClassId(athleteSportClassId);
+      },
+
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+
+        this.$refs.AthleteCoachEvaluationList.queryParam.athleteSportClassId = null;
+        this.$refs.AthleteCoachEvaluationList.loadData();
+        this.$refs.AthleteCoachEvaluationList.selectedRowKeys = [];
+        this.$refs.AthleteCoachEvaluationList.selectionRows = [];
+      },
+
+      searchQuery:function(){
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+
+        this.$refs.AthleteCoachEvaluationList.queryParam.athleteSportClassId = null;
+        this.$refs.AthleteCoachEvaluationList.loadData();
+        this.$refs.AthleteCoachEvaluationList.selectedRowKeys = [];
+        this.$refs.AthleteCoachEvaluationList.selectionRows = [];
+
+        this.loadData();
       }
-       
+
     }
   }
 </script>

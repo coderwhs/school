@@ -37,8 +37,14 @@
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
-      <a-button @click="handleSignUp" type="primary" icon="unlock">开通账号</a-button>
-      <a-button @click="handleSignLock" type="primary" icon="lock">冻结账号</a-button>
+      <!--<a-dropdown v-if="selectedRowKeys.length > 0">
+        <a-menu slot="overlay">
+          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+        </a-menu>
+        <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
+      </a-dropdown>-->
+<!--      <a-button @click="handleSignUp" type="primary" icon="unlock">开通账号</a-button>-->
+<!--      <a-button @click="handleSignLock" type="primary" icon="lock">冻结账号</a-button>-->
     </div>
 
     <!-- table区域-begin -->
@@ -96,6 +102,12 @@
                   <a>删除</a>
                 </a-popconfirm>
               </a-menu-item>
+              <a-menu-item>
+                <a @click="handleSignUp(record)" icon="unlock">开通账号</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a @click="handleSignLock(record)" icon="lock">冻结账号</a>
+              </a-menu-item>
             </a-menu>
           </a-dropdown>
         </span>
@@ -137,6 +149,7 @@
   import CoachTrainingModal from './modules/CoachTrainingModal'
   import CoachPaperModal from './modules/CoachPaperModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import {deleteAction, putAction} from '@/api/manage'
 
   export default {
     name: "CoachList",
@@ -266,8 +279,8 @@
           deleteBatch: "/edusport/coach/deleteBatch",
           exportXlsUrl: "/edusport/coach/exportXls",
           importExcelUrl: "edusport/coach/importExcel",
-          signUpUrl: "edusport/coach/signUp",
-          signLockUrl: "edusport/coach/signLock",
+          signUp: "/edusport/coach/signUp",
+          signLock: "/edusport/coach/signLock",
         },
         dictOptions:{
          gender:[],
@@ -300,9 +313,27 @@
         })
       },
 
-      handleSignUp: function () {
+      handleSignUp: function (record) {
+        var that = this;
+        putAction(that.url.signUp, record).then((res) => {
+          if (res.success) {
+            that.$message.success(res.message);
+            that.loadData();
+          } else {
+            that.$message.warning(res.message);
+          }
+        })
       },
-      handleSignLock: function () {
+      handleSignLock: function (record) {
+        var that = this;
+        putAction(that.url.signLock, record).then((res) => {
+          if (res.success) {
+            that.$message.success(res.message);
+            that.loadData();
+          } else {
+            that.$message.warning(res.message);
+          }
+        })
       },
 
       clickThenCheck(record) {

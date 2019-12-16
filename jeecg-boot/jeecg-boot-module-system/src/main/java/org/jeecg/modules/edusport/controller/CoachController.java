@@ -1,6 +1,7 @@
 package org.jeecg.modules.edusport.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,11 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.util.PasswordUtil;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.edusport.entity.Coach;
 import org.jeecg.modules.edusport.service.ICoachService;
+import org.jeecg.modules.system.entity.SysUser;
+import org.jeecg.modules.system.service.ISysUserService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +50,8 @@ import com.alibaba.fastjson.JSON;
 public class CoachController extends JeecgController<Coach, ICoachService> {
 	@Autowired
 	private ICoachService coachService;
+	@Autowired
+	private ISysUserService sysUserService;
 	
 	/**
 	 * 分页列表查询
@@ -151,5 +158,71 @@ public class CoachController extends JeecgController<Coach, ICoachService> {
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         return super.importExcel(request, response, Coach.class);
     }
+    
+	/**
+	 *  开通及解冻账号
+	 *
+	 * @param coach
+	 * @return
+	 */
+	@PutMapping(value = "/signUp")
+	public Result<?> coachSignUp(@RequestBody Coach coach) {
+		String selectedRoles = "";
+		String selectedDeparts = "";
+		
+		SysUser user = sysUserService.getUserByName(coach.getCoachNo());
+		if (user == null) {
+			user = new SysUser();
+			
+			user.setUsername(coach.getCoachNo());
+			user.setUserType(2); //教练账号
+			user.setPassword("123456");
+			user.setWorkNo(coach.getCoachNo());
+			user.setRealname(coach.getCoachName());
+			user.setBirthday(coach.getBirthDate());
+			user.setPhone(coach.getMobile());
+			user.setSex(coach.getGender() == null? null : Integer.parseInt(coach.getGender()));
+			user.setCreateTime(new Date());//设置创建时间
+			
+			String salt = oConvertUtils.randomGen(8);
+			user.setSalt(salt);
+			String passwordEncode = PasswordUtil.encrypt(user.getUsername(), user.getPassword(), salt);
+			user.setPassword(passwordEncode);
+			user.setStatus(1);
+			user.setDelFlag("0");
+
+			sysUserService.addUserWithRole(user, selectedRoles);
+            sysUserService.addUserWithDepart(user, selectedDeparts);
+            
+    		return Result.ok("开通账号成功!");
+		} else {
+			user.setStatus(1);
+			this.sysUserService.update(new SysUser().setStatus(user.getStatus()),
+				new UpdateWrapper<SysUser>().lambda().eq(SysUser::getId,user.getId()));
+			
+			return Result.ok("账号解冻成功!");
+		}
+	}
+	
+	/**
+	 *  冻结账号
+	 *
+	 * @param coach
+	 * @return
+	 */
+	@PutMapping(value = "/signLock")
+	public Result<?> signLock(@RequestBody Coach coach) {
+		SysUser user = sysUserService.getUserByName(coach.getCoachNo());
+		if (user != null) {
+			user.setStatus(2); //冻结账号
+			this.sysUserService.update(new SysUser().setStatus(user.getStatus()),
+				new UpdateWrapper<SysUser>().lambda().eq(SysUser::getId,user.getId()));
+			return Result.ok("账号冻结成功!");
+			
+		} else {
+			return Result.error("未找到对应数据");
+		}
+	}
+	
 
 }

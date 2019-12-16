@@ -11,29 +11,33 @@
 
   <a-spin :spinning="confirmLoading">
           <a-form :form="form">
+
+
+
             <a-row>
               <a-col :span="17">
                 <a-row>
-                  <a-col :span="14">
-                    <a-form-item label="学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-col :span="12">
+                    <a-form-item label="学号" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                       <a-input v-decorator="[ 'athleteNo', validatorRules.athleteNo]" placeholder="请输入学号"></a-input>
                     </a-form-item>
                   </a-col>
-                  <a-col :span="10">
-                    <a-form-item label="姓名" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-col :span="12">
+                    <a-form-item label="姓名" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                       <a-input v-decorator="[ 'athleteName', validatorRules.athleteName]" placeholder="请输入姓名"></a-input>
                     </a-form-item>
                   </a-col>
                 </a-row>
                 <a-row>
-                  <a-col :span="14">
-                    <a-form-item label="出生日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                      <j-date placeholder="请选择出生日期" v-decorator="[ 'birthDate', validatorRules.birthDate]" :trigger-change="true" style="width: 100%"/>
-                    </a-form-item>
-                  </a-col>
-                  <a-col :span="10">
-                    <a-form-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-col :span="12">
+                    <a-form-item label="性别" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                       <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
+                    </a-form-item>
+
+                  </a-col>
+                  <a-col :span="12">
+                    <a-form-item label="民族" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                      <j-dict-select-tag type="list" v-decorator="['nation']" :trigger-change="true" dictCode="nation" placeholder="请选择民族"/>
                     </a-form-item>
                   </a-col>
                 </a-row>
@@ -63,180 +67,166 @@
                 </a-form-item>
               </a-col>
             </a-row>
-            <!--<a-row>
-            <a-col :span="12">
-              <a-form-item label="照片路径" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                <a-input v-decorator="[ 'photoPath', validatorRules.photoPath]" placeholder="请输入照片路径"></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :span="12">
-            </a-col>
-          </a-row>-->
             <a-row>
               <a-col :span="12">
-                <a-form-item label="身高(cm)" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input-number v-decorator="[ 'studentHeight', validatorRules.studentHeight]" placeholder="请输入身高(cm)" style="width: 100%"/>
+                <a-form-item label="出生日期" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                  <j-date placeholder="请选择出生日期" v-decorator="[ 'birthDate', validatorRules.birthDate]" :trigger-change="true" style="width: 100%"/>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
-                <a-form-item label="体重(kg)" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input-number v-decorator="[ 'studentWeight', validatorRules.studentWeight]" placeholder="请输入体重(kg)" style="width: 100%"/>
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row>
-              <a-col :span="12">
-                <a-form-item label="专业项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <j-search-select-tag v-decorator="['majorSport']" dict="tb_edu_sport,sport_name,sport_code" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="12">
-                <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <j-search-select-tag v-decorator="['majorSportTeacherCode']" dict="tb_edu_coach,coach_name,coach_no" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row>
-              <a-col :span="12">
-                <a-form-item label="籍贯省" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input v-decorator="[ 'nativeProvince', validatorRules.nativeProvince]" placeholder="请输入籍贯省"></a-input>
-                </a-form-item>
-              </a-col>
-              <a-col :span="12">
-                <a-form-item label="籍贯市" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input v-decorator="[ 'nativeCity', validatorRules.nativeCity]" placeholder="请输入籍贯市"></a-input>
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row>
-              <a-col :span="12">
-                <a-form-item label="民族" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <j-dict-select-tag type="list" v-decorator="['nation']" :trigger-change="true" dictCode="nation" placeholder="请选择民族"/>
-                </a-form-item>
-              </a-col>
-              <a-col :span="12">
-                <a-form-item label="身份证号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="身份证号" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'idNo', validatorRules.idNo]" placeholder="请输入身份证号"></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-item label="手机号码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="手机号码" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'mobile', validatorRules.mobile]" placeholder="请输入手机号码"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
-                <a-form-item label="家庭住址" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="家庭住址" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'homeAddress', validatorRules.homeAddress]" placeholder="请输入家庭住址"></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-item label="邮政编码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="籍贯省" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                  <a-input v-decorator="[ 'nativeProvince', validatorRules.nativeProvince]" placeholder="请输入籍贯省"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :span="12">
+                <a-form-item label="籍贯市" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                  <a-input v-decorator="[ 'nativeCity', validatorRules.nativeCity]" placeholder="请输入籍贯市"></a-input>
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row>
+              <a-col :span="12">
+                <a-form-item label="邮政编码" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'zipcode', validatorRules.zipcode]" placeholder="请输入邮政编码"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
-                <a-form-item label="户籍所在派出所" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="户籍所在派出所" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'policeStation', validatorRules.policeStation]" placeholder="请输入户籍所在派出所"></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
+
             <a-row>
               <a-col :span="12">
-                <a-form-item label="父亲姓名" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="父亲姓名" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'father', validatorRules.father]" placeholder="请输入父亲姓名"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
-                <a-form-item label="父亲身高" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input-number v-decorator="[ 'fatherHeight', validatorRules.fatherHeight]" placeholder="请输入父亲身高" style="width: 100%"/>
+                <a-form-item label="母亲姓名" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                  <a-input v-decorator="[ 'mother', validatorRules.mother]" placeholder="请输入母亲姓名"></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-item label="母亲姓名" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input v-decorator="[ 'mother', validatorRules.mother]" placeholder="请输入母亲姓名"></a-input>
+                <a-form-item label="父亲身高" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                  <a-input-number v-decorator="[ 'fatherHeight', validatorRules.fatherHeight]" placeholder="请输入父亲身高" style="width: 100%"/>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
-                <a-form-item label="母亲身高" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="母亲身高" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input-number v-decorator="[ 'motherHeight', validatorRules.motherHeight]" placeholder="请输入母亲身高" style="width: 100%"/>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-item label="父亲电话" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="父亲电话" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'fatherMobile', validatorRules.fatherMobile]" placeholder="请输入父亲电话"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
-                <a-form-item label="母亲电话" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="母亲电话" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'motherMobile', validatorRules.motherMobile]" placeholder="请输入母亲电话"></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-item label="输送单位区县" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="输送单位区县" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'transportDepartmentCity', validatorRules.transportDepartmentCity]" placeholder="请输入输送单位区县"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
-                <a-form-item label="输送单位名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="输送单位名称" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'transportDepartmentSchool', validatorRules.transportDepartmentSchool]" placeholder="请输入输送单位名称"></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-item label="入学日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="入学日期" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <j-date placeholder="请选择入学日期" v-decorator="[ 'admissionDate', validatorRules.admissionDate]" :trigger-change="true" style="width: 100%"/>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
-                <a-form-item label="就读年级" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input v-decorator="[ 'grade', validatorRules.grade]" placeholder="请输入就读年级"></a-input>
+                <a-form-item label="就读年级" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                  <j-dict-select-tag type="list" v-decorator="['grade']" :trigger-change="true" dictCode="edu_grade" placeholder="请选择就读年级"/>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-item label="入队时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="专业项目" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                  <j-search-select-tag v-decorator="['majorSport']" dict="tb_edu_sport,sport_name,sport_code" />
+                </a-form-item>
+              </a-col>
+              <a-col :span="12">
+                <a-form-item label="教练员" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                  <j-search-select-tag v-decorator="['majorSportTeacherCode']" dict="tb_edu_coach,coach_name,coach_no" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row>
+              <a-col :span="12">
+                <a-form-item label="身高(cm)" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                  <a-input-number v-decorator="[ 'studentHeight', validatorRules.studentHeight]" placeholder="请输入身高(cm)" style="width: 100%"/>
+                </a-form-item>
+              </a-col>
+              <a-col :span="12">
+                <a-form-item label="体重(kg)" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                  <a-input-number v-decorator="[ 'studentWeight', validatorRules.studentWeight]" placeholder="请输入体重(kg)" style="width: 100%"/>
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row>
+              <a-col :span="12">
+                <a-form-item label="入队时间" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <j-date placeholder="请选择入队时间" v-decorator="[ 'majorSportAttendDate', validatorRules.majorSportAttendDate]" :trigger-change="true" style="width: 100%"/>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
-                <a-form-item label="退役时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="退役时间" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'retireDate', validatorRules.retireDate]" placeholder="请输入退役时间"></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-item label="吸收单位类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="吸收单位类别" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <j-dict-select-tag type="list" v-decorator="['acceptDepartmentType']" :trigger-change="true" dictCode="accept_department_type" placeholder="请选择吸收单位类别"/>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
-                <a-form-item label="吸收单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="吸收单位" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
                   <a-input v-decorator="[ 'acceptDepartment', validatorRules.acceptDepartment]" placeholder="请输入吸收单位"></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-row>
-              <a-col :span="23">
-                <a-form-item label="简介" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-textarea v-decorator="['resume']" rows="4" placeholder="请输入简介"/>
-                </a-form-item>
-              </a-col>
-              <a-col :span="1">
-              </a-col>
-            </a-row>
+            <a-form-item label="简介" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-textarea v-decorator="['resume']" rows="4" placeholder="请输入简介"/>
+            </a-form-item>
           </a-form>
         </a-spin>
         <div class="drawer-bootom-button" v-show="!disableSubmit">
@@ -276,20 +266,11 @@
             drawerWidth:800,
             disableSubmit:false,
             model: {},
-            /*labelCol: {
-              xs: { span: 24 },
-              sm: { span: 8 },
-              md: { span: 8 },
-            },
-            wrapperCol: {
-              xs: { span: 24 },
-              sm: { span: 14 },
-              md: { span: 14 },
-            },*/
+
             labelCol: {
               xs: { span: 24 },
-              sm: { span: 5 },
-              md: { span: 5 },
+              sm: { span: 6 },
+              md: { span: 6 },
             },
             wrapperCol: {
               xs: { span: 24 },
@@ -310,13 +291,13 @@
 
             labelCol3: {
               xs: { span: 24 },
-              sm: { span: 8 },
-              md: { span: 8 },
+              sm: { span: 12 },
+              md: { span: 12 },
             },
             wrapperCol3: {
               xs: { span: 24 },
-              sm: { span: 14 },
-              md: { span: 14 },
+              sm: { span: 10 },
+              md: { span: 10 },
             },
 
             // 图片初始化
@@ -332,32 +313,32 @@
               gender:{rules: [{ required: true, message: '请输入性别!' }]},
               nation:{rules: [{ required: true, message: '请输入民族!' }]},
               birthDate:{rules: [{ required: true, message: '请输入出生日期!' }]},
-              studentHeight:{rules: [{ required: true, message: '请输入身高(cm)!' }]},
-              studentWeight:{rules: [{ required: true, message: '请输入体重(kg)!' }]},
-              majorSport:{rules: [{ required: true, message: '请输入专业项目!' }]},
-              majorSportTeacherCode:{rules: [{ required: true, message: '请输入教练员!' }]},
-              nativeProvince:{rules: [{ required: true, message: '请输入籍贯省!' }]},
-              nativeCity:{rules: [{ required: true, message: '请输入籍贯市!' }]},
               idNo:{rules: [{ required: true, message: '请输入身份证号!' }]},
-              mobile:{rules: [{ required: true, message: '请输入手机号码!' }]},
+              // mobile:{rules: [{ required: true, message: '请输入手机号码!' }]},
               homeAddress:{rules: [{ required: true, message: '请输入家庭住址!' }]},
-              zipcode:{rules: [{ required: true, message: '请输入邮政编码!' }]},
+              // nativeProvince:{rules: [{ required: true, message: '请输入籍贯省!' }]},
+              // nativeCity:{rules: [{ required: true, message: '请输入籍贯市!' }]},
+              // zipcode:{rules: [{ required: true, message: '请输入邮政编码!' }]},
               policeStation:{rules: [{ required: true, message: '请输入户籍所在派出所!' }]},
               father:{rules: [{ required: true, message: '请输入父亲姓名!' }]},
-              fatherHeight:{rules: [{ required: true, message: '请输入父亲身高!' }]},
-              fatherMobile:{rules: [{ required: true, message: '请输入父亲电话!' }]},
               mother:{rules: [{ required: true, message: '请输入母亲姓名!' }]},
-              motherHeight:{rules: [{ required: true, message: '请输入母亲身高!' }]},
+              // fatherHeight:{rules: [{ required: true, message: '请输入父亲身高!' }]},
+              // motherHeight:{rules: [{ required: true, message: '请输入母亲身高!' }]},
+              fatherMobile:{rules: [{ required: true, message: '请输入父亲电话!' }]},
               motherMobile:{rules: [{ required: true, message: '请输入母亲电话!' }]},
-              transportDepartmentCity:{rules: [{ required: true, message: '请输入输送单位区县!' }]},
-              transportDepartmentSchool:{rules: [{ required: true, message: '请输入输送单位名称!' }]},
+              // transportDepartmentCity:{rules: [{ required: true, message: '请输入输送单位区县!' }]},
+              // transportDepartmentSchool:{rules: [{ required: true, message: '请输入输送单位名称!' }]},
               admissionDate:{},
               grade:{rules: [{ required: true, message: '请输入就读年级!' }]},
-              majorSportAttendDate:{},
-              retireDate:{rules: [{ required: true, message: '请输入退役时间!' }]},
-              acceptDepartmentType:{rules: [{ required: true, message: '请输入吸收单位类别!' }]},
-              acceptDepartment:{rules: [{ required: true, message: '请输入吸收单位!' }]},
-              photoPath:{rules: [{ required: true, message: '请输入照片路径!' }]},
+              majorSport:{rules: [{ required: true, message: '请输入专业项目!' }]},
+              majorSportTeacherCode:{rules: [{ required: true, message: '请输入教练员!' }]},
+              studentHeight:{rules: [{ required: true, message: '请输入身高(cm)!' }]},
+              studentWeight:{rules: [{ required: true, message: '请输入体重(kg)!' }]},
+              // majorSportAttendDate:{},
+              // retireDate:{rules: [{ required: true, message: '请输入退役时间!' }]},
+              // acceptDepartmentType:{rules: [{ required: true, message: '请输入吸收单位类别!' }]},
+              // acceptDepartment:{rules: [{ required: true, message: '请输入吸收单位!' }]},
+              // photoPath:{rules: [{ required: true, message: '请输入照片路径!' }]},
               resume:{rules: [{ required: true, message: '请输入简介!' }]},
             },
             url: {

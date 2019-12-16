@@ -208,6 +208,21 @@
             <artifactId>online-form</artifactId>
             <version>1.2.0</version>
         </dependency>
+<!--         <dependency>
+            <groupId>org.jeecgframework.boot</groupId>
+            <artifactId>online-graphreport</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jeecgframework.boot</groupId>
+            <artifactId>online-cgreport</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jeecgframework.boot</groupId>
+            <artifactId>online-cgdynamgraph</artifactId>
+            <version>1.2.0</version>
+        </dependency> -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>

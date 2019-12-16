@@ -21,8 +21,8 @@
                 </a-form-item>
               </a-col>
               <a-col :span="12">
-                <a-form-item label="教练员姓名" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
-                  <a-input v-decorator="[ 'coachName', validatorRules.coachName]" placeholder="请输入教练员姓名"></a-input>
+                <a-form-item label="姓名" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+                  <a-input v-decorator="[ 'coachName', validatorRules.coachName]" placeholder="请输入姓名"></a-input>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -83,7 +83,7 @@
             </a-form-item>
           </a-col>
           <a-col :span="12">
-            <a-form-item label="家庭地址" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-form-item label="家庭地址" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
               <a-input v-decorator="[ 'homeAddress', validatorRules.homeAddress]" placeholder="请输入家庭地址"></a-input>
             </a-form-item>
           </a-col>
@@ -242,8 +242,8 @@
 
         labelCol2: {
           xs: { span: 24 },
-          sm: { span: 8 },
-          md: { span: 8 },
+          sm: { span: 9 },
+          md: { span: 9 },
         },
         wrapperCol2: {
           xs: { span: 24 },
@@ -253,13 +253,13 @@
 
         labelCol3: {
           xs: { span: 24 },
-          sm: { span: 12 },
-          md: { span: 12 },
+          sm: { span: 13 },
+          md: { span: 13 },
         },
         wrapperCol3: {
           xs: { span: 24 },
-          sm: { span: 10 },
-          md: { span: 10 },
+          sm: { span: 9 },
+          md: { span: 9 },
         },
 
         // 图片初始化
@@ -276,10 +276,10 @@
           nation:{rules: [{ required: true, message: '请输入民族!' }]},
           birthDate:{rules: [{ required: true, message: '请输入出生日期!' }]},
           idNo:{rules: [{ required: true, message: '请输入身份证号!' }]},
-          nativeProvince:{rules: [{ message: '请输入籍贯省!' }]},
-          nativeCity:{rules: [{ message: '请输入籍贯市!' }]},
-          politicalStatus:{rules: [{ message: '请输入政治面貌!' }]},
-          homeAddress:{rules: [{ message: '请输入家庭地址!' }]},
+          // nativeProvince:{rules: [{ required: true, message: '请输入籍贯省!' }]},
+          // nativeCity:{rules: [{ required: true, message: '请输入籍贯市!' }]},
+          // politicalStatus:{rules: [{ required: true, message: '请输入政治面貌!' }]},
+          // homeAddress:{rules: [{ required: true, message: '请输入家庭地址!' }]},
           mobile:{rules: [{ required: true, message: '请输入手机号码!' }]},
           eduBackground:{rules: [{ required: true, message: '请输入学历!' }]},
           eduDegree:{rules: [{ required: true, message: '请输入学位!' }]},
@@ -287,15 +287,15 @@
           hireDate:{},
           hireYears:{rules: [{ required: true, message: '请输入聘用年限!' }]},
           marjorInfo:{rules: [{ required: true, message: '请输入何年毕业于何学校专业!' }]},
-          coachStartDate:{rules: [{ message: '请输入初任教练员时间!' }]},
-          l3AppointmentDate:{rules: [{ message: '请输入三级教练员聘任时间!' }]},
-          l2AppointmentDate:{rules: [{ message: '请输入二级教练员聘任时间!' }]},
-          l1AppointmentDate:{rules: [{ message: '请输入一级教练员聘任时间!' }]},
-          ladvCertDate:{rules: [{ message: '请输入取得高级教练员资格时间!' }]},
-          ladvAppointmentDate:{rules: [{ message: '请输入高级教练员聘任时间!' }]},
-          lcnCertDate:{rules: [{ message: '请输入取得国家级教练员资格时间!' }]},
-          lcnAppointmentDate:{rules: [{ message: '请输入国家级教练员聘任时间!' }]},
-          photoPath:{rules: [{ message: '请输入照片名称!' }]},
+          // coachStartDate:{rules: [{ required: true, message: '请输入初任教练员时间!' }]},
+          // l3AppointmentDate:{rules: [{ required: true, message: '请输入三级教练员聘任时间!' }]},
+          // l2AppointmentDate:{rules: [{ required: true, message: '请输入二级教练员聘任时间!' }]},
+          // l1AppointmentDate:{rules: [{ required: true, message: '请输入一级教练员聘任时间!' }]},
+          // ladvCertDate:{rules: [{ required: true, message: '请输入取得高级教练员资格时间!' }]},
+          // ladvAppointmentDate:{rules: [{ required: true, message: '请输入高级教练员聘任时间!' }]},
+          // lcnCertDate:{rules: [{ required: true, message: '请输入取得国家级教练员资格时间!' }]},
+          // lcnAppointmentDate:{rules: [{ required: true, message: '请输入国家级教练员聘任时间!' }]},
+          // photoPath:{rules: [{ required: true, message: '请输入照片名称!' }]},
         },
         url: {
           add: "/edusport/coach/add",

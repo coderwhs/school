@@ -50,6 +50,8 @@
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
       </a-dropdown>-->
+<!--      <a-button @click="handleSignUp" type="primary" icon="unlock">开通账号</a-button>-->
+<!--      <a-button @click="handleSignLock" type="primary" icon="lock">冻结账号</a-button>-->
     </div>
 
     <!-- table区域-begin -->
@@ -104,6 +106,12 @@
                   <a>删除</a>
                 </a-popconfirm>
               </a-menu-item>
+              <a-menu-item>
+                <a @click="handleSignUp(record)" icon="unlock">开通账号</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a @click="handleSignLock(record)" icon="lock">冻结账号</a>
+              </a-menu-item>
             </a-menu>
           </a-dropdown>
         </span>
@@ -146,7 +154,7 @@
   import AthleteContestModal from './modules/AthleteContestModal'/* Tab修改@2019-12-12 */
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-  import {deleteAction} from '@/api/manage'
+  import {deleteAction, putAction} from '@/api/manage'
 
 
   export default {
@@ -267,6 +275,8 @@
           deleteBatch: "/edusport/athlete/deleteBatch",
           exportXlsUrl: "/edusport/athlete/exportXls",
           importExcelUrl: "edusport/athlete/importExcel",
+          signUp: "/edusport/athlete/signUp",
+          signLock: "/edusport/athlete/signLock",
         },
         dictOptions:{
           gender:[],
@@ -298,6 +308,30 @@
           }
         })
       },
+
+      handleSignUp: function (record) {
+        var that = this;
+        putAction(that.url.signUp, record).then((res) => {
+          if (res.success) {
+            that.$message.success(res.message);
+            that.loadData();
+          } else {
+            that.$message.warning(res.message);
+          }
+        })
+      },
+      handleSignLock: function (record) {
+        var that = this;
+        putAction(that.url.signLock, record).then((res) => {
+          if (res.success) {
+            that.$message.success(res.message);
+            that.loadData();
+          } else {
+            that.$message.warning(res.message);
+          }
+        })
+      },
+
       clickThenCheck(record) {
         return {
           on: {

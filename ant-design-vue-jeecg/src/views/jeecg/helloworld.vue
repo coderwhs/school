@@ -1,21 +1,29 @@
 <template>
-  <div class="clearfix">
-    <a-upload
-      action="uploadAction"
-      listType="picture-card"
-      :fileList="fileList"
-      @preview="handlePreview"
-      @change="handleChange"
-    >
-      <div v-if="fileList.length < 3">
-        <a-icon type="plus" />
-        <div class="ant-upload-text">Upload</div>
-      </div>
-    </a-upload>
-    <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-      <img alt="example" style="width: 100%" :src="previewImage" />
-    </a-modal>
-  </div>
+<!--  <div class="clearfix">-->
+<!--    <a-upload-->
+<!--      action="uploadAction"-->
+<!--      listType="picture-card"-->
+<!--      :fileList="fileList"-->
+<!--      @preview="handlePreview"-->
+<!--      @change="handleChange"-->
+<!--    >-->
+<!--      <div v-if="fileList.length < 3">-->
+<!--        <a-icon type="plus" />-->
+<!--        <div class="ant-upload-text">Upload</div>-->
+<!--      </div>-->
+<!--    </a-upload>-->
+<!--    <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">-->
+<!--      <img alt="example" style="width: 100%" :src="previewImage" />-->
+<!--    </a-modal>-->
+<!--  </div>-->
+  <a-row>
+    <a-col>sysUserCode: {{sysUserCode}}</a-col>
+    <a-col>sysUserName: {{sysUserName}}</a-col>
+    <a-col>sysOrgCode: {{sysOrgCode}}</a-col>
+    <a-col>sysDate: {{sysDate}}</a-col>
+    <a-col>sysTime: {{sysTime}}</a-col>
+  </a-row>
+
 </template>
 <script>
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
@@ -46,9 +54,9 @@
         this.previewImage = file.url || file.thumbUrl;
         this.previewVisible = true;
       },
-      handleChange({ fileList }) {
-        this.fileList = fileList;
-      },
+      // handleChange({ fileList }) {
+      //   this.fileList = fileList;
+      // },
     },
   };
 </script>

@@ -1,6 +1,7 @@
 package org.jeecg.modules.edusport.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
@@ -10,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.system.util.JwtUtil;
+import org.jeecg.common.util.PasswordUtil;
+import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.edusport.entity.Athlete;
 import org.jeecg.modules.edusport.mapper.AthleteContestMapper;
 import org.jeecg.modules.edusport.service.IAthleteContestService;
@@ -17,6 +21,9 @@ import org.jeecg.modules.edusport.service.IAthleteOtherTrianningInfoService;
 import org.jeecg.modules.edusport.service.IAthleteService;
 import org.jeecg.modules.edusport.service.IAthleteSportScoreService;
 import org.jeecg.modules.edusport.service.IAthleteTransportService;
+import org.jeecg.modules.shiro.vo.DefContants;
+import org.jeecg.modules.system.entity.SysUser;
+import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
@@ -58,6 +66,10 @@ public class AthleteController extends JeecgController<Athlete, IAthleteService>
 	private IAthleteSportScoreService athleteSportScoreService;
 	@Autowired
 	private IAthleteOtherTrianningInfoService athleteOtherTrianningInfoService;
+	
+	@Autowired
+	private ISysUserService sysUserService;
+	
 	/**
 	 * 分页列表查询
 	 *
@@ -72,7 +84,39 @@ public class AthleteController extends JeecgController<Athlete, IAthleteService>
 								   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
+		
+		//1.获取用户
+		String token = req.getHeader(DefContants.X_ACCESS_TOKEN);
+		if(oConvertUtils.isEmpty(token)) {
+			return Result.error("Token失效!");
+		}
+		
 		QueryWrapper<Athlete> queryWrapper = QueryGenerator.initQueryWrapper(athlete, req.getParameterMap());
+		String userName = JwtUtil.getUsername(token);
+		SysUser sysUser = sysUserService.getUserByName(userName);
+	    if(sysUser == null) {
+	    	return Result.error("Token无效!");
+	    }
+	    
+    	// 教务人员, 看到所有运动员
+    	if (1 == sysUser.getUserType()) {
+    		// Skip
+    		
+    		// 教练员, 教练员只能看到所带班级运动员，只能看到自己所在队及
+    	} else if (2 == sysUser.getUserType()) {
+			StringBuffer coachSql = new StringBuffer();
+			coachSql.append("select athlete_id from tb_edu_athlete_sport_class WHERE sport_class_id in ");
+			coachSql.append("(select id from tb_edu_sport_class where coach_id in ");
+			coachSql.append("(select id from tb_edu_coach t where coach_no = '");
+			coachSql.append(userName);
+			coachSql.append("'))");
+			queryWrapper.inSql("id", coachSql.toString());
+			
+    		// 运动员, 运动员只能看到自己，只能看到自己所在队及所在队的教练
+    	} else if (3 == sysUser.getUserType()) {
+    		queryWrapper.eq("athlete_no", userName);
+    	}
+	    
 		Page<Athlete> page = new Page<Athlete>(pageNo, pageSize);
 		IPage<Athlete> pageList = athleteService.page(page, queryWrapper);
 		return Result.ok(pageList);
@@ -175,5 +219,72 @@ public class AthleteController extends JeecgController<Athlete, IAthleteService>
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         return super.importExcel(request, response, Athlete.class);
     }
+    
+	/**
+	 *  开通及解冻账号
+	 *
+	 * @param athlete
+	 * @return
+	 */
+	@PutMapping(value = "/signUp")
+	public Result<?> coachSignUp(@RequestBody Athlete athlete) {
+		String selectedRoles = "";
+		String selectedDeparts = "";
+		
+		SysUser user = sysUserService.getUserByName(athlete.getAthleteNo());
+		if (user == null) {
+			user = new SysUser();
+			
+			user.setUsername(athlete.getAthleteNo());
+			user.setUserType(3); //运动员账号
+			user.setPassword("123456");
+			user.setWorkNo("");
+			user.setRealname(athlete.getAthleteName());
+			user.setBirthday(athlete.getBirthDate());
+			user.setPhone(athlete.getMobile());
+			user.setSex(athlete.getGender() == null? null : Integer.parseInt(athlete.getGender()));
+			user.setCreateTime(new Date());//设置创建时间
+			
+			String salt = oConvertUtils.randomGen(8);
+			user.setSalt(salt);
+			String passwordEncode = PasswordUtil.encrypt(user.getUsername(), user.getPassword(), salt);
+			user.setPassword(passwordEncode);
+			user.setStatus(1);
+			user.setDelFlag("0");
+
+			sysUserService.addUserWithRole(user, selectedRoles);
+            sysUserService.addUserWithDepart(user, selectedDeparts);
+            
+            return Result.ok("开通账号成功!");
+		} else {
+			user.setStatus(1);
+			this.sysUserService.update(new SysUser().setStatus(user.getStatus()),
+				new UpdateWrapper<SysUser>().lambda().eq(SysUser::getId,user.getId()));
+			return Result.ok("账号解冻成功!");
+		}   
+	}
+	
+
+	/**
+	 *  冻结账号
+	 *
+	 * @param athlete
+	 * @return
+	 */
+	@PutMapping(value = "/signLock")
+	public Result<?> signLock(@RequestBody Athlete athlete) {	
+		SysUser user = sysUserService.getUserByName(athlete.getAthleteNo());
+		if (user != null) {
+			user.setStatus(2); //冻结账号
+			this.sysUserService.update(new SysUser().setStatus(user.getStatus()),
+				new UpdateWrapper<SysUser>().lambda().eq(SysUser::getId,user.getId()));
+			return Result.ok("账号冻结成功!");
+			
+		} else {
+			return Result.error("未找到对应数据");
+		}
+	}
+
+    
 
 }
