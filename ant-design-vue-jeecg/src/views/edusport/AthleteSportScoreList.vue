@@ -84,24 +84,24 @@
       </a-table>
     </div>
 
-    <athleteTransport-modal ref="modalForm" @ok="modalFormOk"></athleteTransport-modal>
+    <athleteSportScore-modal ref="modalForm" @ok="modalFormOk"></athleteSportScore-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  // import AthleteTransportModal from './modules/AthleteTransportModal'
-  import AthleteTransportModal from './modules/AthleteTransportModal__Style#Drawer'
+  // import AthleteSportScoreModal from './modules/AthleteSportScoreModal'
+  import AthleteSportScoreModal from './modules/AthleteSportScoreModal__Style#Drawer'
   import AthleteList from './AthleteList'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import {getAction} from '@/api/manage'/* Tab修改@2019-12-12 */
 
   export default {
-    name: "AthleteTransportList",
+    name: "AthleteSportScoreList",
     mixins:[JeecgListMixin],
     components: {
-      AthleteTransportModal,
+      AthleteSportScoreModal,
       AthleteList/* Tab修改@2019-12-12 */
     },
     data () {
@@ -201,11 +201,11 @@
           }
         ],
         url: {
-          list: "/edusport/athleteTransport/list",
-          delete: "/edusport/athleteTransport/delete",
-          deleteBatch: "/edusport/athleteTransport/deleteBatch",
-          exportXlsUrl: "/edusport/athleteTransport/exportXls",
-          importExcelUrl: "edusport/athleteTransport/importExcel",
+          list: "/edusport/athleteSportScore/list",
+          delete: "/edusport/athleteSportScore/delete",
+          deleteBatch: "/edusport/athleteSportScore/deleteBatch",
+          exportXlsUrl: "/edusport/athleteSportScore/exportXls",
+          importExcelUrl: "edusport/athleteSportScore/importExcel",
         },
         dictOptions:{
          athleteTechGrade:[],
@@ -271,7 +271,7 @@
       },
       handleAdd: function () {
         this.$refs.modalForm.add(this.queryParam.athleteId);
-        this.$refs.modalForm.title = "运动员输送信息";
+        this.$refs.modalForm.title = "运动员测试记录信息";
       },
        
     }

@@ -105,18 +105,17 @@
           this.$message.warning("请选择一个宿舍信息");
         }
       },
-      edit (record) {
-        if(record.workflowState == '1' || record.workflowState == '4'){//
-          this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
+      edit (record) {// 如果是编辑，状态
+        if(record.id && (record.workflowState == '2' || record.workflowState == '3')){
+          this.$message.warning("已经提交工作流，不允许修改!");
+        } else {
           this.form.resetFields();
           this.dormId = record.dormId;
           this.model = Object.assign({}, record);
           this.visible = true;
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model, 'athleteId', 'leaveCause', 'startDate', 'endDate', 'workflowState', 'billType'))
+            this.form.setFieldsValue(pick(this.model,'athleteId','leaveCause','startDate','endDate'))
           })
-        } else {
-          this.$message.warning("已经提交工作流，不允许修改!");
         }
       },
       close () {

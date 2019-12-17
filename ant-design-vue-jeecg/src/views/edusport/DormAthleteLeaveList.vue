@@ -73,7 +73,7 @@
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record)">
                   <a>删除</a>
                 </a-popconfirm>
                 <a-popconfirm title="确定提交吗?" @confirm="() => handleSubmit(record)">
@@ -97,7 +97,7 @@
   // import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal'
   import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-  import {getAction, httpAction} from '@/api/manage'
+  import {getAction, httpAction, deleteAction } from '@/api/manage'
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
 
   export default {
@@ -251,25 +251,49 @@
         this.$refs.modalForm.add(this.queryParam.dormId);
         this.$refs.modalForm.title = "请假运动员信息";
       },
+
+      handleDelete: function (record) {/* Tab修改@2019-12-12 */
+        if(record.workflowState == '1'){
+          var that = this;
+          deleteAction(that.url.delete, {id: record.id}).then((res) => {
+            if (res.success) {
+              that.$message.success(res.message);
+              that.loadData();
+              this.$refs.DormAthleteLivingList.loadData();
+              this.$refs.DormAthleteLeaveList.loadData();
+            } else {
+              that.$message.warning(res.message);
+            }
+          });
+        } else {
+          alert("工作流中的数据，不允许删除！");
+        }
+      },
+
       handleSubmit: function (record) {
-        let httpurl = '';
-        let method = '';
-        httpurl+=this.url.submit;
-        method = 'put';
-        this.model = Object.assign({}, record);
-        let formData = Object.assign(this.model, record);
-        console.log("表单提交数据",formData);
-        //formData.id = id;
-        httpAction(httpurl,formData,method).then((res)=>{
-          if(res.success){
-            this.$message.success(res.message);
-            //this.$emit('ok');
-          }else{
-            this.$message.warning(res.message);
-          }
-        }).finally(() => {
-          this.loadData(1);
-        })
+        if(record.workflowState == '2' || record.workflowState == '3'){
+          alert("已经提交工作流，不能再次提交！");
+        } else{
+          let httpurl = '';
+          let method = '';
+          httpurl+=this.url.submit;
+          method = 'put';
+          this.model = Object.assign({}, record);
+          let formData = Object.assign(this.model, record);
+          console.log("表单提交数据",formData);
+          //formData.id = id;
+          httpAction(httpurl,formData,method).then((res)=>{
+            if(res.success){
+              this.$message.success(res.message);
+              //this.$emit('ok');
+            }else{
+              this.$message.warning(res.message);
+            }
+          }).finally(() => {
+            this.loadData(1);
+          })
+        }
+
       },
     }
   }
