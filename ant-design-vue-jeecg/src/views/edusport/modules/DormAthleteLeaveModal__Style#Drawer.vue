@@ -8,8 +8,6 @@
     @close="close"
     :visible="visible"
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
-    :visible="visible"
-    style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
@@ -25,6 +23,12 @@
         <a-form-item label="结束日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择结束日期" v-decorator="[ 'endDate', validatorRules.endDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
+        <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-dict-select-tag type="list" v-decorator="['workflowState']" :trigger-change="true" dictCode="workflow_state" placeholder="请选择状态"/>
+        </a-form-item>
+        <a-form-item label="单据类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-dict-select-tag type="list" v-decorator="['billType']" :trigger-change="true" dictCode="bill_type" placeholder="请选择单据类型"/>
+        </a-form-item>
 
       </a-form>
     </a-spin>
@@ -34,7 +38,7 @@
       </a-popconfirm>
       <a-button type="primary" @click="handleOk" :loading="confirmLoading">提交</a-button>
     </div>
-    </a-drawer>
+  </a-drawer>
 </template>
 
 <script>
@@ -76,6 +80,8 @@
           leaveCause:{rules: [{ required: true, message: '请输入请假原因!' }]},
           startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
           endDate:{rules: [{ required: true, message: '请输入结束日期!' }]},
+          workflowState:{rules: [{ required: true, message: '请输入状态!' }]},
+          billType:{rules: [{ required: true, message: '请输入单据类型!' }]},
         },
         url: {
           add: "/edusport/dormAthleteLeave/add",
@@ -100,14 +106,18 @@
         }
       },
       edit (record) {
-        this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
-        this.form.resetFields();
-        this.dormId = record.dormId;
-        this.model = Object.assign({}, record);
-        this.visible = true;
-        this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteId','leaveCause','startDate','endDate'))
-        })
+        if(record.workflowState == '1' || record.workflowState == '4'){//
+          this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
+          this.form.resetFields();
+          this.dormId = record.dormId;
+          this.model = Object.assign({}, record);
+          this.visible = true;
+          this.$nextTick(() => {
+            this.form.setFieldsValue(pick(this.model, 'athleteId', 'leaveCause', 'startDate', 'endDate', 'workflowState', 'billType'))
+          })
+        } else {
+          this.$message.warning("已经提交工作流，不允许修改!");
+        }
       },
       close () {
         this.$emit('close');
@@ -124,7 +134,6 @@
           this.drawerWidth = 700;
         }
       },
-
       handleOk () {
         const that = this;
         // 触发表单验证
@@ -141,6 +150,7 @@
               method = 'put';
             }
             let formData = Object.assign(this.model, values);
+            console.log("values = " + JSON.stringify(values));
             console.log("表单提交数据",formData);
             formData.dormId = this.dormId;
             httpAction(httpurl,formData,method).then((res)=>{

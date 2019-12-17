@@ -10,66 +10,29 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-row>
-          <a-col :span="17">
-            <a-row>
-              <a-col :span="14">
-                <a-form-item label="学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input v-decorator="[ 'athleteNo', validatorRules.athleteNo]" placeholder="请输入学号"></a-input>
-                </a-form-item>
-              </a-col>
-              <a-col :span="10">
-                <a-form-item label="姓名" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input v-decorator="[ 'athleteName', validatorRules.athleteName]" placeholder="请输入姓名"></a-input>
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row>
-              <a-col :span="14">
-                <a-form-item label="出生日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <j-date placeholder="请选择出生日期" v-decorator="[ 'birthDate', validatorRules.birthDate]" :trigger-change="true" style="width: 100%"/>
-                </a-form-item>
-              </a-col>
-              <a-col :span="10">
-                <a-form-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
-                </a-form-item>
-              </a-col>
-            </a-row>
+          <a-col :span="12">
+            <a-form-item label="学号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input v-decorator="[ 'athleteNo', validatorRules.athleteNo]" placeholder="请输入学号"></a-input>
+            </a-form-item>
           </a-col>
-          <a-col :span="7">
-            <a-form-item
-              :labelCol="labelCol2"
-              :wrapperCol="wrapperCol2"
-              label="2寸照片"
-              hasFeedback>
-              <a-upload
-                :action="uploadAction"
-                listType="picture-card"
-                :headers="headers"
-                :fileList="fileList"
-                @change="handlePicChange"
-                @preview="handlePicPreview"
-              >
-                <div v-if="fileList.length < 1">
-                  <a-icon type="plus" />
-                  <div class="ant-upload-text">上传照片</div>
-                </div>
-              </a-upload>
-              <a-modal :visible="previewVisible" :footer="null" @cancel="handlePicCancel">
-                <img alt="example" style="width: 100%" :src="previewImage"/>
-              </a-modal>
+          <a-col :span="12">
+            <a-form-item label="姓名" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input v-decorator="[ 'athleteName', validatorRules.athleteName]" placeholder="请输入姓名"></a-input>
             </a-form-item>
           </a-col>
         </a-row>
-        <!--<a-row>
-        <a-col :span="12">
-          <a-form-item label="照片路径" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input v-decorator="[ 'photoPath', validatorRules.photoPath]" placeholder="请输入照片路径"></a-input>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-        </a-col>
-      </a-row>-->
+        <a-row>
+          <a-col :span="12">
+            <a-form-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item label="出生日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <j-date placeholder="请选择出生日期" v-decorator="[ 'birthDate', validatorRules.birthDate]" :trigger-change="true" style="width: 100%"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
         <a-row>
           <a-col :span="12">
             <a-form-item label="身高(cm)" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -227,6 +190,37 @@
           </a-col>
         </a-row>
         <a-row>
+          <a-col :span="17">
+            <a-form-item label="照片路径" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input v-decorator="[ 'photoPath', validatorRules.photoPath]" placeholder="请输入照片路径"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :span="7">
+            <a-form-item
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              label="2寸照片"
+              hasFeedback>
+              <a-upload
+                :action="uploadAction"
+                listType="picture-card"
+                :headers="headers"
+                :fileList="fileList"
+                @change="handlePicChange"
+                @preview="handlePicPreview"
+              >
+                <div v-if="fileList.length < 1">
+                  <a-icon type="plus" />
+                  <div class="ant-upload-text">上传照片</div>
+                </div>
+              </a-upload>
+              <a-modal :visible="previewVisible" :footer="null" @cancel="handlePicCancel">
+                <img alt="example" style="width: 100%" :src="previewImage"/>
+              </a-modal>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row>
           <a-col :span="23">
             <a-form-item label="简介" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <a-textarea v-decorator="['resume']" rows="4" placeholder="请输入简介"/>
@@ -249,15 +243,14 @@
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   import { getUploadFileList,getFilePaths } from '@/utils/commonUploadFile.js'
   import JUpload from '@/components/jeecg/JUpload'
-  import Vue from 'vue'
   import {ACCESS_TOKEN} from "@/store/mutation-types"
+
   export default {
     name: "AthleteModal",
     components: { 
       JDate,
       JDictSelectTag,
       JSearchSelectTag,
-      JUpload,
     },
     data () {
       return {
@@ -266,7 +259,7 @@
         width:800,
         visible: false,
         model: {},
-        /*labelCol: {
+        labelCol: {
           xs: { span: 24 },
           sm: { span: 8 },
           md: { span: 8 },
@@ -275,8 +268,9 @@
           xs: { span: 24 },
           sm: { span: 14 },
           md: { span: 14 },
-        },*/
-        labelCol: {
+        },
+/*
+labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
           md: { span: 5 },
@@ -309,12 +303,7 @@
           md: { span: 14 },
         },
 
-        // 图片初始化
-        headers: {},
-        fileList: [],
-        previewVisible: false,
-        previewImage: '',
-
+ */
         confirmLoading: false,
         validatorRules:{
         athleteNo:{rules: [{ required: true, message: '请输入学号!' }]},
@@ -353,22 +342,11 @@
         url: {
           add: "/edusport/athlete/add",
           edit: "/edusport/athlete/edit",
-          fileUpload: window._CONFIG['domianURL'] + "/sys/common/upload",
-          imgerver: window._CONFIG['domianURL'] + "/sys/common/view",
         }
      
       }
     },
-
-    computed: {
-      uploadAction: function () {
-        return this.url.fileUpload;
-      }
-    },
-
     created () {
-      const token = Vue.ls.get(ACCESS_TOKEN);
-      this.headers = {"X-Access-Token": token}
     },
     methods: {
       add () {
@@ -377,9 +355,6 @@
       edit (record) {
         this.form.resetFields();
 
-        // 添加图片处理
-        let currFileList = getUploadFileList(record.photoPath)
-        this.fileList = [...currFileList]
 
         this.model = Object.assign({}, record);
         this.visible = true;
@@ -407,9 +382,6 @@
                method = 'put';
             }
             let formData = Object.assign(this.model, values);
-            // 图片路径保存
-            formData.photoPath = getFilePaths(this.fileList);
-
             console.log("表单提交数据",formData)
             httpAction(httpurl,formData,method).then((res)=>{
               if(res.success){
@@ -432,31 +404,7 @@
       popupCallback(row){
         this.form.setFieldsValue(pick(row,'athleteNo','athleteName','gender','nation','birthDate','studentHeight','studentWeight','majorSport','majorSportTeacherCode','nativeProvince','nativeCity','idNo','mobile','homeAddress','zipcode','policeStation','father','fatherHeight','fatherMobile','mother','motherHeight','motherMobile','transportDepartmentCity','transportDepartmentSchool','admissionDate','grade','majorSportAttendDate','retireDate','acceptDepartmentType','acceptDepartment','photoPath','resume'))
       },
-      handlePicChange(info) {
-        this.fileList = info.fileList;
-        if (info.file.status === 'uploading') {
-          return
-        }
-        if (info.file.status === 'done') {
-          var response = info.file.response;
-          if (!response.success) {
-            this.$message.warning(response.message);
-          }
-        }
-      },
-      handlePicCancel() {
-        this.previewVisible = false
-        this.previewImage=''
-      },
-      handlePicView(url){
-        this.previewImage = this.url.imgerver + "/" + url
-        this.previewVisible = true
-      },
-      handlePicPreview(file) {
-        console.log("handlePicPreview.file.url: ",file.url);
-        this.previewImage = file.url || file.thumbUrl
-        this.previewVisible = true
-      },
+
       
     }
   }

@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.SecurityUtils;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.ProcessEngineConfiguration;
@@ -19,20 +22,34 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.image.ProcessDiagramGenerator;
 import org.flowable.task.api.Task;
 import org.jeecg.common.system.base.controller.JeecgController;
+import org.jeecg.common.system.util.JwtUtil;
+import org.jeecg.common.system.vo.LoginUser;
+import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.demo.test.entity.JeecgDemo;
 import org.jeecg.modules.demo.test.service.IJeecgDemoService;
+import org.jeecg.modules.edusport.entity.DormAthleteLeave;
+import org.jeecg.modules.edusport.entity.TactRuTask;
+import org.jeecg.modules.edusport.mapper.DormAthleteLeaveMapper;
+import org.jeecg.modules.shiro.vo.DefContants;
+import org.jeecg.modules.system.entity.SysUser;
+import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.collect.Lists;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
 @Api(tags = "工作流测试DEMO")
 @RestController
 //@Controller
-@RequestMapping(value = "process")
+@RequestMapping(value = "/process")
 public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoService> {
 	@Autowired
 	private RuntimeService runtimeService;
@@ -42,9 +59,52 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	private RepositoryService repositoryService;
 	@Autowired
 	private ProcessEngine processEngine;
-
+	@Resource
+	private DormAthleteLeaveMapper dormAthleteLeaveMapper;
+	@Autowired
+	private ISysUserService sysUserService;
 	/*************** 此处为业务代码 ******************/
 
+
+	
+	@RequestMapping(value = "create")
+	@ResponseBody
+	@Transactional
+	public String createFlowable(HttpServletRequest request, @RequestBody DormAthleteLeave dormAthleteLeave) {
+		dormAthleteLeaveMapper.updateWorkflowState(dormAthleteLeave.getId());
+		System.out.println("提交成功abcdefg");
+		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
+		SysUser user = new SysUser();
+		  if(!oConvertUtils.isEmpty(token)) {
+		   String username = JwtUtil.getUsername(token);
+		   System.out.println(">>> username: " + username);
+		   user = sysUserService.getUserByName(username);
+		  }
+
+		String processInstanceId = addFlowable(user.getId(), dormAthleteLeave.getBillType(), dormAthleteLeave.getId()) ;
+		List<String> tasks = Flowablelist(user.getId());
+		if (tasks.size() != 0) {
+			String taskId = tasks.get(0);
+//			apply(dormAthleteLeave, tasks.get(0));
+			
+			dormAthleteLeaveMapper.updateWorkflowState(dormAthleteLeave.getId());
+			dormAthleteLeave.setWorkflowState("3");
+			System.out.println("==============" + dormAthleteLeave.getId());
+			
+			Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+			if (task == null) {
+				throw new RuntimeException("流程不存在");
+			}
+			// 通过审核
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("outcome", "通过");
+			taskService.complete(taskId, map);
+		}
+		
+		return "提交成功.";
+	}
+	
+	
 	/**
 	 * 添加报销
 	 *
@@ -56,12 +116,21 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
     @ApiOperation(value = "添加流程", notes = "添加工作流")
 	@RequestMapping(value = "add")
 	@ResponseBody
-	public String addFlowable(String userId, Integer leaveType, String descption) {
+	@Transactional
+	public String addFlowable(String userId, String leaveType, String billId) {
+    	
 		// 启动流程
 		HashMap<String, Object> map = new HashMap<>();
+		
+		LoginUser sysUser = (LoginUser)SecurityUtils.getSubject().getPrincipal();
 		map.put("taskUser", userId);
 		map.put("leaveType", leaveType);
-		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("Leave", map);
+		String billType = "SickLeave";// 宿舍请假单.
+		if("2".equals(leaveType)) {
+			billType = "PersonalLeave";// 考勤请假单.
+		}
+		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("Leave",billId, map);
+		System.out.println( "提交成功.流程Id为：" + processInstance.getId());
 		return "提交成功.流程Id为：" + processInstance.getId();
 	}
 
@@ -70,12 +139,13 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	 */
 	@RequestMapping(value = "/list")
 	@ResponseBody
-	public Object Flowablelist(String userId) {
+	public List<String> Flowablelist(String userId) {
 		List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list();
+		List<String> results = Lists.newArrayList();
 		for (Task task : tasks) {
-			System.out.println(task.toString());
+			results.add(task.getId());
 		}
-		return tasks.toString();
+		return results;
 	}
 
 	/**
@@ -83,30 +153,57 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	 *
 	 * @param taskId 任务ID
 	 */
-	@RequestMapping(value = "apply")
-	@ResponseBody
-	public String apply(String taskId) {
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		if (task == null) {
-			throw new RuntimeException("流程不存在");
+	@PutMapping(value = "/apply")
+	@Transactional
+	public String apply(HttpServletRequest request, @RequestBody TactRuTask tactRuTask) {
+		// 更改状态.
+//		dormAthleteLeaveMapper.updateWorkflowState(dormAthleteLeave.getId());
+//		dormAthleteLeave.setWorkflowState("3");
+//		System.out.println("==============" + dormAthleteLeave.getId());
+		SysUser user = getSystemUser(request);
+		List<String> tasks = Flowablelist(user.getId());
+		if (tasks != null && tasks.size() != 0) {
+			String taskId = tasks.get(0);
+//			apply(dormAthleteLeave, tasks.get(0));
+			
+			Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+			if (task == null) {
+				throw new RuntimeException("流程不存在");
+			}
+			// 通过审核
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("outcome", "通过");
+			taskService.complete(taskId, map);
 		}
-		// 通过审核
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("outcome", "通过");
-		taskService.complete(taskId, map);
 		return "processed ok!";
 	}
 
 	/**
 	 * 拒绝
 	 */
-	@ResponseBody
-	@RequestMapping(value = "reject")
-	public String reject(String taskId) {
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("outcome", "驳回");
-		taskService.complete(taskId, map);
-		return "reject";
+	@Transactional
+	@PutMapping(value = "reject")
+	public String reject(HttpServletRequest request, @RequestBody DormAthleteLeave dormAthleteLeave) {
+		// 更改状态.
+		dormAthleteLeaveMapper.updateWorkflowState(dormAthleteLeave.getId());
+		dormAthleteLeave.setWorkflowState("4");
+		
+		System.out.println("==============" + dormAthleteLeave.getId());
+		SysUser user = getSystemUser(request);
+		List<String> tasks = Flowablelist(user.getId());
+		if (tasks != null && tasks.size() != 0) {
+			String taskId = tasks.get(0);
+			Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+			if (task == null) {
+				throw new RuntimeException("流程不存在");
+			}
+			// 驳回.
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("outcome", "驳回");
+			taskService.complete(taskId, map);
+		}
+
+		return "reject!";
 	}
 
 	/**
@@ -115,9 +212,12 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	 * @param processId 任务ID
 	 */
 	@RequestMapping(value = "processDiagram")
-	public void genProcessDiagram(HttpServletResponse httpServletResponse, String processId) throws Exception {
-		ProcessInstance pi = runtimeService.createProcessInstanceQuery().processInstanceId(processId).singleResult();
+//	@PutMapping(value = "processDiagram")
 
+	public void processDiagram(HttpServletResponse httpServletResponse, @RequestParam(name="procInstId",required=false) String procInstId) throws Exception {
+		ProcessInstance pi = runtimeService.createProcessInstanceQuery().processInstanceId(procInstId).singleResult();
+		httpServletResponse.setContentType("image/png");
+//		httpServletResponse.setContentType("application/x-img");
 		// 流程走完的不显示图
 		if (pi == null) {
 			return;
@@ -161,6 +261,23 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 				out.close();
 			}
 		}
+
 	}
 
+	/**
+	 * 取得当前登录用户.
+	 * @param request
+	 * @return
+	 */
+	private SysUser getSystemUser(HttpServletRequest request) {
+		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
+		SysUser user = new SysUser();
+		if (!oConvertUtils.isEmpty(token)) {
+			String username = JwtUtil.getUsername(token);
+			System.out.println(">>> username: " + username);
+			user = sysUserService.getUserByName(username);
+		}
+		
+		return user;
+	}
 }

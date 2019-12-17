@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 宿舍运动员请假表
  * @Author: jeecg-boot
- * @Date:   2019-12-13
+ * @Date:   2019-12-15
  * @Version: V1.0
  */
 @Data
@@ -46,6 +46,12 @@ public class DormAthleteLeave implements Serializable {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private java.util.Date endDate;
+	/**状态*/
+	@Excel(name = "状态", width = 15)
+    private java.lang.String workflowState;
+	/**单据类型*/
+	@Excel(name = "单据类型", width = 15)
+    private java.lang.String billType;
 	/**创建人*/
 	@Excel(name = "创建人", width = 15)
     private java.lang.String createBy;
