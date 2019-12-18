@@ -1,4 +1,4 @@
-package org.jeecg.modules.demo.test.controller;
+package org.jeecg.modules.flowable.controller;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,7 +10,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.shiro.SecurityUtils;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.ProcessEngineConfiguration;
@@ -23,13 +22,13 @@ import org.flowable.image.ProcessDiagramGenerator;
 import org.flowable.task.api.Task;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.util.JwtUtil;
-import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.demo.test.entity.JeecgDemo;
 import org.jeecg.modules.demo.test.service.IJeecgDemoService;
 import org.jeecg.modules.edusport.entity.DormAthleteLeave;
 import org.jeecg.modules.edusport.entity.TactRuTask;
 import org.jeecg.modules.edusport.mapper.DormAthleteLeaveMapper;
+import org.jeecg.modules.flowable.service.IProcessService;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
@@ -46,6 +45,7 @@ import com.google.common.collect.Lists;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
 @Api(tags = "工作流测试DEMO")
 @RestController
 //@Controller
@@ -63,34 +63,33 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	private DormAthleteLeaveMapper dormAthleteLeaveMapper;
 	@Autowired
 	private ISysUserService sysUserService;
+	@Autowired
+	private IProcessService processServices;
+
 	/*************** 此处为业务代码 ******************/
 
-
-	
 	@RequestMapping(value = "create")
 	@ResponseBody
 	@Transactional
 	public String createFlowable(HttpServletRequest request, @RequestBody DormAthleteLeave dormAthleteLeave) {
 		dormAthleteLeaveMapper.updateWorkflowState(dormAthleteLeave.getId());
 		System.out.println("提交成功abcdefg");
-		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
-		SysUser user = new SysUser();
-		  if(!oConvertUtils.isEmpty(token)) {
-		   String username = JwtUtil.getUsername(token);
-		   System.out.println(">>> username: " + username);
-		   user = sysUserService.getUserByName(username);
-		  }
 
-		String processInstanceId = addFlowable(user.getId(), dormAthleteLeave.getBillType(), dormAthleteLeave.getId()) ;
-		List<String> tasks = Flowablelist(user.getId());
+		HashMap<String, Object> map1 = new HashMap<>();
+
+		String userName = getSystemUser(request).getUsername();
+		map1.put("taskUser", userName);
+		map1.put("leaveType", 1);
+		processServices.addFlowable(userName, "Leave", dormAthleteLeave.getId(), map1);
+		List<String> tasks = list(userName);
 		if (tasks.size() != 0) {
 			String taskId = tasks.get(0);
 //			apply(dormAthleteLeave, tasks.get(0));
-			
+
 			dormAthleteLeaveMapper.updateWorkflowState(dormAthleteLeave.getId());
 			dormAthleteLeave.setWorkflowState("3");
 			System.out.println("==============" + dormAthleteLeave.getId());
-			
+
 			Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 			if (task == null) {
 				throw new RuntimeException("流程不存在");
@@ -98,40 +97,47 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 			// 通过审核
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("outcome", "通过");
+			map.put("nextHandler", userName);
 			taskService.complete(taskId, map);
 		}
-		
+
 		return "提交成功.";
 	}
-	
-	
+
 	/**
-	 * 添加报销
+	 * 启动一个工作流
 	 *
 	 * @param userId    用户Id
 	 * @param money     报销金额
 	 * @param descption 描述
 	 */
 
-    @ApiOperation(value = "添加流程", notes = "添加工作流")
+	@ApiOperation(value = "添加流程", notes = "添加工作流")
 	@RequestMapping(value = "add")
 	@ResponseBody
 	@Transactional
-	public String addFlowable(String userId, String leaveType, String billId) {
-    	
+	public String addFlowable(HttpServletRequest request, String userId, String leaveType, String billId) {
 		// 启动流程
 		HashMap<String, Object> map = new HashMap<>();
-		
-		LoginUser sysUser = (LoginUser)SecurityUtils.getSubject().getPrincipal();
-		map.put("taskUser", userId);
-		map.put("leaveType", leaveType);
-		String billType = "SickLeave";// 宿舍请假单.
-		if("2".equals(leaveType)) {
-			billType = "PersonalLeave";// 考勤请假单.
-		}
-		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("Leave",billId, map);
-		System.out.println( "提交成功.流程Id为：" + processInstance.getId());
-		return "提交成功.流程Id为：" + processInstance.getId();
+
+		String userName = getSystemUser(request).getUsername();
+		map.put("taskUser", userName);
+		map.put("leaveType", 1);
+		return processServices.addFlowable(userName, "leave", billId, map);
+
+//		// 启动流程
+//		HashMap<String, Object> map = new HashMap<>();
+//		
+//		LoginUser sysUser = (LoginUser)SecurityUtils.getSubject().getPrincipal();
+//		map.put("taskUser", userId);
+//		map.put("leaveType", leaveType);
+//		String billType = "SickLeave";// 宿舍请假单.
+//		if("2".equals(leaveType)) {
+//			billType = "PersonalLeave";// 考勤请假单.
+//		}
+//		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("Leave",billId, map);
+//		System.out.println( "提交成功.流程Id为：" + processInstance.getId());
+//		return "提交成功.流程Id为：" + processInstance.getId();
 	}
 
 	/**
@@ -139,7 +145,8 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	 */
 	@RequestMapping(value = "/list")
 	@ResponseBody
-	public List<String> Flowablelist(String userId) {
+	public List<String> list(String userId) {
+		
 		List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list();
 		List<String> results = Lists.newArrayList();
 		for (Task task : tasks) {
@@ -161,11 +168,11 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 //		dormAthleteLeave.setWorkflowState("3");
 //		System.out.println("==============" + dormAthleteLeave.getId());
 		SysUser user = getSystemUser(request);
-		List<String> tasks = Flowablelist(user.getId());
+		List<String> tasks = list(user.getUsername());
 		if (tasks != null && tasks.size() != 0) {
 			String taskId = tasks.get(0);
 //			apply(dormAthleteLeave, tasks.get(0));
-			
+
 			Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 			if (task == null) {
 				throw new RuntimeException("流程不存在");
@@ -173,6 +180,8 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 			// 通过审核
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("outcome", "通过");
+			map.put("nextHandler", user.getId());
+			map.put("reqDays", 10);
 			taskService.complete(taskId, map);
 		}
 		return "processed ok!";
@@ -187,10 +196,10 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 		// 更改状态.
 		dormAthleteLeaveMapper.updateWorkflowState(dormAthleteLeave.getId());
 		dormAthleteLeave.setWorkflowState("4");
-		
+
 		System.out.println("==============" + dormAthleteLeave.getId());
 		SysUser user = getSystemUser(request);
-		List<String> tasks = Flowablelist(user.getId());
+		List<String> tasks = list(user.getId());
 		if (tasks != null && tasks.size() != 0) {
 			String taskId = tasks.get(0);
 			Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -214,7 +223,8 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	@RequestMapping(value = "processDiagram")
 //	@PutMapping(value = "processDiagram")
 
-	public void processDiagram(HttpServletResponse httpServletResponse, @RequestParam(name="procInstId",required=false) String procInstId) throws Exception {
+	public void processDiagram(HttpServletResponse httpServletResponse,
+			@RequestParam(name = "procInstId", required = false) String procInstId) throws Exception {
 		ProcessInstance pi = runtimeService.createProcessInstanceQuery().processInstanceId(procInstId).singleResult();
 		httpServletResponse.setContentType("image/png");
 //		httpServletResponse.setContentType("application/x-img");
@@ -266,6 +276,7 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 
 	/**
 	 * 取得当前登录用户.
+	 * 
 	 * @param request
 	 * @return
 	 */
@@ -277,7 +288,7 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 			System.out.println(">>> username: " + username);
 			user = sysUserService.getUserByName(username);
 		}
-		
+
 		return user;
 	}
 }
