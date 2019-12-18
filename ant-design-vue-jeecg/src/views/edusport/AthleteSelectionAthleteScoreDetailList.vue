@@ -116,11 +116,6 @@
             }
           },
           {
-            title:'测试成绩',
-            align:"center",
-            dataIndex: 'athleteScoreId'
-          },
-          {
             title:'运动员',
             align:"center",
             dataIndex: 'athleteId',
@@ -189,6 +184,11 @@
             title:'得分',
             align:"center",
             dataIndex: 'testScore'
+          },
+          {
+            title:'测试成绩',
+            align:"center",
+            dataIndex: 'athleteScoreId'
           },
           {
             title:'测试等级评定',

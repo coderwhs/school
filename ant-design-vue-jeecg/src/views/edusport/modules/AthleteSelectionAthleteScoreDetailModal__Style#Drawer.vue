@@ -10,9 +10,6 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="测试成绩" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'athleteScoreId', validatorRules.athleteScoreId]" placeholder="请输入测试成绩"></a-input>
-        </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'athleteId', validatorRules.athleteId]" placeholder="请输入运动员"></a-input>
         </a-form-item>
@@ -33,6 +30,9 @@
         </a-form-item>
         <a-form-item label="得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%"/>
+        </a-form-item>
+        <a-form-item label="测试成绩" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'athleteScoreId', validatorRules.athleteScoreId]" placeholder="请输入测试成绩"></a-input>
         </a-form-item>
         <a-form-item label="测试等级评定" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['testGrade']" :trigger-change="true" dictCode="tb_edu_athlete_selection_group_rating,rating,id" placeholder="请选择测试等级评定"/>
@@ -74,7 +74,6 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteScoreId:{rules: [{ required: true, message: '请输入测试成绩!' }]},
         athleteId:{},
         testId:{},
         groupId:{},
@@ -82,6 +81,7 @@
         indexCode:{},
         testValue:{rules: [{ required: true, message: '请输入测试值!' }]},
         testScore:{},
+        athleteScoreId:{rules: [{ required: true, message: '请输入测试成绩!' }]},
         testGrade:{},
         },
         url: {
@@ -102,7 +102,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteScoreId','athleteId','testId','groupId','eventCode','indexCode','testValue','testScore','testGrade'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','testId','groupId','eventCode','indexCode','testValue','testScore','athleteScoreId','testGrade'))
         })
       },
       close () {
@@ -145,7 +145,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteScoreId','athleteId','testId','groupId','eventCode','indexCode','testValue','testScore','testGrade'))
+        this.form.setFieldsValue(pick(row,'athleteId','testId','groupId','eventCode','indexCode','testValue','testScore','athleteScoreId','testGrade'))
       }
       
     }
