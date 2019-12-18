@@ -2,11 +2,7 @@ package org.jeecg.modules.edusport.controller;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +10,7 @@ import org.flowable.engine.TaskService;
 import org.flowable.task.api.Task;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.constant.CommonConstant;
+import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.util.oConvertUtils;
@@ -22,6 +19,17 @@ import org.jeecg.modules.edusport.service.ITactRuTaskService;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -29,19 +37,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 
 import lombok.extern.slf4j.Slf4j;
-
-import org.jeecgframework.poi.excel.ExcelImportUtil;
-import org.jeecgframework.poi.excel.def.NormalExcelConstants;
-import org.jeecgframework.poi.excel.entity.ExportParams;
-import org.jeecgframework.poi.excel.entity.ImportParams;
-import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
-import org.jeecg.common.system.base.controller.JeecgController;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
-import com.alibaba.fastjson.JSON;
 
  /**
  * @Description: tact_ru_task
@@ -77,7 +72,7 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 		Page<TactRuTask> page = new Page<TactRuTask>(pageNo, pageSize);
 		IPage<TactRuTask> pageList = tactRuTaskService.page(page, queryWrapper);
 //		String userId = "教练";
-		String userId = "教练";
+		String userId = getSystemUser(request).getUsername();
 		
 		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
 		SysUser user = new SysUser();
@@ -196,5 +191,23 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         return super.importExcel(request, response, TactRuTask.class);
     }
+    
+    /**
+	 * 取得当前登录用户.
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private SysUser getSystemUser(HttpServletRequest request) {
+		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
+		SysUser user = new SysUser();
+		if (!oConvertUtils.isEmpty(token)) {
+			String username = JwtUtil.getUsername(token);
+			System.out.println(">>> username: " + username);
+			user = sysUserService.getUserByName(username);
+		}
+
+		return user;
+	}
 
 }
