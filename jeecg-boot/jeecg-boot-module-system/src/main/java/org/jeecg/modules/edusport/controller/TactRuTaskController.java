@@ -9,15 +9,25 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.flowable.engine.TaskService;
+import org.flowable.task.api.Task;
 import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.constant.CommonConstant;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.edusport.entity.AthleteSportClass;
-import org.jeecg.modules.edusport.service.IAthleteSportClassService;
+import org.jeecg.modules.edusport.entity.TactRuTask;
+import org.jeecg.modules.edusport.service.ITactRuTaskService;
+import org.jeecg.modules.shiro.vo.DefContants;
+import org.jeecg.modules.system.entity.SysUser;
+import org.jeecg.modules.system.service.ISysUserService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.jeecgframework.poi.excel.ExcelImportUtil;
@@ -34,60 +44,94 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 
  /**
- * @Description: 训练队成员表
+ * @Description: tact_ru_task
  * @Author: jeecg-boot
- * @Date:   2019-12-13
+ * @Date:   2019-12-16
  * @Version: V1.0
  */
 @RestController
-@RequestMapping("/edusport/athleteSportClass")
+@RequestMapping("/edusport/tactRuTask")
 @Slf4j
-public class AthleteSportClassController extends JeecgController<AthleteSportClass, IAthleteSportClassService> {
+public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTaskService> {
 	@Autowired
-	private IAthleteSportClassService athleteSportClassService;
-	
+	private ITactRuTaskService tactRuTaskService;
+	@Autowired
+	private TaskService taskService;
+	@Autowired
+	private ISysUserService sysUserService;
 	/**
 	 * 分页列表查询
 	 *
-	 * @param athleteSportClass
+	 * @param tactRuTask
 	 * @param pageNo
 	 * @param pageSize
 	 * @param req
 	 * @return
 	 */
 	@GetMapping(value = "/list")
-	public Result<?> queryPageList(AthleteSportClass athleteSportClass,
+	public Result<?> queryPageList(HttpServletRequest request, TactRuTask tactRuTask,
 								   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
-		QueryWrapper<AthleteSportClass> queryWrapper = QueryGenerator.initQueryWrapper(athleteSportClass, req.getParameterMap());
-		queryWrapper.orderByAsc("sport_class_id","attend_date");
-		Page<AthleteSportClass> page = new Page<AthleteSportClass>(pageNo, pageSize);
-		IPage<AthleteSportClass> pageList = athleteSportClassService.page(page, queryWrapper);
-		return Result.ok(pageList);
+		QueryWrapper<TactRuTask> queryWrapper = QueryGenerator.initQueryWrapper(tactRuTask, req.getParameterMap());
+		Page<TactRuTask> page = new Page<TactRuTask>(pageNo, pageSize);
+		IPage<TactRuTask> pageList = tactRuTaskService.page(page, queryWrapper);
+//		String userId = "教练";
+		String userId = "教练";
+		
+		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
+		SysUser user = new SysUser();
+		  if(!oConvertUtils.isEmpty(token)) {
+		   String username = JwtUtil.getUsername(token);
+		   System.out.println(">>> userName: " + username);
+		   user = sysUserService.getUserByName(username);
+		   System.out.println(">>> userId: " + user.getId());
+		  }
+		  
+		List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list();
+		List<TactRuTask> rs = Lists.newArrayList();
+		for (Task task :tasks) {
+			TactRuTask t = new TactRuTask();
+			t.setId(task.getId());
+			t.setProcDefId(task.getProcessDefinitionId());
+			t.setProcInstId(task.getProcessInstanceId());
+			t.setName(task.getName());
+			t.setAssignee(task.getAssignee());
+			rs.add(t);
+		}
+		pageList.setRecords(rs);
+		
+		Result<Object> r = new Result<Object>();
+		r.setSuccess(true);
+		r.setCode(CommonConstant.SC_OK_200);
+		r.setResult(pageList);
+		
+		
+        return r;
+//		return Result.ok(pageList);
 	}
 	
 	/**
 	 *   添加
 	 *
-	 * @param athleteSportClass
+	 * @param tactRuTask
 	 * @return
 	 */
 	@PostMapping(value = "/add")
-	public Result<?> add(@RequestBody AthleteSportClass athleteSportClass) {
-		athleteSportClassService.save(athleteSportClass);
+	public Result<?> add(@RequestBody TactRuTask tactRuTask) {
+		tactRuTaskService.save(tactRuTask);
 		return Result.ok("添加成功！");
 	}
 	
 	/**
 	 *  编辑
 	 *
-	 * @param athleteSportClass
+	 * @param tactRuTask
 	 * @return
 	 */
 	@PutMapping(value = "/edit")
-	public Result<?> edit(@RequestBody AthleteSportClass athleteSportClass) {
-		athleteSportClassService.updateById(athleteSportClass);
+	public Result<?> edit(@RequestBody TactRuTask tactRuTask) {
+		tactRuTaskService.updateById(tactRuTask);
 		return Result.ok("编辑成功!");
 	}
 	
@@ -99,7 +143,7 @@ public class AthleteSportClassController extends JeecgController<AthleteSportCla
 	 */
 	@DeleteMapping(value = "/delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
-		athleteSportClassService.removeById(id);
+		tactRuTaskService.removeById(id);
 		return Result.ok("删除成功!");
 	}
 	
@@ -111,7 +155,7 @@ public class AthleteSportClassController extends JeecgController<AthleteSportCla
 	 */
 	@DeleteMapping(value = "/deleteBatch")
 	public Result<?> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
-		this.athleteSportClassService.removeByIds(Arrays.asList(ids.split(",")));
+		this.tactRuTaskService.removeByIds(Arrays.asList(ids.split(",")));
 		return Result.ok("批量删除成功!");
 	}
 	
@@ -123,22 +167,22 @@ public class AthleteSportClassController extends JeecgController<AthleteSportCla
 	 */
 	@GetMapping(value = "/queryById")
 	public Result<?> queryById(@RequestParam(name="id",required=true) String id) {
-		AthleteSportClass athleteSportClass = athleteSportClassService.getById(id);
-		if(athleteSportClass==null) {
+		TactRuTask tactRuTask = tactRuTaskService.getById(id);
+		if(tactRuTask==null) {
 			return Result.error("未找到对应数据");
 		}
-		return Result.ok(athleteSportClass);
+		return Result.ok(tactRuTask);
 	}
 
     /**
     * 导出excel
     *
     * @param request
-    * @param athleteSportClass
+    * @param tactRuTask
     */
     @RequestMapping(value = "/exportXls")
-    public ModelAndView exportXls(HttpServletRequest request, AthleteSportClass athleteSportClass) {
-        return super.exportXls(request, athleteSportClass, AthleteSportClass.class, "训练队成员表");
+    public ModelAndView exportXls(HttpServletRequest request, TactRuTask tactRuTask) {
+        return super.exportXls(request, tactRuTask, TactRuTask.class, "tact_ru_task");
     }
 
     /**
@@ -150,7 +194,7 @@ public class AthleteSportClassController extends JeecgController<AthleteSportCla
     */
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
-        return super.importExcel(request, response, AthleteSportClass.class);
+        return super.importExcel(request, response, TactRuTask.class);
     }
 
 }

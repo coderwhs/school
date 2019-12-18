@@ -1,9 +1,8 @@
 package org.jeecg.modules.edusport.mapper;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 import org.jeecg.modules.edusport.entity.DormAthleteLeave;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -13,5 +12,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Version: V1.0
  */
 public interface DormAthleteLeaveMapper extends BaseMapper<DormAthleteLeave> {
-
+	public void updateWorkflowState(@Param("id") String id);
 }

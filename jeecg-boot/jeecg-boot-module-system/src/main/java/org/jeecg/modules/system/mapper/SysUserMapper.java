@@ -19,12 +19,27 @@ import java.util.List;
  */
 public interface SysUserMapper extends BaseMapper<SysUser> {
 	/**
+	  * 根据用户Id查询同一个角色下的用户
+	 * @param id
+	 * @return
+	 */
+	public List<SysUser> getUsersById(@Param("id") String id);
+
+	/**
 	  * 通过用户账号查询用户信息
 	 * @param username
 	 * @return
 	 */
 	public SysUser getUserByName(@Param("username") String username);
 
+	/**
+	  * 通过用户账号查询用户角色信息
+	 * @param username
+	 * @return
+	 */
+	public SysUser getUserByRole(@Param("username") String username);
+
+	
 	/**
 	 *  根据部门Id查询用户信息
 	 * @param page

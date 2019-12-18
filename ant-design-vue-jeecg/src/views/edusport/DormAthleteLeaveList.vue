@@ -1,6 +1,6 @@
 <template>
   <a-card :bordered="false">
-    <!-- ��询区域 -->
+    <!-- 查询区域 -->
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
@@ -13,7 +13,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <!--<a-button type="primary" icon="download" @click="handleExportXls('宿舍运动员请假表')">导出</a-button>
+      <!--<a-button type="primary" icon="download" @click="handleExportXls('宿舍运动员请假��')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>-->
@@ -73,8 +73,11 @@
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record)">
                   <a>删除</a>
+                </a-popconfirm>
+                <a-popconfirm title="确定提交吗?" @confirm="() => handleSubmit(record)">
+                  <a>提交</a>
                 </a-popconfirm>
               </a-menu-item>
             </a-menu>
@@ -94,17 +97,20 @@
   // import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal'
   import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-  import {getAction} from '@/api/manage'
+  import {getAction, httpAction, deleteAction } from '@/api/manage'
+  import JDictSelectTag from "@/components/dict/JDictSelectTag"
 
   export default {
-    name:"DormAthleteLeaveList",
+    name: "DormAthleteLeaveList",
     mixins:[JeecgListMixin],
     components: {
-      DormAthleteLeaveModal
+      DormAthleteLeaveModal,
+      JDictSelectTag,
     },
     data () {
       return {
         description: '宿舍运动员请假表管理页面',
+        model: {},
         // 表头
         columns: [
           {
@@ -151,6 +157,30 @@
             }
           },
           {
+            title:'状态',
+            align:"center",
+            dataIndex: 'workflowState',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['workflowState'], text+"")
+              }
+            }
+          },
+          {
+            title:'单据类型',
+            align:"center",
+            dataIndex: 'billType',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['billType'], text+"")
+              }
+            }
+          },
+          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
@@ -160,11 +190,15 @@
         url: {
           list: "/edusport/dormAthleteLeave/list",
           delete: "/edusport/dormAthleteLeave/delete",
+          //submit: "/edusport/dormAthleteLeave/submit",
+          submit:"process/create",
           deleteBatch: "/edusport/dormAthleteLeave/deleteBatch",
           exportXlsUrl: "/edusport/dormAthleteLeave/exportXls",
           importExcelUrl: "edusport/dormAthleteLeave/importExcel",
         },
         dictOptions:{
+          workflowState:[],
+          billType:[],
         },
       }
     },
@@ -178,6 +212,16 @@
         initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'athleteId', res.result)
+          }
+        })
+        initDictOptions('workflow_state').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'workflowState', res.result)
+          }
+        })
+        initDictOptions('bill_type').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'billType', res.result)
           }
         })
       },
@@ -206,6 +250,50 @@
       handleAdd: function () {
         this.$refs.modalForm.add(this.queryParam.dormId);
         this.$refs.modalForm.title = "请假运动员信息";
+      },
+
+      handleDelete: function (record) {/* Tab修改@2019-12-12 */
+        if(record.workflowState == '1'){
+          var that = this;
+          deleteAction(that.url.delete, {id: record.id}).then((res) => {
+            if (res.success) {
+              that.$message.success(res.message);
+              that.loadData();
+              this.$refs.DormAthleteLivingList.loadData();
+              this.$refs.DormAthleteLeaveList.loadData();
+            } else {
+              that.$message.warning(res.message);
+            }
+          });
+        } else {
+          alert("工作流中的数据，不允许删除！");
+        }
+      },
+
+      handleSubmit: function (record) {
+        if(record.workflowState == '2' || record.workflowState == '3'){
+          alert("已经提交工作流，不能再次提交！");
+        } else{
+          let httpurl = '';
+          let method = '';
+          httpurl+=this.url.submit;
+          method = 'put';
+          this.model = Object.assign({}, record);
+          let formData = Object.assign(this.model, record);
+          console.log("表单提交数据",formData);
+          //formData.id = id;
+          httpAction(httpurl,formData,method).then((res)=>{
+            if(res.success){
+              this.$message.success(res.message);
+              //this.$emit('ok');
+            }else{
+              this.$message.warning(res.message);
+            }
+          }).finally(() => {
+            this.loadData(1);
+          })
+        }
+
       },
     }
   }

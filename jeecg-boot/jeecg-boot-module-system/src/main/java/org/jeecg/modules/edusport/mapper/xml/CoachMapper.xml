@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.edusport.mapper.CoachMapper">
+	<!-- 根据单据Id查询单据中运动员的教练 -->
+	<select id="getCoachByBillId" resultType="org.jeecg.modules.edusport.mapper.CoachMapper">
+		SELECT DISTINCT coach.id,coach.coach_no,coach.coach_name
+		FROM tb_edu_athlete athlete
+		LEFT JOIN tb_edu_coach coach ON coach.coach_no = athlete.major_sport_teacher_code
+		LEFT JOIN tb_edu_dorm_athlete_leave al ON al.athlete_id = athlete.id
+		WHERE al.id = #{id}
+
+	</select>
 
 </mapper>

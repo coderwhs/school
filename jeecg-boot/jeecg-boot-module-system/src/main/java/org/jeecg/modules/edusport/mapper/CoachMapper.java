@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.jeecg.modules.edusport.entity.Coach;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -13,5 +14,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Version: V1.0
  */
 public interface CoachMapper extends BaseMapper<Coach> {
-
+	/**
+	  * 根据单据Id查询单据中运动员的教练
+	 * @param id
+	 * @return
+	 */
+	public List<Coach> getCoachByBillId(@Param("id") String id);
 }

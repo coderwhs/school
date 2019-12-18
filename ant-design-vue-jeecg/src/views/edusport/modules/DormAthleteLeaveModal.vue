@@ -22,6 +22,12 @@
         <a-form-item label="结束日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择结束日期" v-decorator="[ 'endDate', validatorRules.endDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
+        <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-dict-select-tag type="list" v-decorator="['workflowState']" :trigger-change="true" dictCode="workflow_state" placeholder="请选择状态"/>
+        </a-form-item>
+        <a-form-item label="单据类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-dict-select-tag type="list" v-decorator="['billType']" :trigger-change="true" dictCode="bill_type" placeholder="请选择单据类型"/>
+        </a-form-item>
 
       </a-form>
     </a-spin>
@@ -32,13 +38,15 @@
 
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
-  import JDate from '@/components/jeecg/JDate'
+  import JDate from '@/components/jeecg/JDate'  
+  import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "DormAthleteLeaveModal",
-    components: {
+    components: { 
       JDate,
+      JDictSelectTag,
       JSearchSelectTag,
     },
     data () {
@@ -59,40 +67,32 @@
 
         confirmLoading: false,
         validatorRules:{
-          athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
-          leaveCause:{rules: [{ required: true, message: '请输入请假原因!' }]},
-          startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
-          endDate:{rules: [{ required: true, message: '请输入结束日期!' }]},
+        athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
+        leaveCause:{rules: [{ required: true, message: '请输入请假原因!' }]},
+        startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
+        endDate:{rules: [{ required: true, message: '请输入结束日期!' }]},
+        workflowState:{rules: [{ required: true, message: '请输入状态!' }]},
+        billType:{rules: [{ required: true, message: '请输入单据类型!' }]},
         },
         url: {
           add: "/edusport/dormAthleteLeave/add",
           edit: "/edusport/dormAthleteLeave/edit",
         }
-
+     
       }
     },
     created () {
     },
     methods: {
-      //add () {
-      //  this.edit({});
-      //},
-      add(dormId){
-        this.hiding = true;
-        if (dormId) {
-          this.dormId = dormId;
-          this.edit({dormId}, '');
-        } else {
-          this.$message.warning("请选择一个宿舍信息");
-        }
+      add () {
+        this.edit({});
       },
       edit (record) {
         this.form.resetFields();
-        this.dormId = record.dormId;
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteId','leaveCause','startDate','endDate'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','leaveCause','startDate','endDate','workflowState','billType'))
         })
       },
       close () {
@@ -112,11 +112,10 @@
               method = 'post';
             }else{
               httpurl+=this.url.edit;
-              method = 'put';
+               method = 'put';
             }
             let formData = Object.assign(this.model, values);
-            console.log("表单提交数据",formData);
-            formData.dormId = this.dormId;
+            console.log("表单提交数据",formData)
             httpAction(httpurl,formData,method).then((res)=>{
               if(res.success){
                 that.$message.success(res.message);
@@ -129,17 +128,17 @@
               that.close();
             })
           }
-
+         
         })
       },
       handleCancel () {
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteId','leaveCause','startDate','endDate'))
+        this.form.setFieldsValue(pick(row,'athleteId','leaveCause','startDate','endDate','workflowState','billType'))
       },
 
-
+      
     }
   }
 </script>
