@@ -61,6 +61,7 @@ public class AthleteSportClassController extends JeecgController<AthleteSportCla
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSportClass> queryWrapper = QueryGenerator.initQueryWrapper(athleteSportClass, req.getParameterMap());
+		queryWrapper.orderByAsc("sport_class_id","attend_date");
 		Page<AthleteSportClass> page = new Page<AthleteSportClass>(pageNo, pageSize);
 		IPage<AthleteSportClass> pageList = athleteSportClassService.page(page, queryWrapper);
 		return Result.ok(pageList);
