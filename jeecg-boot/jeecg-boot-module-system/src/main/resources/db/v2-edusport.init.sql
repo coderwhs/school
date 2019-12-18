@@ -420,13 +420,13 @@ CREATE TABLE tb_edu_sport(
     sport_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '大项名称' ,
     disciplines_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '分项名称' ,
     event_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '小项名称' ,
+    enable_status VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '启用状态' ,
     create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
     create_time DATETIME    COMMENT '创建时间' ,
     update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
     update_time DATETIME    COMMENT '更新时间' ,
     PRIMARY KEY (id)
 ) COMMENT = '运动项目表 ';;
-
 
 
 DROP TABLE IF EXISTS tb_edu_sport_venue;;/*SkipError*/
@@ -850,6 +850,160 @@ CREATE TABLE tb_edu_sport_class_athlete_year_goal(
     update_time DATETIME    COMMENT '更新时间' ,
     PRIMARY KEY (id)
 ) COMMENT = '年度训练运动员素质目标信息表 ';;
+
+
+
+
+/* 大纲测试管理 */
+DROP TABLE IF EXISTS tb_edu_athlete_selection_test;;/*SkipError*/
+CREATE TABLE tb_edu_athlete_selection_test(
+    id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
+    test_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '测试名称' ,
+    sport_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试大项' ,
+    group_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试组别' ,
+    publish_date DATE    COMMENT '发布日期' ,
+    create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
+    create_time DATETIME    COMMENT '创建时间' ,
+    update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
+    update_time DATETIME    COMMENT '更新时间' ,
+    PRIMARY KEY (id)
+) COMMENT = '运动员选材测试表 ';;
+
+
+
+DROP TABLE IF EXISTS tb_edu_athlete_selection_athlete_score;;/*SkipError*/
+CREATE TABLE tb_edu_athlete_selection_athlete_score(
+    id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
+    test_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '所属测试' ,
+    group_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试组别' ,
+    event_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '小项' ,
+    test_score INT    COMMENT '得分' ,
+    test_grade VARCHAR(32)    COMMENT '测试等级评定' ,
+    create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
+    create_time DATETIME    COMMENT '创建时间' ,
+    update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
+    update_time DATETIME    COMMENT '更新时间' ,
+    PRIMARY KEY (id)
+) COMMENT = '运动员选材测试成绩表 ';;
+
+
+
+DROP TABLE IF EXISTS tb_edu_athlete_selection_athlete_score_detail;;/*SkipError*/
+CREATE TABLE tb_edu_athlete_selection_athlete_score_detail(
+    id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
+    athlete_score_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试成绩' ,
+    athlete_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '运动员' ,
+    test_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '所属测试' ,
+    group_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试组别' ,
+    event_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '小项' ,
+    index_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '指标' ,
+    test_value VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试值' ,
+    test_score INT    COMMENT '得分' ,
+    test_grade VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试等级评定' ,
+    create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
+    create_time DATETIME    COMMENT '创建时间' ,
+    update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
+    update_time DATETIME    COMMENT '更新时间' ,
+    PRIMARY KEY (id)
+) COMMENT = '运动员选材测试成绩明细表 ';;
+
+
+
+
+DROP TABLE IF EXISTS tb_edu_athlete_selection_group;;/*SkipError*/
+CREATE TABLE tb_edu_athlete_selection_group(
+    id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
+    group_name VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '组别名称' ,
+    sport_code VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '大项' ,
+    event_codes VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '小项' ,
+    create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
+    create_time DATETIME    COMMENT '创建时间' ,
+    update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
+    update_time DATETIME    COMMENT '更新时间' ,
+    PRIMARY KEY (id)
+) COMMENT = '运动员选材测试组别标准表 ';;
+
+
+DROP TABLE IF EXISTS tb_edu_athlete_selection_group_index;;/*SkipError*/
+CREATE TABLE tb_edu_athlete_selection_group_index(
+    id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
+    group_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '所属组别' ,
+    index_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '指标' ,
+    create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
+    create_time DATETIME    COMMENT '创建时间' ,
+    update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
+    update_time DATETIME    COMMENT '更新时间' ,
+    PRIMARY KEY (id)
+) COMMENT = '运动员选材测试组别的指标明细表 ';;
+
+
+DROP TABLE IF EXISTS tb_edu_athlete_selection_group_index_grade;;/*SkipError*/
+CREATE TABLE tb_edu_athlete_selection_group_index_grade(
+    id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
+    group_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '所属组别' ,
+    index_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '指标' ,
+    gender VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '性别' ,
+    start_age INT    COMMENT '起始年龄' ,
+    end_age INT    COMMENT '截止年龄' ,
+    min_data DECIMAL(32,10)    COMMENT '最小数值' ,
+    max_data DECIMAL(32,10)    COMMENT '最大数值' ,
+    score INT    COMMENT '得分' ,
+    create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
+    create_time DATETIME    COMMENT '创建时间' ,
+    update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
+    update_time DATETIME    COMMENT '更新时间' ,
+    PRIMARY KEY (id)
+) COMMENT = '运动员选材测试指标评分标准列表 ';;
+
+
+
+DROP TABLE IF EXISTS tb_edu_athlete_selection_group_rating;;/*SkipError*/
+CREATE TABLE tb_edu_athlete_selection_group_rating(
+    id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
+    group_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '所属组别' ,
+    min_data INT    COMMENT '最小分值' ,
+    max_data INT    COMMENT '最大分值' ,
+    rating VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '等级' ,
+    create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
+    create_time DATETIME    COMMENT '创建时间' ,
+    update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
+    update_time DATETIME    COMMENT '更新时间' ,
+    PRIMARY KEY (id)
+) COMMENT = '运动员选材测试等级评定标准表 ';;
+
+
+
+DROP TABLE IF EXISTS tb_edu_athlete_selection_index;;/*SkipError*/
+CREATE TABLE tb_edu_athlete_selection_index(
+    id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
+    index_cat_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '指标类别' ,
+    l1_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '大类代码' ,
+    l2_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '中类代码' ,
+    l3_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '小类代码' ,
+    cn_name VARCHAR(128)    COMMENT '中文名称' ,
+    en_name VARCHAR(128)    COMMENT '英文名称' ,
+    en_short_name VARCHAR(128)    COMMENT '英文简称' ,
+    unit VARCHAR(32)    COMMENT '单位' ,
+    enable_status VARCHAR(32)    COMMENT '启用状态' ,
+    create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
+    create_time DATETIME    COMMENT '创建时间' ,
+    update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
+    update_time DATETIME    COMMENT '更新时间' ,
+    PRIMARY KEY (id)
+) COMMENT = '运动员选材指标信息表 ';;
+
+
+DROP TABLE IF EXISTS tb_edu_athlete_selection_index_cat;;/*SkipError*/
+CREATE TABLE tb_edu_athlete_selection_index_cat(
+    id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
+    index_cat_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '指标类别名称' ,
+    create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
+    create_time DATETIME    COMMENT '创建时间' ,
+    update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
+    update_time DATETIME    COMMENT '更新时间' ,
+    PRIMARY KEY (id)
+) COMMENT = '运动员选材指标分类信息表 ';;
 
 
 
