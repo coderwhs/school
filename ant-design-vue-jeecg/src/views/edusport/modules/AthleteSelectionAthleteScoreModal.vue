@@ -82,8 +82,14 @@
     created () {
     },
     methods: {
-      add () {
-        this.edit({});
+      add(groupId){alert("groupId = " + groupId);
+        this.hiding = true;
+        if (groupId) {
+          // this.dormId = dormId;
+          this.edit({groupId}, '');
+        } else {
+          this.$message.warning("请选择一条测试信息");
+        }
       },
       edit (record) {
         this.form.resetFields();

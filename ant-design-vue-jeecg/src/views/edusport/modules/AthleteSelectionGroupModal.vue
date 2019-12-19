@@ -14,10 +14,11 @@
           <a-input v-decorator="[ 'groupName', validatorRules.groupName]" placeholder="请输入组别名称"></a-input>
         </a-form-item>
         <a-form-item label="大项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" />
+          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" placeholder="请选择大小项" @change="handleValueChange"/>
         </a-form-item>
-        <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-multi-select-tag type="list_multi" v-decorator="['eventCodes']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" placeholder="请选择小项"/>
+        <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol" >
+          <j-multi-select-tag type="list_multi" v-decorator="['eventCodes']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" :async="true" placeholder="请选择小项"/>
+<!--          <j-multi-select-tag type="checkbox" v-decorator="['eventCodes']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" :async="true" placeholder="请选择小项"/>-->
         </a-form-item>
 
       </a-form>
@@ -70,6 +71,17 @@
     created () {
     },
     methods: {
+
+      /** 当选项被改变时，联动其他组件 */
+      handleValueChange(selectedValue) {
+        // alert("value = " + selectedValue);
+        this.eventCodes = this.request(selectedValue);
+      },
+
+      request(selectedValue) {
+        // return this.$refs.dictOptions.filter(i => i.sportCode.substring(0,1) === selectedValue)
+      },
+
       add () {
         this.edit({});
       },
@@ -124,7 +136,6 @@
         this.form.setFieldsValue(pick(row,'groupName','sportCode','eventCodes'))
       },
 
-      
     }
   }
 </script>

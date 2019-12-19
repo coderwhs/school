@@ -75,7 +75,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:type}"
         :scroll="tableScroll"
         @change="handleTableChange">
 
@@ -118,6 +118,12 @@
       </a-table>
     </div>
 
+    <a-tabs defaultActiveKey="1">
+      <a-tab-pane tab="运动员测试成绩" key="1">
+        <Athlete-Selection-Athlete-Score-List ref="AthleteSelectionAthleteScoreList"></Athlete-Selection-Athlete-Score-List>
+      </a-tab-pane>
+    </a-tabs>
+
     <athleteSelectionTest-modal ref="modalForm" @ok="modalFormOk"></athleteSelectionTest-modal>
   </a-card>
 </template>
@@ -128,13 +134,17 @@
   import AthleteSelectionTestModal from './modules/AthleteSelectionTestModal'
   import JDate from '@/components/jeecg/JDate.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import AthleteSelectionAthleteScoreList from './AthleteSelectionAthleteScoreList'
+  import AthleteSelectionAthleteScoreModal from './modules/AthleteSelectionAthleteScoreModal'
 
   export default {
     name: "AthleteSelectionTestList",
     mixins:[JeecgListMixin],
     components: {
       JDate,
-      AthleteSelectionTestModal
+      AthleteSelectionTestModal,
+      AthleteSelectionAthleteScoreList,
+      AthleteSelectionAthleteScoreModal
     },
     data () {
       return {
@@ -197,6 +207,7 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
+        type: "radio",/* Tab修改@2019-12-12 */
         url: {
           list: "/edusport/athleteSelectionTest/list",
           delete: "/edusport/athleteSelectionTest/delete",
@@ -226,8 +237,44 @@
             this.$set(this.dictOptions, 'groupId', res.result)
           }
         })
+      },
+
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectionRows = selectionRows;
+        // this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(this.selectedRowKeys[0]);/* Tab修改@2019-12-12 */
+        this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(selectionRows[0].groupId);
+        //alert("selectionRows[0].groupId = " + selectionRows[0].groupId);
+      },
+      onClearSelected() {/* Tab修改@2019-12-12 */
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+        this.$refs.AthleteSelectionAthleteScoreList.queryParam.groupId = null;
+        this.$refs.AthleteSelectionAthleteScoreList.loadData();
+        this.$refs.AthleteSelectionAthleteScoreList.selectedRowKeys = [];
+        this.$refs.AthleteSelectionAthleteScoreList.selectionRows = [];
+      },
+      handleDelete: function (id) {/* Tab修改@2019-12-12 */
+        var that = this;
+        deleteAction(that.url.delete, {id: id}).then((res) => {
+          if (res.success) {
+            that.$message.success(res.message);
+            that.loadData();
+            this.$refs.AthleteSelectionAthleteScoreList.loadData();
+          } else {
+            that.$message.warning(res.message);
+          }
+        });
+      },
+      searchQuery:function(){/* Tab修改@2019-12-12 */
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+        this.$refs.AthleteSelectionAthleteScoreList.queryParam.mainId = null;
+        this.$refs.AthleteSelectionAthleteScoreList.loadData();
+        this.$refs.AthleteSelectionAthleteScoreList.selectedRowKeys = [];
+        this.$refs.AthleteSelectionAthleteScoreList.selectionRows = [];
+        this.loadData();
       }
-       
     }
   }
 </script>

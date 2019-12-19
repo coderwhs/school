@@ -275,8 +275,28 @@
             this.$set(this.dictOptions, 'testGrade', res.result)
           }
         })
+      },
+      getAthleteScore(groupId) {
+        this.queryParam.groupId = groupId;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.groupId);
+        this.$refs.modalForm.title = "运动员测试成绩信息";
+      },
+
+      handleDelete: function (record) {/* Tab修改@2019-12-12 */
+        var that = this;
+        deleteAction(that.url.delete, {id: record.id}).then((res) => {
+          if (res.success) {
+            that.$message.success(res.message);
+            that.loadData();
+            this.$refs.AthleteSelectionAthleteScoreList.loadData();
+          } else {
+            that.$message.warning(res.message);
+          }
+        });
       }
-       
     }
   }
 </script>
