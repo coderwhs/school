@@ -320,6 +320,10 @@
         this.selectedRowKeys = [];
         this.selectionRows = [];
         this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteScoreId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.testId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.groupId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.eventCode = null;
         this.$refs.AthleteSelectionAthleteScoreDetailList.loadData();
         this.$refs.AthleteSelectionAthleteScoreDetailList.selectedRowKeys = [];
         this.$refs.AthleteSelectionAthleteScoreDetailList.selectionRows = [];
@@ -329,6 +333,10 @@
         this.selectedRowKeys = [];
         this.selectionRows = [];
         this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteScoreId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.testId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.groupId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.eventCode = null;
         this.$refs.AthleteSelectionAthleteScoreDetailList.loadData();
         this.$refs.AthleteSelectionAthleteScoreDetailList.selectedRowKeys = [];
         this.$refs.AthleteSelectionAthleteScoreDetailList.selectionRows = [];
