@@ -140,6 +140,8 @@
   import AthleteSelectionAthleteScoreModal from './modules/AthleteSelectionAthleteScoreModal'
   import { httpAction,deleteAction  } from '@/api/manage'
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import AthleteSelectionAthleteScoreDetailList from './AthleteSelectionAthleteScoreDetailList'
+  import AthleteSelectionAthleteScoreDetailModal from './modules/AthleteSelectionAthleteScoreDetailModal'
 
   export default {
     name: "AthleteSelectionTestList",
@@ -150,6 +152,8 @@
       AthleteSelectionAthleteScoreList,
       AthleteSelectionAthleteScoreModal,
       JSearchSelectTag,
+      AthleteSelectionAthleteScoreDetailModal,
+      AthleteSelectionAthleteScoreDetailList,
     },
     data () {
       return {
@@ -270,6 +274,16 @@
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
         this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(selectionRows[0].id,selectionRows[0].groupId);
+
+        // // 成绩明细.
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteScoreId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.testId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.groupId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.eventCode = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.loadData();
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.selectedRowKeys = [];
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.selectionRows = [];
       },
       onClearSelected() {/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
@@ -279,19 +293,18 @@
         this.$refs.AthleteSelectionAthleteScoreList.loadData();
         this.$refs.AthleteSelectionAthleteScoreList.selectedRowKeys = [];
         this.$refs.AthleteSelectionAthleteScoreList.selectionRows = [];
+
+        // // 成绩明细.
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteScoreId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.testId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.groupId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.eventCode = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.loadData();
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.selectedRowKeys = [];
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.selectionRows = [];
       },
-      handleDelete: function (id) {/* Tab修改@2019-12-12 */
-        var that = this;
-        deleteAction(that.url.delete, {id: id}).then((res) => {
-          if (res.success) {
-            that.$message.success(res.message);
-            that.loadData();
-            this.$refs.AthleteSelectionAthleteScoreList.loadData();
-          } else {
-            that.$message.warning(res.message);
-          }
-        });
-      },
+
       searchQuery:function(){/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
@@ -301,7 +314,30 @@
         this.$refs.AthleteSelectionAthleteScoreList.loadData();
         this.$refs.AthleteSelectionAthleteScoreList.selectedRowKeys = [];
         this.$refs.AthleteSelectionAthleteScoreList.selectionRows = [];
+        // // 成绩明细.
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteScoreId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.testId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.groupId = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.eventCode = null;
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.loadData();
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.selectedRowKeys = [];
+        // this.$refs.AthleteSelectionAthleteScoreDetailList.selectionRows = [];
         this.loadData();
+      },
+
+      handleDelete: function (id) {/* Tab修改@2019-12-12 */
+        var that = this;
+        deleteAction(that.url.delete, {id: id}).then((res) => {
+          if (res.success) {
+            that.$message.success(res.message);
+            that.loadData();
+            this.$refs.AthleteSelectionAthleteScoreList.loadData();
+            this.$refs.AthleteSelectionAthleteScoreDetailList.loadData();
+          } else {
+            that.$message.warning(res.message);
+          }
+        });
       },
 
     }

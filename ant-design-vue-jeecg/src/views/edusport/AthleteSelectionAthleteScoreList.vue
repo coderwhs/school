@@ -332,19 +332,6 @@
         this.$refs.AthleteSelectionAthleteScoreDetailList.getAthleteScoreId(selectionRows[0].id,selectionRows[0].athleteId,selectionRows[0].testId,selectionRows[0].groupId,selectionRows[0].eventCode);
       },
 
-      onClearSelected() {/* Tab修改@2019-12-12 */
-        this.selectedRowKeys = [];
-        this.selectionRows = [];
-        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteScoreId = null;
-        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteId = null;
-        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.testId = null;
-        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.groupId = null;
-        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.eventCode = null;
-        this.$refs.AthleteSelectionAthleteScoreDetailList.loadData();
-        this.$refs.AthleteSelectionAthleteScoreDetailList.selectedRowKeys = [];
-        this.$refs.AthleteSelectionAthleteScoreDetailList.selectionRows = [];
-      },
-
       searchQuery:function(){/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
@@ -357,7 +344,20 @@
         this.$refs.AthleteSelectionAthleteScoreDetailList.selectedRowKeys = [];
         this.$refs.AthleteSelectionAthleteScoreDetailList.selectionRows = [];
         this.loadData();
-      }
+      },
+
+      onClearSelected() {/* Tab修改@2019-12-12 */
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteScoreId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.testId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.groupId = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.eventCode = null;
+        this.$refs.AthleteSelectionAthleteScoreDetailList.loadData();
+        this.$refs.AthleteSelectionAthleteScoreDetailList.selectedRowKeys = [];
+        this.$refs.AthleteSelectionAthleteScoreDetailList.selectionRows = [];
+      },
 
     }
   }
