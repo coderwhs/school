@@ -109,10 +109,10 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 	 * @param athleteSelectionAthleteScore
 	 * @return
 	 */
-	@PostMapping(value = "/calculateScore")
-	@RequiresPermissions("athlete:calculateScore")
-	public Result<?> calculateScore(@RequestBody AthleteSelectionAthleteScore athleteSelectionAthleteScore) {
-		
+	@GetMapping(value = "/calculateScore")
+//	@RequiresPermissions("athlete:calculateScore")
+	public Result<?> calculateScore(@RequestParam(name="groupId",required=true) String groupId) {
+		System.out.println("=============计算运动员成绩信息===============" + groupId);
 		return Result.ok("计算运动员成绩成功！");
 	}
 	

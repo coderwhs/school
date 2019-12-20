@@ -48,6 +48,9 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+<!--            <a-button @click="handleImportAthlete"  type="primary" icon="plus">引入</a-button>-->
+            <a-button @click="handleCalculateScore"  type="primary" icon="plus">计算</a-button>
+<!--            <a-button @click="handleAudit" type="primary" icon="plus">审核</a-button>-->
       <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试成绩表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
@@ -137,6 +140,7 @@
   import AthleteSelectionAthleteScoreDetailList from './AthleteSelectionAthleteScoreDetailList'
   import AthleteSelectionAthleteScoreDetailModal from './modules/AthleteSelectionAthleteScoreDetailModal'
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import { getAction,httpAction,deleteAction  } from '@/api/manage'
 
   export default {
     name: "AthleteSelectionAthleteScoreList",
@@ -261,6 +265,9 @@
           deleteBatch: "/edusport/athleteSelectionAthleteScore/deleteBatch",
           exportXlsUrl: "/edusport/athleteSelectionAthleteScore/exportXls",
           importExcelUrl: "edusport/athleteSelectionAthleteScore/importExcel",
+          // importAthlete:"/edusport/athleteSelectionAthleteScore/importAthlete",
+          calculateScore:"/edusport/athleteSelectionAthleteScore/calculateScore",
+          // audit:"/edusport/athleteSelectionAthleteScore/audit",
         },
         dictOptions:{
          eventCode:[],
@@ -327,6 +334,7 @@
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
+        this.queryParam.id = selectionRows[0].id;// 为计算应用参数值.
         // id,athleteId ,testId,groupId,eventCode
         //alert(selectionRows[0].id + ", " + selectionRows[0].athleteId + ", " + selectionRows[0].testId + ", " + selectionRows[0].groupId + ", " + selectionRows[0].eventCode);
         this.$refs.AthleteSelectionAthleteScoreDetailList.getAthleteScoreId(selectionRows[0].id,selectionRows[0].athleteId,selectionRows[0].testId,selectionRows[0].groupId,selectionRows[0].eventCode);
@@ -358,6 +366,41 @@
         this.$refs.AthleteSelectionAthleteScoreDetailList.selectedRowKeys = [];
         this.$refs.AthleteSelectionAthleteScoreDetailList.selectionRows = [];
       },
+
+      // 引入运动员.
+      handleImportAthlete: function () {
+
+      },
+      // 计算运动员成绩.
+      handleCalculateScore: function () {
+        if(this.queryParam.id){
+          alert("bbbbbbbbbbbb" + this.queryParam.id);
+
+          // typeof thisObj.city === 'undefined'
+          let params = {
+            groupId: this.queryParam.id
+          };
+          console.log("表单提交数据", params);
+
+          getAction(this.url.calculateScore, params).then((res) => {
+            if (res.success) {
+              this.$message.success(res.message);
+              //this.$emit('ok');
+            } else {
+              this.$message.warning(res.message);
+            }
+          }).finally(() => {
+            this.loadData(1);
+          })
+        } else {
+          alert("请选择一条学生信息3333333333333");
+        }
+      },
+
+      // 审核运动员成绩.
+      handleAudit: function () {
+
+      }
 
     }
   }
