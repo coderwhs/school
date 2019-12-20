@@ -197,11 +197,11 @@
             align:"center",
             dataIndex: 'testScore'
           },
-          {
-            title:'测试成绩',
-            align:"center",
-            dataIndex: 'athleteScoreId'
-          },
+          // {
+          //   title:'测试成绩',
+          //   align:"center",
+          //   dataIndex: 'athleteScoreId'
+          // },
           // {
           //   title:'测试等级评定',
           //   align:"center",
@@ -258,7 +258,7 @@
             this.$set(this.dictOptions, 'groupId', res.result)
           }
         })
-        initDictOptions('tb_edu_sport,sport_name,id').then((res) => {
+        initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'eventCode', res.result)
           }
@@ -274,12 +274,16 @@
           }
         })
       },
-      getAthleteScoreId(athleteScoreId) {
-        this.queryParam.athleteScoreId = athleteScoreId;
+      getAthleteScoreId(id,athleteId ,testId,groupId,eventCode) {
+        this.queryParam.athleteScoreId = id;
+        this.queryParam.athleteId = athleteId;
+        this.queryParam.testId = testId;
+        this.queryParam.groupId = groupId;
+        this.queryParam.eventCode = eventCode;
         this.loadData(1);
       },
       handleAdd: function () {
-        this.$refs.modalForm.add(this.queryParam.athleteScoreId);
+        this.$refs.modalForm.add(this.queryParam.athleteScoreId,this.queryParam.athleteId,this.queryParam.testId,this.queryParam.groupId,this.queryParam.eventCode);
         this.$refs.modalForm.title = "运动员成绩详情信息";
       },
     }

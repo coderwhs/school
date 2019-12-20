@@ -311,7 +311,9 @@
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
-        this.$refs.AthleteSelectionAthleteScoreDetailList.getAthleteScoreId(this.selectedRowKeys[0]);
+        // id,athleteId ,testId,groupId,eventCode
+        //alert(selectionRows[0].id + ", " + selectionRows[0].athleteId + ", " + selectionRows[0].testId + ", " + selectionRows[0].groupId + ", " + selectionRows[0].eventCode);
+        this.$refs.AthleteSelectionAthleteScoreDetailList.getAthleteScoreId(selectionRows[0].id,selectionRows[0].athleteId,selectionRows[0].testId,selectionRows[0].groupId,selectionRows[0].eventCode);
       },
 
       onClearSelected() {/* Tab修改@2019-12-12 */

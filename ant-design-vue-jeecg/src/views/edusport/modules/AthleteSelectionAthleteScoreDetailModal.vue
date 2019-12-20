@@ -20,7 +20,7 @@
           <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
         </a-form-item>
         <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['eventCode']" dict="tb_edu_sport,sport_name,id" />
+          <j-search-select-tag v-decorator="['eventCode']" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
         <a-form-item label="指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['indexCode']" dict="tb_edu_athlete_selection_index,cn_name,id" />
@@ -31,9 +31,9 @@
         <a-form-item label="得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%"/>
         </a-form-item>
-        <a-form-item label="测试成绩" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'athleteScoreId', validatorRules.athleteScoreId]" placeholder="请输入测试成绩"></a-input>
-        </a-form-item>
+<!--        <a-form-item label="测试成绩" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <a-input v-decorator="[ 'athleteScoreId', validatorRules.athleteScoreId]" placeholder="请输入测试成绩"></a-input>-->
+<!--        </a-form-item>-->
         <a-form-item label="测试等级评定" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['testGrade']" :trigger-change="true" dictCode="tb_edu_athlete_selection_group_rating,rating,id" placeholder="请选择测试等级评定"/>
         </a-form-item>
@@ -94,11 +94,15 @@
     created () {
     },
     methods: {
-      add(athleteScoreId){
+      add(athleteScoreId,athleteId ,testId,groupId,eventCode){
         this.hiding = true;
-        if (athleteScoreId) {
-          this.athleteScoreId = athleteScoreId;
-          this.edit({athleteScoreId}, '');
+        if (testId) {
+          // this.record.athleteScoreId = athleteScoreId;
+          // this.record.athleteId = athleteId;
+          // this.record.testId = testId;
+          // this.record.groupId = groupId;
+          // this.record.eventCode = eventCode;
+          this.edit({athleteScoreId,athleteId,testId,groupId,eventCode}, '');
         } else {
           this.$message.warning("请选择一个运动员信息");
         }
