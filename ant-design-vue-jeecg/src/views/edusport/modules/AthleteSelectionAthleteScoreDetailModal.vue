@@ -97,11 +97,6 @@
       add(athleteScoreId,athleteId ,testId,groupId,eventCode){
         this.hiding = true;
         if (testId) {
-          // this.record.athleteScoreId = athleteScoreId;
-          // this.record.athleteId = athleteId;
-          // this.record.testId = testId;
-          // this.record.groupId = groupId;
-          // this.record.eventCode = eventCode;
           this.edit({athleteScoreId,athleteId,testId,groupId,eventCode}, '');
         } else {
           this.$message.warning("请选择一个运动员信息");

@@ -11,13 +11,15 @@
           </a-col>
           <a-col :md="6" :sm="8">
             <a-form-item label="测试大项">
-              <a-input placeholder="请输入测试大项" v-model="queryParam.sportCode"></a-input>
+<!--              <a-input placeholder="请输入测试大项" v-model="queryParam.sportCode"></a-input>-->
+              <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" />
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
               <a-form-item label="测试组别">
-                <a-input placeholder="请输入测试组别" v-model="queryParam.groupId"></a-input>
+<!--                <a-input placeholder="请输入测试组别" v-model="queryParam.groupId"></a-input>-->
+                <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
               </a-form-item>
             </a-col>
             <a-col :md="12" :sm="16">
@@ -137,6 +139,7 @@
   import AthleteSelectionAthleteScoreList from './AthleteSelectionAthleteScoreList'
   import AthleteSelectionAthleteScoreModal from './modules/AthleteSelectionAthleteScoreModal'
   import { httpAction,deleteAction  } from '@/api/manage'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "AthleteSelectionTestList",
@@ -145,7 +148,8 @@
       JDate,
       AthleteSelectionTestModal,
       AthleteSelectionAthleteScoreList,
-      AthleteSelectionAthleteScoreModal
+      AthleteSelectionAthleteScoreModal,
+      JSearchSelectTag,
     },
     data () {
       return {

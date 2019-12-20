@@ -23,13 +23,13 @@
           <j-multi-select-tag type="list_multi" v-decorator="['eventCode']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" placeholder="请选择小项"/>
         </a-form-item>
         <a-form-item label="得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%"/>
+          <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%" disabled="disabled"/>
         </a-form-item>
         <a-form-item label="测试等级评定" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['testGrade']" :trigger-change="true" dictCode="tb_edu_athlete_selection_group_rating,rating,id" placeholder="请选择测试等级评定"/>
+          <j-dict-select-tag type="list" v-decorator="['testGrade']" :trigger-change="true" dictCode="tb_edu_athlete_selection_group_rating,rating,id" placeholder="请选择测试等级评定" disabled="disabled"/>
         </a-form-item>
         <a-form-item label="审核状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'auditState', validatorRules.auditState]" placeholder="请输入审核状态"></a-input>
+          <j-dict-select-tag type="list" v-decorator="['auditState']" :trigger-change="true" dictCode="audit_state" placeholder="请输入审核状态" disabled="disabled"/>
         </a-form-item>
 
       </a-form>

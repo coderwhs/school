@@ -1,17 +1,53 @@
 <template>
   <a-card :bordered="false">
+
     <!-- 查询区域 -->
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
+          <a-col :md="6" :sm="8">
+            <a-form-item label="运动员">
+              <!--              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>-->
+              <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="所属测试">
+              <!--              <a-input placeholder="请输入所属测试" v-model="queryParam.testId"></a-input>-->
+              <j-search-select-tag v-decorator="['testId']" dict="tb_edu_athlete_selection_test,test_name,id" />
+            </a-form-item>
+          </a-col>
+          <template v-if="toggleSearchStatus">
+            <a-col :md="6" :sm="8">
+              <a-form-item label="测试组别">
+                <!--                <a-input placeholder="请输入测试组别" v-model="queryParam.groupId"></a-input>-->
+                <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="8">
+              <a-form-item label="指标">
+                <!--                <a-input placeholder="请输入指标" v-model="queryParam.indexCode"></a-input>-->
+                <j-search-select-tag v-decorator="['indexCode']" dict="tb_edu_athlete_selection_index,cn_name,id" />
+              </a-form-item>
+            </a-col>
+          </template>
+          <a-col :md="6" :sm="8" >
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
 
         </a-row>
       </a-form>
     </div>
     <!-- 查询区域-END -->
-    
     <!-- 操作按钮区域 -->
-    <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
+    <div class="table-operator" >
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试成绩明细表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
@@ -93,12 +129,14 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import AthleteSelectionAthleteScoreDetailModal from './modules/AthleteSelectionAthleteScoreDetailModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "AthleteSelectionAthleteScoreDetailList",
     mixins:[JeecgListMixin],
     components: {
-      AthleteSelectionAthleteScoreDetailModal
+      AthleteSelectionAthleteScoreDetailModal,
+      JSearchSelectTag
     },
     data () {
       return {
@@ -202,18 +240,18 @@
           //   align:"center",
           //   dataIndex: 'athleteScoreId'
           // },
-          // {
-          //   title:'测试等级评定',
-          //   align:"center",
-          //   dataIndex: 'testGrade',
-          //   customRender:(text)=>{
-          //     if(!text){
-          //       return ''
-          //     }else{
-          //       return filterMultiDictText(this.dictOptions['testGrade'], text+"")
-          //     }
-          //   }
-          // },
+          {
+            title:'测试等级评定',
+            align:"center",
+            dataIndex: 'testGrade',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['testGrade'], text+"")
+              }
+            }
+          },
           {
             title: '操作',
             dataIndex: 'action',

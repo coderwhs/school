@@ -6,18 +6,21 @@
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
             <a-form-item label="运动员">
-              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>
+<!--              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>-->
+              <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
             <a-form-item label="所属测试">
-              <a-input placeholder="请输入所属测试" v-model="queryParam.testId"></a-input>
+<!--              <a-input placeholder="请输入所属测试" v-model="queryParam.testId"></a-input>-->
+              <j-search-select-tag v-decorator="['testId']" dict="tb_edu_athlete_selection_test,test_name,id" />
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
               <a-form-item label="测试组别">
-                <a-input placeholder="请输入测试组别" v-model="queryParam.groupId"></a-input>
+<!--                <a-input placeholder="请输入测试组别" v-model="queryParam.groupId"></a-input>-->
+                <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="8">
@@ -133,6 +136,7 @@
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import AthleteSelectionAthleteScoreDetailList from './AthleteSelectionAthleteScoreDetailList'
   import AthleteSelectionAthleteScoreDetailModal from './modules/AthleteSelectionAthleteScoreDetailModal'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "AthleteSelectionAthleteScoreList",
@@ -141,7 +145,8 @@
       JDictSelectTag,
       AthleteSelectionAthleteScoreModal,
       AthleteSelectionAthleteScoreDetailModal,
-      AthleteSelectionAthleteScoreDetailList
+      AthleteSelectionAthleteScoreDetailList,
+      JSearchSelectTag
     },
     data () {
       return {
