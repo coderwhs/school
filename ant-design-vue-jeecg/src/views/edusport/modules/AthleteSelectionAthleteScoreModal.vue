@@ -42,15 +42,15 @@
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
-  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "AthleteSelectionAthleteScoreModal",
-    components: {
+    components: { 
       JDictSelectTag,
+      JMultiSelectTag,
       JSearchSelectTag,
-      JMultiSelectTag
     },
     data () {
       return {
@@ -70,32 +70,26 @@
 
         confirmLoading: false,
         validatorRules:{
-          athleteId:{},
-          testId:{},
-          groupId:{},
-          eventCode:{},
-          testScore:{},
-          testGrade:{},
-          auditState:{},
+        athleteId:{},
+        testId:{},
+        groupId:{},
+        eventCode:{},
+        testScore:{},
+        testGrade:{},
+        auditState:{},
         },
         url: {
           add: "/edusport/athleteSelectionAthleteScore/add",
           edit: "/edusport/athleteSelectionAthleteScore/edit",
         }
-
+     
       }
     },
     created () {
     },
     methods: {
-      add(id){
-        this.hiding = true;
-        if (id) {
-          // this.dormId = dormId;
-          this.edit({gruopId:id}, '');
-        } else {
-          this.$message.warning("请选择一条测试信息");
-        }
+      add () {
+        this.edit({});
       },
       edit (record) {
         this.form.resetFields();
@@ -122,7 +116,7 @@
               method = 'post';
             }else{
               httpurl+=this.url.edit;
-              method = 'put';
+               method = 'put';
             }
             let formData = Object.assign(this.model, values);
             console.log("表单提交数据",formData)
@@ -138,7 +132,7 @@
               that.close();
             })
           }
-
+         
         })
       },
       handleCancel () {
@@ -148,7 +142,7 @@
         this.form.setFieldsValue(pick(row,'athleteId','testId','groupId','eventCode','testScore','testGrade','auditState'))
       },
 
-
+      
     }
   }
 </script>

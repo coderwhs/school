@@ -11,7 +11,7 @@
     <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
+    <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试成绩明细表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
@@ -103,6 +103,18 @@
     data () {
       return {
         description: '运动员选材测试成绩明细表管理页面',
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
         // 表头
         columns: [
           {
@@ -255,17 +267,28 @@
           if (res.success) {
             this.$set(this.dictOptions, 'indexCode', res.result)
           }
+        }),
+        initDictOptions('tb_edu_athlete_selection_group_rating,rating,id').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'testGrade', res.result)
+          }
         })
-        // initDictOptions('tb_edu_athlete_selection_group_rating,rating,id').then((res) => {
-        //   if (res.success) {
-        //     this.$set(this.dictOptions, 'testGrade', res.result)
-        //   }
-        // })
-      }
-       
+      },
+      getAthleteScoreId(athleteScoreId) {
+        this.queryParam.athleteScoreId = athleteScoreId;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.athleteScoreId);
+        this.$refs.modalForm.title = "运动员成绩详情信息";
+      },
     }
   }
 </script>
 <style scoped>
   @import '~@assets/less/common.less'
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

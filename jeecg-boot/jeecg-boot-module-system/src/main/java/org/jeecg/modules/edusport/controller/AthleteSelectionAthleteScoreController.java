@@ -15,6 +15,7 @@ import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.edusport.entity.AthleteSelectionAthleteScore;
+import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreDetailService;
 import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -29,6 +30,7 @@ import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -47,6 +49,8 @@ import com.alibaba.fastjson.JSON;
 public class AthleteSelectionAthleteScoreController extends JeecgController<AthleteSelectionAthleteScore, IAthleteSelectionAthleteScoreService> {
 	@Autowired
 	private IAthleteSelectionAthleteScoreService athleteSelectionAthleteScoreService;
+	@Autowired
+	private IAthleteSelectionAthleteScoreDetailService iAthleteSelectionAthleteScoreDetailService;
 	
 	/**
 	 * 分页列表查询
@@ -132,8 +136,13 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 	 * @return
 	 */
 	@PostMapping(value = "/add")
+	@Transactional
 	public Result<?> add(@RequestBody AthleteSelectionAthleteScore athleteSelectionAthleteScore) {
+		
+		
 		athleteSelectionAthleteScoreService.save(athleteSelectionAthleteScore);
+		
+		
 		return Result.ok("添加成功！");
 	}
 	

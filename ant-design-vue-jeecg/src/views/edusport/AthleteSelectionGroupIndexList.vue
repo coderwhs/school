@@ -170,7 +170,7 @@
             this.$set(this.dictOptions, 'groupId', res.result)
           }
         })
-        initDictOptions('tb_edu_athlete_selection_index,cn_name,id').then((res) => {
+        initDictOptions('tb_edu_athlete_selection_index,cn_name,l3_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'indexId', res.result)
           }

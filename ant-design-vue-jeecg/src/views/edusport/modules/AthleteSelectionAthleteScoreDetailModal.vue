@@ -94,8 +94,14 @@
     created () {
     },
     methods: {
-      add () {
-        this.edit({});
+      add(athleteScoreId){
+        this.hiding = true;
+        if (athleteScoreId) {
+          this.athleteScoreId = athleteScoreId;
+          this.edit({athleteScoreId}, '');
+        } else {
+          this.$message.warning("请选择一个运动员信息");
+        }
       },
       edit (record) {
         this.form.resetFields();
