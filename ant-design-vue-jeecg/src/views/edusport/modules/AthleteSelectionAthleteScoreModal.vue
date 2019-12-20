@@ -20,13 +20,16 @@
           <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
         </a-form-item>
         <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['eventCode']" dict="tb_edu_sport,sport_name,id" />
+          <j-multi-select-tag type="list_multi" v-decorator="['eventCode']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" placeholder="请选择小项"/>
         </a-form-item>
         <a-form-item label="得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="测试等级评定" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['testGrade']" :trigger-change="true" dictCode="tb_edu_athlete_selection_group_rating,rating,id" placeholder="请选择测试等级评定"/>
+        </a-form-item>
+        <a-form-item label="审核状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'auditState', validatorRules.auditState]" placeholder="请输入审核状态"></a-input>
         </a-form-item>
 
       </a-form>
@@ -40,12 +43,14 @@
   import pick from 'lodash.pick'
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
 
   export default {
     name: "AthleteSelectionAthleteScoreModal",
-    components: { 
+    components: {
       JDictSelectTag,
       JSearchSelectTag,
+      JMultiSelectTag
     },
     data () {
       return {
@@ -65,28 +70,29 @@
 
         confirmLoading: false,
         validatorRules:{
-        athleteId:{},
-        testId:{},
-        groupId:{},
-        eventCode:{},
-        testScore:{},
-        testGrade:{},
+          athleteId:{},
+          testId:{},
+          groupId:{},
+          eventCode:{},
+          testScore:{},
+          testGrade:{},
+          auditState:{},
         },
         url: {
           add: "/edusport/athleteSelectionAthleteScore/add",
           edit: "/edusport/athleteSelectionAthleteScore/edit",
         }
-     
+
       }
     },
     created () {
     },
     methods: {
-      add(groupId){alert("groupId = " + groupId);
+      add(id){
         this.hiding = true;
-        if (groupId) {
+        if (id) {
           // this.dormId = dormId;
-          this.edit({groupId}, '');
+          this.edit({gruopId:id}, '');
         } else {
           this.$message.warning("请选择一条测试信息");
         }
@@ -96,7 +102,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteId','testId','groupId','eventCode','testScore','testGrade'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','testId','groupId','eventCode','testScore','testGrade','auditState'))
         })
       },
       close () {
@@ -116,7 +122,7 @@
               method = 'post';
             }else{
               httpurl+=this.url.edit;
-               method = 'put';
+              method = 'put';
             }
             let formData = Object.assign(this.model, values);
             console.log("表单提交数据",formData)
@@ -132,17 +138,17 @@
               that.close();
             })
           }
-         
+
         })
       },
       handleCancel () {
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteId','testId','groupId','eventCode','testScore','testGrade'))
+        this.form.setFieldsValue(pick(row,'athleteId','testId','groupId','eventCode','testScore','testGrade','auditState'))
       },
 
-      
+
     }
   }
 </script>

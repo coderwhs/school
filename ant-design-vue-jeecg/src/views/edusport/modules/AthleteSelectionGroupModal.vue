@@ -32,6 +32,7 @@
   import pick from 'lodash.pick'
   import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
     name: "AthleteSelectionGroupModal",

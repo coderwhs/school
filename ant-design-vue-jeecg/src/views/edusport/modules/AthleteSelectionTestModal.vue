@@ -14,7 +14,7 @@
           <a-input v-decorator="[ 'testName', validatorRules.testName]" placeholder="请输入测试名称"></a-input>
         </a-form-item>
         <a-form-item label="测试大项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,id" />
+          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
         <a-form-item label="测试组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />

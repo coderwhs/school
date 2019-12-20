@@ -136,6 +136,7 @@
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import AthleteSelectionAthleteScoreList from './AthleteSelectionAthleteScoreList'
   import AthleteSelectionAthleteScoreModal from './modules/AthleteSelectionAthleteScoreModal'
+  import { httpAction,deleteAction  } from '@/api/manage'
 
   export default {
     name: "AthleteSelectionTestList",
@@ -227,7 +228,7 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport,sport_name,id').then((res) => {
+        initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'sportCode', res.result)
           }
@@ -242,8 +243,8 @@
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
-        // this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(this.selectedRowKeys[0]);/* Tab修改@2019-12-12 */
-        this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(selectionRows[0].groupId);
+        this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(this.selectedRowKeys[0]);/* Tab修改@2019-12-12 */
+        // this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(selectionRows[0].groupId);
         //alert("selectionRows[0].groupId = " + selectionRows[0].groupId);
       },
       onClearSelected() {/* Tab修改@2019-12-12 */
@@ -274,7 +275,8 @@
         this.$refs.AthleteSelectionAthleteScoreList.selectedRowKeys = [];
         this.$refs.AthleteSelectionAthleteScoreList.selectionRows = [];
         this.loadData();
-      }
+      },
+
     }
   }
 </script>

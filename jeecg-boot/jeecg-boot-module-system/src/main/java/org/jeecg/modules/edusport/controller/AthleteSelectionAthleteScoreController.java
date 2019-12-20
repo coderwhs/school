@@ -9,6 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
@@ -36,7 +38,7 @@ import com.alibaba.fastjson.JSON;
  /**
  * @Description: 运动员选材测试成绩表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2019-12-19
  * @Version: V1.0
  */
 @RestController
@@ -64,6 +66,63 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 		Page<AthleteSelectionAthleteScore> page = new Page<AthleteSelectionAthleteScore>(pageNo, pageSize);
 		IPage<AthleteSelectionAthleteScore> pageList = athleteSelectionAthleteScoreService.page(page, queryWrapper);
 		return Result.ok(pageList);
+	}
+	
+	/**
+	 *   引入运动员信息.
+	 *
+	 * @param athleteSelectionAthleteScore
+	 * @return
+	 */
+	@GetMapping(value = "/importAthlete")
+	//@RequiresPermissions("user:add")
+	public Result<?> importAthlete(@RequestBody AthleteSelectionAthleteScore athleteSelectionAthleteScore) {
+				System.out.println("============================" + athleteSelectionAthleteScore.getGroupId());
+		//athleteSelectionAthleteScoreService.save(athleteSelectionAthleteScore);
+		
+		return Result.ok("引入运动员成功！"+ athleteSelectionAthleteScore.getGroupId());
+	}
+	
+	/**
+	 *   引入运动员信息.
+	 *
+	 * @param athleteSelectionAthleteScore
+	 * @return
+	 */
+	@GetMapping(value = "/importAthleteB")
+	//@RequiresPermissions("user:add")
+	public Result<?> importAthlete(@RequestParam(name="groupId",required=true) String groupId) {
+				System.out.println("============================" + groupId);
+		//athleteSelectionAthleteScoreService.save(athleteSelectionAthleteScore);
+		
+		return Result.ok("引入运动员成功！"+ groupId);
+	}
+	
+
+	/**
+	 *   计算运动员成绩信息.
+	 *
+	 * @param athleteSelectionAthleteScore
+	 * @return
+	 */
+	@PostMapping(value = "/calculateScore")
+	@RequiresPermissions("athlete:calculateScore")
+	public Result<?> calculateScore(@RequestBody AthleteSelectionAthleteScore athleteSelectionAthleteScore) {
+		
+		return Result.ok("计算运动员成绩成功！");
+	}
+	
+	/**
+	 *   审核成绩信息.
+	 *
+	 * @param athleteSelectionAthleteScore
+	 * @return
+	 */
+	@PostMapping(value = "/audit")
+	@RequiresPermissions("athlete:audit")
+	public Result<?> audit(@RequestBody AthleteSelectionAthleteScore athleteSelectionAthleteScore) {
+		
+		return Result.ok("审核成绩成功！");
 	}
 	
 	/**

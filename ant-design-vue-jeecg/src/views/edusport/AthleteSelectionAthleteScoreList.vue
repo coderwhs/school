@@ -51,11 +51,14 @@
     
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试成绩表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+      <a-button @click="handleAdd"  type="primary" icon="plus">新增</a-button>
+<!--      <a-button @click="handleImportAthlete"  type="primary" icon="plus">引入</a-button>-->
+<!--      <a-button @click="handleCalculateScore"  type="primary" icon="plus">计算</a-button>-->
+<!--      <a-button @click="handleAudit" type="primary" icon="plus">审核</a-button>-->
+<!--      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试成绩表')">导出</a-button>-->
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -133,6 +136,7 @@
   import AthleteSelectionAthleteScoreModal from './modules/AthleteSelectionAthleteScoreModal'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import {getAction, httpAction, deleteAction } from '@/api/manage'
 
   export default {
     name: "AthleteSelectionAthleteScoreList",
@@ -222,6 +226,11 @@
             }
           },
           {
+            title:'审核状态',
+            align:"center",
+            dataIndex: 'auditState'
+          },
+          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
@@ -236,11 +245,15 @@
           deleteBatch: "/edusport/athleteSelectionAthleteScore/deleteBatch",
           exportXlsUrl: "/edusport/athleteSelectionAthleteScore/exportXls",
           importExcelUrl: "edusport/athleteSelectionAthleteScore/importExcel",
+          importAthlete:"/edusport/athleteSelectionAthleteScore/importAthlete",
+          importAthleteB:"/edusport/athleteSelectionAthleteScore/importAthleteB",
+          calculateScore:"/edusport/athleteSelectionAthleteScore/calculateScore",
+          audit:"/edusport/athleteSelectionAthleteScore/audit",
         },
         dictOptions:{
          testGrade:[],
         },
-        tableScroll:{x :6*147+50}
+        tableScroll:{x :7*147+50}
       }
     },
     computed: {
@@ -265,7 +278,7 @@
             this.$set(this.dictOptions, 'groupId', res.result)
           }
         })
-        initDictOptions('tb_edu_sport,sport_name,id').then((res) => {
+        initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'eventCode', res.result)
           }
@@ -276,12 +289,12 @@
           }
         })
       },
-      getAthleteScore(groupId) {
-        this.queryParam.groupId = groupId;
+      getAthleteScore(id) {
+        this.queryParam.id = id;
         this.loadData(1);
       },
       handleAdd: function () {
-        this.$refs.modalForm.add(this.queryParam.groupId);
+        this.$refs.modalForm.add(this.queryParam.id);
         this.$refs.modalForm.title = "运动员测试成绩信息";
       },
 
@@ -296,7 +309,84 @@
             that.$message.warning(res.message);
           }
         });
-      }
+      },
+
+      // 引入运动员.
+      handleImportAthlete: function () {
+        if(this.queryParam.id){
+          let params = {
+            groupId: this.queryParam.id
+          };
+          //alert("params = " + JSON.stringify(params));
+          console.log("表单提交数据",params);
+
+          getAction(this.url.importAthleteB, params).then((res)=>{
+            if(res.success){
+              this.$message.success(res.message);
+              //this.$emit('ok');
+            }else{
+              this.$message.warning(res.message);
+            }
+          })           .finally(() => {
+            this.loadData(1);
+          })
+        } else {
+          alert("请选择一条测试名称。");
+        }
+
+      },
+
+      // 计算运动员成绩.
+      handleCalculateScore: function (record) {
+        if(this.queryParam.groupId){
+          let httpurl = '';
+          let method = '';
+          httpurl+=this.url.calculateScore;
+          method = 'put';
+          this.model = Object.assign({}, record);
+          let formData = Object.assign(this.model, record);
+          console.log("表单提交数据",formData);
+          //formData.id = id;
+          httpAction(httpurl,formData,method).then((res)=>{
+            if(res.success){
+              this.$message.success(res.message);
+              //this.$emit('ok');
+            }else{
+              this.$message.warning(res.message);
+            }
+          }).finally(() => {
+            this.loadData(1);
+          })
+        } else {
+          alert("请选择一条测试名称。");
+        }
+      },
+
+      // 审核运动员成绩.
+      handleAudit: function (record) {
+        if(this.queryParam.groupId){
+          let httpurl = '';
+          let method = '';
+          httpurl+=this.url.audit;
+          method = 'put';
+          this.model = Object.assign({}, record);
+          let formData = Object.assign(this.model, record);
+          console.log("表单提交数据",formData);
+          //formData.id = id;
+          httpAction(httpurl,formData,method).then((res)=>{
+            if(res.success){
+              this.$message.success(res.message);
+              //this.$emit('ok');
+            }else{
+              this.$message.warning(res.message);
+            }
+          }).finally(() => {
+            this.loadData(1);
+          })
+        } else {
+          alert("请选择一条测试名称。");
+        }
+      },
     }
   }
 </script>

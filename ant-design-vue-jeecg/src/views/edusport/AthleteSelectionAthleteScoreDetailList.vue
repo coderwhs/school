@@ -190,18 +190,18 @@
             align:"center",
             dataIndex: 'athleteScoreId'
           },
-          {
-            title:'测试等级评定',
-            align:"center",
-            dataIndex: 'testGrade',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['testGrade'], text+"")
-              }
-            }
-          },
+          // {
+          //   title:'测试等级评定',
+          //   align:"center",
+          //   dataIndex: 'testGrade',
+          //   customRender:(text)=>{
+          //     if(!text){
+          //       return ''
+          //     }else{
+          //       return filterMultiDictText(this.dictOptions['testGrade'], text+"")
+          //     }
+          //   }
+          // },
           {
             title: '操作',
             dataIndex: 'action',
@@ -219,7 +219,7 @@
           importExcelUrl: "edusport/athleteSelectionAthleteScoreDetail/importExcel",
         },
         dictOptions:{
-         testGrade:[],
+         // testGrade:[],
         },
         tableScroll:{x :9*147+50}
       }
@@ -256,11 +256,11 @@
             this.$set(this.dictOptions, 'indexCode', res.result)
           }
         })
-        initDictOptions('tb_edu_athlete_selection_group_rating,rating,id').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'testGrade', res.result)
-          }
-        })
+        // initDictOptions('tb_edu_athlete_selection_group_rating,rating,id').then((res) => {
+        //   if (res.success) {
+        //     this.$set(this.dictOptions, 'testGrade', res.result)
+        //   }
+        // })
       }
        
     }

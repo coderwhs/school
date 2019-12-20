@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员选材测试成绩表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2019-12-19
  * @Version: V1.0
  */
 @Data
@@ -45,6 +45,9 @@ public class AthleteSelectionAthleteScore implements Serializable {
 	/**测试等级评定*/
 	@Excel(name = "测试等级评定", width = 15)
     private java.lang.String testGrade;
+	/**审核状态*/
+	@Excel(name = "审核状态", width = 15)
+    private java.lang.String auditState;
 	/**创建人*/
 	@Excel(name = "创建人", width = 15)
     private java.lang.String createBy;
