@@ -75,7 +75,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:type}"
+        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:tabSelectType}"
         :scroll="tableScroll"
         @change="handleTableChange">
 
@@ -150,6 +150,18 @@
     data () {
       return {
         description: '运动员选材测试表管理页面',
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
         // 表头
         columns: [
           {
@@ -208,7 +220,7 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
-        type: "radio",/* Tab修改@2019-12-12 */
+        tabSelectType: "radio",/* Tab修改@2019-12-12 */
         url: {
           list: "/edusport/athleteSelectionTest/list",
           delete: "/edusport/athleteSelectionTest/delete",
@@ -240,16 +252,25 @@
         })
       },
 
+      clickThenCheck(record) {
+        return {
+          on: {
+            click: () => {
+              this.onSelectChange(record.id.split(","), [record]);
+            }
+          }
+        };
+      },
+
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
-        this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(this.selectedRowKeys[0]);/* Tab修改@2019-12-12 */
-        // this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(selectionRows[0].groupId);
-        //alert("selectionRows[0].groupId = " + selectionRows[0].groupId);
+        this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(selectionRows[0].id,selectionRows[0].groupId);
       },
       onClearSelected() {/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
+        this.$refs.AthleteSelectionAthleteScoreList.queryParam.testId = null;
         this.$refs.AthleteSelectionAthleteScoreList.queryParam.groupId = null;
         this.$refs.AthleteSelectionAthleteScoreList.loadData();
         this.$refs.AthleteSelectionAthleteScoreList.selectedRowKeys = [];
@@ -270,7 +291,9 @@
       searchQuery:function(){/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
-        this.$refs.AthleteSelectionAthleteScoreList.queryParam.mainId = null;
+        this.$refs.AthleteSelectionAthleteScoreList.queryParam.testId = null;
+        this.$refs.AthleteSelectionAthleteScoreList.queryParam.sportCode = null;
+        this.$refs.AthleteSelectionAthleteScoreList.queryParam.groupId = null;
         this.$refs.AthleteSelectionAthleteScoreList.loadData();
         this.$refs.AthleteSelectionAthleteScoreList.selectedRowKeys = [];
         this.$refs.AthleteSelectionAthleteScoreList.selectionRows = [];

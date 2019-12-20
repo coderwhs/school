@@ -298,6 +298,17 @@
         })
       },
 
+      // 处理成绩信息.
+      getAthleteScore(id,groupId) {
+        this.queryParam.testId = id;
+        this.queryParam.groupId = groupId;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.testId,this.queryParam.groupId);
+        this.$refs.modalForm.title = "运动员成绩信息";
+      },
+      // 处理成绩明细信息.
       clickThenCheck(record) {
         return {
           on: {
