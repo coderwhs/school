@@ -26,7 +26,7 @@
           <j-search-select-tag v-decorator="['indexCode']" dict="tb_edu_athlete_selection_index,cn_name,l3_code" />
         </a-form-item>
         <a-form-item label="测试值" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'testValue', validatorRules.testValue]" placeholder="请输入测试值"></a-input>
+          <a-input-number v-decorator="[ 'testValue', validatorRules.testValue]" :min="0" :max="1000" placeholder="请输入测试值" v-on:blur="calcScore" ></a-input-number>
         </a-form-item>
         <a-form-item label="得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%"/>
@@ -45,7 +45,7 @@
 
 <script>
 
-  import { httpAction } from '@/api/manage'
+  import { getAction, httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
@@ -87,6 +87,7 @@
         url: {
           add: "/edusport/athleteSelectionAthleteScoreDetail/add",
           edit: "/edusport/athleteSelectionAthleteScoreDetail/edit",
+          calcScore:"/edusport/athleteSelectionAthleteScoreDetail/calcScore"
         }
      
       }
@@ -94,7 +95,7 @@
     created () {
     },
     methods: {
-      add(athleteScoreId,athleteId ,testId,groupId,eventCode){
+      add(athleteScoreId,athleteId,testId,groupId,eventCode){
         this.hiding = true;
         if (testId) {
           this.edit({athleteScoreId,athleteId,testId,groupId,eventCode}, '');
@@ -152,8 +153,31 @@
       popupCallback(row){
         this.form.setFieldsValue(pick(row,'athleteId','testId','groupId','eventCode','indexCode','testValue','testScore','athleteScoreId','testGrade'))
       },
-
-      
+      // 计算成绩.
+      calcScore: function () {
+        // console.log("输入的测试值==" + JSON.stringify(this.model));
+        let params = {
+          athleteId:this.model.athleteId,
+          groupId:this.model.groupId,
+          indexCode:this.model.indexCode,
+          testValue:this.model.testValue,
+        };
+        // console.log("输入的测试值==88" + JSON.stringify(params));
+        getAction(this.url.calcScore, params).then((res) => {
+          if (res.success) {
+            this.$message.success(res.message);
+            // alert("返回值=" + res.message);
+            // console.log("返回值=" + res.message);
+            this.model.testScore = res.message;
+            console.log("赋值 = " + this.model.testScore);
+            //this.$emit('ok');
+          } else {
+            this.$message.warning(res.message);
+          }
+        }).finally(() => {
+          //this.loadData(1);
+        })
+      }
     }
   }
 </script>

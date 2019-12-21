@@ -1,37 +1,37 @@
 package org.jeecg.modules.edusport.controller;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.util.HashMap;
+
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
-import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.edusport.entity.AthleteSelectionAthleteScoreDetail;
+import org.jeecg.modules.edusport.mapper.AthleteMapper;
+import org.jeecg.modules.edusport.mapper.AthleteSelectionGroupIndexGradeMapper;
 import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.extern.slf4j.Slf4j;
 
-import org.jeecgframework.poi.excel.ExcelImportUtil;
-import org.jeecgframework.poi.excel.def.NormalExcelConstants;
-import org.jeecgframework.poi.excel.entity.ExportParams;
-import org.jeecgframework.poi.excel.entity.ImportParams;
-import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
-import org.jeecg.common.system.base.controller.JeecgController;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
-import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 
  /**
  * @Description: 运动员选材测试成绩明细表
@@ -45,7 +45,10 @@ import com.alibaba.fastjson.JSON;
 public class AthleteSelectionAthleteScoreDetailController extends JeecgController<AthleteSelectionAthleteScoreDetail, IAthleteSelectionAthleteScoreDetailService> {
 	@Autowired
 	private IAthleteSelectionAthleteScoreDetailService athleteSelectionAthleteScoreDetailService;
-	
+	@Resource
+	private AthleteMapper athleteMapper;
+	@Resource
+	private AthleteSelectionGroupIndexGradeMapper athleteSelectionGroupIndexGradeMapper;
 	/**
 	 * 分页列表查询
 	 *
@@ -100,6 +103,29 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		athleteSelectionAthleteScoreDetailService.removeById(id);
 		return Result.ok("删除成功!");
+	}
+	
+	/**
+	 *   计算考核成绩信息.
+	 *
+	 * @param athleteSelectionAthleteScore
+	 * @return
+	 */
+	@GetMapping(value = "/calcScore")
+	@Transactional
+	public Result<?> audit(@RequestParam(name = "athleteId", required = true) String athleteId,
+			@RequestParam(name = "groupId", required = true) String groupId,
+			@RequestParam(name = "indexCode", required = true) String indexCode,
+			@RequestParam(name = "testValue", required = true) String testValue) {
+		HashMap athleteMap = (HashMap) athleteMapper.getAthleteAgeById(athleteId);// 运动员信息.
+		
+		System.out.println("============" + athleteMap.get("age"));
+		
+/*		Integer score = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(indexId, groupId,
+				athleteMap.get("gender"), Integer.valueOf(athleteMap.get("age")), testValue);*/
+		Integer score = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(indexCode, groupId,
+				"1", Integer.valueOf("1"), Integer.valueOf("1"));
+		return Result.ok(score);
 	}
 	
 	/**

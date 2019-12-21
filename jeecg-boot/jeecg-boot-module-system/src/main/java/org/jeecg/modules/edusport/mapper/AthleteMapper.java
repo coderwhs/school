@@ -1,9 +1,10 @@
 package org.jeecg.modules.edusport.mapper;
 
-import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.jeecg.modules.edusport.entity.Athlete;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -13,5 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Version: V1.0
  */
 public interface AthleteMapper extends BaseMapper<Athlete> {
-
+	Map getAthleteAgeById(@Param("id") String id);
 }

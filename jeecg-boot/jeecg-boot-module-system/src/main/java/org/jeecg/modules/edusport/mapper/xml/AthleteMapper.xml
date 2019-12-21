@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.jeecg.modules.edusport.mapper.AthleteMapper">
+<mapper
+	namespace="org.jeecg.modules.edusport.mapper.AthleteMapper">
 
+	<select id="getAthleteAgeById"
+		resultType="java.util.HashMap">
+		<![CDATA[SELECT gender,IFNULL(TIMESTAMPDIFF(YEAR,DATE_FORMAT(SUBSTRING(REPLACE(id_no,' ',''), 7, 8),"%Y-%m-%d") , DATE_FORMAT( NOW(),"%Y-%m-%d")),0) age
+		FROM tb_edu_athlete  
+		where id = #{id}]]>
+	</select>
 </mapper>

@@ -13,5 +13,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Version: V1.0
  */
 public interface AthleteSelectionGroupIndexGradeMapper extends BaseMapper<AthleteSelectionGroupIndexGrade> {
-
+	Integer getAthleteScoreByTestValue(@Param("indexId") String indexId, 
+			@Param("groupId") String groupId, 
+			@Param("gender") String gender,
+			@Param("age") Integer age,
+			@Param("testValue") Integer testValue);
 }
