@@ -62,7 +62,7 @@ public class AthleteSelectionGroupIndexGradeController extends JeecgController<A
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionGroupIndexGrade> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionGroupIndexGrade, req.getParameterMap());
 		Page<AthleteSelectionGroupIndexGrade> page = new Page<AthleteSelectionGroupIndexGrade>(pageNo, pageSize);
-		queryWrapper.orderByDesc("groupId","indexId","gender");
+		queryWrapper.orderByDesc("group_id","index_id","gender");
 		IPage<AthleteSelectionGroupIndexGrade> pageList = athleteSelectionGroupIndexGradeService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}

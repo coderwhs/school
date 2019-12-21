@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员选材测试指标评分标准列表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2019-12-21
  * @Version: V1.0
  */
 @Data

@@ -14,7 +14,7 @@
           <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
         </a-form-item>
         <a-form-item label="指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['indexId']" dict="tb_edu_athlete_selection_index,cn_name,id" />
+          <j-search-select-tag v-decorator="['indexId']" dict="tb_edu_athlete_selection_index,cn_name,l3_code" />
         </a-form-item>
         <a-form-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
