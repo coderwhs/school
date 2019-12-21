@@ -1,9 +1,8 @@
 package org.jeecg.modules.edusport.mapper;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 import org.jeecg.modules.edusport.entity.AthleteSelectionAthleteScoreDetail;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -14,4 +13,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface AthleteSelectionAthleteScoreDetailMapper extends BaseMapper<AthleteSelectionAthleteScoreDetail> {
 
+	Integer getAthleteScoreById(@Param("id") String id);
 }

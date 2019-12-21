@@ -14,10 +14,10 @@
           <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
         <a-form-item label="所属测试" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['testId']" dict="tb_edu_athlete_selection_test,test_name,id" />
+          <j-search-select-tag v-decorator="['testId']" dict="tb_edu_athlete_selection_test,test_name,id" disabled="disabled"/>
         </a-form-item>
         <a-form-item label="测试组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
+          <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" disabled="disabled"/>
         </a-form-item>
         <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-multi-select-tag type="list_multi" v-decorator="['eventCode']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" placeholder="请选择小项"/>
@@ -29,9 +29,8 @@
           <j-dict-select-tag type="list" v-decorator="['testGrade']" :trigger-change="true" dictCode="tb_edu_athlete_selection_group_rating,rating,id" placeholder="请选择测试等级评定" disabled="disabled"/>
         </a-form-item>
         <a-form-item label="审核状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['auditState']" :trigger-change="true" dictCode="audit_state" placeholder="请输入审核状态" disabled="disabled"/>
+          <j-dict-select-tag type="list" v-decorator="['auditState']" :trigger-change="true" dictCode="audit_state" placeholder="请选择审核状态" disabled="disabled"/>
         </a-form-item>
-
       </a-form>
     </a-spin>
   </a-modal>

@@ -11,13 +11,13 @@
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" disabled="disabled"/>
         </a-form-item>
         <a-form-item label="所属测试" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['testId']" dict="tb_edu_athlete_selection_test,test_name,id" />
+          <j-search-select-tag v-decorator="['testId']" dict="tb_edu_athlete_selection_test,test_name,id" disabled="disabled"/>
         </a-form-item>
         <a-form-item label="测试组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
+          <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" disabled="disabled"/>
         </a-form-item>
         <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['eventCode']" dict="tb_edu_sport,sport_name,sport_code" />

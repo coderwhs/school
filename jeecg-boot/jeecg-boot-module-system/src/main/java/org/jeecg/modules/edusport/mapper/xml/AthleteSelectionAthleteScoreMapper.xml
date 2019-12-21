@@ -2,4 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreMapper">
 
+	<update id="updateScoreAndRatingByWrapper">
+        UPDATE tb_edu_athlete_selection_athlete_score_detail 
+        SET test_score = #{athleteSelectionAthleteScore.testScore},
+        test_grade = #{athleteSelectionAthleteScore.testGrade} ${ew.customSqlSegment}
+    </update>
+	
 </mapper>

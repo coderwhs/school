@@ -28,6 +28,11 @@
                 <j-dict-select-tag placeholder="请选择测试等级评定" v-model="queryParam.testGrade" dictCode="tb_edu_athlete_selection_group_rating,rating,id"/>
               </a-form-item>
             </a-col>
+            <a-col :md="6" :sm="8">
+              <a-form-item label="审核状态">
+                <j-dict-select-tag placeholder="请选择审核状态" v-model="queryParam.auditState" dictCode="audit_state"/>
+              </a-form-item>
+            </a-col>
           </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -50,11 +55,11 @@
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
 <!--            <a-button @click="handleImportAthlete"  type="primary" icon="plus">引入</a-button>-->
             <a-button @click="handleCalculateScore"  type="primary" icon="plus">计算</a-button>
-<!--            <a-button @click="handleAudit" type="primary" icon="plus">审核</a-button>-->
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试成绩表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+            <a-button @click="handleAudit" type="primary" icon="plus">审核</a-button>
+<!--      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试成绩表')">导出</a-button>-->
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -247,7 +252,14 @@
           {
             title:'审核状态',
             align:"center",
-            dataIndex: 'auditState'
+            dataIndex: 'auditState',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['auditState'], text+"")
+              }
+            }
           },
           {
             title: '操作',
@@ -267,11 +279,12 @@
           importExcelUrl: "edusport/athleteSelectionAthleteScore/importExcel",
           // importAthlete:"/edusport/athleteSelectionAthleteScore/importAthlete",
           calculateScore:"/edusport/athleteSelectionAthleteScore/calculateScore",
-          // audit:"/edusport/athleteSelectionAthleteScore/audit",
+          audit:"/edusport/athleteSelectionAthleteScore/audit",
         },
         dictOptions:{
          eventCode:[],
          testGrade:[],
+         auditState:[],
         },
         tableScroll:{x :7*147+50}
       }
@@ -306,6 +319,11 @@
         initDictOptions('tb_edu_athlete_selection_group_rating,rating,id').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'testGrade', res.result)
+          }
+        })
+        initDictOptions('audit_state').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'auditState', res.result)
           }
         })
       },
@@ -374,11 +392,9 @@
       // 计算运动员成绩.
       handleCalculateScore: function () {
         if(this.queryParam.id){
-          alert("bbbbbbbbbbbb" + this.queryParam.id);
-
           // typeof thisObj.city === 'undefined'
           let params = {
-            groupId: this.queryParam.id
+            id: this.queryParam.id
           };
           console.log("表单提交数据", params);
 
@@ -393,13 +409,31 @@
             this.loadData(1);
           })
         } else {
-          alert("请选择一条学生信息3333333333333");
+          alert("请选择一条学生信息");
         }
       },
 
       // 审核运动员成绩.
       handleAudit: function () {
+        if(this.queryParam.id){
+          // typeof thisObj.city === 'undefined'
+          let params = {
+            id: this.queryParam.id
+          };
 
+          getAction(this.url.audit, params).then((res) => {
+            if (res.success) {
+              this.$message.success(res.message);
+              //this.$emit('ok');
+            } else {
+              this.$message.warning(res.message);
+            }
+          }).finally(() => {
+            this.loadData(1);
+          })
+        } else {
+          alert("请选择一条学生信息");
+        }
       }
 
     }

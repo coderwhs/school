@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.edusport.mapper.AthleteSelectionGroupRatingMapper">
 
+	<select id="getAthleteScoreRatingByScore" resultType="org.jeecg.modules.edusport.entity.AthleteSelectionGroupRating">
+        SELECT * FROM tb_edu_athlete_selection_group_rating
+		WHERE max_data >= #{score} 
+		<![CDATA[ AND min_data <= #{score} ]]>
+    </select>
+    
+
 </mapper>

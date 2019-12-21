@@ -1,41 +1,39 @@
 package org.jeecg.modules.edusport.controller;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
-import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.edusport.entity.AthleteSelectionAthleteScore;
+import org.jeecg.modules.edusport.entity.AthleteSelectionGroupRating;
+import org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreDetailMapper;
+import org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreMapper;
+import org.jeecg.modules.edusport.mapper.AthleteSelectionGroupRatingMapper;
 import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreDetailService;
 import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.extern.slf4j.Slf4j;
 
-import org.jeecgframework.poi.excel.ExcelImportUtil;
-import org.jeecgframework.poi.excel.def.NormalExcelConstants;
-import org.jeecgframework.poi.excel.entity.ExportParams;
-import org.jeecgframework.poi.excel.entity.ImportParams;
-import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
-import org.jeecg.common.system.base.controller.JeecgController;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
-import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 
  /**
  * @Description: 运动员选材测试成绩表
@@ -51,7 +49,12 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 	private IAthleteSelectionAthleteScoreService athleteSelectionAthleteScoreService;
 	@Autowired
 	private IAthleteSelectionAthleteScoreDetailService iAthleteSelectionAthleteScoreDetailService;
-	
+	@Resource
+	private AthleteSelectionAthleteScoreMapper athleteSelectionAthleteScoreMapper;
+	@Resource
+	private AthleteSelectionAthleteScoreDetailMapper athleteSelectionAthleteScoreDetailMapper;
+	@Resource
+	private AthleteSelectionGroupRatingMapper athleteSelectionGroupRatingMapper;
 	/**
 	 * 分页列表查询
 	 *
@@ -69,6 +72,7 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 		QueryWrapper<AthleteSelectionAthleteScore> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionAthleteScore, req.getParameterMap());
 		Page<AthleteSelectionAthleteScore> page = new Page<AthleteSelectionAthleteScore>(pageNo, pageSize);
 		IPage<AthleteSelectionAthleteScore> pageList = athleteSelectionAthleteScoreService.page(page, queryWrapper);
+
 		return Result.ok(pageList);
 	}
 	
@@ -80,28 +84,12 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 	 */
 	@GetMapping(value = "/importAthlete")
 	//@RequiresPermissions("user:add")
-	public Result<?> importAthlete(@RequestBody AthleteSelectionAthleteScore athleteSelectionAthleteScore) {
-				System.out.println("============================" + athleteSelectionAthleteScore.getGroupId());
-		//athleteSelectionAthleteScoreService.save(athleteSelectionAthleteScore);
-		
-		return Result.ok("引入运动员成功！"+ athleteSelectionAthleteScore.getGroupId());
-	}
-	
-	/**
-	 *   引入运动员信息.
-	 *
-	 * @param athleteSelectionAthleteScore
-	 * @return
-	 */
-	@GetMapping(value = "/importAthleteB")
-	//@RequiresPermissions("user:add")
 	public Result<?> importAthlete(@RequestParam(name="groupId",required=true) String groupId) {
 				System.out.println("============================" + groupId);
 		//athleteSelectionAthleteScoreService.save(athleteSelectionAthleteScore);
 		
 		return Result.ok("引入运动员成功！"+ groupId);
 	}
-	
 
 	/**
 	 *   计算运动员成绩信息.
@@ -110,9 +98,17 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 	 * @return
 	 */
 	@GetMapping(value = "/calculateScore")
-//	@RequiresPermissions("athlete:calculateScore")
-	public Result<?> calculateScore(@RequestParam(name="groupId",required=true) String groupId) {
-		System.out.println("=============计算运动员成绩信息===============" + groupId);
+	@Transactional
+	public Result<?> calculateScore(@RequestParam(name="id",required=true) String id) {
+		Integer testScore = athleteSelectionAthleteScoreDetailMapper.getAthleteScoreById(id);
+		AthleteSelectionGroupRating groupRating = athleteSelectionGroupRatingMapper.getAthleteScoreRatingByScore(testScore);
+		QueryWrapper<AthleteSelectionAthleteScore> queryWrapper = new QueryWrapper<AthleteSelectionAthleteScore>();
+		queryWrapper.eq("id", id);
+		AthleteSelectionAthleteScore athleteSelectionAthleteScore = athleteSelectionAthleteScoreService.getById(id);
+		athleteSelectionAthleteScore.setTestScore(testScore);
+		athleteSelectionAthleteScore.setTestGrade(groupRating.getId());
+		
+		athleteSelectionAthleteScoreMapper.updateScoreAndRatingByWrapper(queryWrapper, athleteSelectionAthleteScore);
 		return Result.ok("计算运动员成绩成功！");
 	}
 	
@@ -122,10 +118,12 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 	 * @param athleteSelectionAthleteScore
 	 * @return
 	 */
-	@PostMapping(value = "/audit")
-	@RequiresPermissions("athlete:audit")
-	public Result<?> audit(@RequestBody AthleteSelectionAthleteScore athleteSelectionAthleteScore) {
-		
+	@GetMapping(value = "/audit")
+	@Transactional
+	public Result<?> audit(@RequestParam(name="id",required=true) String id) {
+		AthleteSelectionAthleteScore athleteSelectionAthleteScore = athleteSelectionAthleteScoreService.getById(id);
+		athleteSelectionAthleteScore.setAuditState("2");
+		athleteSelectionAthleteScoreService.updateById(athleteSelectionAthleteScore);
 		return Result.ok("审核成绩成功！");
 	}
 	
