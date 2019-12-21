@@ -17,14 +17,14 @@
     </userTask>
     <userTask id="bossTask" name="校长审批" xmlns:flowable="http://flowable.org/bpmn" flowable:assignee="$INITIATOR" flowable:formFieldValidation="true">
       <extensionElements>
-        <activiti:taskListener event="create" class="org.jeecg.modules.demo.test.controller.BossTaskHandler"></activiti:taskListener>
+        <activiti:taskListener event="create" class="org.jeecg.modules.flowable.handle.BossTaskHandler"></activiti:taskListener>
         <modeler:activiti-idm-initiator xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:activiti-idm-initiator>
       </extensionElements>
     </userTask>
     <endEvent id="end" name="结束"></endEvent>
     <sequenceFlow id="flow1" sourceRef="start" targetRef="fillTask"></sequenceFlow>
     <sequenceFlow id="flow2" sourceRef="fillTask" targetRef="directorTak"></sequenceFlow>
-    <sequenceFlow id="flow3" name="通过" sourceRef="directorTak" targetRef="judgeTask">
+    <sequenceFlow id="flow3" name="同意" sourceRef="directorTak" targetRef="judgeTask">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${outcome=='通过'}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow4" name="大于7天" sourceRef="judgeTask" targetRef="bossTask">
@@ -33,8 +33,13 @@
     <sequenceFlow id="flow5" name="小于7天" sourceRef="judgeTask" targetRef="end">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${reqDays < 7}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow6" sourceRef="bossTask" targetRef="end"></sequenceFlow>
-    <sequenceFlow id="flow7" name="不通过" sourceRef="directorTak" targetRef="fillTask">
+    <sequenceFlow id="flow6" name="同意" sourceRef="bossTask" targetRef="end">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${outcome=='通过'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow7" name="不同意" sourceRef="directorTak" targetRef="fillTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${outcome=='驳回'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow8" name="不同意" sourceRef="bossTask" targetRef="fillTask">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${outcome=='驳回'}]]></conditionExpression>
     </sequenceFlow>
   </process>
@@ -77,20 +82,23 @@
         <omgdi:waypoint x="109.0" y="389.0"></omgdi:waypoint>
         <omgdi:waypoint x="188.0" y="390.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="109.0" y="389.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="42.0" x="109.0" y="389.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
         <omgdi:waypoint x="89.0" y="409.0"></omgdi:waypoint>
         <omgdi:waypoint x="89.0" y="489.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="89.0" y="409.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="42.0" x="89.0" y="409.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
         <omgdi:waypoint x="238.0" y="430.0"></omgdi:waypoint>
         <omgdi:waypoint x="242.0" y="506.0"></omgdi:waypoint>
         <omgdi:waypoint x="107.0" y="506.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="239.0" y="476.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
         <omgdi:waypoint x="140.0" y="269.0"></omgdi:waypoint>
@@ -99,6 +107,14 @@
         <omgdi:waypoint x="140.0" y="130.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="14.0" width="100.0" x="140.0" y="269.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="238.0" y="350.0"></omgdi:waypoint>
+        <omgdi:waypoint x="238.0" y="130.0"></omgdi:waypoint>
+        <omgdi:waypoint x="140.0" y="130.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="239.0" y="283.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

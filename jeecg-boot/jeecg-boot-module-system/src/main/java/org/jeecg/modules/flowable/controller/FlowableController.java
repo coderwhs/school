@@ -28,6 +28,7 @@ import org.jeecg.modules.demo.test.service.IJeecgDemoService;
 import org.jeecg.modules.edusport.entity.DormAthleteLeave;
 import org.jeecg.modules.edusport.entity.TactRuTask;
 import org.jeecg.modules.edusport.mapper.DormAthleteLeaveMapper;
+import org.jeecg.modules.edusport.service.IDormAthleteLeaveService;
 import org.jeecg.modules.flowable.service.IProcessService;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
@@ -43,6 +44,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -65,6 +68,8 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	private ISysUserService sysUserService;
 	@Autowired
 	private IProcessService processServices;
+	@Autowired
+	private IDormAthleteLeaveService dormAthleteLeaveService;
 
 	/*************** 此处为业务代码 ******************/
 
@@ -98,6 +103,8 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("outcome", "通过");
 			map.put("nextHandler", userName);
+			map.put("billType", "leave");
+			map.put("billId", dormAthleteLeave.getId());
 			taskService.complete(taskId, map);
 		}
 
@@ -177,11 +184,16 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 			if (task == null) {
 				throw new RuntimeException("流程不存在");
 			}
+			String processInstanceId = task.getProcessInstanceId();
+	        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+	        DormAthleteLeave dormAthleteLeave = dormAthleteLeaveService.getById(processInstance.getBusinessKey());
+	        long reqDays = DateUtil.between(dormAthleteLeave.getStartDate(), dormAthleteLeave.getEndDate(), DateUnit.DAY);
+	        System.out.println("请假天数：" + reqDays);
 			// 通过审核
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("outcome", "通过");
 			map.put("nextHandler", user.getId());
-			map.put("reqDays", 10);
+			map.put("reqDays", reqDays);
 			taskService.complete(taskId, map);
 		}
 		return "processed ok!";
@@ -221,8 +233,6 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	 * @param processId 任务ID
 	 */
 	@RequestMapping(value = "processDiagram")
-//	@PutMapping(value = "processDiagram")
-
 	public void processDiagram(HttpServletResponse httpServletResponse,
 			@RequestParam(name = "procInstId", required = false) String procInstId) throws Exception {
 		ProcessInstance pi = runtimeService.createProcessInstanceQuery().processInstanceId(procInstId).singleResult();
