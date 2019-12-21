@@ -108,7 +108,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteId','testId','groupId','eventCode','indexCode','testValue','testScore','athleteScoreId','testGrade'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','testId','groupId','eventCode','indexCode','testValue','testScore','testGrade'))
         })
       },
       close () {
@@ -169,7 +169,7 @@
             // alert("返回值=" + res.message);
             // console.log("返回值=" + res.message);
             this.model.testScore = res.message;
-            console.log("赋值 = " + this.model.testScore);
+            console.log("赋值 = " + JSON.stringify(res.data) + "////// " + JSON.stringify(res.message));
             //this.$emit('ok');
           } else {
             this.$message.warning(res.message);

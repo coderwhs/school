@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -31,6 +32,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import cn.hutool.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
  /**
@@ -113,6 +115,7 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 	 */
 	@GetMapping(value = "/calcScore")
 	@Transactional
+	@ResponseBody
 	public Result<?> audit(@RequestParam(name = "athleteId", required = true) String athleteId,
 			@RequestParam(name = "groupId", required = true) String groupId,
 			@RequestParam(name = "indexCode", required = true) String indexCode,
@@ -125,7 +128,11 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 				athleteMap.get("gender"), Integer.valueOf(athleteMap.get("age")), testValue);*/
 		Integer score = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(indexCode, groupId,
 				"1", Integer.valueOf("1"), Integer.valueOf("1"));
-		return Result.ok(score);
+		Result result = new Result();
+		AthleteSelectionAthleteScoreDetail athleteSelectionAthleteScoreDetail = new AthleteSelectionAthleteScoreDetail();
+		athleteSelectionAthleteScoreDetail.setTestScore(Integer.valueOf("10"));
+		JSONObject jsonObject = new JSONObject("{\"phonetype\":\"N95\",\"cat\":\"WP\"}");
+		return Result.ok(jsonObject);
 	}
 	
 	/**
