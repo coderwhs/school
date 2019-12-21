@@ -301,7 +301,7 @@
             this.$set(this.dictOptions, 'eventCode', res.result)
           }
         })
-        initDictOptions('tb_edu_athlete_selection_index,cn_name,id').then((res) => {
+        initDictOptions('tb_edu_athlete_selection_index,cn_name,l3_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'indexCode', res.result)
           }

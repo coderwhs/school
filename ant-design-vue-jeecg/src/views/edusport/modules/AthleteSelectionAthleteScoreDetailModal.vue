@@ -23,7 +23,7 @@
           <j-search-select-tag v-decorator="['eventCode']" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
         <a-form-item label="指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['indexCode']" dict="tb_edu_athlete_selection_index,cn_name,id" />
+          <j-search-select-tag v-decorator="['indexCode']" dict="tb_edu_athlete_selection_index,cn_name,l3_code" />
         </a-form-item>
         <a-form-item label="测试值" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'testValue', validatorRules.testValue]" placeholder="请输入测试值"></a-input>
