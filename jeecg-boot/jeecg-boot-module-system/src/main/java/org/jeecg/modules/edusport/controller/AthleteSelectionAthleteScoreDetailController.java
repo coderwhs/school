@@ -131,7 +131,7 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 		Result result = new Result();
 		AthleteSelectionAthleteScoreDetail athleteSelectionAthleteScoreDetail = new AthleteSelectionAthleteScoreDetail();
 		athleteSelectionAthleteScoreDetail.setTestScore(Integer.valueOf("10"));
-		JSONObject jsonObject = new JSONObject("{\"phonetype\":\"N95\",\"cat\":\"WP\"}");
+		JSONObject jsonObject = new JSONObject("{\"testScord\":\"" + String.valueOf(99) + "\"}");
 		return Result.ok(jsonObject);
 	}
 	

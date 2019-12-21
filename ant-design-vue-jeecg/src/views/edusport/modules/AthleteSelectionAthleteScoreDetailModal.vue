@@ -26,17 +26,17 @@
           <j-search-select-tag v-decorator="['indexCode']" dict="tb_edu_athlete_selection_index,cn_name,l3_code" />
         </a-form-item>
         <a-form-item label="测试值" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'testValue', validatorRules.testValue]" :min="0" :max="1000" placeholder="请输入测试值" v-on:blur="calcScore" ></a-input-number>
+          <a-input-number v-decorator="[ 'testValue', validatorRules.testValue]" :min="0" :max="1000" :precision="0.1" placeholder="请输入测试值" v-on:blur="calcScore" ></a-input-number>
         </a-form-item>
         <a-form-item label="得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%"/>
+          <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%" disabled="disabled"/>
         </a-form-item>
 <!--        <a-form-item label="测试成绩" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
 <!--          <a-input v-decorator="[ 'athleteScoreId', validatorRules.athleteScoreId]" placeholder="请输入测试成绩"></a-input>-->
 <!--        </a-form-item>-->
-        <a-form-item label="测试等级评定" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['testGrade']" :trigger-change="true" dictCode="tb_edu_athlete_selection_group_rating,rating,id" placeholder="请选择测试等级评定"/>
-        </a-form-item>
+<!--        <a-form-item label="测试等级评定" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <j-dict-select-tag type="list" v-decorator="['testGrade']" :trigger-change="true" dictCode="tb_edu_athlete_selection_group_rating,rating,id" placeholder="请选择测试等级评定"/>-->
+<!--        </a-form-item>-->
 
       </a-form>
     </a-spin>
@@ -49,7 +49,7 @@
   import pick from 'lodash.pick'
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
-
+  import axios from 'axios'
   export default {
     name: "AthleteSelectionAthleteScoreDetailModal",
     components: { 
@@ -81,8 +81,8 @@
         indexCode:{},
         testValue:{rules: [{ required: true, message: '请输入测试值!' }]},
         testScore:{},
-        athleteScoreId:{rules: [{ required: true, message: '请输入测试成绩!' }]},
-        testGrade:{},
+        // athleteScoreId:{rules: [{ required: true, message: '请输入测试成绩!' }]},
+        // testGrade:{},
         },
         url: {
           add: "/edusport/athleteSelectionAthleteScoreDetail/add",
@@ -108,7 +108,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteId','testId','groupId','eventCode','indexCode','testValue','testScore','testGrade'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','testId','groupId','eventCode','indexCode','testValue','testScore'))
         })
       },
       close () {
@@ -166,11 +166,9 @@
         getAction(this.url.calcScore, params).then((res) => {
           if (res.success) {
             this.$message.success(res.message);
-            // alert("返回值=" + res.message);
-            // console.log("返回值=" + res.message);
-            this.model.testScore = res.message;
-            console.log("赋值 = " + JSON.stringify(res.data) + "////// " + JSON.stringify(res.message));
-            //this.$emit('ok');
+            // console.log("返回值=" + JSON.stringify(res.result).substr(14,2));
+            console.log("赋值 === " + JSON.stringify(res.result).substr(14,2));
+            this.form.testScore = "9";
           } else {
             this.$message.warning(res.message);
           }
