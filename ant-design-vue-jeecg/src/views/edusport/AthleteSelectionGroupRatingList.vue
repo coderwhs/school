@@ -6,7 +6,8 @@
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
             <a-form-item label="所属组别">
-              <a-input placeholder="请输入所属组别" v-model="queryParam.groupId"></a-input>
+<!--              <a-input placeholder="请输入所属组别" v-model="queryParam.groupId"></a-input>-->
+              <j-search-select-tag v-decorator="['groupId']" v-model="queryParam.groupId" dict="tb_edu_athlete_selection_group,group_name,id" />
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8" >
@@ -108,12 +109,13 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import AthleteSelectionGroupRatingModal from './modules/AthleteSelectionGroupRatingModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   export default {
     name: "AthleteSelectionGroupRatingList",
     mixins:[JeecgListMixin],
     components: {
-      AthleteSelectionGroupRatingModal
+      AthleteSelectionGroupRatingModal,
+      JSearchSelectTag
     },
     data () {
       return {

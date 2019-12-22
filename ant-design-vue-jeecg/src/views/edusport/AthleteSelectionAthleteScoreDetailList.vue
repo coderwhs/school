@@ -8,26 +8,26 @@
           <a-col :md="6" :sm="8">
             <a-form-item label="运动员">
 <!--                            <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>-->
-              <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+              <j-search-select-tag v-decorator="['athleteId']" v-model="queryParam.athleteId" dict="tb_edu_athlete,athlete_name,id" />
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
             <a-form-item label="所属测试">
 <!--                            <a-input placeholder="请输入所属测试" v-model="queryParam.testId"></a-input>-->
-              <j-search-select-tag v-decorator="['testId']" dict="tb_edu_athlete_selection_test,test_name,id" />
+              <j-search-select-tag v-decorator="['testId']" v-model="queryParam.testId" dict="tb_edu_athlete_selection_test,test_name,id" />
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
               <a-form-item label="测试组别">
 <!--                                <a-input placeholder="请输入测试组别" v-model="queryParam.groupId"></a-input>-->
-                <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
+                <j-search-select-tag v-decorator="['groupId']" v-model="queryParam.groupId" dict="tb_edu_athlete_selection_group,group_name,id" />
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="8">
               <a-form-item label="指标">
 <!--                                <a-input placeholder="请输入指标" v-model="queryParam.indexCode"></a-input>-->
-                <j-search-select-tag v-decorator="['indexCode']" dict="tb_edu_athlete_selection_index,cn_name,id" />
+                <j-search-select-tag v-decorator="['indexCode']" v-model="queryParam.indexCode" dict="tb_edu_athlete_selection_index,cn_name,id" />
               </a-form-item>
             </a-col>
 <!--            <a-col :md="6" :sm="8">-->

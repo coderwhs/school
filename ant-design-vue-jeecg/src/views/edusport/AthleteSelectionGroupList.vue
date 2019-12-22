@@ -11,15 +11,16 @@
           </a-col>
           <a-col :md="6" :sm="8">
             <a-form-item label="大项">
-              <a-input placeholder="请输入大项" v-model="queryParam.sportCode"></a-input>
+<!--              <a-input placeholder="请输入大项" v-model="queryParam.sportCode"></a-input>-->
+              <j-search-select-tag v-decorator="['sportCode']" v-model="queryParam.sportCode" dict="tb_edu_sport,sport_name,sport_code" placeholder="请选择大小项"/>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="小项">
-                <a-input placeholder="请输入小项" v-model="queryParam.eventCodes"></a-input>
-              </a-form-item>
-            </a-col>
+<!--            <a-col :md="6" :sm="8">-->
+<!--              <a-form-item label="小项">-->
+<!--                <a-input placeholder="请输入小项" v-model="queryParam.eventCodes"></a-input>-->
+<!--              </a-form-item>-->
+<!--            </a-col>-->
           </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -120,12 +121,17 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import AthleteSelectionGroupModal from './modules/AthleteSelectionGroupModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+
 
   export default {
     name: "AthleteSelectionGroupList",
     mixins:[JeecgListMixin],
     components: {
-      AthleteSelectionGroupModal
+      AthleteSelectionGroupModal,
+      JMultiSelectTag,
+      JSearchSelectTag,
     },
     data () {
       return {

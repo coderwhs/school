@@ -6,7 +6,8 @@
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
             <a-form-item label="指标类别">
-              <a-input placeholder="请输入指标类别" v-model="queryParam.indexCatId"></a-input>
+<!--              <a-input placeholder="请输入指标类别" v-model="queryParam.indexCatId"></a-input>-->
+              <j-search-select-tag v-decorator="['indexCatId']" v-model="queryParam.indexCatId" dict="tb_edu_athlete_selection_index_cat,index_cat_name,id" />
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
@@ -125,12 +126,16 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import AthleteSelectionIndexModal from './modules/AthleteSelectionIndexModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import JDictSelectTag from "@/components/dict/JDictSelectTag"
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "AthleteSelectionIndexList",
     mixins:[JeecgListMixin],
     components: {
-      AthleteSelectionIndexModal
+      AthleteSelectionIndexModal,
+      JDictSelectTag,
+      JSearchSelectTag,
     },
     data () {
       return {

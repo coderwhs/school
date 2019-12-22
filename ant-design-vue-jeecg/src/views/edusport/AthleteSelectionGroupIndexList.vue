@@ -4,6 +4,22 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
+          <a-col :md="6" :sm="8">
+            <a-form-item label="所属组别">
+<!--              <a-input placeholder="请输入所属组别" v-model="queryParam.groupId"></a-input>-->
+              <j-search-select-tag v-decorator="['groupId']" v-model="queryParam.groupId" dict="tb_edu_athlete_selection_group,group_name,id" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8" >
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
 
         </a-row>
       </a-form>
@@ -93,12 +109,16 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import AthleteSelectionGroupIndexModal from './modules/AthleteSelectionGroupIndexModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "AthleteSelectionGroupIndexList",
     mixins:[JeecgListMixin],
     components: {
-      AthleteSelectionGroupIndexModal
+      AthleteSelectionGroupIndexModal,
+      JMultiSelectTag,
+      JSearchSelectTag,
     },
     data () {
       return {
