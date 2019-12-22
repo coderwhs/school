@@ -42,7 +42,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+        :scroll="tableScroll"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -156,6 +156,7 @@
         dictOptions:{
          indexId:[],
         },
+        tableScroll:{x :2*147+50}
       }
     },
     computed: {

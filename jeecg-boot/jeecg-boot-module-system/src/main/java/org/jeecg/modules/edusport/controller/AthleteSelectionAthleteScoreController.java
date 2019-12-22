@@ -108,7 +108,8 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 		athleteSelectionAthleteScore.setTestScore(testScore);
 		athleteSelectionAthleteScore.setTestGrade(groupRating.getId());
 		
-		athleteSelectionAthleteScoreMapper.updateScoreAndRatingByWrapper(queryWrapper, athleteSelectionAthleteScore);
+		athleteSelectionAthleteScoreService.updateById(athleteSelectionAthleteScore);
+		//athleteSelectionAthleteScoreMapper.updateScoreAndRatingByWrapper(queryWrapper, athleteSelectionAthleteScore);
 		return Result.ok("计算运动员成绩成功！");
 	}
 	
@@ -122,7 +123,7 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 	@Transactional
 	public Result<?> audit(@RequestParam(name="id",required=true) String id) {
 		AthleteSelectionAthleteScore athleteSelectionAthleteScore = athleteSelectionAthleteScoreService.getById(id);
-		athleteSelectionAthleteScore.setAuditState("2");
+		athleteSelectionAthleteScore.setAuditState("1");// 审核
 		athleteSelectionAthleteScoreService.updateById(athleteSelectionAthleteScore);
 		return Result.ok("审核成绩成功！");
 	}

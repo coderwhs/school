@@ -30,6 +30,11 @@
                 <j-search-select-tag v-decorator="['indexCode']" dict="tb_edu_athlete_selection_index,cn_name,id" />
               </a-form-item>
             </a-col>
+            <a-col :md="6" :sm="8">
+              <a-form-item label="小项">
+                <a-input placeholder="请输入小项" v-model="queryParam.eventCode"></a-input>
+              </a-form-item>
+            </a-col>
           </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -240,18 +245,18 @@
           //   align:"center",
           //   dataIndex: 'athleteScoreId'
           // },
-          {
-            title:'测试等级评定',
-            align:"center",
-            dataIndex: 'testGrade',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['testGrade'], text+"")
-              }
-            }
-          },
+          // {
+          //   title:'测试等级评定',
+          //   align:"center",
+          //   dataIndex: 'testGrade',
+          //   customRender:(text)=>{
+          //     if(!text){
+          //       return ''
+          //     }else{
+          //       return filterMultiDictText(this.dictOptions['testGrade'], text+"")
+          //     }
+          //   }
+          // },
           {
             title: '操作',
             dataIndex: 'action',
