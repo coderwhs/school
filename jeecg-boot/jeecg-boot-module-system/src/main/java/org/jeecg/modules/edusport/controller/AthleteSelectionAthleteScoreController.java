@@ -103,7 +103,9 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 		AthleteSelectionAthleteScore athleteSelectionAthleteScore = athleteSelectionAthleteScoreService.getById(id);
 		String resultInfo = "计算运动员成绩成功!";
 		if(athleteSelectionAthleteScore != null) {
-			if(athleteSelectionAthleteScore.getAuditState() != null && !"1".equals(athleteSelectionAthleteScore.getAuditState())) {
+			if("1".equals(athleteSelectionAthleteScore.getAuditState())) {
+				resultInfo = "运动员信息已经审核，不能再次计算，请确认!";
+			} else {
 				// 根据运动员取得成绩总分.
 				Integer testScore = athleteSelectionAthleteScoreDetailMapper.getAthleteScoreById(id);
 				// 根据分数判断相应等级.
@@ -116,8 +118,6 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 				} else {
 					resultInfo = "没有设置相应的评分等级!";
 				}
-			} else {
-				resultInfo = "运动员信息已经审核，不能再次计算，请确认!";
 			}
 		} else {
 			resultInfo = "运动员信息不存在，请确认!";
@@ -138,11 +138,11 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 		String resultInfo = "审核成绩成功！";
 		AthleteSelectionAthleteScore athleteSelectionAthleteScore = athleteSelectionAthleteScoreService.getById(id);
 		if(athleteSelectionAthleteScore != null) {
-			if(athleteSelectionAthleteScore.getAuditState() != null && !"1".equals(athleteSelectionAthleteScore.getAuditState())){
+			if("1".equals(athleteSelectionAthleteScore.getAuditState())){
+				resultInfo = "运动员成绩已经审核，请确认!";
+			} else {
 				athleteSelectionAthleteScore.setAuditState("1");// 审核
 				athleteSelectionAthleteScoreService.updateById(athleteSelectionAthleteScore);
-			} else {
-				resultInfo = "运动员成绩已经审核，请确认!";
 			}
 		} else {
 			resultInfo = "运动员信息不存，请确认!";

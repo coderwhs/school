@@ -20,16 +20,16 @@
           <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
         </a-form-item>
         <a-form-item label="起始年龄" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'startAge', validatorRules.startAge]" placeholder="请输入起始年龄" style="width: 100%"/>
+          <a-input-number v-decorator="[ 'startAge', validatorRules.startAge]" :min="0" :max="100" placeholder="请输入起始年龄" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="截止年龄" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'endAge', validatorRules.endAge]" placeholder="请输入截止年龄" style="width: 100%"/>
+          <a-input-number v-decorator="[ 'endAge', validatorRules.endAge]" :min="0" :max="100" placeholder="请输入截止年龄" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="最小数值" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'minData', validatorRules.minData]" placeholder="请输入最小数值" style="width: 100%"/>
+          <a-input-number v-decorator="[ 'minData', validatorRules.minData]" :min="0" :max="1000" :step="0.01" :precision="2" placeholder="请输入最小数值" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="最大数值" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'maxData', validatorRules.maxData]" placeholder="请输入最大数值" style="width: 100%"/>
+          <a-input-number v-decorator="[ 'maxData', validatorRules.maxData]" :min="0" :max="1000" :step="0.01" :precision="2" placeholder="请输入最大数值" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'score', validatorRules.score]" placeholder="请输入得分" style="width: 100%"/>
