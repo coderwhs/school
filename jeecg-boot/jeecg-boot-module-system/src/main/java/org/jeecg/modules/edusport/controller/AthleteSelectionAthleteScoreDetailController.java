@@ -118,20 +118,20 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 	@ResponseBody
 	public Result<?> audit(@RequestParam(name = "athleteId", required = true) String athleteId,
 			@RequestParam(name = "groupId", required = true) String groupId,
-			@RequestParam(name = "indexCode", required = true) String indexCode,
+			@RequestParam(name = "indexCode", required = false) String indexCode,
 			@RequestParam(name = "testValue", required = true) String testValue) {
 		HashMap athleteMap = (HashMap) athleteMapper.getAthleteAgeById(athleteId);// 运动员信息.
 		
 		System.out.println("============" + athleteMap.get("age"));
 		
-/*		Integer score = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(indexId, groupId,
-				athleteMap.get("gender"), Integer.valueOf(athleteMap.get("age")), testValue);*/
-		Integer score = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(indexCode, groupId,
-				"1", Integer.valueOf("1"), Integer.valueOf("1"));
-		Result result = new Result();
+		Integer score = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(groupId, indexCode,
+				athleteMap.get("gender").toString(), Integer.valueOf(athleteMap.get("age").toString()),
+				Integer.valueOf(testValue));
+//		Integer score = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(groupId,indexCode, 
+//				"1", Integer.valueOf("1"), Integer.valueOf("1"));
 		AthleteSelectionAthleteScoreDetail athleteSelectionAthleteScoreDetail = new AthleteSelectionAthleteScoreDetail();
 		athleteSelectionAthleteScoreDetail.setTestScore(Integer.valueOf("10"));
-		JSONObject jsonObject = new JSONObject("{\"testScord\":\"" + String.valueOf(99) + "\"}");
+		JSONObject jsonObject = new JSONObject("{\"testScord\":\"" + score + "\"}");
 		return Result.ok(jsonObject);
 	}
 	

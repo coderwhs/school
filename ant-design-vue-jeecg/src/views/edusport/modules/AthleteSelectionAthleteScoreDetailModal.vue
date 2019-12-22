@@ -26,10 +26,10 @@
           <j-search-select-tag v-decorator="['indexCode']" dict="tb_edu_athlete_selection_index,cn_name,l3_code" />
         </a-form-item>
         <a-form-item label="测试值" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'testValue', validatorRules.testValue]" :min="0" :max="1000" :precision="0.1" placeholder="请输入测试值" v-on:blur="calcScore" ></a-input-number>
+          <a-input-number v-decorator="[ 'testValue']" :min="0" :max="1000" placeholder="请输入测试值" v-on:blur="calcScore" ></a-input-number>
         </a-form-item>
         <a-form-item label="得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%" disabled="disabled"/>
+          <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%"/>
         </a-form-item>
 <!--        <a-form-item label="测试成绩" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
 <!--          <a-input v-decorator="[ 'athleteScoreId', validatorRules.athleteScoreId]" placeholder="请输入测试成绩"></a-input>-->
@@ -73,6 +73,7 @@
         },
 
         confirmLoading: false,
+
         validatorRules:{
         athleteId:{},
         testId:{},
@@ -154,21 +155,34 @@
         this.form.setFieldsValue(pick(row,'athleteId','testId','groupId','eventCode','indexCode','testValue','testScore','athleteScoreId','testGrade'))
       },
       // 计算成绩.
-      calcScore: function () {
-        // console.log("输入的测试值==" + JSON.stringify(this.model));
+      calcScore: function (event) {
+        console.log("当前值：" + this.model.testValue);
+        console.log("当前值：" + JSON.stringify(event.target.value) + " / " + JSON.stringify(event.currentTarget.toString()));
+        this.testValue = event.target.value;
+
         let params = {
           athleteId:this.model.athleteId,
           groupId:this.model.groupId,
           indexCode:this.model.indexCode,
-          testValue:this.model.testValue,
+          testValue:event.target.value
         };
+
         // console.log("输入的测试值==88" + JSON.stringify(params));
         getAction(this.url.calcScore, params).then((res) => {
           if (res.success) {
+
+
+            let that = this;
+            console.log("that.testValue: " + that.testValue);
             this.$message.success(res.message);
-            // console.log("返回值=" + JSON.stringify(res.result).substr(14,2));
-            console.log("赋值 === " + JSON.stringify(res.result).substr(14,2));
-            this.model.testScore = "9";
+            console.log("赋值 === " + JSON.stringify(res.result));
+            console.log("赋值 === " + JSON.stringify(res.result).split(":")[1].split("}")[0]);
+
+
+            this.model.testScore = '99';
+            console.log("this.form: " + JSON.stringify(this.model));
+            this.form.setFieldsValue(pick(this.model,'testScore'));
+
           } else {
             this.$message.warning(res.message);
           }
