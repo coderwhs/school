@@ -22,8 +22,8 @@
         <div  style="padding-top:5px;" v-bind:class="{hidden:true}">
           <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
   <!--          <j-search-select-tag v-decorator="['eventCode']" dict="tb_edu_sport,sport_name,sport_code" />-->
-  <!--          <j-multi-select-tag type="checkbox" v-decorator="['eventCode']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" placeholder="请选择小项"/>-->
-            <j-multi-select-tag type="list_multi" v-decorator="['eventCode']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" placeholder="请选择小项"/>
+<!--            <j-multi-select-tag type="checkbox" v-decorator="['eventCode']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" placeholder="请选择小项"/>-->
+            <j-multi-select-tag type="list_multi" v-decorator="['eventCode']"  dictCode="tb_edu_sport_small,event_name,event_code"/>
           </a-form-item>
         </div>
         <a-form-item label="指标" :labelCol="labelCol" :wrapperCol="wrapperCol">

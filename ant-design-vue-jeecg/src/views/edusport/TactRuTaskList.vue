@@ -42,9 +42,9 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        :scroll="tableScroll"
-        @change="handleTableChange">
 
+        @change="handleTableChange">
+        <!--        :scroll="tableScroll"-->
         <template slot="htmlSlot" slot-scope="text">
           <div v-html="text"></div>
         </template>
@@ -307,7 +307,7 @@
         dictOptions:{
 
         },
-        tableScroll:{x :10*147+50}
+        // tableScroll:{x :10*147+50}
       }
     },
     computed: {

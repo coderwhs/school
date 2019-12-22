@@ -220,18 +220,18 @@
               }
             }
           },
-          // {
-          //   title:'小项',
-          //   align:"center",
-          //   dataIndex: 'eventCode',
-          //   customRender:(text)=>{
-          //     if(!text){
-          //       return ''
-          //     }else{
-          //       return filterMultiDictText(this.dictOptions['eventCode'], text+"")
-          //     }
-          //   }
-          // },
+          {
+            title:'小项',
+            align:"center",
+            dataIndex: 'eventCode',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['eventCode'], text+"")
+              }
+            }
+          },
           {
             title:'得分',
             align:"center",
@@ -311,7 +311,7 @@
             this.$set(this.dictOptions, 'groupId', res.result)
           }
         })
-        initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
+        initDictOptions('tb_edu_sport_small,event_name,event_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'eventCode', res.result)
           }

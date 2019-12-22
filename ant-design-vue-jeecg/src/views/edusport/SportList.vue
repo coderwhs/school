@@ -144,16 +144,16 @@
             align:"center",
             dataIndex: 'sportName'
           },
-          {
-            title:'分项名称',
-            align:"center",
-            dataIndex: 'disciplinesName'
-          },
-          {
-            title:'小项名称',
-            align:"center",
-            dataIndex: 'eventName'
-          },
+          // {
+          //   title:'分项名称',
+          //   align:"center",
+          //   dataIndex: 'disciplinesName'
+          // },
+          // {
+          //   title:'小项名称',
+          //   align:"center",
+          //   dataIndex: 'eventName'
+          // },
           {
             title: '操作',
             dataIndex: 'action',

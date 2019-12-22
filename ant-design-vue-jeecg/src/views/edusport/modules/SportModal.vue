@@ -16,12 +16,12 @@
         <a-form-item label="大项名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'sportName', validatorRules.sportName]" placeholder="请输入大项名称"></a-input>
         </a-form-item>
-        <a-form-item label="分项名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'disciplinesName', validatorRules.disciplinesName]" placeholder="请输入分项名称"></a-input>
-        </a-form-item>
-        <a-form-item label="小项名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'eventName', validatorRules.eventName]" placeholder="请输入小项名称"></a-input>
-        </a-form-item>
+<!--        <a-form-item label="分项名称" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <a-input v-decorator="[ 'disciplinesName', validatorRules.disciplinesName]" placeholder="请输入分项名称"></a-input>-->
+<!--        </a-form-item>-->
+<!--        <a-form-item label="小项名称" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <a-input v-decorator="[ 'eventName', validatorRules.eventName]" placeholder="请输入小项名称"></a-input>-->
+<!--        </a-form-item>-->
 
       </a-form>
     </a-spin>
