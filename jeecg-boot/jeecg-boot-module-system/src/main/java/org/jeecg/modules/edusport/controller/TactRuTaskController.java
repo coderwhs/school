@@ -6,7 +6,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.flowable.engine.ProcessEngine;
+import org.flowable.engine.RepositoryService;
+import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
+import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.constant.CommonConstant;
@@ -14,7 +18,10 @@ import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.edusport.entity.DormAthleteLeave;
 import org.jeecg.modules.edusport.entity.TactRuTask;
+import org.jeecg.modules.edusport.service.IAthleteService;
+import org.jeecg.modules.edusport.service.IDormAthleteLeaveService;
 import org.jeecg.modules.edusport.service.ITactRuTaskService;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
@@ -51,9 +58,22 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 	@Autowired
 	private ITactRuTaskService tactRuTaskService;
 	@Autowired
+	private RuntimeService runtimeService;
+	@Autowired
 	private TaskService taskService;
 	@Autowired
+	private RepositoryService repositoryService;
+	@Autowired
+	private ProcessEngine processEngine;
+	@Autowired
 	private ISysUserService sysUserService;
+	
+
+	@Autowired
+	private IAthleteService athleteService;
+	@Autowired
+	private IDormAthleteLeaveService dormAthleteLeaveService;
+	
 	/**
 	 * 分页列表查询
 	 *
@@ -90,6 +110,13 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 			t.setId(task.getId());
 			t.setProcDefId(task.getProcessDefinitionId());
 			t.setProcInstId(task.getProcessInstanceId());
+	        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
+	        if ("Leave".equals(processInstance.getProcessDefinitionKey())) {
+	        	DormAthleteLeave dormAthleteLeave = dormAthleteLeaveService.getById(processInstance.getBusinessKey());
+	        	System.out.println(athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName());
+		        t.setDescription("【任务】请审批【" + athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName() + "】的请假申请！" );
+	        }
+	        
 			t.setName(task.getName());
 			t.setAssignee(task.getAssignee());
 			rs.add(t);
