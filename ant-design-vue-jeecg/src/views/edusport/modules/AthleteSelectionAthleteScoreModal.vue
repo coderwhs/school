@@ -72,7 +72,7 @@
         athleteId:{},
         testId:{},
         groupId:{},
-        eventCode:{},
+        // eventCode:{},
         testScore:{},
         testGrade:{},
         auditState:{},
@@ -100,7 +100,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteId','testId','groupId','eventCode','testScore','testGrade','auditState'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','testId','groupId','testScore','testGrade','auditState'))
         })
       },
       close () {
@@ -143,7 +143,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteId','testId','groupId','eventCode','testScore','testGrade','auditState'))
+        this.form.setFieldsValue(pick(row,'athleteId','testId','groupId','testScore','testGrade','auditState'))
       },
 
       

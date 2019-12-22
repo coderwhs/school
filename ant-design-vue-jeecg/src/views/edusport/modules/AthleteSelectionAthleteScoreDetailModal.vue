@@ -84,7 +84,7 @@
         athleteId:{},
         testId:{},
         groupId:{},
-        eventCode:{},
+        // eventCode:{},
         indexCode:{},
         testValue:{rules: [{ required: true, message: '请输入测试值!' }]},
         testScore:{},
