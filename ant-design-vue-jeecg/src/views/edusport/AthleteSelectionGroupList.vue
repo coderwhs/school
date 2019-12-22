@@ -12,15 +12,16 @@
           <a-col :md="6" :sm="8">
             <a-form-item label="大项">
 <!--              <a-input placeholder="请输入大项" v-model="queryParam.sportCode"></a-input>-->
-              <j-search-select-tag v-decorator="['sportCode']" v-model="queryParam.sportCode" dict="tb_edu_sport,sport_name,sport_code" placeholder="请选择大小项"/>
+              <j-search-select-tag v-decorator="['sportCode']" v-model="queryParam.sportCode" dict="tb_edu_sport,sport_name,sport_code"/>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
-<!--            <a-col :md="6" :sm="8">-->
-<!--              <a-form-item label="小项">-->
+            <a-col :md="6" :sm="8">
+              <a-form-item label="小项">
 <!--                <a-input placeholder="请输入小项" v-model="queryParam.eventCodes"></a-input>-->
-<!--              </a-form-item>-->
-<!--            </a-col>-->
+                <j-search-select-tag v-decorator="['eventCodes']" v-model="queryParam.eventCodes" dict="tb_edu_sport_small,event_name,event_code"/>
+              </a-form-item>
+            </a-col>
           </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">

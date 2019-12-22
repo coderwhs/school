@@ -16,9 +16,9 @@
         <a-form-item label="大类代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'l1Code', validatorRules.l1Code]" placeholder="请输入大类代码"></a-input>
         </a-form-item>
-        <a-form-item label="中类代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'l2Code', validatorRules.l2Code]" placeholder="请输入中类代码"></a-input>
-        </a-form-item>
+<!--        <a-form-item label="中类代码" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <a-input v-decorator="[ 'l2Code', validatorRules.l2Code]" placeholder="请输入中类代码"></a-input>-->
+<!--        </a-form-item>-->
         <a-form-item label="小类代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'l3Code', validatorRules.l3Code]" placeholder="请输入小类代码"></a-input>
         </a-form-item>
@@ -76,7 +76,7 @@
         validatorRules:{
         indexCatId:{rules: [{ required: true, message: '请输入指标类别!' }]},
         l1Code:{rules: [{ required: true, message: '请输入大类代码!' }]},
-        l2Code:{rules: [{ required: true, message: '请输入中类代码!' }]},
+        // l2Code:{rules: [{ required: true, message: '请输入中类代码!' }]},
         l3Code:{rules: [{ required: true, message: '请输入小类代码!' }]},
         cnName:{rules: [{ required: true, message: '请输入中文名称!' }]},
         enName:{},
@@ -102,7 +102,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'indexCatId','l1Code','l2Code','l3Code','cnName','enName','enShortName','unit','enableStatus'))
+          this.form.setFieldsValue(pick(this.model,'indexCatId','l1Code','l3Code','cnName','enName','enShortName','unit','enableStatus'))
         })
       },
       close () {
@@ -145,7 +145,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'indexCatId','l1Code','l2Code','l3Code','cnName','enName','enShortName','unit','enableStatus'))
+        this.form.setFieldsValue(pick(row,'indexCatId','l1Code','l3Code','cnName','enName','enShortName','unit','enableStatus'))
       },
 
       

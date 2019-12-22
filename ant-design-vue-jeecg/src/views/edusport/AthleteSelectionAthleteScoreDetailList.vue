@@ -30,12 +30,12 @@
                 <j-search-select-tag v-decorator="['indexCode']" v-model="queryParam.indexCode" dict="tb_edu_athlete_selection_index,cn_name,id" />
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="8">
-              <a-form-item label="小项">
-<!--                <a-input placeholder="请输入小项" v-model="queryParam.eventCode"></a-input>-->
-                <j-multi-select-tag type="list_multi" v-decorator="['eventCode']" v-model="queryParam.eventCode" dictCode="tb_edu_sport_small,event_name,event_code"/>
-              </a-form-item>
-            </a-col>
+<!--            <a-col :md="6" :sm="8">-->
+<!--              <a-form-item label="小项">-->
+<!--&lt;!&ndash;                <a-input placeholder="请输入小项" v-model="queryParam.eventCode"></a-input>&ndash;&gt;-->
+<!--                <j-multi-select-tag type="list_multi" v-decorator="['eventCode']" v-model="queryParam.eventCode" dictCode="tb_edu_sport_small,event_name,event_code"/>-->
+<!--              </a-form-item>-->
+<!--            </a-col>-->
           </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -210,18 +210,18 @@
               }
             }
           },
-          {
-            title:'小项',
-            align:"center",
-            dataIndex: 'eventCode',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['eventCode'], text+"")
-              }
-            }
-          },
+          // {
+          //   title:'小项',
+          //   align:"center",
+          //   dataIndex: 'eventCode',
+          //   customRender:(text)=>{
+          //     if(!text){
+          //       return ''
+          //     }else{
+          //       return filterMultiDictText(this.dictOptions['eventCode'], text+"")
+          //     }
+          //   }
+          // },
           {
             title:'指标',
             align:"center",
@@ -305,7 +305,7 @@
             this.$set(this.dictOptions, 'groupId', res.result)
           }
         })
-        initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
+        initDictOptions('tb_edu_sport_small,event_name,event_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'eventCode', res.result)
           }
@@ -326,7 +326,7 @@
         this.queryParam.athleteId = athleteId;
         this.queryParam.testId = testId;
         this.queryParam.groupId = groupId;
-        this.queryParam.eventCode = eventCode;
+        // this.queryParam.eventCode = eventCode;
         this.loadData();
       },
       handleAdd: function () {

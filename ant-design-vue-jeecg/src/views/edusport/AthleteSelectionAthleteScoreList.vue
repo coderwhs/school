@@ -220,18 +220,18 @@
               }
             }
           },
-          {
-            title:'小项',
-            align:"center",
-            dataIndex: 'eventCode',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['eventCode'], text+"")
-              }
-            }
-          },
+          // {
+          //   title:'小项',
+          //   align:"center",
+          //   dataIndex: 'eventCode',
+          //   customRender:(text)=>{
+          //     if(!text){
+          //       return ''
+          //     }else{
+          //       return filterMultiDictText(this.dictOptions['eventCode'], text+"")
+          //     }
+          //   }
+          // },
           {
             title:'得分',
             align:"center",

@@ -16,11 +16,11 @@
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="中类代码">
-                <a-input placeholder="请输入中类代码" v-model="queryParam.l2Code"></a-input>
-              </a-form-item>
-            </a-col>
+<!--            <a-col :md="6" :sm="8">-->
+<!--              <a-form-item label="中类代码">-->
+<!--                <a-input placeholder="请输入中类代码" v-model="queryParam.l2Code"></a-input>-->
+<!--              </a-form-item>-->
+<!--            </a-col>-->
             <a-col :md="6" :sm="8">
               <a-form-item label="小类代码">
                 <a-input placeholder="请输入小类代码" v-model="queryParam.l3Code"></a-input>
@@ -169,11 +169,11 @@
             align:"center",
             dataIndex: 'l1Code'
           },
-          {
-            title:'中类代码',
-            align:"center",
-            dataIndex: 'l2Code'
-          },
+          // {
+          //   title:'中类代码',
+          //   align:"center",
+          //   dataIndex: 'l2Code'
+          // },
           {
             title:'小类代码',
             align:"center",

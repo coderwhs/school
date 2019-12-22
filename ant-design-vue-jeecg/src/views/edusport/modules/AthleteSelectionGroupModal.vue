@@ -17,7 +17,7 @@
           <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" placeholder="请选择大小项" @change="handleValueChange"/>
         </a-form-item>
         <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol" >
-          <j-multi-select-tag type="list_multi" v-decorator="['eventCodes']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" placeholder="请选择小项"/>
+          <j-multi-select-tag type="list_multi" v-decorator="['eventCodes']" dictCode="tb_edu_sport_small,event_name,event_code" />
 <!--          <j-multi-select-tag type="checkbox" v-decorator="['eventCodes']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" :async="true" placeholder="请选择小项"/>-->
         </a-form-item>
 
