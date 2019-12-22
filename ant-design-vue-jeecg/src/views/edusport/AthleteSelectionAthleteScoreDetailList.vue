@@ -34,7 +34,6 @@
               <a-form-item label="小项">
 <!--                <a-input placeholder="请输入小项" v-model="queryParam.eventCode"></a-input>-->
                 <j-multi-select-tag type="list_multi" v-decorator="['eventCode']" dictCode="tb_edu_sport,sport_name,sport_code"/>
-                <j-multi-select-tag type="list_multi" v-decorator="['eventCode']" dictCode="tb_edu_sport,sport_name,sport_code"/>
               </a-form-item>
             </a-col>
           </template>

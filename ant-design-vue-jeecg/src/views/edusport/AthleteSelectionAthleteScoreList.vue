@@ -361,6 +361,7 @@
       searchQuery:function(){/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.id = null;
         this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteScoreId = null;
         this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteId = null;
         this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.testId = null;
@@ -375,6 +376,7 @@
       onClearSelected() {/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
+        this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.id = null;
         this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteScoreId = null;
         this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteId = null;
         this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.testId = null;

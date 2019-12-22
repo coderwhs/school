@@ -100,17 +100,30 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 	@GetMapping(value = "/calculateScore")
 	@Transactional
 	public Result<?> calculateScore(@RequestParam(name="id",required=true) String id) {
-		Integer testScore = athleteSelectionAthleteScoreDetailMapper.getAthleteScoreById(id);
-		AthleteSelectionGroupRating groupRating = athleteSelectionGroupRatingMapper.getAthleteScoreRatingByScore(testScore);
-		QueryWrapper<AthleteSelectionAthleteScore> queryWrapper = new QueryWrapper<AthleteSelectionAthleteScore>();
-		queryWrapper.eq("id", id);
 		AthleteSelectionAthleteScore athleteSelectionAthleteScore = athleteSelectionAthleteScoreService.getById(id);
-		athleteSelectionAthleteScore.setTestScore(testScore);
-		athleteSelectionAthleteScore.setTestGrade(groupRating.getId());
-		
-		athleteSelectionAthleteScoreService.updateById(athleteSelectionAthleteScore);
-		//athleteSelectionAthleteScoreMapper.updateScoreAndRatingByWrapper(queryWrapper, athleteSelectionAthleteScore);
-		return Result.ok("计算运动员成绩成功！");
+		String resultInfo = "计算运动员成绩成功!";
+		if(athleteSelectionAthleteScore != null) {
+			if(athleteSelectionAthleteScore.getAuditState() != null && !"1".equals(athleteSelectionAthleteScore.getAuditState())) {
+				// 根据运动员取得成绩总分.
+				Integer testScore = athleteSelectionAthleteScoreDetailMapper.getAthleteScoreById(id);
+				// 根据分数判断相应等级.
+				AthleteSelectionGroupRating groupRating = athleteSelectionGroupRatingMapper.getAthleteScoreRatingByScore(testScore);
+				if(groupRating != null && groupRating.getId() != null) {
+					athleteSelectionAthleteScore.setTestScore(testScore);
+					athleteSelectionAthleteScore.setTestGrade(groupRating.getId());
+					
+					athleteSelectionAthleteScoreService.updateById(athleteSelectionAthleteScore);
+				} else {
+					resultInfo = "没有设置相应的评分等级!";
+				}
+			} else {
+				resultInfo = "运动员信息已经审核，不能再次计算，请确认!";
+			}
+		} else {
+			resultInfo = "运动员信息不存在，请确认!";
+		}
+
+		return Result.ok(resultInfo);
 	}
 	
 	/**
@@ -122,10 +135,20 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 	@GetMapping(value = "/audit")
 	@Transactional
 	public Result<?> audit(@RequestParam(name="id",required=true) String id) {
+		String resultInfo = "审核成绩成功！";
 		AthleteSelectionAthleteScore athleteSelectionAthleteScore = athleteSelectionAthleteScoreService.getById(id);
-		athleteSelectionAthleteScore.setAuditState("1");// 审核
-		athleteSelectionAthleteScoreService.updateById(athleteSelectionAthleteScore);
-		return Result.ok("审核成绩成功！");
+		if(athleteSelectionAthleteScore != null) {
+			if(athleteSelectionAthleteScore.getAuditState() != null && !"1".equals(athleteSelectionAthleteScore.getAuditState())){
+				athleteSelectionAthleteScore.setAuditState("1");// 审核
+				athleteSelectionAthleteScoreService.updateById(athleteSelectionAthleteScore);
+			} else {
+				resultInfo = "运动员成绩已经审核，请确认!";
+			}
+		} else {
+			resultInfo = "运动员信息不存，请确认!";
+		}
+
+		return Result.ok(resultInfo);
 	}
 	
 	/**
