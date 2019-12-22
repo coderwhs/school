@@ -4,6 +4,28 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
+          <a-col :md="12" :sm="16">
+            <a-form-item label="小项名称">
+              <a-input placeholder="请输入最小值" class="query-group-cust" v-model="queryParam.eventName_begin"></a-input>
+              <span class="query-group-split-cust"></span>
+              <a-input placeholder="请输入最大值" class="query-group-cust" v-model="queryParam.eventName_end"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="所属大项ID">
+              <a-input placeholder="请输入所属大项ID" v-model="queryParam.sportId"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8" >
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
 
         </a-row>
       </a-form>
@@ -13,7 +35,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员训练其他事项记录信息表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('tb_edu_sport_small')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -84,25 +106,25 @@
       </a-table>
     </div>
 
-    <athleteOtherTrianningInfo-modal ref="modalForm" @ok="modalFormOk"></athleteOtherTrianningInfo-modal>
+    <sportSmall-modal ref="modalForm" @ok="modalFormOk"></sportSmall-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteOtherTrianningInfoModal from './modules/AthleteOtherTrianningInfoModal'
+  import SportSmallModal from './modules/SportSmallModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "AthleteOtherTrianningInfoList",
+    name: "SportSmallList",
     mixins:[JeecgListMixin],
     components: {
-      AthleteOtherTrianningInfoModal
+      SportSmallModal
     },
     data () {
       return {
-        description: '运动员训练其他事项记录信息表管理页面',
+        description: 'tb_edu_sport_small管理页面',
         // 表头
         columns: [
           {
@@ -116,29 +138,31 @@
             }
           },
           {
-            title:'运动员',
+            title:'项目代码',
             align:"center",
-            dataIndex: 'athleteId',
+            dataIndex: 'eventCode'
+          },
+          {
+            title:'小项名称',
+            align:"center",
+            dataIndex: 'eventName'
+          },
+          {
+            title:'所属大项ID',
+            align:"center",
+            dataIndex: 'sportId',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['athleteId'], text+"")
+                return filterMultiDictText(this.dictOptions['sportId'], text+"")
               }
             }
           },
           {
-            title:'记录时间',
+            title:'启用状态',
             align:"center",
-            dataIndex: 'recordDate',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
-            }
-          },
-          {
-            title:'内容',
-            align:"center",
-            dataIndex: 'content'
+            dataIndex: 'enableStatus'
           },
           {
             title: '操作',
@@ -148,11 +172,11 @@
           }
         ],
         url: {
-          list: "/edusport/athleteOtherTrianningInfo/list",
-          delete: "/edusport/athleteOtherTrianningInfo/delete",
-          deleteBatch: "/edusport/athleteOtherTrianningInfo/deleteBatch",
-          exportXlsUrl: "/edusport/athleteOtherTrianningInfo/exportXls",
-          importExcelUrl: "edusport/athleteOtherTrianningInfo/importExcel",
+          list: "/edusport/sportSmall/list",
+          delete: "/edusport/sportSmall/delete",
+          deleteBatch: "/edusport/sportSmall/deleteBatch",
+          exportXlsUrl: "/edusport/sportSmall/exportXls",
+          importExcelUrl: "edusport/sportSmall/importExcel",
         },
         dictOptions:{
         },
@@ -165,9 +189,9 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
+        initDictOptions('tb_edu_sport,sport_name,id').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'athleteId', res.result)
+            this.$set(this.dictOptions, 'sportId', res.result)
           }
         })
       }
