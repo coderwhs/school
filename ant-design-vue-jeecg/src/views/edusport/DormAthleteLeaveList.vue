@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <a-card :bordered="false">
     <!-- 查询区域 -->
     <div class="table-page-search-wrapper">
@@ -13,9 +13,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button @click="handleAdd" type="primary" icon="plus">计算</a-button>
-      <a-button @click="handleAdd" type="primary" icon="plus">审核</a-button>
-      <!--<a-button type="primary" icon="download" @click="handleExportXls('宿舍运动员请假��')">导出</a-button>
+      <!--<a-button type="primary" icon="download" @click="handleExportXls('宿舍运动员请假')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>-->

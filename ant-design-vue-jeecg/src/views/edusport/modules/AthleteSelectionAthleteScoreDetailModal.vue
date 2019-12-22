@@ -168,7 +168,7 @@
             this.$message.success(res.message);
             // console.log("返回值=" + JSON.stringify(res.result).substr(14,2));
             console.log("赋值 === " + JSON.stringify(res.result).substr(14,2));
-            this.form.testScore = "9";
+            this.model.testScore = "9";
           } else {
             this.$message.warning(res.message);
           }
