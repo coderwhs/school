@@ -120,18 +120,20 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 			@RequestParam(name = "groupId", required = true) String groupId,
 			@RequestParam(name = "indexCode", required = false) String indexCode,
 			@RequestParam(name = "testValue", required = true) String testValue) {
-		HashMap athleteMap = (HashMap) athleteMapper.getAthleteAgeById(athleteId);// 运动员信息.
-		
-		System.out.println("============" + athleteMap.get("age"));
-		
-		Integer score = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(groupId, indexCode,
-				athleteMap.get("gender").toString(), Integer.valueOf(athleteMap.get("age").toString()),
-				Integer.valueOf(testValue));
-//		Integer score = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(groupId,indexCode, 
-//				"1", Integer.valueOf("1"), Integer.valueOf("1"));
-		AthleteSelectionAthleteScoreDetail athleteSelectionAthleteScoreDetail = new AthleteSelectionAthleteScoreDetail();
-		athleteSelectionAthleteScoreDetail.setTestScore(Integer.valueOf("10"));
-		JSONObject jsonObject = new JSONObject("{\"testScord\":\"" + score + "\"}");
+		// 运动员信息.
+		JSONObject jsonObject = new JSONObject();
+		HashMap athleteMap = (HashMap) athleteMapper.getAthleteAgeById(athleteId);
+		if(athleteMap != null && !athleteMap.isEmpty()) {
+			Integer score = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(groupId, indexCode,
+					athleteMap.get("gender").toString(), Integer.valueOf(athleteMap.get("age").toString()),
+					Integer.valueOf(testValue));
+			if(score != null) {
+				jsonObject = new JSONObject("{\"testScord\":" + score.intValue() + "}");
+			} else {
+				jsonObject = new JSONObject("{\"testScord\":" + 0 + "}");
+			}	
+		}
+
 		return Result.ok(jsonObject);
 	}
 	

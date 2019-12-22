@@ -356,7 +356,7 @@
         // id,athleteId ,testId,groupId,eventCode
         //alert(selectionRows[0].id + ", " + selectionRows[0].athleteId + ", " + selectionRows[0].testId + ", " + selectionRows[0].groupId + ", " + selectionRows[0].eventCode);
         this.$refs.AthleteSelectionAthleteScoreDetailList.getAthleteScoreId(selectionRows[0].id,selectionRows[0].athleteId,selectionRows[0].testId,selectionRows[0].groupId,selectionRows[0].eventCode);
-      },
+        },
 
       searchQuery:function(){/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
@@ -385,6 +385,19 @@
         this.$refs.AthleteSelectionAthleteScoreDetailList.loadData();
         this.$refs.AthleteSelectionAthleteScoreDetailList.selectedRowKeys = [];
         this.$refs.AthleteSelectionAthleteScoreDetailList.selectionRows = [];
+      },
+
+      handleDelete: function (id) {/* Tab修改@2019-12-12 */
+        var that = this;
+        deleteAction(that.url.delete, {id: id}).then((res) => {
+          if (res.success) {
+            that.$message.success(res.message);
+            that.loadData();
+            this.$refs.AthleteSelectionAthleteScoreDetailList.loadData();
+          } else {
+            that.$message.warning(res.message);
+          }
+        });
       },
 
       // 引入运动员.
