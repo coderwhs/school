@@ -114,11 +114,11 @@
               return parseInt(index)+1;
             }
           },
-          {
-            title:'assignee',
-            align:"center",
-            dataIndex: 'assignee'
-          },
+          // {
+          //   title:'任务执行人',
+          //   align:"center",
+          //   dataIndex: 'assignee'
+          // },
           /*{
             title:'category',
             align:"center",
@@ -173,11 +173,11 @@
             align:"center",
             dataIndex: 'formKey'
           },*/
-          {
-            title:'id',
-            align:"center",
-            dataIndex: 'id'
-          },
+          // {
+          //   title:'任务ID',
+          //   align:"center",
+          //   dataIndex: 'id'
+          // },
           /*{
             title:'idLinkCount',
             align:"center",
@@ -189,7 +189,12 @@
             dataIndex: 'isCountEnabled'
           },*/
           {
-            title:'name',
+            title:'任务描述',
+            align:"left",
+            dataIndex: 'description'
+          },
+          {
+            title:'当前步骤',
             align:"center",
             dataIndex: 'name'
           },
@@ -213,11 +218,11 @@
             align:"center",
             dataIndex: 'procDefId'
           },*/
-          {
-            title:'procInstId',
-            align:"center",
-            dataIndex: 'procInstId'
-          },
+          // {
+          //   title:'流程ID',
+          //   align:"center",
+          //   dataIndex: 'procInstId'
+          // },
           /*{
             title:'rev',
             align:"center",
