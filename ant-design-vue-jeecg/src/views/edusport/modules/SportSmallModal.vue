@@ -10,17 +10,18 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="项目代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'eventCode', validatorRules.eventCode]" placeholder="请输入项目代码"></a-input>
+        <a-form-item label="小项代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'eventCode', validatorRules.eventCode]" placeholder="请输入小项代码"></a-input>
         </a-form-item>
         <a-form-item label="小项名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'eventName', validatorRules.eventName]" placeholder="请输入小项名称"></a-input>
         </a-form-item>
-        <a-form-item label="所属大项ID" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="大项" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['sportId']" dict="tb_edu_sport,sport_name,id" />
         </a-form-item>
         <a-form-item label="启用状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'enableStatus', validatorRules.enableStatus]" placeholder="请输入启用状态"></a-input>
+<!--          <a-input v-decorator="[ 'enableStatus', validatorRules.enableStatus]" placeholder="请输入启用状态"></a-input>-->
+          <j-dict-select-tag type="list" v-decorator="['enableStatus']" :trigger-change="true" dictCode="bill_state" placeholder="请选择启用状态"/>
         </a-form-item>
 
       </a-form>
@@ -57,7 +58,7 @@
 
         confirmLoading: false,
         validatorRules:{
-        eventCode:{rules: [{ required: true, message: '请输入项目代码!' }]},
+        eventCode:{rules: [{ required: true, message: '请输入小项代码!' }]},
         eventName:{},
         sportId:{},
         enableStatus:{},

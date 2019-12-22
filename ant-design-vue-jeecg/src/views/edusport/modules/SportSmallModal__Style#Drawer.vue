@@ -10,14 +10,14 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="项目代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'eventCode', validatorRules.eventCode]" placeholder="请输入项目代码"></a-input>
+        <a-form-item label="小项代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'eventCode', validatorRules.eventCode]" placeholder="请输入小项代码"></a-input>
         </a-form-item>
         <a-form-item label="小项名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'eventName', validatorRules.eventName]" placeholder="请输入小项名称"></a-input>
         </a-form-item>
-        <a-form-item label="所属大项ID" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportId', validatorRules.sportId]" placeholder="请输入所属大项ID"></a-input>
+        <a-form-item label="大项" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'sportId', validatorRules.sportId]" placeholder="请输入大项"></a-input>
         </a-form-item>
         <a-form-item label="启用状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'enableStatus', validatorRules.enableStatus]" placeholder="请输入启用状态"></a-input>
@@ -57,7 +57,7 @@
 
         confirmLoading: false,
         validatorRules:{
-        eventCode:{rules: [{ required: true, message: '请输入项目代码!' }]},
+        eventCode:{rules: [{ required: true, message: '请输入小项代码!' }]},
         eventName:{},
         sportId:{},
         enableStatus:{},

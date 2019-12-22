@@ -4,16 +4,15 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="12" :sm="16">
+          <a-col :md="6" :sm="8">
             <a-form-item label="小项名称">
-              <a-input placeholder="请输入最小值" class="query-group-cust" v-model="queryParam.eventName_begin"></a-input>
-              <span class="query-group-split-cust"></span>
-              <a-input placeholder="请输入最大值" class="query-group-cust" v-model="queryParam.eventName_end"></a-input>
+              <a-input placeholder="请输入小项名称" v-model="queryParam.eventName"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="所属大项ID">
-              <a-input placeholder="请输入所属大项ID" v-model="queryParam.sportId"></a-input>
+            <a-form-item label="大项">
+<!--              <a-input placeholder="请输入大项" v-model="queryParam.sportId"></a-input>-->
+              <j-search-select-tag v-decorator="['sportId']" v-model="queryParam.sportId" dict="tb_edu_sport,sport_name,id" />
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8" >
@@ -35,7 +34,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('tb_edu_sport_small')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('运动项目明细表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -115,16 +114,17 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SportSmallModal from './modules/SportSmallModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   export default {
     name: "SportSmallList",
     mixins:[JeecgListMixin],
     components: {
-      SportSmallModal
+      SportSmallModal,
+      JSearchSelectTag
     },
     data () {
       return {
-        description: 'tb_edu_sport_small管理页面',
+        description: '运动项目明细表管理页面',
         // 表头
         columns: [
           {
@@ -138,7 +138,7 @@
             }
           },
           {
-            title:'项目代码',
+            title:'小项代码',
             align:"center",
             dataIndex: 'eventCode'
           },
@@ -148,7 +148,7 @@
             dataIndex: 'eventName'
           },
           {
-            title:'所属大项ID',
+            title:'大项',
             align:"center",
             dataIndex: 'sportId',
             customRender:(text)=>{
@@ -162,7 +162,14 @@
           {
             title:'启用状态',
             align:"center",
-            dataIndex: 'enableStatus'
+            dataIndex: 'enableStatus',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['enableStatus'], text+"")
+              }
+            }
           },
           {
             title: '操作',
@@ -179,6 +186,7 @@
           importExcelUrl: "edusport/sportSmall/importExcel",
         },
         dictOptions:{
+          enableStatus:[],
         },
       }
     },
@@ -192,6 +200,11 @@
         initDictOptions('tb_edu_sport,sport_name,id').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'sportId', res.result)
+          }
+        })
+        initDictOptions('bill_state').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'enableStatus', res.result)
           }
         })
       }
