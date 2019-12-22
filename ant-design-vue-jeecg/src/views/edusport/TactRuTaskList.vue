@@ -307,7 +307,7 @@
         dictOptions:{
 
         },
-        tableScroll:{x :10*80+50}
+        tableScroll:{x :10*147+50}
       }
     },
     computed: {
