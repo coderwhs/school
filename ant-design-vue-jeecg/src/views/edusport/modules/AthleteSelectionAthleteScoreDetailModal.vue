@@ -30,7 +30,7 @@
           <j-search-select-tag v-decorator="['indexCode']" dict="tb_edu_athlete_selection_index,cn_name,l3_code" />
         </a-form-item>
         <a-form-item label="测试值" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'testValue']" :min="0" :max="1000" placeholder="请输入测试值" v-on:blur="calcScore" ></a-input-number>
+          <a-input-number v-decorator="[ 'testValue']" :min="0" :max="1000" :step="0.01" :precision="2" placeholder="请输入测试值" v-on:blur="calcScore" ></a-input-number>
         </a-form-item>
         <a-form-item label="得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%"/>

@@ -18,5 +18,5 @@ public interface AthleteSelectionGroupIndexGradeMapper extends BaseMapper<Athlet
 			@Param("indexCode") String indexCode, 
 			@Param("gender") String gender,
 			@Param("age") Integer age,
-			@Param("testValue") Integer testValue);
+			@Param("testValue") double testValue);
 }

@@ -122,11 +122,12 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 			@RequestParam(name = "testValue", required = true) String testValue) {
 		// 运动员信息.
 		JSONObject jsonObject = new JSONObject();
+		@SuppressWarnings("rawtypes")
 		HashMap athleteMap = (HashMap) athleteMapper.getAthleteAgeById(athleteId);
 		if(athleteMap != null && !athleteMap.isEmpty()) {
 			Integer score = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(groupId, indexCode,
 					athleteMap.get("gender").toString(), Integer.valueOf(athleteMap.get("age").toString()),
-					Integer.valueOf(testValue));
+					Double.parseDouble(testValue));
 			if(score != null) {
 				jsonObject = new JSONObject("{\"testScord\":" + score.intValue() + "}");
 			} else {

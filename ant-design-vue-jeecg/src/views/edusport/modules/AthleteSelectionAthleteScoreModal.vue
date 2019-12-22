@@ -19,9 +19,9 @@
         <a-form-item label="测试组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" disabled="disabled"/>
         </a-form-item>
-        <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-multi-select-tag type="checkbox" v-decorator="['eventCode']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" placeholder="请选择小项"/>
-        </a-form-item>
+<!--        <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <j-multi-select-tag type="checkbox" v-decorator="['eventCode']" :trigger-change="true" dictCode="tb_edu_sport,sport_name,sport_code" placeholder="请选择小项"/>-->
+<!--        </a-form-item>-->
         <a-form-item label="得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%" disabled="disabled"/>
         </a-form-item>
