@@ -7,32 +7,34 @@
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
             <a-form-item label="运动员">
-              <!--              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>-->
+<!--                            <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>-->
               <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
             <a-form-item label="所属测试">
-              <!--              <a-input placeholder="请输入所属测试" v-model="queryParam.testId"></a-input>-->
+<!--                            <a-input placeholder="请输入所属测试" v-model="queryParam.testId"></a-input>-->
               <j-search-select-tag v-decorator="['testId']" dict="tb_edu_athlete_selection_test,test_name,id" />
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
               <a-form-item label="测试组别">
-                <!--                <a-input placeholder="请输入测试组别" v-model="queryParam.groupId"></a-input>-->
+<!--                                <a-input placeholder="请输入测试组别" v-model="queryParam.groupId"></a-input>-->
                 <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="8">
               <a-form-item label="指标">
-                <!--                <a-input placeholder="请输入指标" v-model="queryParam.indexCode"></a-input>-->
+<!--                                <a-input placeholder="请输入指标" v-model="queryParam.indexCode"></a-input>-->
                 <j-search-select-tag v-decorator="['indexCode']" dict="tb_edu_athlete_selection_index,cn_name,id" />
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="8">
               <a-form-item label="小项">
-                <a-input placeholder="请输入小项" v-model="queryParam.eventCode"></a-input>
+<!--                <a-input placeholder="请输入小项" v-model="queryParam.eventCode"></a-input>-->
+                <j-multi-select-tag type="list_multi" v-decorator="['eventCode']" dictCode="tb_edu_sport,sport_name,sport_code"/>
+                <j-multi-select-tag type="list_multi" v-decorator="['eventCode']" dictCode="tb_edu_sport,sport_name,sport_code"/>
               </a-form-item>
             </a-col>
           </template>
@@ -133,15 +135,18 @@
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import AthleteSelectionAthleteScoreDetailModal from './modules/AthleteSelectionAthleteScoreDetailModal'
-  import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
+  import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+
 
   export default {
     name: "AthleteSelectionAthleteScoreDetailList",
     mixins:[JeecgListMixin],
     components: {
       AthleteSelectionAthleteScoreDetailModal,
-      JSearchSelectTag
+      JSearchSelectTag,
+      JMultiSelectTag
     },
     data () {
       return {
@@ -322,7 +327,7 @@
         this.queryParam.athleteId = athleteId;
         this.queryParam.testId = testId;
         this.queryParam.groupId = groupId;
-        this.queryParam.eventCode = eventCode;
+        // this.queryParam.eventCode = eventCode;
         this.loadData(1);
       },
       handleAdd: function () {
