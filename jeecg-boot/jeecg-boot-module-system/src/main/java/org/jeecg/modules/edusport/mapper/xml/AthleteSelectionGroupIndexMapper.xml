@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.edusport.mapper.AthleteSelectionGroupIndexMapper">
+	<select id="getIndexByGroupId" resultType="org.jeecg.modules.edusport.entity.AthleteSelectionGroupIndex">
+        SELECT * FROM tb_edu_athlete_selection_group_index
+		WHERE group_id = #{groupId} 
+    </select>
 
 </mapper>
