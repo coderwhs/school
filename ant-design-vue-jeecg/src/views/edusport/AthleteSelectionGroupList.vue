@@ -212,7 +212,7 @@
             this.$set(this.dictOptions, 'sportCode', res.result)
           }
         })
-        initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
+        initDictOptions('tb_edu_sport_small,event_name,event_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'eventCodes', res.result)
           }
