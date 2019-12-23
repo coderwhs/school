@@ -1,7 +1,11 @@
 package org.jeecg.modules.edusport.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -10,10 +14,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.system.util.JwtUtil;
+import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.edusport.entity.AthleteSelectionAthleteScoreDetail;
+import org.jeecg.modules.edusport.entity.AthleteSelectionGroupIndex;
 import org.jeecg.modules.edusport.mapper.AthleteMapper;
+import org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreDetailMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionGroupIndexGradeMapper;
+import org.jeecg.modules.edusport.mapper.AthleteSelectionGroupIndexMapper;
 import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreDetailService;
+import org.jeecg.modules.edusport.service.IAthleteSelectionGroupIndexService;
+import org.jeecg.modules.edusport.service.IAthleteSelectionIndexService;
+import org.jeecg.modules.shiro.vo.DefContants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +45,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import cn.hutool.json.JSONObject;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
  /**
@@ -50,8 +63,16 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 	@Resource
 	private AthleteMapper athleteMapper;
 	@Resource
+	private AthleteSelectionGroupIndexMapper athleteSelectionGroupIndexMapper;
+	@Resource
 	private AthleteSelectionGroupIndexGradeMapper athleteSelectionGroupIndexGradeMapper;
-	/**
+	@Autowired
+	private IAthleteSelectionGroupIndexService ahleteSelectionGroupIndexService;
+	@Autowired
+	private IAthleteSelectionIndexService athleteSelectionIndexService;
+	@Resource
+	private AthleteSelectionAthleteScoreDetailMapper athleteSelectionAthleteScoreDetailMapper;
+	/**o
 	 * 分页列表查询
 	 *
 	 * @param athleteSelectionAthleteScoreDetail
@@ -67,6 +88,7 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionAthleteScoreDetail> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionAthleteScoreDetail, req.getParameterMap());
 		Page<AthleteSelectionAthleteScoreDetail> page = new Page<AthleteSelectionAthleteScoreDetail>(pageNo, pageSize);
+		
 		IPage<AthleteSelectionAthleteScoreDetail> pageList = athleteSelectionAthleteScoreDetailService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
@@ -78,9 +100,67 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 	 * @return
 	 */
 	@PostMapping(value = "/add")
+	@Transactional
 	public Result<?> add(@RequestBody AthleteSelectionAthleteScoreDetail athleteSelectionAthleteScoreDetail) {
 		athleteSelectionAthleteScoreDetailService.save(athleteSelectionAthleteScoreDetail);
 		return Result.ok("添加成功！");
+	}
+	
+	/**
+	 * 引入运动员信息.
+	 * @param id
+	 * @return
+	 */
+	@GetMapping(value = "/importAthleteIndex")
+	@Transactional
+	public Result<?> calculateScore(HttpServletRequest request, @RequestParam(name="athleteScoreId",required=true) String athleteScoreId,@RequestParam(name="athleteId",required=true) String athleteId,
+			@RequestParam(name="testId",required=true) String testId,@RequestParam(name="groupId",required=true) String groupId) {
+		String resultInfo = "添加成功！";
+		AthleteSelectionGroupIndex athleteSelectionGroupIndex = athleteSelectionGroupIndexMapper.getIndexByGroupId(groupId);
+		if(athleteSelectionGroupIndex != null && athleteSelectionGroupIndex.getIndexId() != null
+				&& !"".equals(athleteSelectionGroupIndex.getIndexId())) {
+			String[] indexId = athleteSelectionGroupIndex.getIndexId().split(",");
+			String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
+
+			String username = "";
+			if(!oConvertUtils.isEmpty(token)) {
+				username = JwtUtil.getUsername(token);
+			}
+
+			List<AthleteSelectionAthleteScoreDetail> list = new ArrayList<AthleteSelectionAthleteScoreDetail>();
+			List<AthleteSelectionAthleteScoreDetail> indexList = new ArrayList<AthleteSelectionAthleteScoreDetail>();
+			for(int i = 0; i < indexId.length; i++) {
+				AthleteSelectionAthleteScoreDetail athleteSelectionAthleteScoreDetail = new AthleteSelectionAthleteScoreDetail();
+				AthleteSelectionAthleteScoreDetail deleteDetail = new AthleteSelectionAthleteScoreDetail();
+				athleteSelectionAthleteScoreDetail.setCreateTime(Calendar.getInstance().getTime());
+				athleteSelectionAthleteScoreDetail.setUpdateTime(Calendar.getInstance().getTime());
+				athleteSelectionAthleteScoreDetail.setCreateBy(username);
+				athleteSelectionAthleteScoreDetail.setUpdateBy(username);
+				
+				athleteSelectionAthleteScoreDetail.setAthleteId(athleteId);
+				athleteSelectionAthleteScoreDetail.setAthleteScoreId(athleteScoreId);
+				athleteSelectionAthleteScoreDetail.setGroupId(groupId);
+				athleteSelectionAthleteScoreDetail.setTestId(testId);
+				athleteSelectionAthleteScoreDetail.setTestValue("0");
+				athleteSelectionAthleteScoreDetail.setTestScore(Integer.valueOf(0));
+				athleteSelectionAthleteScoreDetail.setIndexCode(indexId[i]);// 指标记录.
+				list.add(athleteSelectionAthleteScoreDetail);
+				
+				// 删除明细.
+				deleteDetail.setAthleteScoreId(athleteScoreId);
+				deleteDetail.setAthleteId(athleteId);
+				deleteDetail.setTestId(testId);
+				deleteDetail.setGroupId(groupId);
+				deleteDetail.setIndexCode(indexId[i]);
+				indexList.add(deleteDetail);
+			}
+			athleteSelectionAthleteScoreDetailMapper.deleteIndexByIndexId(indexList);
+			athleteSelectionAthleteScoreDetailService.saveBatch(list);
+		} else {
+			resultInfo = "组别指标信息不存在，请确认！";
+		}
+		
+		return Result.ok(resultInfo);
 	}
 	
 	/**

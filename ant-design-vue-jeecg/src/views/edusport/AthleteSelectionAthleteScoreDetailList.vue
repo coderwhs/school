@@ -55,6 +55,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator" >
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+<!--      <a-button @click="handleImportAthleteIndex"  type="primary" icon="plus">引入</a-button>-->
 <!--      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试成绩明细表')">导出</a-button>-->
 <!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
 <!--        <a-button type="primary" icon="import">导入</a-button>-->
@@ -137,7 +138,7 @@
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-
+  import { getAction,httpAction,deleteAction  } from '@/api/manage'
 
   export default {
     name: "AthleteSelectionAthleteScoreDetailList",
@@ -276,6 +277,7 @@
           deleteBatch: "/edusport/athleteSelectionAthleteScoreDetail/deleteBatch",
           exportXlsUrl: "/edusport/athleteSelectionAthleteScoreDetail/exportXls",
           importExcelUrl: "edusport/athleteSelectionAthleteScoreDetail/importExcel",
+          importAthleteIndex:"/edusport/athleteSelectionAthleteScoreDetail/importAthleteIndex"
         },
         dictOptions:{
          // testGrade:[],
@@ -332,6 +334,32 @@
       handleAdd: function () {
         this.$refs.modalForm.add(this.queryParam.athleteScoreId,this.queryParam.athleteId,this.queryParam.testId,this.queryParam.groupId,this.queryParam.eventCode);
         this.$refs.modalForm.title = "运动员成绩详情信息";
+      },
+      // 导入运动员指标.
+      handleImportAthleteIndex: function () {
+        if(this.queryParam.athleteScoreId){
+          // typeof thisObj.city === 'undefined'
+          let params = {
+            athleteScoreId:this.queryParam.athleteScoreId,
+            athleteId:this.queryParam.athleteId,
+            testId:this.queryParam.testId,
+            groupId:this.queryParam.groupId,
+          };
+          console.log("表单提交数据", params);
+
+          getAction(this.url.importAthleteIndex, params).then((res) => {
+            if (res.success) {
+              this.$message.success(res.message);
+              //this.$emit('ok');
+            } else {
+              this.$message.warning(res.message);
+            }
+          }).finally(() => {
+            this.loadData(1);
+          })
+        } else {
+          alert("请选择一条运动员成绩信息");
+        }
       },
     }
   }
