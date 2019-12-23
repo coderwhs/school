@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.jeecg.modules.edusport.entity.AthleteSelectionGroupIndex;
+import org.jeecg.modules.edusport.entity.AthleteSelectionGroupRating;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -13,5 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Version: V1.0
  */
 public interface AthleteSelectionGroupIndexMapper extends BaseMapper<AthleteSelectionGroupIndex> {
-
+	AthleteSelectionGroupIndex getIndexByGroupId(@Param("groupId") String groupId);
 }
