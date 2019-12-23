@@ -62,7 +62,7 @@ public class AthleteSelectionIndexCatController extends JeecgController<AthleteS
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionIndexCat> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionIndexCat, req.getParameterMap());
 		Page<AthleteSelectionIndexCat> page = new Page<AthleteSelectionIndexCat>(pageNo, pageSize);
-		queryWrapper.orderByAsc("index_cat_no");
+		queryWrapper.orderByAsc("index_cat_no","index_cat_name");
 		IPage<AthleteSelectionIndexCat> pageList = athleteSelectionIndexCatService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}

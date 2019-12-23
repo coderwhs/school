@@ -62,6 +62,7 @@ public class AthleteSelectionGroupRatingController extends JeecgController<Athle
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionGroupRating> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionGroupRating, req.getParameterMap());
 		Page<AthleteSelectionGroupRating> page = new Page<AthleteSelectionGroupRating>(pageNo, pageSize);
+		queryWrapper.orderByAsc("group_id");
 		IPage<AthleteSelectionGroupRating> pageList = athleteSelectionGroupRatingService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
