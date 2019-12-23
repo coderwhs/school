@@ -88,7 +88,7 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionAthleteScoreDetail> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionAthleteScoreDetail, req.getParameterMap());
 		Page<AthleteSelectionAthleteScoreDetail> page = new Page<AthleteSelectionAthleteScoreDetail>(pageNo, pageSize);
-		
+		queryWrapper.orderByAsc("group_id","index_id");
 		IPage<AthleteSelectionAthleteScoreDetail> pageList = athleteSelectionAthleteScoreDetailService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
