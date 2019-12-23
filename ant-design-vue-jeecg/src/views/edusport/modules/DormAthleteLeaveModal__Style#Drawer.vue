@@ -80,8 +80,10 @@
           leaveCause:{rules: [{ required: true, message: '请输入请假原因!' }]},
           startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
           endDate:{rules: [{ required: true, message: '请输入结束日期!' }]},
-          workflowState:{rules: [{ required: true, message: '请输入状态!' }]},
-          billType:{rules: [{ required: true, message: '请输入单据类型!' }]},
+          workflowState:{},
+          billType:{},
+          // workflowState:{rules: [{ required: true, message: '请输入状态!' }]},
+          // billType:{rules: [{ required: true, message: '请输入单据类型!' }]},
         },
         url: {
           add: "/edusport/dormAthleteLeave/add",
@@ -172,16 +174,6 @@
       },
       popupCallback(row){
         this.form.setFieldsValue(pick(row,'athleteId','leaveCause','startDate','endDate'))
-      },
-
-      // 根据屏幕变化,设置抽屉尺寸
-      resetScreenSize(){
-        let screenWidth = document.body.clientWidth;
-        if(screenWidth < 500){
-          this.drawerWidth = screenWidth;
-        }else{
-          this.drawerWidth = 700;
-        }
       },
     }
   }

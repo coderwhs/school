@@ -102,8 +102,13 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 		   user = sysUserService.getUserByName(username);
 		   System.out.println(">>> userId: " + user.getId());
 		  }
+		  List<Task> tasks = Lists.newArrayList();
+		  if("admin".equals(userId)) {
+			  tasks = taskService.createTaskQuery().ignoreAssigneeValue().orderByTaskCreateTime().desc().list();
+		  } else {
+			  tasks = taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list();
+		  }
 		  
-		List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).orderByTaskCreateTime().desc().list();
 		List<TactRuTask> rs = Lists.newArrayList();
 		for (Task task :tasks) {
 			TactRuTask t = new TactRuTask();

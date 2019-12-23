@@ -283,7 +283,7 @@
           console.log("表单提交数据",formData);
           //formData.id = id;
           httpAction(httpurl,formData,method).then((res)=>{
-            if(res.success){
+            if(res.success){console.log("res.message:" + res.message);
               this.$message.success(res.message);
               //this.$emit('ok');
             }else{
