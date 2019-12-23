@@ -123,9 +123,9 @@
       <a-tab-pane tab="运动员运动员参赛记录" key="1">
         <Athlete-Contest-List ref="AthleteContestList"></Athlete-Contest-List>
       </a-tab-pane>
-      <a-tab-pane tab="运动员测试记录" key="2" forceRender>
-        <Athlete-Sport-Score-List ref="AthleteSportScoreList"></Athlete-Sport-Score-List>
-      </a-tab-pane>
+<!--      <a-tab-pane tab="运动员测试记录" key="2" forceRender>-->
+<!--        <Athlete-Sport-Score-List ref="AthleteSportScoreList"></Athlete-Sport-Score-List>-->
+<!--      </a-tab-pane>-->
       <a-tab-pane tab="运动员输送记录" key="3" forceRender>
         <Athlete-Transport-List ref="AthleteTransportList"></Athlete-Transport-List>
       </a-tab-pane>
