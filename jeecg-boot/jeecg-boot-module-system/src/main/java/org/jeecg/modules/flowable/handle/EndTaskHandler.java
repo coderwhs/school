@@ -1,26 +1,26 @@
 package org.jeecg.modules.flowable.handle;
-import org.flowable.engine.delegate.TaskListener;
-import org.flowable.task.service.delegate.DelegateTask;
+import org.flowable.engine.delegate.DelegateExecution;
+import org.flowable.engine.delegate.JavaDelegate;
 import org.jeecg.modules.edusport.entity.DormAthleteLeave;
 import org.jeecg.modules.edusport.service.IDormAthleteLeaveService;
 import org.jeecg.modules.edusport.service.impl.DormAthleteLeaveServiceImpl;
 import org.jeecg.modules.flowable.util.SpringUtil;
 
-public class EndTaskHandler implements TaskListener {
+public class EndTaskHandler  implements JavaDelegate{
  
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
 
 	@Override
-    public void notify(DelegateTask delegateTask) {
+	public void execute(DelegateExecution execution) {
+		System.out.println("EndTaskHandler已经执行已经执行！");
+		
 		IDormAthleteLeaveService dormAthleteLeaveService = SpringUtil.getObject(DormAthleteLeaveServiceImpl.class);
-		String billId = "" + delegateTask.getVariable("billId");
+		String billId = "" + execution.getVariable("billId");
 		System.out.println(">>>>>>>>>>billId>>>>>>>>>>>>>" + billId);
 		DormAthleteLeave dormAthleteLeave = dormAthleteLeaveService.getById(billId);
 		dormAthleteLeave.setWorkflowState("3");
 		dormAthleteLeaveService.saveOrUpdate(dormAthleteLeave);
-    }
+		
+	}
  
 }
