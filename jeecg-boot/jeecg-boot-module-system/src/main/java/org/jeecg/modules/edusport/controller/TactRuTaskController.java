@@ -114,7 +114,7 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 	        if ("Leave".equals(processInstance.getProcessDefinitionKey())) {
 	        	DormAthleteLeave dormAthleteLeave = dormAthleteLeaveService.getById(processInstance.getBusinessKey());
 	        	System.out.println(athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName());
-		        t.setDescription("【任务】请审批【" + athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName() + "】的请假申请！" );
+		        t.setDescription("【任务】请审批【" + athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName() + "】的请假申请！" + "【请假原因】：" + dormAthleteLeave.getLeaveCause());
 	        }
 	        
 			t.setName(task.getName());
