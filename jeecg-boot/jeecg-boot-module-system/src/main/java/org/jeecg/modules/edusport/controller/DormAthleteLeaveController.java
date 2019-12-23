@@ -75,6 +75,7 @@ public class DormAthleteLeaveController extends JeecgController<DormAthleteLeave
 								   HttpServletRequest req) {
 		QueryWrapper<DormAthleteLeave> queryWrapper = QueryGenerator.initQueryWrapper(dormAthleteLeave, req.getParameterMap());
 		Page<DormAthleteLeave> page = new Page<DormAthleteLeave>(pageNo, pageSize);
+		queryWrapper.orderByDesc("start_date","dorm_id");
 		IPage<DormAthleteLeave> pageList = dormAthleteLeaveService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
@@ -87,6 +88,8 @@ public class DormAthleteLeaveController extends JeecgController<DormAthleteLeave
 	 */
 	@PostMapping(value = "/add")
 	public Result<?> add(@RequestBody DormAthleteLeave dormAthleteLeave) {
+		dormAthleteLeave.setBillType("1");// 运动员宿舍请假单
+		dormAthleteLeave.setWorkflowState("1");// 初始化.
 		dormAthleteLeaveService.save(dormAthleteLeave);
 		return Result.ok("添加成功！");
 	}

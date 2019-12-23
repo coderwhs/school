@@ -168,18 +168,18 @@
               }
             }
           },
-          {
-            title:'单据类型',
-            align:"center",
-            dataIndex: 'billType',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['billType'], text+"")
-              }
-            }
-          },
+          // {
+          //   title:'单据类型',
+          //   align:"center",
+          //   dataIndex: 'billType',
+          //   customRender:(text)=>{
+          //     if(!text){
+          //       return ''
+          //     }else{
+          //       return filterMultiDictText(this.dictOptions['billType'], text+"")
+          //     }
+          //   }
+          // },
           {
             title: '操作',
             dataIndex: 'action',

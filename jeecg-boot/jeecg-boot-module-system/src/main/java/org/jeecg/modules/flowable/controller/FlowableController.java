@@ -91,8 +91,10 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 			String taskId = tasks.get(0);
 //			apply(dormAthleteLeave, tasks.get(0));
 
-			dormAthleteLeaveMapper.updateWorkflowState(dormAthleteLeave.getId());
-			dormAthleteLeave.setWorkflowState("3");
+			// 更改状态.
+			dormAthleteLeave = dormAthleteLeaveService.getById(dormAthleteLeave.getId());
+			dormAthleteLeave.setWorkflowState("2");
+			dormAthleteLeaveService.saveOrUpdate(dormAthleteLeave);
 			System.out.println("==============" + dormAthleteLeave.getId());
 
 			Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -206,12 +208,12 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	@PutMapping(value = "reject")
 	public String reject(HttpServletRequest request, @RequestBody DormAthleteLeave dormAthleteLeave) {
 		// 更改状态.
-		dormAthleteLeaveMapper.updateWorkflowState(dormAthleteLeave.getId());
-		dormAthleteLeave.setWorkflowState("4");
-
+		dormAthleteLeave = dormAthleteLeaveService.getById(dormAthleteLeave.getId());
+		dormAthleteLeave.setWorkflowState("4");// 驳回.
+		dormAthleteLeaveService.saveOrUpdate(dormAthleteLeave);
 		System.out.println("==============" + dormAthleteLeave.getId());
 		SysUser user = getSystemUser(request);
-		List<String> tasks = list(user.getId());
+		List<String> tasks = list(user.getUsername());
 		if (tasks != null && tasks.size() != 0) {
 			String taskId = tasks.get(0);
 			Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
