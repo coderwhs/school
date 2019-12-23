@@ -25,12 +25,12 @@
         <a-form-item label="年度离队(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'leaveNum', validatorRules.leaveNum]" placeholder="请输入年度离队(人)" style="width: 100%"/>
         </a-form-item>
-        <a-form-item label="市体校(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'citySchoolNum', validatorRules.citySchoolNum]" placeholder="请输入市体校(人)" style="width: 100%"/>
-        </a-form-item>
-        <a-form-item label="省体校(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'provinceSchoolNum', validatorRules.provinceSchoolNum]" placeholder="请输入省体校(人)" style="width: 100%"/>
-        </a-form-item>
+<!--        <a-form-item label="市体校(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <a-input-number v-decorator="[ 'citySchoolNum', validatorRules.citySchoolNum]" placeholder="请输入市体校(人)" style="width: 100%"/>-->
+<!--        </a-form-item>-->
+<!--        <a-form-item label="省体校(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <a-input-number v-decorator="[ 'provinceSchoolNum', validatorRules.provinceSchoolNum]" placeholder="请输入省体校(人)" style="width: 100%"/>-->
+<!--        </a-form-item>-->
         <a-form-item label="省队集试训(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'provinceTeamNum', validatorRules.provinceTeamNum]" placeholder="请输入省队集试训(人)" style="width: 100%"/>
         </a-form-item>
@@ -46,12 +46,12 @@
         <a-form-item label="输送省队(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'toProvinceTeam', validatorRules.toProvinceTeam]" placeholder="请输入输送省队(人)" style="width: 100%"/>
         </a-form-item>
-        <a-form-item label="输送省体校(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'toProvinceSchool', validatorRules.toProvinceSchool]" placeholder="请输入输送省体校(人)" style="width: 100%"/>
-        </a-form-item>
-        <a-form-item label="输送市体校(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'toCitySchool', validatorRules.toCitySchool]" placeholder="请输入输送市体校(人)" style="width: 100%"/>
-        </a-form-item>
+<!--        <a-form-item label="输送省体校(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <a-input-number v-decorator="[ 'toProvinceSchool', validatorRules.toProvinceSchool]" placeholder="请输入输送省体校(人)" style="width: 100%"/>-->
+<!--        </a-form-item>-->
+<!--        <a-form-item label="输送市体校(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <a-input-number v-decorator="[ 'toCitySchool', validatorRules.toCitySchool]" placeholder="请输入输送市体校(人)" style="width: 100%"/>-->
+<!--        </a-form-item>-->
         <a-form-item label="输送高校(人)" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'toCollege', validatorRules.toCollege]" placeholder="请输入输送高校(人)" style="width: 100%"/>
         </a-form-item>
@@ -88,12 +88,12 @@
         <a-form-item label="年度业务考核得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'appraisalScore', validatorRules.appraisalScore]" placeholder="请输入年度业务考核得分"></a-input>
         </a-form-item>
-        <a-form-item label="年度业务考核等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'appraisalGrade', validatorRules.appraisalGrade]" placeholder="请输入年度业务考核等级"></a-input>
-        </a-form-item>
-        <a-form-item label="训练部门审核意见" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['auditOpinion']" rows="4" placeholder="请输入训练部门审核意见"/>
-        </a-form-item>
+<!--        <a-form-item label="年度业务考核等级" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <a-input v-decorator="[ 'appraisalGrade', validatorRules.appraisalGrade]" placeholder="请输入年度业务考核等级"></a-input>-->
+<!--        </a-form-item>-->
+<!--        <a-form-item label="训练部门审核意见" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <a-textarea v-decorator="['auditOpinion']" rows="4" placeholder="请输入训练部门审核意见"/>-->
+<!--        </a-form-item>-->
 
       </a-form>
     </a-spin>

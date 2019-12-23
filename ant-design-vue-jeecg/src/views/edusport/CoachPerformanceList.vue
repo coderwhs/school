@@ -157,11 +157,11 @@
             align:"center",
             dataIndex: 'appraisalScore'
           },
-          {
-            title:'年度业务考核等级',
-            align:"center",
-            dataIndex: 'appraisalGrade'
-          },
+          // {
+          //   title:'年度业务考核等级',
+          //   align:"center",
+          //   dataIndex: 'appraisalGrade'
+          // },
           {
             title: '操作',
             dataIndex: 'action',
