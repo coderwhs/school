@@ -71,6 +71,7 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionAthleteScore> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionAthleteScore, req.getParameterMap());
 		Page<AthleteSelectionAthleteScore> page = new Page<AthleteSelectionAthleteScore>(pageNo, pageSize);
+		queryWrapper.orderByDesc("test_id","group_id");
 		IPage<AthleteSelectionAthleteScore> pageList = athleteSelectionAthleteScoreService.page(page, queryWrapper);
 
 		return Result.ok(pageList);
@@ -85,7 +86,6 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 	@GetMapping(value = "/importAthlete")
 	//@RequiresPermissions("user:add")
 	public Result<?> importAthlete(@RequestParam(name="groupId",required=true) String groupId) {
-				System.out.println("============================" + groupId);
 		//athleteSelectionAthleteScoreService.save(athleteSelectionAthleteScore);
 		
 		return Result.ok("引入运动员成功！"+ groupId);

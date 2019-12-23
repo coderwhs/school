@@ -62,6 +62,7 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionTest> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionTest, req.getParameterMap());
 		Page<AthleteSelectionTest> page = new Page<AthleteSelectionTest>(pageNo, pageSize);
+		queryWrapper.orderByDesc("publish_date","test_name");
 		IPage<AthleteSelectionTest> pageList = athleteSelectionTestService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
