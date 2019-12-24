@@ -123,14 +123,17 @@
       <a-tab-pane tab="运动员运动员参赛记录" key="1">
         <Athlete-Contest-List ref="AthleteContestList"></Athlete-Contest-List>
       </a-tab-pane>
-<!--      <a-tab-pane tab="运动员测试记录" key="2" forceRender>-->
-<!--        <Athlete-Sport-Score-List ref="AthleteSportScoreList"></Athlete-Sport-Score-List>-->
-<!--      </a-tab-pane>-->
+      <a-tab-pane tab="运动员文件成绩" key="2" forceRender>
+        <Athlete-Literacy-Score-List ref="AthleteLiteracyScoreList"></Athlete-Literacy-Score-List>
+      </a-tab-pane>
       <a-tab-pane tab="运动员输送记录" key="3" forceRender>
         <Athlete-Transport-List ref="AthleteTransportList"></Athlete-Transport-List>
       </a-tab-pane>
       <a-tab-pane tab="运动员其他训练事项记录" key="4" forceRender>
         <Athlete-Other-Trianning-Info-List ref="AthleteOtherTrianningInfoList"></Athlete-Other-Trianning-Info-List>
+      </a-tab-pane>
+      <a-tab-pane tab="运动员测试记录" key="5" forceRender>
+        <Athlete-Sport-Score-List ref="AthleteSportScoreList"></Athlete-Sport-Score-List>
       </a-tab-pane>
     </a-tabs>
 
@@ -147,6 +150,8 @@
   import AthleteSportScoreList from './AthleteSportScoreList'
   import AthleteTransportList from './AthleteTransportList'
   import AthleteOtherTrianningInfoList from './AthleteOtherTrianningInfoList'
+  import AthleteLiteracyScoreList from './AthleteLiteracyScoreList'
+  import AthleteLiteracyScoreModal from './modules/AthleteLiteracyScoreModal__Style#Drawer'
 
   import AthleteTransportModal from './modules/AthleteTransportModal'
   import AthleteSportScoreModal from './modules/AthleteSportScoreModal'
@@ -170,7 +175,9 @@
       AthleteTransportModal,
       AthleteSportScoreModal,
       AthleteOtherTrianningInfoModal,
-      AthleteContestModal
+      AthleteContestModal,
+      AthleteLiteracyScoreList,
+      AthleteLiteracyScoreModal,
       /* Tab修改@2019-12-12 */
     },
     data () {
@@ -345,10 +352,12 @@
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
         let athleteId = this.selectedRowKeys[0];
+        console.log("athleteId = " + athleteId)
         this.$refs.AthleteContestList.getAthleteByAthleteId(athleteId);
         this.$refs.AthleteSportScoreList.getAthleteByAthleteId(athleteId);
         this.$refs.AthleteTransportList.getAthleteByAthleteId(athleteId);
         this.$refs.AthleteOtherTrianningInfoList.getAthleteByAthleteId(athleteId);
+        this.$refs.AthleteLiteracyScoreList.getAthleteByAthleteId(athleteId);
         /* Tab修改@2019-12-12 */
       },
       onClearSelected() {/* Tab修改@2019-12-12 */
@@ -358,10 +367,12 @@
         this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
         this.$refs.AthleteOtherTrianningInfoList.queryParam.athleteId = null;
         this.$refs.AthleteContestList.queryParam.athleteId = null;
+        this.$refs.AthleteLiteracyScoreList.queryParam.athleteId = null;
         this.$refs.AthleteTransportList.loadData();
         this.$refs.AthleteSportScoreList.loadData();
         this.$refs.AthleteOtherTrianningInfoList.loadData();
         this.$refs.AthleteContestList.loadData();
+        this.$refs.AthleteLiteracyScoreList.loadData();
         this.$refs.AthleteTransportList.selectedRowKeys = [];
         this.$refs.AthleteTransportList.selectionRows = [];
         this.$refs.AthleteSportScoreList.selectedRowKeys = [];
@@ -370,6 +381,8 @@
         this.$refs.AthleteOtherTrianningInfoList.selectionRows = [];
         this.$refs.AthleteContestList.selectedRowKeys = [];
         this.$refs.AthleteContestList.selectionRows = [];
+        this.$refs.AthleteLiteracyScoreList.selectedRowKeys = [];
+        this.$refs.AthleteLiteracyScoreList.selectionRows = [];
       },
 
       handleDelete: function (id) {/* Tab修改@2019-12-12 */
@@ -382,6 +395,7 @@
             this.$refs.AthleteSportScoreList.loadData();
             this.$refs.AthleteOtherTrianningInfoList.loadData();
             this.$refs.AthleteContestList.loadData();
+            this.$refs.AthleteLiteracyScoreList.loadData();
           } else {
             that.$message.warning(res.message);
           }
@@ -394,10 +408,12 @@
         this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
         this.$refs.AthleteOtherTrianningInfoList.queryParam.athleteId = null;
         this.$refs.AthleteContestList.queryParam.athleteId = null;
+        this.$refs.AthleteLiteracyScoreList.queryParam.athleteId = null;
         this.$refs.AthleteTransportList.loadData();
         this.$refs.AthleteSportScoreList.loadData();
         this.$refs.AthleteOtherTrianningInfoList.loadData();
         this.$refs.AthleteContestList.loadData();
+        this.$refs.AthleteLiteracyScoreList.loadData();
         this.$refs.AthleteTransportList.selectedRowKeys = [];
         this.$refs.AthleteTransportList.selectionRows = [];
         this.$refs.AthleteSportScoreList.selectedRowKeys = [];
@@ -406,9 +422,10 @@
         this.$refs.AthleteOtherTrianningInfoList.selectionRows = [];
         this.$refs.AthleteContestList.selectedRowKeys = [];
         this.$refs.AthleteContestList.selectionRows = [];
+        this.$refs.AthleteLiteracyScoreList.selectedRowKeys = [];
+        this.$refs.AthleteLiteracyScoreList.selectionRows = [];
         this.loadData();
       }
-
     }
   }
 </script>

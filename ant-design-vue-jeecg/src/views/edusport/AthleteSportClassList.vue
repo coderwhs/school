@@ -4,33 +4,33 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="训练队">
-              <a-input placeholder="请输入训练队" v-model="queryParam.sportClassId"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="运动员">
-              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="获得等级">
-                <j-dict-select-tag placeholder="请选择获得等级" v-model="queryParam.athleteAwardTechGrade" dictCode="athlete_tech_grade"/>
-              </a-form-item>
-            </a-col>
-          </template>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
+<!--          <a-col :md="6" :sm="8">-->
+<!--            <a-form-item label="训练队">-->
+<!--              <a-input placeholder="请输入训练队" v-model="queryParam.sportClassId"></a-input>-->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--          <a-col :md="6" :sm="8">-->
+<!--            <a-form-item label="运动员">-->
+<!--              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>-->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--          <template v-if="toggleSearchStatus">-->
+<!--            <a-col :md="6" :sm="8">-->
+<!--              <a-form-item label="获得等级">-->
+<!--                <j-dict-select-tag placeholder="请选择获得等级" v-model="queryParam.athleteAwardTechGrade" dictCode="athlete_tech_grade"/>-->
+<!--              </a-form-item>-->
+<!--            </a-col>-->
+<!--          </template>-->
+<!--          <a-col :md="6" :sm="8" >-->
+<!--            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">-->
+<!--              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>-->
+<!--              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>-->
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
+<!--            </span>-->
+<!--          </a-col>-->
 
         </a-row>
       </a-form>
@@ -131,7 +131,7 @@
   import AthleteCoachEvaluationModal from './modules/AthleteCoachEvaluationModal'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-
+  import {getAction} from '@/api/manage'/* Tab修改@2019-12-12 */
   export default {
     name: "AthleteSportClassList",
     mixins:[JeecgListMixin],
@@ -139,7 +139,7 @@
       JDictSelectTag,
       AthleteSportClassModal,
       AthleteCoachEvaluationList,
-      AthleteCoachEvaluationModal
+      AthleteCoachEvaluationModal,
     },
     data () {
       return {
@@ -293,8 +293,16 @@
         this.$refs.AthleteCoachEvaluationList.selectionRows = [];
 
         this.loadData();
-      }
-
+      },
+      getListBySportClassId(sportClassId) {
+        this.queryParam.sportClassId = sportClassId;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.sportClassId);
+        this.$refs.modalForm.title = "训练队成员";
+        this.$refs.modalForm.disableSubmit = false;
+      },
     }
   }
 </script>

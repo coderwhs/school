@@ -108,6 +108,18 @@
     data () {
       return {
         description: '运动员输送表管理页面',
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
         // 表头
         columns: [
           {

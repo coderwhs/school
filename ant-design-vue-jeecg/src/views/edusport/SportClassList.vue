@@ -109,6 +109,9 @@
       <a-tab-pane tab="训练请假" key="2" forceRender>
         <Sport-Class-Athlete-Leave-List ref="SportClassAthleteLeaveList"></Sport-Class-Athlete-Leave-List>
       </a-tab-pane>
+      <a-tab-pane tab="训练队成员" key="3" forceRender>
+        <Athlete-Sport-Class-List ref="AthleteSportClassList"></Athlete-Sport-Class-List>
+      </a-tab-pane>
     </a-tabs>
 
     <sportClass-modal ref="modalForm" @ok="modalFormOk"></sportClass-modal>
@@ -126,6 +129,8 @@
   import SportClassAthleteLeaveModal from './modules/SportClassAthleteLeaveModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag.vue'
+  import AthleteSportClassList from './AthleteSportClassList'
+  import AthleteSportClassModal from './modules/AthleteSportClassModal__Style#Drawer'
 
   export default {
     name: "SportClassList",
@@ -136,6 +141,8 @@
       SportClassAthleteAttendModal,
       SportClassAthleteLeaveList,
       SportClassAthleteLeaveModal,
+      AthleteSportClassList,
+      AthleteSportClassModal,
       JSearchSelectTag
     },
     data () {
@@ -285,9 +292,9 @@
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
         let sportClassId = this.selectedRowKeys[0];
-
         this.$refs.SportClassAthleteAttendList.getListBySportClassId(sportClassId);
         this.$refs.SportClassAthleteLeaveList.getListBySportClassId(sportClassId);
+        this.$refs.AthleteSportClassList.getListBySportClassId(sportClassId);
       },
 
       onClearSelected() {
@@ -303,6 +310,11 @@
         this.$refs.SportClassAthleteLeaveList.loadData();
         this.$refs.SportClassAthleteLeaveList.selectedRowKeys = [];
         this.$refs.SportClassAthleteLeaveList.selectionRows = [];
+
+        this.$refs.AthleteSportClassList.queryParam.sportClassId = null;
+        this.$refs.AthleteSportClassList.loadData();
+        this.$refs.AthleteSportClassList.selectedRowKeys = [];
+        this.$refs.AthleteSportClassList.selectionRows = [];
       },
 
       searchQuery:function(){
@@ -319,6 +331,10 @@
         this.$refs.SportClassAthleteLeaveList.selectedRowKeys = [];
         this.$refs.SportClassAthleteLeaveList.selectionRows = [];
 
+        this.$refs.AthleteSportClassList.queryParam.sportClassId = null;
+        this.$refs.AthleteSportClassList.loadData();
+        this.$refs.AthleteSportClassList.selectedRowKeys = [];
+        this.$refs.AthleteSportClassList.selectionRows = [];
         this.loadData();
       }
        

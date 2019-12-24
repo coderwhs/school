@@ -81,12 +81,12 @@
   // import SportClassAthleteAttendModal from './modules/SportClassAthleteAttendModal'
   import SportClassAthleteAttendModal from './modules/SportClassAthleteAttendModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-
+  import {getAction} from '@/api/manage'/* Tab修改@2019-12-12 */
   export default {
     name: "SportClassAthleteAttendList",
     mixins:[JeecgListMixin],
     components: {
-      SportClassAthleteAttendModal
+      SportClassAthleteAttendModal,
     },
     data () {
       return {
@@ -189,6 +189,7 @@
           }
         })
       },
+
       getListBySportClassId(sportClassId) {
         this.queryParam.sportClassId = sportClassId;
         this.loadData(1);

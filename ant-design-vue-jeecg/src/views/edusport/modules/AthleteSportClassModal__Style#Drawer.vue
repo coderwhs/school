@@ -101,6 +101,15 @@
       add () {
         this.edit({});
       },
+      add(sportClassId) {
+        this.hiding = true;
+        if (sportClassId) {
+          this.sportClassId = sportClassId;
+          this.edit({sportClassId}, '');
+        } else {
+          this.$message.warning("请选择一个训练队信息");
+        }
+      },
       edit (record) {
         this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
         this.form.resetFields();

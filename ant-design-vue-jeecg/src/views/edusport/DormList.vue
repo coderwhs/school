@@ -128,7 +128,7 @@
   import DormAthleteLivingList from './DormAthleteLivingList'
   import DormAthleteLeaveList from './DormAthleteLeaveList'
   import DormAthleteLeaveModal from './modules/DormAthleteLeaveModal'
-  import DormAthleteLivingModal from './modules/DormAthleteLivingModal'/* Tab修改@2019-12-12 */
+  import DormAthleteLivingModal from './modules/AthleteLiteracyScoreModal__Style#Drawer'/* Tab修改@2019-12-12 */
   import {deleteAction} from '@/api/manage'
 
   export default {

@@ -4,38 +4,38 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="运动员">
-              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="年级">
-              <j-dict-select-tag placeholder="请选择年级" v-model="queryParam.grade" dictCode="edu_grade"/>
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="教学年度">
-                <a-input placeholder="请输入教学年度" v-model="queryParam.academicYear"></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="8">
-              <a-form-item label="学期">
-                <j-dict-select-tag placeholder="请选择学期" v-model="queryParam.semester" dictCode="edu_semester"/>
-              </a-form-item>
-            </a-col>
-          </template>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
+<!--          <a-col :md="6" :sm="8">-->
+<!--            <a-form-item label="运动员">-->
+<!--              <a-input placeholder="请输入运动员" v-model="queryParam.athleteId"></a-input>-->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--          <a-col :md="6" :sm="8">-->
+<!--            <a-form-item label="年级">-->
+<!--              <j-dict-select-tag placeholder="请选择年级" v-model="queryParam.grade" dictCode="edu_grade"/>-->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--          <template v-if="toggleSearchStatus">-->
+<!--            <a-col :md="6" :sm="8">-->
+<!--              <a-form-item label="教学年度">-->
+<!--                <a-input placeholder="请输入教学年度" v-model="queryParam.academicYear"></a-input>-->
+<!--              </a-form-item>-->
+<!--            </a-col>-->
+<!--            <a-col :md="6" :sm="8">-->
+<!--              <a-form-item label="学期">-->
+<!--                <j-dict-select-tag placeholder="请选择学期" v-model="queryParam.semester" dictCode="edu_semester"/>-->
+<!--              </a-form-item>-->
+<!--            </a-col>-->
+<!--          </template>-->
+<!--          <a-col :md="6" :sm="8" >-->
+<!--            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">-->
+<!--              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>-->
+<!--              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>-->
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
+<!--            </span>-->
+<!--          </a-col>-->
 
         </a-row>
       </a-form>
@@ -127,6 +127,7 @@
   import AthleteLiteracyScoreModal from './modules/AthleteLiteracyScoreModal__Style#Drawer'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import {getAction} from '@/api/manage'/* Tab修改@2019-12-12 */
 
   export default {
     name: "AthleteLiteracyScoreList",
@@ -138,6 +139,18 @@
     data () {
       return {
         description: '运动员文化课成绩信息表管理页面',
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
         // 表头
         columns: [
           {
@@ -278,11 +291,42 @@
             this.$set(this.dictOptions, 'semester', res.result)
           }
         })
-      }
-
+      },
+      loadData(arg) {/* Tab修改@2019-12-12 */
+        if (arg === 1) {
+          this.ipagination.current = 1;
+        }
+        //update-begin--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
+        var params = this.getQueryParams();
+        getAction(this.url.list, {
+          athleteId: params.athleteId, pageNo: this.ipagination.current,
+          pageSize: this.ipagination.pageSize
+        }).then((res) => {
+          if (res.success) {
+            this.dataSource = res.result.records;
+            this.ipagination.total = res.result.total;
+          } else {
+            this.dataSource = null;
+          }
+        })
+      },
+      getAthleteByAthleteId(athleteId) {/* Tab修改@2019-12-12 */
+        this.queryParam.athleteId = athleteId;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.athleteId);
+        this.$refs.modalForm.title = "运动员文化成绩信息";
+      },
     }
   }
 </script>
 <style scoped>
   @import '~@assets/less/common.less'
+  <style scoped>
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
+  </style>
 </style>

@@ -138,8 +138,15 @@
     created () {
     },
     methods: {
-      add () {
-        this.edit({});
+      add(athleteId){/* Tab修改@2019-12-12 */
+        this.hiding = true;
+
+        if (athleteId) {
+          this.athleteId = athleteId;
+          this.edit({athleteId:athleteId},'');
+        } else {
+          this.$message.warning("请选择一条运动员信息");
+        }
       },
       edit (record) {
         this.form.resetFields();
