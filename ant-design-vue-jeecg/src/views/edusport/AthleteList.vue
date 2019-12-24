@@ -132,9 +132,9 @@
       <a-tab-pane tab="运动员其他训练事项记录" key="4" forceRender>
         <Athlete-Other-Trianning-Info-List ref="AthleteOtherTrianningInfoList"></Athlete-Other-Trianning-Info-List>
       </a-tab-pane>
-      <a-tab-pane tab="运动员测试记录" key="5" forceRender>
-        <Athlete-Sport-Score-List ref="AthleteSportScoreList"></Athlete-Sport-Score-List>
-      </a-tab-pane>
+<!--      <a-tab-pane tab="运动员测试记录" key="5" forceRender>-->
+<!--        <Athlete-Sport-Score-List ref="AthleteSportScoreList"></Athlete-Sport-Score-List>-->
+<!--      </a-tab-pane>-->
     </a-tabs>
 
     <athlete-modal ref="modalForm" @ok="modalFormOk"></athlete-modal>
@@ -147,7 +147,7 @@
   // import AthleteModal from './modules/AthleteModal'
   import AthleteModal from './modules/AthleteModal__Style#Drawer'
   import AthleteContestList from './AthleteContestList'
-  import AthleteSportScoreList from './AthleteSportScoreList'
+  // import AthleteSportScoreList from './AthleteSportScoreList'
   import AthleteTransportList from './AthleteTransportList'
   import AthleteOtherTrianningInfoList from './AthleteOtherTrianningInfoList'
   import AthleteLiteracyScoreList from './AthleteLiteracyScoreList'
@@ -169,7 +169,7 @@
       JDictSelectTag,
       AthleteModal,
       AthleteTransportList,
-      AthleteSportScoreList,
+      // AthleteSportScoreList,
       AthleteOtherTrianningInfoList,
       AthleteContestList,
       AthleteTransportModal,
@@ -354,7 +354,7 @@
         let athleteId = this.selectedRowKeys[0];
         console.log("athleteId = " + athleteId)
         this.$refs.AthleteContestList.getAthleteByAthleteId(athleteId);
-        this.$refs.AthleteSportScoreList.getAthleteByAthleteId(athleteId);
+        // this.$refs.AthleteSportScoreList.getAthleteByAthleteId(athleteId);
         this.$refs.AthleteTransportList.getAthleteByAthleteId(athleteId);
         this.$refs.AthleteOtherTrianningInfoList.getAthleteByAthleteId(athleteId);
         this.$refs.AthleteLiteracyScoreList.getAthleteByAthleteId(athleteId);
@@ -364,19 +364,19 @@
         this.selectedRowKeys = [];
         this.selectionRows = [];
         this.$refs.AthleteTransportList.queryParam.athleteId = null;
-        this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
+        // this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
         this.$refs.AthleteOtherTrianningInfoList.queryParam.athleteId = null;
         this.$refs.AthleteContestList.queryParam.athleteId = null;
         this.$refs.AthleteLiteracyScoreList.queryParam.athleteId = null;
         this.$refs.AthleteTransportList.loadData();
-        this.$refs.AthleteSportScoreList.loadData();
+        // this.$refs.AthleteSportScoreList.loadData();
         this.$refs.AthleteOtherTrianningInfoList.loadData();
         this.$refs.AthleteContestList.loadData();
         this.$refs.AthleteLiteracyScoreList.loadData();
         this.$refs.AthleteTransportList.selectedRowKeys = [];
         this.$refs.AthleteTransportList.selectionRows = [];
-        this.$refs.AthleteSportScoreList.selectedRowKeys = [];
-        this.$refs.AthleteSportScoreList.selectionRows = [];
+        // this.$refs.AthleteSportScoreList.selectedRowKeys = [];
+        // this.$refs.AthleteSportScoreList.selectionRows = [];
         this.$refs.AthleteOtherTrianningInfoList.selectedRowKeys = [];
         this.$refs.AthleteOtherTrianningInfoList.selectionRows = [];
         this.$refs.AthleteContestList.selectedRowKeys = [];
@@ -392,7 +392,7 @@
             that.$message.success(res.message);
             that.loadData();
             this.$refs.AthleteTransportList.loadData();
-            this.$refs.AthleteSportScoreList.loadData();
+            // this.$refs.AthleteSportScoreList.loadData();
             this.$refs.AthleteOtherTrianningInfoList.loadData();
             this.$refs.AthleteContestList.loadData();
             this.$refs.AthleteLiteracyScoreList.loadData();
@@ -405,19 +405,19 @@
         this.selectedRowKeys = [];
         this.selectionRows = [];
         this.$refs.AthleteTransportList.queryParam.athleteId = null;
-        this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
+        // this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
         this.$refs.AthleteOtherTrianningInfoList.queryParam.athleteId = null;
         this.$refs.AthleteContestList.queryParam.athleteId = null;
         this.$refs.AthleteLiteracyScoreList.queryParam.athleteId = null;
         this.$refs.AthleteTransportList.loadData();
-        this.$refs.AthleteSportScoreList.loadData();
+        // this.$refs.AthleteSportScoreList.loadData();
         this.$refs.AthleteOtherTrianningInfoList.loadData();
         this.$refs.AthleteContestList.loadData();
         this.$refs.AthleteLiteracyScoreList.loadData();
         this.$refs.AthleteTransportList.selectedRowKeys = [];
         this.$refs.AthleteTransportList.selectionRows = [];
-        this.$refs.AthleteSportScoreList.selectedRowKeys = [];
-        this.$refs.AthleteSportScoreList.selectionRows = [];
+        // this.$refs.AthleteSportScoreList.selectedRowKeys = [];
+        // this.$refs.AthleteSportScoreList.selectionRows = [];
         this.$refs.AthleteOtherTrianningInfoList.selectedRowKeys = [];
         this.$refs.AthleteOtherTrianningInfoList.selectionRows = [];
         this.$refs.AthleteContestList.selectedRowKeys = [];
