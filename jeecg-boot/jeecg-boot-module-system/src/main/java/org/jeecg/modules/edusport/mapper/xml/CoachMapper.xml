@@ -11,4 +11,16 @@
 
 	</select>
 
+	<select id="getCoachByAthleteId" resultType="java.util.HashMap" >
+		SELECT coach.id id,coach.coach_no coach_no,coach.coach_name coach_name,GROUP_CONCAT(athlete.athlete_no) athlete FROM 
+		tb_edu_athlete athlete
+		LEFT JOIN tb_edu_coach coach ON coach.coach_no = athlete.major_sport_teacher_code
+		WHERE athlete.athlete_no IN 
+		<foreach collection="athleteNo" item="id" index="index" open="(" close=")" separator=",">
+		  #{id}
+		</foreach>
+		GROUP BY coach.coach_no,coach.coach_name
+		ORDER BY coach.coach_no 
+    </select>
+    
 </mapper>

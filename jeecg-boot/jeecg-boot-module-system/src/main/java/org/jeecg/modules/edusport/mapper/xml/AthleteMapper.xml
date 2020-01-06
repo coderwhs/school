@@ -9,4 +9,9 @@
 		FROM tb_edu_athlete  
 		where id = #{id}]]>
 	</select>
+	
+	<select id="getAthleteByNo" resultType="org.jeecg.modules.edusport.entity.Athlete">
+		<![CDATA[SELECT * FROM tb_edu_athlete  
+			where athlete_no = #{athleteNo}]]>
+	</select>
 </mapper>

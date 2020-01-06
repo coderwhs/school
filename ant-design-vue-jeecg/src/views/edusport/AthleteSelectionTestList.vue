@@ -49,6 +49,8 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="handleAudit" type="primary" icon="plus">启用</a-button>
+      <a-button @click="handleUnAudit" type="primary" icon="plus">禁用</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
@@ -120,11 +122,11 @@
       </a-table>
     </div>
 
-    <a-tabs defaultActiveKey="1">
+    <!-- <a-tabs defaultActiveKey="1">
       <a-tab-pane tab="运动员测试成绩" key="1">
         <Athlete-Selection-Athlete-Score-List ref="AthleteSelectionAthleteScoreList"></Athlete-Selection-Athlete-Score-List>
       </a-tab-pane>
-    </a-tabs>
+    </a-tabs> -->
 
     <athleteSelectionTest-modal ref="modalForm" @ok="modalFormOk"></athleteSelectionTest-modal>
   </a-card>
@@ -162,7 +164,7 @@
         ipagination:{
           current: 1,
           pageSize: 5,
-          pageSizeOptions: ['5', '10', '20'],
+          pageSizeOptions: ['10', '20', '30'],
           showTotal: (total, range) => {
             return range[0] + "-" + range[1] + " 共" + total + "条"
           },
@@ -183,12 +185,17 @@
             }
           },
           {
-            title:'测试名称',
+            title:'编码',
+            align:"center",
+            dataIndex: 'testCode'
+          },
+          {
+            title:'名称',
             align:"center",
             dataIndex: 'testName'
           },
           {
-            title:'测试大项',
+            title:'大项',
             align:"center",
             dataIndex: 'sportCode',
             customRender:(text)=>{
@@ -212,11 +219,35 @@
             }
           },
           {
+            title:'运动员',
+            align:"center",
+            dataIndex: 'athleteNos',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['athleteNos'], text+"")
+              }
+            }
+          },
+          {
             title:'发布日期',
             align:"center",
             dataIndex: 'publishDate',
             customRender:function (text) {
               return !text?"":(text.length>10?text.substr(0,10):text)
+            }
+          },
+          {
+            title:'状态',
+            align:"center",
+            dataIndex: 'billState',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['billState'], text+"")
+              }
             }
           },
           {
@@ -256,6 +287,16 @@
         initDictOptions('tb_edu_athlete_selection_group,group_name,id').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'groupId', res.result)
+          }
+        })
+                initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'athleteNos', res.result)
+          }
+        })
+        initDictOptions('bill_state').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'billState', res.result)
           }
         })
       },

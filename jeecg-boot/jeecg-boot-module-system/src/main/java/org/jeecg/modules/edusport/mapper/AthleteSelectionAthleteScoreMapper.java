@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.jeecg.modules.edusport.entity.AthleteSelectionAthleteScore;
+import org.jeecg.modules.edusport.entity.AthleteSelectionTest;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;

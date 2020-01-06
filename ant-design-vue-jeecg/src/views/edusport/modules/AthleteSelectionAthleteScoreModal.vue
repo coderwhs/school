@@ -11,7 +11,19 @@
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+          <j-search-select-tag type="checkbox" v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+        </a-form-item>
+        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,coach_no" />
+        </a-form-item>
+        <a-form-item label="出生日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-date placeholder="请选择出生日期" v-decorator="[ 'birthday', validatorRules.birthday]" :trigger-change="true" style="width: 100%"/>
+        </a-form-item>
+        <a-form-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
+        </a-form-item>
+        <a-form-item label="年级" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'grade', validatorRules.grade]" placeholder="请输入年级"></a-input>
         </a-form-item>
         <a-form-item label="所属测试" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['testId']" dict="tb_edu_athlete_selection_test,test_name,id" disabled="disabled"/>
@@ -19,9 +31,9 @@
         <a-form-item label="测试组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" disabled="disabled"/>
         </a-form-item>
-<!--        <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
-<!--          <j-multi-select-tag type="checkbox" v-decorator="['eventCode']" :trigger-change="true" dictCode="tb_edu_sport_small,event_name,event_code" placeholder="请选择小项"/>-->
-<!--        </a-form-item>-->
+       <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
+         <j-multi-select-tag type="checkbox" v-decorator="['eventCode']" :trigger-change="true" dictCode="tb_edu_sport_small,event_name,event_code" placeholder="请选择小项"/>
+       </a-form-item>
         <a-form-item label="得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'testScore', validatorRules.testScore]" placeholder="请输入得分" style="width: 100%" disabled="disabled"/>
         </a-form-item>
@@ -43,10 +55,11 @@
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
-
+  import JDate from '@/components/jeecg/JDate'  
   export default {
     name: "AthleteSelectionAthleteScoreModal",
     components: { 
+      JDate,
       JDictSelectTag,
       JMultiSelectTag,
       JSearchSelectTag,
@@ -70,6 +83,10 @@
         confirmLoading: false,
         validatorRules:{
         athleteId:{},
+        coachId:{},
+        birthday:{},
+        gender:{},
+        grade:{},
         testId:{},
         groupId:{},
         // eventCode:{},
@@ -100,7 +117,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteId','testId','groupId','testScore','testGrade','auditState'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','coachId','birthday','gender','grade','testId','groupId','testScore','testGrade','auditState'))
         })
       },
       close () {
@@ -143,7 +160,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteId','testId','groupId','testScore','testGrade','auditState'))
+        this.form.setFieldsValue(pick(row,'athleteId','coachId','birthday','gender','grade','testId','groupId','testScore','testGrade','auditState'))
       },
 
       

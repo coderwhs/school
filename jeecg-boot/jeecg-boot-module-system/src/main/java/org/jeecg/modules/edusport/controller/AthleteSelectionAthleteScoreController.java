@@ -71,7 +71,7 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionAthleteScore> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionAthleteScore, req.getParameterMap());
 		Page<AthleteSelectionAthleteScore> page = new Page<AthleteSelectionAthleteScore>(pageNo, pageSize);
-		queryWrapper.orderByDesc("test_id","group_id");
+		queryWrapper.orderByDesc("test_id");
 		IPage<AthleteSelectionAthleteScore> pageList = athleteSelectionAthleteScoreService.page(page, queryWrapper);
 
 		return Result.ok(pageList);
@@ -103,7 +103,7 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 		AthleteSelectionAthleteScore athleteSelectionAthleteScore = athleteSelectionAthleteScoreService.getById(id);
 		String resultInfo = "计算运动员成绩成功!";
 		if(athleteSelectionAthleteScore != null) {
-			if("1".equals(athleteSelectionAthleteScore.getAuditState())) {
+			if("2".equals(athleteSelectionAthleteScore.getAuditState())) {// 1：初始化，2：审核
 				resultInfo = "运动员信息已经审核，不能再次计算，请确认!";
 			} else {
 				// 根据运动员取得成绩总分.
@@ -138,10 +138,10 @@ public class AthleteSelectionAthleteScoreController extends JeecgController<Athl
 		String resultInfo = "审核成绩成功！";
 		AthleteSelectionAthleteScore athleteSelectionAthleteScore = athleteSelectionAthleteScoreService.getById(id);
 		if(athleteSelectionAthleteScore != null) {
-			if("1".equals(athleteSelectionAthleteScore.getAuditState())){
+			if("2".equals(athleteSelectionAthleteScore.getAuditState())){
 				resultInfo = "运动员成绩已经审核，请确认!";
 			} else {
-				athleteSelectionAthleteScore.setAuditState("1");// 审核
+				athleteSelectionAthleteScore.setAuditState("2");// 审核// 1：初始化，2：审核
 				athleteSelectionAthleteScoreService.updateById(athleteSelectionAthleteScore);
 			}
 		} else {

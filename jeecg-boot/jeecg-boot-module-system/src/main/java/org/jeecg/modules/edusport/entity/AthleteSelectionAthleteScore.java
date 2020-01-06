@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员选材测试成绩表
  * @Author: jeecg-boot
- * @Date:   2019-12-19
+ * @Date:   2020-01-06
  * @Version: V1.0
  */
 @Data
@@ -30,6 +30,20 @@ public class AthleteSelectionAthleteScore implements Serializable {
 	/**运动员*/
 	@Excel(name = "运动员", width = 15)
     private java.lang.String athleteId;
+	/**教练员*/
+	@Excel(name = "教练员", width = 15)
+    private java.lang.String coachId;
+	/**出生日期*/
+	@Excel(name = "出生日期", width = 15, format = "yyyy-MM-dd")
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private java.util.Date birthday;
+	/**性别*/
+	@Excel(name = "性别", width = 15)
+    private java.lang.String gender;
+	/**年级*/
+	@Excel(name = "年级", width = 15)
+    private java.lang.String grade;
 	/**所属测试*/
 	@Excel(name = "所属测试", width = 15)
     private java.lang.String testId;
@@ -45,8 +59,8 @@ public class AthleteSelectionAthleteScore implements Serializable {
 	/**测试等级评定*/
 	@Excel(name = "测试等级评定", width = 15)
     private java.lang.String testGrade;
-	/**审核状态*/
-	@Excel(name = "审核状态", width = 15)
+	/**状态*/
+	@Excel(name = "状态", width = 15)
     private java.lang.String auditState;
 	/**创建人*/
 	@Excel(name = "创建人", width = 15)

@@ -1,0 +1,162 @@
+<template>
+  <a-drawer
+    :title="title"
+    :width="width"
+    placement="right"
+    :closable="false"
+    @close="close"
+    :visible="visible">
+  
+    <a-spin :spinning="confirmLoading">
+      <a-form :form="form">
+
+        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'coachId', validatorRules.coachId]" placeholder="请输入教练员"></a-input>
+        </a-form-item>
+        <a-form-item label="大纲" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'outlineId', validatorRules.outlineId]" placeholder="请输入大纲"></a-input>
+        </a-form-item>
+        <a-form-item label="大纲组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'groupId', validatorRules.groupId]" placeholder="请输入大纲组别"></a-input>
+        </a-form-item>
+        <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="[ 'sportId', validatorRules.sportId]" placeholder="请输入运动项目"></a-input>
+        </a-form-item>
+        <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-multi-select-tag type="list_multi" v-decorator="['althleteNos']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
+        </a-form-item>
+        <a-form-item label="测试项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-multi-select-tag type="list_multi" v-decorator="['eventCodes']" :trigger-change="true" dictCode="tb_edu_sport_small,event_name,event_code" placeholder="请选择测试项目"/>
+        </a-form-item>
+        <a-form-item label="测试日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-date placeholder="请选择测试日期" v-decorator="[ 'testDate', validatorRules.testDate]" :trigger-change="true" style="width: 100%"/>
+        </a-form-item>
+        <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-dict-select-tag type="list" v-decorator="['state']" :trigger-change="true" dictCode="bill_state" placeholder="请选择单据状态"/>
+        </a-form-item>
+        
+      </a-form>
+    </a-spin>
+    <a-button type="primary" @click="handleOk">确定</a-button>
+    <a-button type="primary" @click="handleCancel">取消</a-button>
+  </a-drawer>
+</template>
+
+<script>
+
+  import { httpAction } from '@/api/manage'
+  import pick from 'lodash.pick'
+  import JDate from '@/components/jeecg/JDate'  
+  import JDictSelectTag from "@/components/dict/JDictSelectTag"
+  import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
+  
+  export default {
+    name: "OutlineCoachModal",
+    components: { 
+      JDate,
+      JDictSelectTag,
+      JMultiSelectTag,
+    },
+    data () {
+      return {
+        form: this.$form.createForm(this),
+        title:"操作",
+        width:800,
+        visible: false,
+        model: {},
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 5 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 },
+        },
+
+        confirmLoading: false,
+        validatorRules:{
+        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+        outlineId:{},
+        groupId:{},
+        sportId:{},
+        althleteNos:{},
+        eventCodes:{},
+        testDate:{},
+        state:{},
+        },
+        url: {
+          add: "/edusport/outlineCoach/add",
+          edit: "/edusport/outlineCoach/edit",
+        }
+     
+      }
+    },
+    created () {
+    },
+    methods: {
+      add () {
+        this.edit({});
+      },
+      edit (record) {
+        this.form.resetFields();
+        this.model = Object.assign({}, record);
+        this.visible = true;
+        this.$nextTick(() => {
+          this.form.setFieldsValue(pick(this.model,'coachId','outlineId','groupId','sportId','althleteNos','eventCodes','testDate','state'))
+        })
+      },
+      close () {
+        this.$emit('close');
+        this.visible = false;
+      },
+      handleOk () {
+        const that = this;
+        // 触发表单验证
+        this.form.validateFields((err, values) => {
+          if (!err) {
+            that.confirmLoading = true;
+            let httpurl = '';
+            let method = '';
+            if(!this.model.id){
+              httpurl+=this.url.add;
+              method = 'post';
+            }else{
+              httpurl+=this.url.edit;
+               method = 'put';
+            }
+            let formData = Object.assign(this.model, values);
+            console.log("表单提交数据",formData)
+            httpAction(httpurl,formData,method).then((res)=>{
+              if(res.success){
+                that.$message.success(res.message);
+                that.$emit('ok');
+              }else{
+                that.$message.warning(res.message);
+              }
+            }).finally(() => {
+              that.confirmLoading = false;
+              that.close();
+            })
+          }
+         
+        })
+      },
+      handleCancel () {
+        this.close()
+      },
+      popupCallback(row){
+        this.form.setFieldsValue(pick(row,'coachId','outlineId','groupId','sportId','althleteNos','eventCodes','testDate','state'))
+      }
+      
+    }
+  }
+</script>
+
+<style lang="less" scoped>
+/** Button按钮间距 */
+  .ant-btn {
+    margin-left: 30px;
+    margin-bottom: 30px;
+    float: right;
+  }
+</style>

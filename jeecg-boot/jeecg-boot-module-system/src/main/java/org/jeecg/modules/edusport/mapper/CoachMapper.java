@@ -1,5 +1,6 @@
 package org.jeecg.modules.edusport.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -20,4 +21,12 @@ public interface CoachMapper extends BaseMapper<Coach> {
 	 * @return
 	 */
 	public List<Coach> getCoachByBillId(@Param("id") String id);
+	
+	/**
+	  * 根据运动员信息，查找教练
+	 * @param athleteNo
+	 * @return
+	 */
+	public List<HashMap> getCoachByAthleteId(@Param("athleteNo") String[] athleteNo);
+	
 }

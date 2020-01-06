@@ -52,7 +52,7 @@
     
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="handleAdd" type="primary" icon="plus" disabled="disabled">新增</a-button>
 <!--            <a-button @click="handleImportAthlete"  type="primary" icon="plus">引入</a-button>-->
             <a-button @click="handleCalculateScore"  type="primary" icon="plus">计算</a-button>
             <a-button @click="handleAudit" type="primary" icon="plus">审核</a-button>
@@ -146,6 +146,7 @@
   import AthleteSelectionAthleteScoreDetailModal from './modules/AthleteSelectionAthleteScoreDetailModal'
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   import { getAction,httpAction,deleteAction  } from '@/api/manage'
+  
 
   export default {
     name: "AthleteSelectionAthleteScoreList",
@@ -197,6 +198,43 @@
             }
           },
           {
+            title:'教练员',
+            align:"center",
+            dataIndex: 'coachId',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['coachId'], text+"")
+              }
+            }
+          },
+          {
+            title:'出生日期',
+            align:"center",
+            dataIndex: 'birthday',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
+            }
+          },
+          {
+            title:'性别',
+            align:"center",
+            dataIndex: 'gender',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['gender'], text+"")
+              }
+            }
+          },
+          {
+            title:'年级',
+            align:"center",
+            dataIndex: 'grade'
+          },
+          {
             title:'所属测试',
             align:"center",
             dataIndex: 'testId',
@@ -220,18 +258,18 @@
               }
             }
           },
-          // {
-          //   title:'小项',
-          //   align:"center",
-          //   dataIndex: 'eventCode',
-          //   customRender:(text)=>{
-          //     if(!text){
-          //       return ''
-          //     }else{
-          //       return filterMultiDictText(this.dictOptions['eventCode'], text+"")
-          //     }
-          //   }
-          // },
+          {
+            title:'小项',
+            align:"center",
+            dataIndex: 'eventCode',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['eventCode'], text+"")
+              }
+            }
+          },
           {
             title:'得分',
             align:"center",
@@ -324,6 +362,21 @@
         initDictOptions('audit_state').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'auditState', res.result)
+          }
+        })
+        initDictOptions('tb_edu_coach,coach_name,coach_no').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'coachId', res.result)
+          }
+        })
+        initDictOptions('tb_edu_athlete_selection_group_rating,rating,id').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'testGrade', res.result)
+          }
+        })
+        initDictOptions('sex').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'gender', res.result)
           }
         })
       },

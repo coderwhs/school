@@ -9,26 +9,30 @@
     cancelText="关闭">
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
-        <a-form-item label="编码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'testCode', validatorRules.testCode]" placeholder="请输入编码"></a-input>
+
+        <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
         </a-form-item>
-        <a-form-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'testName', validatorRules.testName]" placeholder="请输入测试名称"></a-input>
+        <a-form-item label="大纲" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['outlineId']" dict="tb_edu_athlete_selection_test,test_name,id" />
         </a-form-item>
-        <a-form-item label="大项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" />
-        </a-form-item>
-        <a-form-item label="组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-form-item label="大纲组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
         </a-form-item>
+        <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-search-select-tag v-decorator="['sportId']" dict="tb_edu_sport,sport_name,sport_code" />
+        </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-multi-select-tag type="list_multi" v-decorator="['athleteNos']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
+          <j-multi-select-tag type="list_multi" v-decorator="['althleteNos']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
         </a-form-item>
-        <a-form-item label="发布日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-date placeholder="请选择发布日期" v-decorator="[ 'publishDate', validatorRules.publishDate]" :trigger-change="true" style="width: 100%"/>
+        <a-form-item label="测试项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-multi-select-tag type="list_multi" v-decorator="['eventCodes']" :trigger-change="true" dictCode="tb_edu_sport_small,event_name,event_code" placeholder="请选择测试项目"/>
         </a-form-item>
-        <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['billState']" :trigger-change="true" dictCode="bill_state" placeholder="请选择状态"/>
+        <a-form-item label="测试日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-date placeholder="请选择测试日期" v-decorator="[ 'testDate', validatorRules.testDate]" :trigger-change="true" style="width: 100%"/>
+        </a-form-item>
+        <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-dict-select-tag type="list" v-decorator="['state']" :trigger-change="true" dictCode="bill_state" placeholder="请选择单据状态"/>
         </a-form-item>
 
       </a-form>
@@ -41,17 +45,17 @@
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import JDate from '@/components/jeecg/JDate'  
-  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
-  import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
+  import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
-    name: "AthleteSelectionTestModal",
+    name: "OutlineCoachModal",
     components: { 
       JDate,
-      JSearchSelectTag,
       JDictSelectTag,
       JMultiSelectTag,
+      JSearchSelectTag,
     },
     data () {
       return {
@@ -71,15 +75,18 @@
 
         confirmLoading: false,
         validatorRules:{
-        testCode:{rules: [{ required: true, message: '请输入编码!' }]},
-        testName:{rules: [{ required: true, message: '请输入名称!' }]},
-        sportCode:{rules: [{ required: true, message: '请输入大项!' }]},
-        groupId:{rules: [{ required: true, message: '请输入组别!' }]},
-        publishDate:{rules: [{ required: true, message: '请输入发布日期!' }]},
+        coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+        outlineId:{},
+        groupId:{},
+        sportId:{},
+        althleteNos:{},
+        eventCodes:{},
+        testDate:{},
+        state:{},
         },
         url: {
-          add: "/edusport/athleteSelectionTest/add",
-          edit: "/edusport/athleteSelectionTest/edit",
+          add: "/edusport/outlineCoach/add",
+          edit: "/edusport/outlineCoach/edit",
         }
      
       }
@@ -95,7 +102,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'testCode','testName','sportCode','groupId','athleteNos','publishDate','billState'))
+          this.form.setFieldsValue(pick(this.model,'coachId','outlineId','groupId','sportId','althleteNos','eventCodes','testDate','state'))
         })
       },
       close () {
@@ -138,7 +145,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'testCode','testName','sportCode','groupId','athleteNos','publishDate','billState'))
+        this.form.setFieldsValue(pick(row,'coachId','outlineId','groupId','sportId','althleteNos','eventCodes','testDate','state'))
       },
 
       

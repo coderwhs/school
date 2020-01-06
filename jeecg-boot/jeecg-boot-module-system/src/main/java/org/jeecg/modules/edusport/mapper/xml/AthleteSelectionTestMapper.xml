@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.edusport.mapper.AthleteSelectionTestMapper">
-
+	<insert id="insertGetId" parameterType="org.jeecg.modules.edusport.entity.AthleteSelectionTest" 
+		useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+		insert into tb_edu_athlete_selection_test(test_code,  test_name,  sport_code,  group_id,  publish_date,  athlete_nos,  bill_state) 
+		values(#{athleteSelectionTest.testCode}, #{athleteSelectionTest.testName}, #{athleteSelectionTest.sportCode}, #{athleteSelectionTest.groupId}, #{athleteSelectionTest.publishDate}, #{athleteSelectionTest.athleteNos}, #{athleteSelectionTest.billState})
+	</insert>
+	
+<!-- 	<insert id="insertGetId" parameterType="org.jeecg.modules.edusport.entity.AthleteSelectionTest" >
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+            SELECT REPLACE(UUID(),'-','')
+        </selectKey>
+		insert into tb_edu_athlete_selection_test(id,test_code,  test_name,  sport_code,  group_id,  publish_date,  athlete_nos,  bill_state) 
+		values(#{id},#{athleteSelectionTest.testCode}, #{athleteSelectionTest.testName}, #{athleteSelectionTest.sportCode}, #{athleteSelectionTest.groupId}, #{athleteSelectionTest.publishDate}, #{athleteSelectionTest.athleteNos}, #{athleteSelectionTest.billState})
+	</insert> -->
 </mapper>

@@ -54,7 +54,7 @@
     <!-- 查询区域-END -->
     <!-- 操作按钮区域 -->
     <div class="table-operator" >
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="handleAdd" type="primary" icon="plus" disabled="disabled">新增</a-button>
 <!--      <a-button @click="handleImportAthleteIndex"  type="primary" icon="plus">引入</a-button>-->
 <!--      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试成绩明细表')">导出</a-button>-->
 <!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
