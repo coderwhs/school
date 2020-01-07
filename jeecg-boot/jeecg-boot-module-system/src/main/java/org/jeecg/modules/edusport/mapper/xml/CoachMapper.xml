@@ -8,7 +8,6 @@
 		LEFT JOIN tb_edu_coach coach ON coach.coach_no = athlete.major_sport_teacher_code
 		LEFT JOIN tb_edu_dorm_athlete_leave al ON al.athlete_id = athlete.id
 		WHERE al.id = #{id}
-
 	</select>
 
 	<select id="getCoachByAthleteId" resultType="java.util.HashMap" >
@@ -21,6 +20,12 @@
 		</foreach>
 		GROUP BY coach.coach_no,coach.coach_name
 		ORDER BY coach.coach_no 
+    </select>
+    
+    <select id="getCoachByName" resultType="org.jeecg.modules.edusport.entity.Coach">
+        SELECT * 
+        FROM tb_edu_coach
+		WHERE coach_name = #{coachName} 
     </select>
     
 </mapper>

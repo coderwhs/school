@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.jeecg.modules.edusport.entity.AthleteSelectionIndexCat;
 import org.jeecg.modules.edusport.entity.Coach;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -29,4 +30,5 @@ public interface CoachMapper extends BaseMapper<Coach> {
 	 */
 	public List<HashMap> getCoachByAthleteId(@Param("athleteNo") String[] athleteNo);
 	
+	public Coach getCoachByName(@Param("coachName") String coachName);
 }

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.edusport.mapper.AthleteSelectionIndexMapper">
-
+	<select id="getIndexByName" resultType="org.jeecg.modules.edusport.entity.AthleteSelectionIndex">
+        SELECT i.* FROM 
+		tb_edu_athlete_selection_index i
+		LEFT JOIN tb_edu_athlete_selection_index_cat cat ON cat.id = i.index_cat_id
+		WHERE i.cn_name = #{cnName} AND cat.index_cat_name = #{indexCatName}
+    </select>
 </mapper>

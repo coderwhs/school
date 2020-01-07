@@ -197,7 +197,7 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 			outlineCoach.setGroupId(groupId);// 组.
 			outlineCoach.setOutlineId(athleteSelectionTest.getId());// 大纲ID.
 			outlineCoach.setSportId(athleteSelectionTest.getSportCode());// 运动项目.
-			outlineCoach.setTestDate(athleteSelectionTest.getPublishDate());// 发布日期
+			outlineCoach.setTestDate(athleteSelectionTest.getPublishDate());// 测试日期
 			outlineCoach.setState("1");// 状态
 			outlineCoach.setCreateTime(Calendar.getInstance().getTime());
 			outlineCoach.setCreateBy(sysUser.getUsername());
@@ -207,56 +207,56 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		}
 		outlineCoachService.saveBatch(outlineCoachList);// 保存教练表信息.
 		
-		// 运动项目信息.
-		String[] sportCode = athleteSelectionGroup.getEventCodes().split(",");
-		for(int j = 0; j < sportCode.length; j++){//运动项目信息.
-			// 取得所有选择的学生.
-			String[] athleteNo = athleteSelectionTest.getAthleteNos().split(",");
-			for(int k = 0; k < athleteNo.length; k++) {// 查询所有运动员信息.
-				Athlete athlete = athleteMapper.getAthleteByNo(athleteNo[k]);
-				// 学生信息：教练、年级、出生年月、性别.
-				AthleteSelectionAthleteScore athleteSelectionAthleteScore = new AthleteSelectionAthleteScore();
-				athleteSelectionAthleteScore.setAthleteId(athlete.getId());// 运动员.
-				athleteSelectionAthleteScore.setBirthday(athlete.getBirthDate());// 出生日期.
-				athleteSelectionAthleteScore.setGender(athlete.getGender());// 性别.
-				athleteSelectionAthleteScore.setGrade(athlete.getGrade());// 年级
-				athleteSelectionAthleteScore.setCoachId(athlete.getMajorSportTeacherCode());// 教练员
-				athleteSelectionAthleteScore.setGroupId(groupId);// 组
-				athleteSelectionAthleteScore.setTestId(athleteSelectionTest.getId());// 大纲ID
-				athleteSelectionAthleteScore.setEventCode(athleteSelectionGroup.getEventCodes());// 运动项目
-				athleteSelectionAthleteScore.setTestScore(Integer.valueOf(0));// 成绩
-				athleteSelectionAthleteScore.setTestGrade("");// 测试等级.
-				athleteSelectionAthleteScore.setAuditState("1");// 状态
-				athleteSelectionAthleteScore.setCreateTime(Calendar.getInstance().getTime());
-				athleteSelectionAthleteScore.setCreateBy(sysUser.getUsername());
-				athleteSelectionAthleteScore.setUpdateTime(Calendar.getInstance().getTime());
-				athleteSelectionAthleteScore.setUpdateBy(sysUser.getUsername());
-				athleteSelectionAthleteScoreService.save(athleteSelectionAthleteScore);
-
-				// 指标信息.
-				AthleteSelectionGroupIndex athleteSelectionGroupIndex = athleteSelectionGroupIndexMapper.getIndexByGroupId(groupId);
-				
-				List<AthleteSelectionAthleteScoreDetail> athleteScoreDetailList = new ArrayList<AthleteSelectionAthleteScoreDetail>();
-				String[] indexids = athleteSelectionGroupIndex.getIndexId().split(",");
-				for(int i = 0; i < indexids.length; i++){//指标信息.
-					AthleteSelectionAthleteScoreDetail athleteSelectionAthleteScoreDetail = new AthleteSelectionAthleteScoreDetail();
-					athleteSelectionAthleteScoreDetail.setAthleteScoreId(athleteSelectionAthleteScore.getId());// 成绩ID
-					athleteSelectionAthleteScoreDetail.setAthleteId(athlete.getId());// 运动员.
-					athleteSelectionAthleteScoreDetail.setTestId(athleteSelectionTest.getId());// 大纲ID
-					athleteSelectionAthleteScoreDetail.setGroupId(groupId);// 组
-					athleteSelectionAthleteScoreDetail.setIndexCode(indexids[i]);// 指标
-					athleteSelectionAthleteScoreDetail.setEventCode(sportCode[j]);// 运动项目
-					athleteSelectionAthleteScoreDetail.setTestValue("");// 测试值
-					athleteSelectionAthleteScoreDetail.setTestScore(Integer.valueOf(0));// 测试分数
-					athleteSelectionAthleteScoreDetail.setCreateTime(Calendar.getInstance().getTime());
-					athleteSelectionAthleteScoreDetail.setCreateBy(sysUser.getUsername());
-					athleteSelectionAthleteScoreDetail.setUpdateTime(Calendar.getInstance().getTime());
-					athleteSelectionAthleteScoreDetail.setUpdateBy(sysUser.getUsername());
-					athleteScoreDetailList.add(athleteSelectionAthleteScoreDetail);
-				}
-				athleteSelectionAthleteScoreDetailService.saveBatch(athleteScoreDetailList);
-			}
-		}
+//		// 运动项目信息.
+//		String[] sportCode = athleteSelectionGroup.getEventCodes().split(",");
+//		for(int j = 0; j < sportCode.length; j++){//运动项目信息.
+//			// 取得所有选择的学生.
+//			String[] athleteNo = athleteSelectionTest.getAthleteNos().split(",");
+//			for(int k = 0; k < athleteNo.length; k++) {// 查询所有运动员信息.
+//				Athlete athlete = athleteMapper.getAthleteByNo(athleteNo[k]);
+//				// 学生信息：教练、年级、出生年月、性别.
+//				AthleteSelectionAthleteScore athleteSelectionAthleteScore = new AthleteSelectionAthleteScore();
+//				athleteSelectionAthleteScore.setAthleteId(athlete.getId());// 运动员.
+//				athleteSelectionAthleteScore.setBirthday(athlete.getBirthDate());// 出生日期.
+//				athleteSelectionAthleteScore.setGender(athlete.getGender());// 性别.
+//				athleteSelectionAthleteScore.setGrade(athlete.getGrade());// 年级
+//				athleteSelectionAthleteScore.setCoachId(athlete.getMajorSportTeacherCode());// 教练员
+//				athleteSelectionAthleteScore.setGroupId(groupId);// 组
+//				athleteSelectionAthleteScore.setTestId(athleteSelectionTest.getId());// 大纲ID
+//				athleteSelectionAthleteScore.setEventCode(athleteSelectionGroup.getEventCodes());// 运动项目
+//				athleteSelectionAthleteScore.setTestScore(Integer.valueOf(0));// 成绩
+//				athleteSelectionAthleteScore.setTestGrade("");// 测试等级.
+//				athleteSelectionAthleteScore.setAuditState("1");// 状态
+//				athleteSelectionAthleteScore.setCreateTime(Calendar.getInstance().getTime());
+//				athleteSelectionAthleteScore.setCreateBy(sysUser.getUsername());
+//				athleteSelectionAthleteScore.setUpdateTime(Calendar.getInstance().getTime());
+//				athleteSelectionAthleteScore.setUpdateBy(sysUser.getUsername());
+//				athleteSelectionAthleteScoreService.save(athleteSelectionAthleteScore);
+//
+//				// 指标信息.
+//				AthleteSelectionGroupIndex athleteSelectionGroupIndex = athleteSelectionGroupIndexMapper.getIndexByGroupId(groupId);
+//				
+//				List<AthleteSelectionAthleteScoreDetail> athleteScoreDetailList = new ArrayList<AthleteSelectionAthleteScoreDetail>();
+//				String[] indexids = athleteSelectionGroupIndex.getIndexId().split(",");
+//				for(int i = 0; i < indexids.length; i++){//指标信息.
+//					AthleteSelectionAthleteScoreDetail athleteSelectionAthleteScoreDetail = new AthleteSelectionAthleteScoreDetail();
+//					athleteSelectionAthleteScoreDetail.setAthleteScoreId(athleteSelectionAthleteScore.getId());// 成绩ID
+//					athleteSelectionAthleteScoreDetail.setAthleteId(athlete.getId());// 运动员.
+//					athleteSelectionAthleteScoreDetail.setTestId(athleteSelectionTest.getId());// 大纲ID
+//					athleteSelectionAthleteScoreDetail.setGroupId(groupId);// 组
+//					athleteSelectionAthleteScoreDetail.setIndexCode(indexids[i]);// 指标
+//					athleteSelectionAthleteScoreDetail.setEventCode(sportCode[j]);// 运动项目
+//					athleteSelectionAthleteScoreDetail.setTestValue("");// 测试值
+//					athleteSelectionAthleteScoreDetail.setTestScore(Integer.valueOf(0));// 测试分数
+//					athleteSelectionAthleteScoreDetail.setCreateTime(Calendar.getInstance().getTime());
+//					athleteSelectionAthleteScoreDetail.setCreateBy(sysUser.getUsername());
+//					athleteSelectionAthleteScoreDetail.setUpdateTime(Calendar.getInstance().getTime());
+//					athleteSelectionAthleteScoreDetail.setUpdateBy(sysUser.getUsername());
+//					athleteScoreDetailList.add(athleteSelectionAthleteScoreDetail);
+//				}
+//				athleteSelectionAthleteScoreDetailService.saveBatch(athleteScoreDetailList);
+//			}
+//		}
 
 		return Result.ok("添加成功！");
 	}
