@@ -111,6 +111,60 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		return Result.ok(pageList);
 	}
 	
+	@GetMapping(value = "/navigation")
+	public Result<?> navigation(HttpServletRequest req) {
+
+		return Result.ok("");
+	}
+	
+	/**
+	 *   审核
+	 *
+	 * @param athleteSelectionTest
+	 * @return
+	 */
+	@GetMapping(value = "/audit")
+	public Result<?> audit(@RequestParam(name="id",required=true) String id)  {
+		String resultInfo = "启用成功！";
+		AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(id);
+		if(athleteSelectionTest != null) {
+			if("1".equals(athleteSelectionTest.getBillState())){
+				resultInfo = "大纲已经启用，请确认!";
+			} else {
+				athleteSelectionTest.setBillState("1"); // 1：启用，2：禁用
+				athleteSelectionTestService.updateById(athleteSelectionTest);
+			}
+		} else {
+			resultInfo = "大纲信息不存，请确认!";
+		}
+
+		return Result.ok(resultInfo);
+	}
+	
+	/**
+	 *   反审核
+	 *
+	 * @param athleteSelectionTest
+	 * @return
+	 */
+	@GetMapping(value = "/unAudit")
+	public Result<?> unAudit(@RequestParam(name="id",required=true) String id) {
+		String resultInfo = "禁用成功！";
+		AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(id);
+		if(athleteSelectionTest != null) {
+			if("2".equals(athleteSelectionTest.getBillState())){
+				resultInfo = "大纲已经禁用，请确认!";
+			} else {
+				athleteSelectionTest.setBillState("2"); // 1：启用，2：禁用
+				athleteSelectionTestService.updateById(athleteSelectionTest);
+			}
+		} else {
+			resultInfo = "大纲信息不存，请确认!";
+		}
+
+		return Result.ok(resultInfo);
+	}
+	
 	/**
 	 *   添加
 	 *

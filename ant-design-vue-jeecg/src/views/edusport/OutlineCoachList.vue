@@ -304,8 +304,15 @@
             this.$set(this.dictOptions, 'state', res.result)
           }
         })
-      }
-       
+      },
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectionRows = selectionRows;
+      },
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+      },
     }
   }
 </script>

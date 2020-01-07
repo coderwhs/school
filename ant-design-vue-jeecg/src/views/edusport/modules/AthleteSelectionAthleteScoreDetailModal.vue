@@ -162,8 +162,8 @@
       },
       // 计算成绩.
       calcScore: function (event) {
-        console.log("当前值：" + this.model.testValue);
-        console.log("当前值：" + JSON.stringify(event.target.value) + " / " + JSON.stringify(event.currentTarget.toString()));
+        // console.log("当前值：" + this.model.testValue);
+        // console.log("当前值：" + JSON.stringify(event.target.value) + " / " + JSON.stringify(event.currentTarget.toString()));
         this.testValue = event.target.value;
 
         let params = {

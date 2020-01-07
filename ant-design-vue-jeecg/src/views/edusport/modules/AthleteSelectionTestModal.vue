@@ -16,7 +16,7 @@
           <a-input v-decorator="[ 'testName', validatorRules.testName]" placeholder="请输入测试名称"></a-input>
         </a-form-item>
         <a-form-item label="大项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" />
+          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" :trigger-change="true" @change="sportChange"/>
         </a-form-item>
         <a-form-item label="组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
@@ -45,6 +45,7 @@
   import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
 
+  import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   export default {
     name: "AthleteSelectionTestModal",
     components: { 
@@ -80,8 +81,8 @@
         url: {
           add: "/edusport/athleteSelectionTest/add",
           edit: "/edusport/athleteSelectionTest/edit",
-        }
-     
+        },
+        sportCode:''
       }
     },
     created () {
@@ -141,7 +142,20 @@
         this.form.setFieldsValue(pick(row,'testCode','testName','sportCode','groupId','athleteNos','publishDate','billState'))
       },
 
-      
+      sportChange(e){
+        if(e.target === e.currentTarget ||
+            e.timeStamp >= attachedTimestamp ||
+            e.timeStamp <= 0 ||
+            e.target.ownerDocument !== document){
+          alert("ok = " + e.setFieldsValue);
+          
+          initDictOptions("tb_edu_athlete,athlete_name,athlete_no,major_sport='" + 7 + "'").then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'athleteNos', res.result)
+          }
+        })
+        }
+      }
     }
   }
 </script>

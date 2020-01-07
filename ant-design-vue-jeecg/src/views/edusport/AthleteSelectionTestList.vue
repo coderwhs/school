@@ -12,7 +12,7 @@
           <a-col :md="6" :sm="8">
             <a-form-item label="测试大项">
 <!--              <a-input placeholder="请输入测试大项" v-model="queryParam.sportCode"></a-input>-->
-              <j-search-select-tag v-decorator="['sportCode']" v-model="queryParam.sportCode" dict="tb_edu_sport,sport_name,sport_code" />
+              <j-search-select-tag v-decorator="['sportCode']" v-model="queryParam.sportCode" dict="tb_edu_sport,sport_name,sport_code" dictCondition=" where sport_code='2'"/>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
@@ -49,6 +49,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="handleNavigation" type="primary" icon="plus">导航</a-button>
       <a-button @click="handleAudit" type="primary" icon="plus">启用</a-button>
       <a-button @click="handleUnAudit" type="primary" icon="plus">禁用</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试表')">导出</a-button>
@@ -140,11 +141,11 @@
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import AthleteSelectionAthleteScoreList from './AthleteSelectionAthleteScoreList'
   import AthleteSelectionAthleteScoreModal from './modules/AthleteSelectionAthleteScoreModal'
-  import { httpAction,deleteAction  } from '@/api/manage'
+  import { getAction, httpAction,deleteAction  } from '@/api/manage'
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   import AthleteSelectionAthleteScoreDetailList from './AthleteSelectionAthleteScoreDetailList'
   import AthleteSelectionAthleteScoreDetailModal from './modules/AthleteSelectionAthleteScoreDetailModal'
-
+  import OutlineNavigation from './OutlineNavigation'
   export default {
     name: "AthleteSelectionTestList",
     mixins:[JeecgListMixin],
@@ -156,6 +157,7 @@
       JSearchSelectTag,
       AthleteSelectionAthleteScoreDetailModal,
       AthleteSelectionAthleteScoreDetailList,
+      OutlineNavigation,
     },
     data () {
       return {
@@ -266,6 +268,8 @@
           deleteBatch: "/edusport/athleteSelectionTest/deleteBatch",
           exportXlsUrl: "/edusport/athleteSelectionTest/exportXls",
           importExcelUrl: "edusport/athleteSelectionTest/importExcel",
+          audit:"/edusport/athleteSelectionTest/audit",
+          unAudit:"/edusport/athleteSelectionTest/unAudit",
         },
         dictOptions:{
         },
@@ -289,7 +293,7 @@
             this.$set(this.dictOptions, 'groupId', res.result)
           }
         })
-                initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
+        initDictOptions('tb_edu_athlete,athlete_name,athlete_no').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'athleteNos', res.result)
           }
@@ -314,6 +318,7 @@
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
+        this.queryParam.id = selectionRows[0].id;
         this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(selectionRows[0].id,selectionRows[0].groupId);
 
         // // 成绩明细.
@@ -379,6 +384,55 @@
             that.$message.warning(res.message);
           }
         });
+      },
+
+      // 审核.
+      handleAudit: function () {
+        if(this.queryParam.id){
+          let params = {
+            id: this.queryParam.id
+          };
+
+          getAction(this.url.audit, params).then((res) => {
+            if (res.success) {
+              this.$message.success(res.message);
+            } else {
+              this.$message.warning(res.message);
+            }
+          }).finally(() => {
+            this.loadData(1);
+          })
+        } else {
+          alert("请选择一条信息");
+        }
+      },
+
+      // 反审核.
+      handleUnAudit: function () {
+        if(this.queryParam.id){
+          let params = {
+            id: this.queryParam.id
+          };
+
+          getAction(this.url.unAudit, params).then((res) => {
+            if (res.success) {
+              this.$message.success(res.message);
+            } else {
+              this.$message.warning(res.message);
+            }
+          }).finally(() => {
+            this.loadData(1);
+          })
+        } else {
+          alert("请选择一条信息");
+        }
+      },
+      handleNavigation: function () {
+        let routeUrl = this.$router.resolve({
+          path: './OutlineNavigation',
+          query: {}
+        });
+        window.open(routeUrl.href, '_blank');
       },
 
     }
