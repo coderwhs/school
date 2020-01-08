@@ -334,8 +334,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 				Cell cell = row.getCell(cellNum);
 				// 项目判断.
 				if(rowNum == 1 && cellNum == 1) {// 项目：举重.
-					String sportName = "";
-					sportName = row.getCell(cellNum).getStringCellValue();
+					String sportName = row.getCell(cellNum).getStringCellValue();
 					Sport sport = sportMapper.getSportByName(sportName);
 					if(sport == null) {
 						Result.error("导入文件模板的行：" + rowNum + "，列：" + cellNum + "的运动项目信息不存在，请确认！");
@@ -344,8 +343,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 
 				// 教练判断.
 				if(rowNum == 1 && cellNum == 3) {// 教练：举重.
-					String coachName = "";
-					coachName = row.getCell(cellNum).getStringCellValue();
+					String coachName = row.getCell(cellNum).getStringCellValue();
 					Coach coach = coachMapper.getCoachByName(coachName);
 					if(coach == null) {
 						Result.error("导入文件模板的行：" + rowNum + "，列：" + cellNum + "的教练信息不存在，请确认！");
@@ -355,6 +353,12 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 				// 指标类别.
 				if(rowNum == 2 && cellNum >= 5) {
 					String indexCatName = row.getCell(cellNum).getStringCellValue();
+					MergedRegionResult mergeRegionResult = isMergedRegion(sheet, rowNum, cellNum);
+					if(mergeRegionResult.merged) {// 合并单元格.
+						indexCatName = row.getCell(mergeRegionResult.startCol).getStringCellValue();
+					} else {
+						indexCatName = row.getCell(cellNum).getStringCellValue();
+					}
 					AthleteSelectionIndexCat athleteSelectionIndexCat = athleteSelectionIndexCatMapper.getIndexCatByName(indexCatName);
 					if(athleteSelectionIndexCat == null) {
 						Result.error("导入文件模板的行：" + rowNum + "，列：" + cellNum + "的指标类别信息不存在，请确认！");
@@ -363,7 +367,14 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 
 				// 指标.
 				if(rowNum == 3 && cellNum >= 5) {
-					String indexCatName = row.getCell(cellNum).getStringCellValue();
+					String indexCatName = "";
+					MergedRegionResult mergeRegionResult = isMergedRegion(sheet, rowNum, cellNum);
+					if(mergeRegionResult.merged) {// 合并单元格.
+						indexCatName = sheet.getRow(rowNum-1).getCell(mergeRegionResult.startCol).getStringCellValue();
+					} else {
+						indexCatName = sheet.getRow(rowNum-1).getCell(cellNum).getStringCellValue();
+					}
+					
 					String indexName = row.getCell(cellNum).getStringCellValue();// 指标.
 					AthleteSelectionIndex athleteSelectionIndex = athleteSelectionIndexMapper.getIndexByName(indexName, indexCatName);
 					if(athleteSelectionIndex == null) {
@@ -373,8 +384,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 				
 				// 运动员信息.
 				if(rowNum == 4) {
-					String athleteNo = "";
-					athleteNo = row.getCell(0).getStringCellValue();// 运动员学号.
+					String athleteNo = row.getCell(0).getStringCellValue();// 运动员学号.
 					Athlete athlete = athleteMapper.getAthleteByNo(athleteNo);
 					if(athlete == null) {
 						Result.error("导入文件模板的行：" + rowNum + "，列：" + cellNum + "的运动员信息不存在，请确认！");
@@ -394,7 +404,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 	 * @param column
 	 * @return
 	 */
-	private ExcelResult isMergedRegion(Sheet sheet, int row, int column) {
+	private MergedRegionResult isMergedRegion(Sheet sheet, int row, int column) {
 		int sheetMergeCount = sheet.getNumMergedRegions();
 		for (int i = 0; i < sheetMergeCount; i++) {
 			CellRangeAddress range = (CellRangeAddress) sheet.getMergedRegion(i);
@@ -404,22 +414,22 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 			int lastRow = range.getLastRow();
 			if (row >= firstRow && row <= lastRow) {
 				if (column >= firstColumn && column <= lastColumn) {
-					return new ExcelResult(true, firstRow + 1, lastRow + 1, firstColumn + 1, lastColumn + 1);
+					return new MergedRegionResult(true, firstRow + 1, lastRow + 1, firstColumn + 1, lastColumn + 1);
 				}
 			}
 		}
-		return new ExcelResult(false, 0, 0, 0, 0);
+		return new MergedRegionResult(false, 0, 0, 0, 0);
 	}
 }
 
-class ExcelResult {
+class MergedRegionResult {
 	public boolean merged;
 	public int startRow;
 	public int endRow;
 	public int startCol;
 	public int endCol;
 
-	public ExcelResult(boolean merged, int startRow, int endRow, int startCol, int endCol) {
+	public MergedRegionResult(boolean merged, int startRow, int endRow, int startCol, int endCol) {
 		this.merged = merged;
 		this.startRow = startRow;
 		this.endRow = endRow;
