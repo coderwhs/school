@@ -17,7 +17,33 @@ import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 
 public class TestIOUtil {
+	public static void main(String[] args) {
 
+		// 通过工具类创建writer
+		ExcelWriter writer = ExcelUtil.getWriter("c:/temp/writeMapTest" + new Date().getTime() + ".xlsx");
+
+		List<String> head12 = CollUtil.newArrayList("素质", "素质", "素质", "专项", "专项", "专项");
+		List<String> testProjectList = CollUtil.newArrayList("立定跳远", "后蹲", "窄硬拉", "抓举", "挺举", "总成绩");
+		String jsonStr = JSONUtil.createObj().put("title", "2019-2020年省体校冬训第一次素质、专项测试成绩").put("project", "举重")
+				.put("coach", "韩永生").put("date", DateUtil.format(new Date(), "yyy年M月")).toString();
+
+		List<Map<String, Object>> rows = Lists.newArrayList();
+		rows.add(createAthlete("S00001", "张三", "男", "初三", "", testProjectList));
+		rows.add(createAthlete("S00002", "李四", "女", "", "2005年6月", testProjectList));
+		
+		outputTemplate(writer, rows, head12, testProjectList, jsonStr);
+
+		// 关闭writer，释放内存
+		writer.close();
+
+		//读取数据		
+		ExcelReader reader = ExcelUtil.getReader("c:/temp/writeMapTest.xlsx");
+		List<Map<String, Object>> readAll = testDataReader(reader);
+		for (int i = 0; i < readAll.size(); i++) {
+			Map<String, Object> row = readAll.get(i);
+			Console.log(row);
+		}
+	}
 	/**
 	 * 导出模板。
 	 * @param writer 传入Excel 写入器
@@ -85,32 +111,6 @@ public class TestIOUtil {
 		return createAthlete(number, name, "", "", "", testProjectList);
 	}
 
-	public static void main(String[] args) {
 
-		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("c:/temp/writeMapTest" + new Date().getTime() + ".xlsx");
-
-		List<String> head12 = CollUtil.newArrayList("素质", "素质", "素质", "专项", "专项", "专项");
-		List<String> testProjectList = CollUtil.newArrayList("立定跳远", "后蹲", "窄硬拉", "抓举", "挺举", "总成绩");
-		String jsonStr = JSONUtil.createObj().put("title", "2019-2020年省体校冬训第一次素质、专项测试成绩").put("project", "举重")
-				.put("coach", "韩永生").put("date", DateUtil.format(new Date(), "yyy年M月")).toString();
-
-		List<Map<String, Object>> rows = Lists.newArrayList();
-		rows.add(createAthlete("S00001", "张三", "男", "初三", "", testProjectList));
-		rows.add(createAthlete("S00002", "李四", "女", "", "2005年6月", testProjectList));
-		
-		outputTemplate(writer, rows, head12, testProjectList, jsonStr);
-
-		// 关闭writer，释放内存
-		writer.close();
-
-		//读取数据		
-		ExcelReader reader = ExcelUtil.getReader("c:/temp/writeMapTest.xlsx");
-		List<Map<String, Object>> readAll = testDataReader(reader);
-		for (int i = 0; i < readAll.size(); i++) {
-			Map<String, Object> row = readAll.get(i);
-			Console.log(row);
-		}
-	}
 
 }

@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -16,18 +15,16 @@ import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.edusport.entity.Athlete;
-import org.jeecg.modules.edusport.entity.AthleteSelectionAthleteScore;
-import org.jeecg.modules.edusport.entity.AthleteSelectionAthleteScoreDetail;
 import org.jeecg.modules.edusport.entity.AthleteSelectionGroup;
-import org.jeecg.modules.edusport.entity.AthleteSelectionGroupIndex;
 import org.jeecg.modules.edusport.entity.AthleteSelectionTest;
 import org.jeecg.modules.edusport.entity.OutlineCoach;
+import org.jeecg.modules.edusport.entity.Sport;
 import org.jeecg.modules.edusport.mapper.AthleteMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionGroupIndexMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionTestMapper;
 import org.jeecg.modules.edusport.mapper.CoachMapper;
+import org.jeecg.modules.edusport.mapper.SportMapper;
 import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreDetailService;
 import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreService;
 import org.jeecg.modules.edusport.service.IAthleteSelectionGroupService;
@@ -86,6 +83,8 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	private AthleteMapper athleteMapper;
 	@Resource
 	private CoachMapper coachMapper;
+	@Resource
+	private SportMapper sportMapper;
 	@Resource
 	private AthleteSelectionAthleteScoreMapper athleteSelectionAthleteScoreMapper;
 	@Autowired
@@ -182,7 +181,7 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		
 		// 系统用户.
 		SysUser sysUser = getSystemUser(request);
-		
+		Sport sport = sportMapper.getSportByCode(athleteSelectionTest.getSportCode());
 		// 教练信息处理.
 		// 取得所有选择的学生.
 		List<OutlineCoach> outlineCoachList = new ArrayList<OutlineCoach>();
@@ -196,7 +195,9 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 			outlineCoach.setEventCodes(athleteSelectionGroup.getEventCodes());// 运动项目.
 			outlineCoach.setGroupId(groupId);// 组.
 			outlineCoach.setOutlineId(athleteSelectionTest.getId());// 大纲ID.
-			outlineCoach.setSportId(athleteSelectionTest.getSportCode());// 运动项目.
+			if(sport != null) {
+				outlineCoach.setSportId(athleteSelectionTest.getId());// 运动项目.
+			}
 			outlineCoach.setTestDate(athleteSelectionTest.getPublishDate());// 测试日期
 			outlineCoach.setState("1");// 状态
 			outlineCoach.setCreateTime(Calendar.getInstance().getTime());

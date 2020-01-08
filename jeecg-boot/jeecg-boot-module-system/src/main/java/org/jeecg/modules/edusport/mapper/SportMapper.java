@@ -15,4 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SportMapper extends BaseMapper<Sport> {
 	public Sport getSportByName(@Param("sportName") String sportName);
+	public Sport getSportByCode(@Param("sportCode") String sportCode);
 }
