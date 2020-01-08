@@ -71,14 +71,18 @@ public class TestIOUtil {
 					end++;
 				} else {
 //					Console.log(">>>>>>>>>>>>>" + start + ":" + end);
-					writer.merge(2, 2, start, end, temp, false);
+					if(start != end) {
+						writer.merge(2, 2, start, end, temp, false);
+					}
 					end++;
 					start = end;
 					temp = head12.get(i);
 				}
 			} else {
 //				Console.log("<<<<<<<<<<<<" + start + ":" + end);
-				writer.merge(2, 2, start, end, temp, false);
+				if(start != end) {
+					writer.merge(2, 2, start, end, temp, false);
+				}
 			}
 		}
 	}
@@ -120,8 +124,8 @@ public class TestIOUtil {
 		// 通过工具类创建writer
 		ExcelWriter writer = ExcelUtil.getWriter("c:/temp/writeMapTest" + new Date().getTime() + ".xlsx");
 
-		List<String> head12 = CollUtil.newArrayList("素质", "素质", "素质", "专项", "专项", "专项");
-		List<String> testProjectList = CollUtil.newArrayList("立定跳远", "后蹲", "窄硬拉", "抓举", "挺举", "总成绩");
+		List<String> head12 = CollUtil.newArrayList("素质", "素质", "素质", "专项", "专项", "专项", "身体");
+		List<String> testProjectList = CollUtil.newArrayList("立定跳远", "后蹲", "窄硬拉", "抓举", "挺举", "总成绩", "体重");
 		String jsonStr = JSONUtil.createObj().put("title", "2019-2020年省体校冬训第一次素质、专项测试成绩").put("project", "举重")
 				.put("coach", "韩永生").put("date", DateUtil.format(new Date(), "yyy年M月")).toString();
 
