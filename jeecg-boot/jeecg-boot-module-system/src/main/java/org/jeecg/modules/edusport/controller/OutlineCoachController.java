@@ -13,11 +13,17 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ooxml.POIXMLDocument;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
@@ -220,6 +226,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  				if (!(inputstream.markSupported())) {
  					inputstream = new PushbackInputStream(inputstream, 8);
  				}
+ 				book = new HSSFWorkbook(inputstream);
 // 				if (POIFSFileSystem.hasPOIFSHeader(inputstream)) {
 // 					book = new HSSFWorkbook(inputstream);
 // 				} else if (POIXMLDocument.hasOOXMLHeader(inputstream)) {
@@ -238,10 +245,10 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 				if(outlineCoach == null) {
 					Result.error("数据信息不存在，请确认！");
 				}
+				
+//				validatorExcel(sheet);
 				// 指标类别信息.
 				String indexCatName = "";
-				// 运动项目.
-				String sportName = "";
 //				Sport sport = sportMapper.getSportByName(sportName);
  				for(int r = 4; r < sheet.getPhysicalNumberOfRows(); r++) {
  					Row row = sheet.getRow(r);
@@ -268,13 +275,21 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  					for(int c = 5; c < row.getPhysicalNumberOfCells(); c++) {// 从第5列开始.
  						Cell cell = row.getCell(c);
 						// 指标类别.
- 						indexCatName = sheet.getRow(2).getCell(5).getStringCellValue(); // 指标类别.
+ 						indexCatName = "";
+ 						int rowNum = 2;// 指标类别固定行号.
+ 						int cellNum = c;
+ 						MergedRegionResult mergeRegionResult = isMergedRegion(sheet, rowNum, cellNum);
+ 						if(mergeRegionResult.merged) {// 合并单元格.
+ 							indexCatName = sheet.getRow(rowNum).getCell(mergeRegionResult.startCol).getStringCellValue();
+ 						} else {
+ 							indexCatName = sheet.getRow(rowNum).getCell(c).getStringCellValue();
+ 						}
  						// 指标.
- 						String indexName = sheet.getRow(3).getCell(c).getStringCellValue(); // 指标.
+ 						String indexName = sheet.getRow(rowNum + 1).getCell(c).getStringCellValue(); // 指标.
  						AthleteSelectionIndex athleteSelectionIndex = athleteSelectionIndexMapper.getIndexByName(indexName, indexCatName);
 
- 						System.out.println("row = " + r + ", col = " + c + ", value = " + cell);// 当前单元格的值.
  						if(athleteSelectionIndex != null) {
+ 							System.out.println("row = " + r + ", col = " + c + ", value = " + cell);// 当前单元格的值.
  							List<AthleteSelectionAthleteScoreDetail> athleteScoreDetailList = new ArrayList<AthleteSelectionAthleteScoreDetail>();
 
  							//指标信息.
@@ -327,7 +342,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 		return user;
 	}
 	
-	private String validatorExcel(Sheet sheet) {
+	private void validatorExcel(Sheet sheet) {
 		for(int rowNum = 0; rowNum < sheet.getPhysicalNumberOfRows(); rowNum++) {
 			Row row = sheet.getRow(rowNum);
 			for(int cellNum = 0; cellNum < row.getPhysicalNumberOfCells(); cellNum++) {
@@ -394,7 +409,6 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 			
 		}
 		
-		return "";
 	}
 
 	/**
@@ -414,7 +428,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 			int lastRow = range.getLastRow();
 			if (row >= firstRow && row <= lastRow) {
 				if (column >= firstColumn && column <= lastColumn) {
-					return new MergedRegionResult(true, firstRow + 1, lastRow + 1, firstColumn + 1, lastColumn + 1);
+					return new MergedRegionResult(true, firstRow, lastRow, firstColumn, lastColumn);
 				}
 			}
 		}
