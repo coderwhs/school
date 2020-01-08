@@ -199,7 +199,7 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	public Result<?> edit(HttpServletRequest request, @RequestBody AthleteSelectionTest athleteSelectionTest) {
 		AthleteSelectionTest test = athleteSelectionTestService.getById(athleteSelectionTest.getId());
 		if(test != null) {
-			if(!"1".equals(test.getBillState())) {// 1:启用，2:禁用
+			if("2".equals(test.getBillState())) {// 1:启用，2:禁用
 				athleteSelectionTestService.updateById(athleteSelectionTest);
 				String testId = test.getId();
 				outlineCoachMapper.deleteCoachByTestId(testId);

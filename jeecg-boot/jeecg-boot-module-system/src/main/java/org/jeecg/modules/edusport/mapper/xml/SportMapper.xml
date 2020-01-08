@@ -8,6 +8,6 @@
     </select>
 
 	<select resultType="org.jeecg.modules.edusport.entity.Sport" id="getSportByCode">
-		SELECT *FROM tb_edu_sportWHERE sport_code = #{sportCode} 
+		SELECT * FROM tb_edu_sport WHERE sport_code = #{sportCode} 
 	</select>
 </mapper>

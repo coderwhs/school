@@ -233,7 +233,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
     @RequestMapping(value = "/exportXls")
     public ModelAndView exportXls(HttpServletRequest request, OutlineCoach outlineCoach) {
 		// 取得当前导入行的大纲教练信息.
-		OutlineCoach outlineCoachInfo = outlineCoachService.getById("1214561679039221761");
+		OutlineCoach outlineCoachInfo = outlineCoachService.getById("1214968966924894209");
 		JSONObject jsonObject = JSONUtil.createObj();
 		// 测试标题.
 		AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(outlineCoachInfo.getOutlineId());
@@ -333,7 +333,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  				SysUser sysUser = getSystemUser(request);
  				Sheet sheet = book.getSheetAt(0);
  				// 取得当前导入行的大纲教练信息.
-				OutlineCoach outlineCoach = outlineCoachService.getById("1214950548129583106");
+				OutlineCoach outlineCoach = outlineCoachService.getById("1214968966924894209");
 				if(outlineCoach == null) {
 					Result.error("数据信息不存在，请确认！");
 				}
