@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.compress.utils.Lists;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -31,6 +32,7 @@ import org.jeecg.modules.edusport.entity.Athlete;
 import org.jeecg.modules.edusport.entity.AthleteSelectionAthleteScore;
 import org.jeecg.modules.edusport.entity.AthleteSelectionAthleteScoreDetail;
 import org.jeecg.modules.edusport.entity.AthleteSelectionGroupIndex;
+import org.jeecg.modules.edusport.entity.AthleteSelectionGroupRating;
 import org.jeecg.modules.edusport.entity.AthleteSelectionIndex;
 import org.jeecg.modules.edusport.entity.AthleteSelectionIndexCat;
 import org.jeecg.modules.edusport.entity.AthleteSelectionTest;
@@ -38,8 +40,11 @@ import org.jeecg.modules.edusport.entity.Coach;
 import org.jeecg.modules.edusport.entity.OutlineCoach;
 import org.jeecg.modules.edusport.entity.Sport;
 import org.jeecg.modules.edusport.mapper.AthleteMapper;
+import org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreDetailMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreMapper;
+import org.jeecg.modules.edusport.mapper.AthleteSelectionGroupIndexGradeMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionGroupIndexMapper;
+import org.jeecg.modules.edusport.mapper.AthleteSelectionGroupRatingMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionIndexCatMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionIndexMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionTestMapper;
@@ -57,6 +62,9 @@ import org.jeecg.modules.edusport.util.TestIOUtil;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
+import org.jeecgframework.poi.excel.def.NormalExcelConstants;
+import org.jeecgframework.poi.excel.entity.ExportParams;
+import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,10 +85,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import lombok.extern.slf4j.Slf4j;
@@ -129,6 +135,12 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 	private AthleteSelectionIndexCatMapper athleteSelectionIndexCatMapper;
 	@Resource
 	private AthleteSelectionIndexMapper athleteSelectionIndexMapper;
+	@Resource
+	private AthleteSelectionGroupIndexGradeMapper athleteSelectionGroupIndexGradeMapper;
+	@Resource
+	private AthleteSelectionAthleteScoreDetailMapper athleteSelectionAthleteScoreDetailMapper;
+	@Resource
+	private AthleteSelectionGroupRatingMapper athleteSelectionGroupRatingMapper;
 	/**
 	 * 分页列表查询
 	 *
@@ -270,8 +282,13 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 		// 关闭writer，释放内存
 		writer.close();
 
-
-        return super.exportXls(request, outlineCoach, OutlineCoach.class, "tb_edu_outline_coach");
+		ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
+        mv.addObject(NormalExcelConstants.FILE_NAME, title); //此处设置的filename无效 ,前端会重更新设置一下
+        mv.addObject(NormalExcelConstants.CLASS, OutlineCoach.class);
+        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams(title + "报表", "导出人:", title));
+        mv.addObject(NormalExcelConstants.DATA_LIST, null);
+        return mv;
+//        return super.exportXls(request, outlineCoach, OutlineCoach.class, "tb_edu_outline_coach");
     }
 
     /**
@@ -290,12 +307,18 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
              MultipartFile file = entity.getValue();// 获取上传文件对象
              try {
  				InputStream inputstream = file.getInputStream();
- 				System.out.println();
- 				Workbook book = null;
+
  				if (!(inputstream.markSupported())) {
  					inputstream = new PushbackInputStream(inputstream, 8);
  				}
- 				book = new HSSFWorkbook(inputstream);
+ 				Workbook book = null;
+ 				try {
+ 					book = new HSSFWorkbook(inputstream);
+ 				} catch(Exception e) {
+ 					e.printStackTrace();
+					Result.error("无效的文件！");
+ 				}
+ 				
 // 				if (POIFSFileSystem.hasPOIFSHeader(inputstream)) {
 // 					book = new HSSFWorkbook(inputstream);
 // 				} else if (POIXMLDocument.hasOOXMLHeader(inputstream)) {
@@ -310,7 +333,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  				SysUser sysUser = getSystemUser(request);
  				Sheet sheet = book.getSheetAt(0);
  				// 取得当前导入行的大纲教练信息.
-				OutlineCoach outlineCoach = outlineCoachService.getById("1214561679039221761");
+				OutlineCoach outlineCoach = outlineCoachService.getById("1214950548129583106");
 				if(outlineCoach == null) {
 					Result.error("数据信息不存在，请确认！");
 				}
@@ -374,7 +397,9 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  							athleteSelectionAthleteScoreDetail.setIndexCode(athleteSelectionIndex.getL3Code());// 指标
  							athleteSelectionAthleteScoreDetail.setEventCode(outlineCoach.getEventCodes());// 运动项目
  							athleteSelectionAthleteScoreDetail.setTestValue(Double.valueOf(cell.getNumericCellValue()).toString());// 测试值
- 							athleteSelectionAthleteScoreDetail.setTestScore(Integer.valueOf(0));// 测试分数
+							athleteSelectionAthleteScoreDetail.setTestScore(calcTestScore(athlete.getId(),
+									outlineCoach.getGroupId(), athleteSelectionIndex.getL3Code(),
+									Double.valueOf(cell.getNumericCellValue()), athleteMapper));// 根据测试值，计算分数.
  							athleteSelectionAthleteScoreDetail.setCreateTime(Calendar.getInstance().getTime());
  							athleteSelectionAthleteScoreDetail.setCreateBy(sysUser.getUsername());
  							athleteSelectionAthleteScoreDetail.setUpdateTime(Calendar.getInstance().getTime());
@@ -383,6 +408,8 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  							athleteSelectionAthleteScoreDetailService.saveBatch(athleteScoreDetailList);
  						}
  					}
+ 					// 根据指标分数，计算总分及等级.
+ 					updateAthleteGrade(athleteSelectionAthleteScore, athleteSelectionAthleteScoreService);
  				}
  			} catch (Exception e) {
                 log.error(e.getMessage(), e);
@@ -398,6 +425,46 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
          return Result.ok("文件导入成功！" );
     }
 
+	/**
+	 * 根据运动员的测试值，计算分数.
+	 * @param athleteId
+	 * @param athleteSelectionAthleteScore
+	 * @param athleteSelectionAthleteScoreService
+	 */
+	private void updateAthleteGrade(AthleteSelectionAthleteScore athleteSelectionAthleteScore,
+			IAthleteSelectionAthleteScoreService athleteSelectionAthleteScoreService) {
+		// 根据运动员取得成绩总分.
+		Integer testScore = athleteSelectionAthleteScoreDetailMapper.getAthleteScoreById(athleteSelectionAthleteScore.getAthleteId());
+		// 根据分数判断相应等级.
+		AthleteSelectionGroupRating groupRating = athleteSelectionGroupRatingMapper.getAthleteScoreRatingByScore(testScore);
+		if (groupRating != null && groupRating.getId() != null) {
+			athleteSelectionAthleteScore.setTestScore(testScore);
+			athleteSelectionAthleteScore.setTestGrade(groupRating.getId());
+
+			athleteSelectionAthleteScoreService.updateById(athleteSelectionAthleteScore);
+		}
+	}
+    
+    /**
+     * 根据指标分数，计算总分及等级.
+     * @param athleteId
+     * @param groupId
+     * @param indexCode
+     * @param testValue
+     * @return
+     */
+	private Integer calcTestScore(String athleteId, String groupId, String indexCode, Double testValue, AthleteMapper athleteMapper) {
+		// 根据测试值，计算分数.
+		Integer testScore = Integer.valueOf(0);
+		HashMap athleteMap = (HashMap) athleteMapper.getAthleteAgeById(athleteId);
+		if (athleteMap != null && !athleteMap.isEmpty()) {
+			testScore = athleteSelectionGroupIndexGradeMapper.getAthleteScoreByTestValue(groupId, indexCode,
+					athleteMap.get("gender").toString(), Integer.valueOf(athleteMap.get("age").toString()), testValue);
+
+		}
+
+		return testScore;
+	}
     /**
 	 * 取得当前登录用户.
 	 * 
@@ -431,7 +498,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 				}
 
 				// 教练判断.
-				if(rowNum == 1 && cellNum == 3) {// 教练：举重.
+				if(rowNum == 1 && cellNum == 4) {// 教练.
 					String coachName = row.getCell(cellNum).getStringCellValue();
 					Coach coach = coachMapper.getCoachByName(coachName);
 					if(coach == null) {

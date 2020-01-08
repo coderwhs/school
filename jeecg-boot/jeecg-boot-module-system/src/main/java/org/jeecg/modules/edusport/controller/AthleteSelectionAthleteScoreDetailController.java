@@ -154,7 +154,7 @@ public class AthleteSelectionAthleteScoreDetailController extends JeecgControlle
 				deleteDetail.setIndexCode(indexId[i]);
 				indexList.add(deleteDetail);
 			}
-			athleteSelectionAthleteScoreDetailMapper.deleteIndexByIndexId(indexList);
+			athleteSelectionAthleteScoreDetailMapper.deleteScoreById(indexList);
 			athleteSelectionAthleteScoreDetailService.saveBatch(list);
 		} else {
 			resultInfo = "组别指标信息不存在，请确认！";

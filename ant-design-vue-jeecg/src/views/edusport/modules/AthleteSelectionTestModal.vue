@@ -147,9 +147,7 @@
             e.timeStamp >= attachedTimestamp ||
             e.timeStamp <= 0 ||
             e.target.ownerDocument !== document){
-          alert("ok = " + e.setFieldsValue);
-          
-          initDictOptions("tb_edu_athlete,athlete_name,athlete_no,major_sport='" + 7 + "'").then((res) => {
+          initDictOptions("tb_edu_athlete,athlete_name,athlete_no").then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'athleteNos', res.result)
           }

@@ -13,5 +13,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Version: V1.0
  */
 public interface OutlineCoachMapper extends BaseMapper<OutlineCoach> {
-
+	void deleteCoachByTestId(@Param("testId") String testId);
 }

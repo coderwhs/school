@@ -14,5 +14,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface AthleteSelectionAthleteScoreDetailMapper extends BaseMapper<AthleteSelectionAthleteScoreDetail> {
 
 	Integer getAthleteScoreById(@Param("id") String id);
-	void deleteIndexByIndexId(@Param("list") java.util.List list);
+	void deleteScoreById(@Param("list") java.util.List list);
+	void deleteScoreDetailByTestId(@Param("testId") String testId);
 }

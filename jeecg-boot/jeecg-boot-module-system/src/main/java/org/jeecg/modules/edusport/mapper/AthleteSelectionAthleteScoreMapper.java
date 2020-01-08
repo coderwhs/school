@@ -19,5 +19,5 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 public interface AthleteSelectionAthleteScoreMapper extends BaseMapper<AthleteSelectionAthleteScore> {
 	int updateScoreAndRatingByWrapper(@Param(Constants.WRAPPER) Wrapper<AthleteSelectionAthleteScore> userWrapper,
 			@Param("athleteSelectionAthleteScore") AthleteSelectionAthleteScore athleteSelectionAthleteScore);
-
+	void deleteScoreByTestId(@Param("testId") String testId);
 }

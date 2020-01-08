@@ -20,10 +20,12 @@ import org.jeecg.modules.edusport.entity.AthleteSelectionTest;
 import org.jeecg.modules.edusport.entity.OutlineCoach;
 import org.jeecg.modules.edusport.entity.Sport;
 import org.jeecg.modules.edusport.mapper.AthleteMapper;
+import org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreDetailMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionGroupIndexMapper;
 import org.jeecg.modules.edusport.mapper.AthleteSelectionTestMapper;
 import org.jeecg.modules.edusport.mapper.CoachMapper;
+import org.jeecg.modules.edusport.mapper.OutlineCoachMapper;
 import org.jeecg.modules.edusport.mapper.SportMapper;
 import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreDetailService;
 import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreService;
@@ -86,7 +88,11 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	@Resource
 	private SportMapper sportMapper;
 	@Resource
+	private OutlineCoachMapper outlineCoachMapper;
+	@Resource
 	private AthleteSelectionAthleteScoreMapper athleteSelectionAthleteScoreMapper;
+	@Resource
+	private AthleteSelectionAthleteScoreDetailMapper athleteSelectionAthleteScoreDetailMapper;
 	@Autowired
 	private ISysUserService sysUserService;
 	/**
@@ -134,7 +140,7 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 				athleteSelectionTestService.updateById(athleteSelectionTest);
 			}
 		} else {
-			resultInfo = "大纲信息不存，请确认!";
+			resultInfo = "大纲信息不存在，请确认!";
 		}
 
 		return Result.ok(resultInfo);
@@ -158,7 +164,7 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 				athleteSelectionTestService.updateById(athleteSelectionTest);
 			}
 		} else {
-			resultInfo = "大纲信息不存，请确认!";
+			resultInfo = "大纲信息不存在，请确认!";
 		}
 
 		return Result.ok(resultInfo);
@@ -175,89 +181,9 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	public Result<?> add(HttpServletRequest request, @RequestBody AthleteSelectionTest athleteSelectionTest) {
 		athleteSelectionTestService.save(athleteSelectionTest);
 
-		String groupId = athleteSelectionTest.getGroupId();
-		// 取得组信息.
-		AthleteSelectionGroup athleteSelectionGroup = athleteSelectionGroupService.getById(groupId);
-		
 		// 系统用户.
 		SysUser sysUser = getSystemUser(request);
-		Sport sport = sportMapper.getSportByCode(athleteSelectionTest.getSportCode());
-		// 教练信息处理.
-		// 取得所有选择的学生.
-		List<OutlineCoach> outlineCoachList = new ArrayList<OutlineCoach>();
-		@SuppressWarnings("rawtypes")
-		List<HashMap> coachList = coachMapper.getCoachByAthleteId(athleteSelectionTest.getAthleteNos().split(","));
-		for(int i = 0; i < coachList.size(); i++) {
-			HashMap<?, ?> map = coachList.get(i);
-			OutlineCoach outlineCoach = new OutlineCoach();
-			outlineCoach.setAlthleteNos(map.get("athlete").toString());// 运动员.
-			outlineCoach.setCoachId(map.get("id").toString());// 教练.
-			outlineCoach.setEventCodes(athleteSelectionGroup.getEventCodes());// 运动项目.
-			outlineCoach.setGroupId(groupId);// 组.
-			outlineCoach.setOutlineId(athleteSelectionTest.getId());// 大纲ID.
-			if(sport != null) {
-				outlineCoach.setSportId(athleteSelectionTest.getId());// 运动项目.
-			}
-			outlineCoach.setTestDate(athleteSelectionTest.getPublishDate());// 测试日期
-			outlineCoach.setState("1");// 状态
-			outlineCoach.setCreateTime(Calendar.getInstance().getTime());
-			outlineCoach.setCreateBy(sysUser.getUsername());
-			outlineCoach.setUpdateTime(Calendar.getInstance().getTime());
-			outlineCoach.setUpdateBy(sysUser.getUsername());
-			outlineCoachList.add(outlineCoach);
-		}
-		outlineCoachService.saveBatch(outlineCoachList);// 保存教练表信息.
-		
-//		// 运动项目信息.
-//		String[] sportCode = athleteSelectionGroup.getEventCodes().split(",");
-//		for(int j = 0; j < sportCode.length; j++){//运动项目信息.
-//			// 取得所有选择的学生.
-//			String[] athleteNo = athleteSelectionTest.getAthleteNos().split(",");
-//			for(int k = 0; k < athleteNo.length; k++) {// 查询所有运动员信息.
-//				Athlete athlete = athleteMapper.getAthleteByNo(athleteNo[k]);
-//				// 学生信息：教练、年级、出生年月、性别.
-//				AthleteSelectionAthleteScore athleteSelectionAthleteScore = new AthleteSelectionAthleteScore();
-//				athleteSelectionAthleteScore.setAthleteId(athlete.getId());// 运动员.
-//				athleteSelectionAthleteScore.setBirthday(athlete.getBirthDate());// 出生日期.
-//				athleteSelectionAthleteScore.setGender(athlete.getGender());// 性别.
-//				athleteSelectionAthleteScore.setGrade(athlete.getGrade());// 年级
-//				athleteSelectionAthleteScore.setCoachId(athlete.getMajorSportTeacherCode());// 教练员
-//				athleteSelectionAthleteScore.setGroupId(groupId);// 组
-//				athleteSelectionAthleteScore.setTestId(athleteSelectionTest.getId());// 大纲ID
-//				athleteSelectionAthleteScore.setEventCode(athleteSelectionGroup.getEventCodes());// 运动项目
-//				athleteSelectionAthleteScore.setTestScore(Integer.valueOf(0));// 成绩
-//				athleteSelectionAthleteScore.setTestGrade("");// 测试等级.
-//				athleteSelectionAthleteScore.setAuditState("1");// 状态
-//				athleteSelectionAthleteScore.setCreateTime(Calendar.getInstance().getTime());
-//				athleteSelectionAthleteScore.setCreateBy(sysUser.getUsername());
-//				athleteSelectionAthleteScore.setUpdateTime(Calendar.getInstance().getTime());
-//				athleteSelectionAthleteScore.setUpdateBy(sysUser.getUsername());
-//				athleteSelectionAthleteScoreService.save(athleteSelectionAthleteScore);
-//
-//				// 指标信息.
-//				AthleteSelectionGroupIndex athleteSelectionGroupIndex = athleteSelectionGroupIndexMapper.getIndexByGroupId(groupId);
-//				
-//				List<AthleteSelectionAthleteScoreDetail> athleteScoreDetailList = new ArrayList<AthleteSelectionAthleteScoreDetail>();
-//				String[] indexids = athleteSelectionGroupIndex.getIndexId().split(",");
-//				for(int i = 0; i < indexids.length; i++){//指标信息.
-//					AthleteSelectionAthleteScoreDetail athleteSelectionAthleteScoreDetail = new AthleteSelectionAthleteScoreDetail();
-//					athleteSelectionAthleteScoreDetail.setAthleteScoreId(athleteSelectionAthleteScore.getId());// 成绩ID
-//					athleteSelectionAthleteScoreDetail.setAthleteId(athlete.getId());// 运动员.
-//					athleteSelectionAthleteScoreDetail.setTestId(athleteSelectionTest.getId());// 大纲ID
-//					athleteSelectionAthleteScoreDetail.setGroupId(groupId);// 组
-//					athleteSelectionAthleteScoreDetail.setIndexCode(indexids[i]);// 指标
-//					athleteSelectionAthleteScoreDetail.setEventCode(sportCode[j]);// 运动项目
-//					athleteSelectionAthleteScoreDetail.setTestValue("");// 测试值
-//					athleteSelectionAthleteScoreDetail.setTestScore(Integer.valueOf(0));// 测试分数
-//					athleteSelectionAthleteScoreDetail.setCreateTime(Calendar.getInstance().getTime());
-//					athleteSelectionAthleteScoreDetail.setCreateBy(sysUser.getUsername());
-//					athleteSelectionAthleteScoreDetail.setUpdateTime(Calendar.getInstance().getTime());
-//					athleteSelectionAthleteScoreDetail.setUpdateBy(sysUser.getUsername());
-//					athleteScoreDetailList.add(athleteSelectionAthleteScoreDetail);
-//				}
-//				athleteSelectionAthleteScoreDetailService.saveBatch(athleteScoreDetailList);
-//			}
-//		}
+		saveCoachInfo(athleteSelectionTest, sysUser);
 
 		return Result.ok("添加成功！");
 	}
@@ -269,8 +195,28 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	 * @return
 	 */
 	@PutMapping(value = "/edit")
-	public Result<?> edit(@RequestBody AthleteSelectionTest athleteSelectionTest) {
-		athleteSelectionTestService.updateById(athleteSelectionTest);
+	@Transactional
+	public Result<?> edit(HttpServletRequest request, @RequestBody AthleteSelectionTest athleteSelectionTest) {
+		AthleteSelectionTest test = athleteSelectionTestService.getById(athleteSelectionTest.getId());
+		if(test != null) {
+			if(!"1".equals(test.getBillState())) {// 1:启用，2:禁用
+				athleteSelectionTestService.updateById(athleteSelectionTest);
+				String testId = test.getId();
+				outlineCoachMapper.deleteCoachByTestId(testId);
+				athleteSelectionAthleteScoreMapper.deleteScoreByTestId(testId);
+				athleteSelectionAthleteScoreDetailMapper.deleteScoreDetailByTestId(testId);
+				
+				// 系统用户.
+				SysUser sysUser = getSystemUser(request);
+				// 教练信息.
+				saveCoachInfo(athleteSelectionTest, sysUser);
+			} else {
+				return Result.ok("启用状态，不允许编辑!");
+			}
+		} else {
+			return Result.ok("大纲信息不存在，请确认!");
+		}
+
 		return Result.ok("编辑成功!");
 	}
 	
@@ -281,8 +227,21 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	 * @return
 	 */
 	@DeleteMapping(value = "/delete")
-	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
-		athleteSelectionTestService.removeById(id);
+	@Transactional
+	public Result<?> delete(HttpServletRequest request, @RequestParam(name="id",required=true) String id) {
+		AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(id);
+		if(athleteSelectionTest != null) {
+			if(!"1".equals(athleteSelectionTest.getBillState())) {// 1:启用，2:禁用
+				athleteSelectionTestService.removeById(id);
+				String testId = athleteSelectionTest.getId();
+				outlineCoachMapper.deleteCoachByTestId(testId);
+				athleteSelectionAthleteScoreMapper.deleteScoreByTestId(testId);
+				athleteSelectionAthleteScoreDetailMapper.deleteScoreDetailByTestId(testId);
+			} else {
+				return Result.ok("启用状态，不允许删除!");
+			}
+		}
+
 		return Result.ok("删除成功!");
 	}
 	
@@ -293,8 +252,27 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	 * @return
 	 */
 	@DeleteMapping(value = "/deleteBatch")
-	public Result<?> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
+	@Transactional
+	public Result<?> deleteBatch(HttpServletRequest request, @RequestParam(name="ids",required=true) String ids) {
+		String[] testIds = ids.split(",");
+		for(int i = 0; i < testIds.length; i++) {
+			AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(testIds[i]);
+			if(athleteSelectionTest != null) {
+				if("1".equals(athleteSelectionTest.getBillState())) {// 1:启用，2:禁用
+					return Result.ok("启用状态，不允许删除!");
+				}
+			}
+		}
+
+		for(int i = 0; i < testIds.length; i++) {
+			AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(testIds[i]);
+			String testId = athleteSelectionTest.getId();
+			outlineCoachMapper.deleteCoachByTestId(testId);
+			athleteSelectionAthleteScoreMapper.deleteScoreByTestId(testId);
+			athleteSelectionAthleteScoreDetailMapper.deleteScoreDetailByTestId(testId);
+		}
 		this.athleteSelectionTestService.removeByIds(Arrays.asList(ids.split(",")));
+		
 		return Result.ok("批量删除成功!");
 	}
 	
@@ -336,6 +314,45 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
         return super.importExcel(request, response, AthleteSelectionTest.class);
     }
 
+	
+	/**
+	 * 保存教练信息.
+	 * @param athleteSelectionTest
+	 * @param sysUser
+	 */
+	private void saveCoachInfo(AthleteSelectionTest athleteSelectionTest, SysUser sysUser) {
+		String groupId = athleteSelectionTest.getGroupId();
+		// 取得组信息.
+		AthleteSelectionGroup athleteSelectionGroup = athleteSelectionGroupService.getById(groupId);
+
+		Sport sport = sportMapper.getSportByCode(athleteSelectionTest.getSportCode());
+		// 教练信息处理.
+		// 取得所有选择的学生.
+		List<OutlineCoach> outlineCoachList = new ArrayList<OutlineCoach>();
+		@SuppressWarnings("rawtypes")
+		List<HashMap> coachList = coachMapper.getCoachByAthleteId(athleteSelectionTest.getAthleteNos().split(","));
+		for(int i = 0; i < coachList.size(); i++) {
+			HashMap<?, ?> map = coachList.get(i);
+			OutlineCoach outlineCoach = new OutlineCoach();
+			outlineCoach.setAlthleteNos(map.get("athlete").toString());// 运动员.
+			outlineCoach.setCoachId(map.get("id").toString());// 教练.
+			outlineCoach.setEventCodes(athleteSelectionGroup.getEventCodes());// 运动项目.
+			outlineCoach.setGroupId(groupId);// 组.
+			outlineCoach.setOutlineId(athleteSelectionTest.getId());// 大纲ID.
+			if(sport != null) {
+				outlineCoach.setSportId(sport.getId());// 运动项目.
+			}
+			outlineCoach.setTestDate(athleteSelectionTest.getPublishDate());// 测试日期
+			outlineCoach.setState("1");// 状态
+			outlineCoach.setCreateTime(Calendar.getInstance().getTime());
+			outlineCoach.setCreateBy(sysUser.getUsername());
+			outlineCoach.setUpdateTime(Calendar.getInstance().getTime());
+			outlineCoach.setUpdateBy(sysUser.getUsername());
+			outlineCoachList.add(outlineCoach);
+		}
+		outlineCoachService.saveBatch(outlineCoachList);// 保存教练表信息.
+	}
+	
     /**
 	 * 取得当前登录用户.
 	 * 

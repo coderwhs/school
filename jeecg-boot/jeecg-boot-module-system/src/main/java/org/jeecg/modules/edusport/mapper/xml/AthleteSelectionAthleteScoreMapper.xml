@@ -8,4 +8,8 @@
         test_grade = #{athleteSelectionAthleteScore.testGrade} ${ew.customSqlSegment}
     </update>
 	
+	<delete id="deleteScoreByTestId">
+        delete from tb_edu_athlete_selection_athlete_score_detail 
+        where test_id = #{testId}
+    </delete>
 </mapper>

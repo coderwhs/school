@@ -6,13 +6,18 @@
         SELECT IFNULL(SUM(test_score),0) test_score FROM tb_edu_athlete_selection_athlete_score_detail 
 		WHERE athlete_score_id = #{id}
     </select>
-    
         
-	<delete id="deleteIndexByIndexId" parameterType="java.util.List">
+	<delete id="deleteScoreById" parameterType="java.util.List">
         delete from tb_edu_athlete_selection_athlete_score_detail where
         <foreach collection="list"  item="item" separator=" or " index="index">
             (athlete_score_id = #{item.athleteScoreId} and athlete_id= #{item.athleteId}
             and test_id = #{item.testId} and group_id = #{item.groupId} and index_code = #{item.indexCode})
         </foreach>
     </delete>
+    
+    <delete id="deleteScoreDetailByTestId">
+        delete from tb_edu_athlete_selection_athlete_score_detail 
+        where test_id = #{testId}
+    </delete>
+    
 </mapper>
