@@ -8,11 +8,10 @@
 		WHERE i.cn_name = #{cnName} AND cat.index_cat_name = #{indexCatName}
     </select>
     
-    <select id="getIndexCatByIndexCode" resultType="java.util.HashMap">
-		SELECT cat.index_cat_name indexCatName,i.cn_name indexName
-		FROM  tb_edu_athlete_selection_index i
-		LEFT JOIN tb_edu_athlete_selection_index_cat cat ON cat.id = i.index_cat_id
-		WHERE i.l3_code = #{indexCode}
-		order by cat.index_cat_name,i.cn_name
-	</select>
+    <select resultType="java.util.HashMap" id="getIndexCatByIndexCode">
+    	SELECT cat.index_cat_name indexCatName,i.cn_name indexName
+    	FROM tb_edu_athlete_selection_index i
+    	LEFT JOIN tb_edu_athlete_selection_index_cat cat ON cat.id = i.index_cat_id
+    	WHERE i.l3_code = #{indexCode}order by cat.index_cat_name,i.cn_name 
+    </select>
 </mapper>

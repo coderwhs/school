@@ -16,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface AthleteSelectionIndexMapper extends BaseMapper<AthleteSelectionIndex> {
 	AthleteSelectionIndex getIndexByName(@Param("cnName") String cnName,@Param("indexCatName") String indexCatName);
 	HashMap<?, ?> getIndexCatByIndexCode(@Param("indexCode") String indexCode);
+
 }

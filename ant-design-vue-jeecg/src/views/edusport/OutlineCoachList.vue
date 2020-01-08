@@ -284,7 +284,7 @@
             this.$set(this.dictOptions, 'groupId', res.result)
           }
         })
-        initDictOptions('tb_edu_sport,sport_name,id').then((res) => {
+        initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'sportId', res.result)
           }

@@ -20,7 +20,7 @@
           <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
         </a-form-item>
         <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportId']" dict="tb_edu_sport,sport_name,id" />
+          <j-search-select-tag v-decorator="['sportId']" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-multi-select-tag type="list_multi" v-decorator="['althleteNos']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
