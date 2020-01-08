@@ -20,11 +20,12 @@ public class TestIOUtil {
 
 	/**
 	 * 导出模板。
-	 * @param writer 传入Excel 写入器
-	 * @param athletes 运动员列表
-	 * @param head12 大类列表
+	 * 
+	 * @param writer          传入Excel 写入器
+	 * @param athletes        运动员列表
+	 * @param head12          大类列表
 	 * @param testProjectList 测试项目列表
-	 * @param jsonStr title等其他内容的json字符串
+	 * @param jsonStr         title等其他内容的json字符串
 	 */
 	public static void outputTemplate(ExcelWriter writer, List<Map<String, Object>> athletes, List<String> head12,
 			List<String> testProjectList, String jsonStr) {
@@ -46,17 +47,45 @@ public class TestIOUtil {
 		writer.merge(2, 3, 2, 2, "性别", false);
 		writer.merge(2, 3, 3, 3, "年级", false);
 		writer.merge(2, 3, 4, 4, "出生年月", false);
-		writer.merge(2, 2, 5, 7, "", false);
-		writer.merge(2, 2, 8, 10, "", false);
 
 		List<List<String>> heads = CollUtil.newArrayList(head1, head2);
 		writer.write(heads, true);
+		mergeTypeCell(writer, head12);
+//		writer.merge(2, 2, 5, 7, "素质", false);
+//		writer.merge(2, 2, 8, 10, "专项", false);
 		// 一次性写出内容，使用默认样式，强制输出标题
 		writer.write(athletes, false);
 	}
 
+	private static void mergeTypeCell(ExcelWriter writer, List<String> head12) {
+		int start = 5;
+		int end = 5;
+		String temp = "";
+		int size = head12.size();
+
+		for (int i = 0; i <= size; i++) {
+			if (i == 0) {
+				temp = head12.get(i);
+			} else if (i != size) {
+				if (temp.equals(head12.get(i))) {
+					end++;
+				} else {
+//					Console.log(">>>>>>>>>>>>>" + start + ":" + end);
+					writer.merge(2, 2, start, end, temp, false);
+					end++;
+					start = end;
+					temp = head12.get(i);
+				}
+			} else {
+//				Console.log("<<<<<<<<<<<<" + start + ":" + end);
+				writer.merge(2, 2, start, end, temp, false);
+			}
+		}
+	}
+
 	/**
 	 * 从文件读取器中读取内容
+	 * 
 	 * @param reader 读取器
 	 * @return
 	 */
@@ -67,8 +96,9 @@ public class TestIOUtil {
 		List<Map<String, Object>> readAll = reader.read(headerRowIndex, startRowIndex, endRowIndex);
 		return readAll;
 	}
-	
-	public static Map<String, Object> createAthlete(String number,String name,String sex,String grade,String brith, List<String> testProjectList) {
+
+	public static Map<String, Object> createAthlete(String number, String name, String sex, String grade, String brith,
+			List<String> testProjectList) {
 		Map<String, Object> row = new LinkedHashMap<>();
 		row.put("学号", number);
 		row.put("姓名", name);
@@ -80,8 +110,8 @@ public class TestIOUtil {
 		}
 		return row;
 	}
-	
-	public static Map<String, Object> createAthlete(String number,String name, List<String> testProjectList) {
+
+	public static Map<String, Object> createAthlete(String number, String name, List<String> testProjectList) {
 		return createAthlete(number, name, "", "", "", testProjectList);
 	}
 
@@ -98,13 +128,13 @@ public class TestIOUtil {
 		List<Map<String, Object>> rows = Lists.newArrayList();
 		rows.add(createAthlete("S00001", "张三", "男", "初三", "", testProjectList));
 		rows.add(createAthlete("S00002", "李四", "女", "", "2005年6月", testProjectList));
-		
+
 		outputTemplate(writer, rows, head12, testProjectList, jsonStr);
 
 		// 关闭writer，释放内存
 		writer.close();
 
-		//读取数据		
+		// 读取数据
 		ExcelReader reader = ExcelUtil.getReader("c:/temp/writeMapTest.xlsx");
 		List<Map<String, Object>> readAll = testDataReader(reader);
 		for (int i = 0; i < readAll.size(); i++) {
