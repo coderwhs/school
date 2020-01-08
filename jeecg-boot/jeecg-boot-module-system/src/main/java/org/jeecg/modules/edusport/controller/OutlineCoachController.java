@@ -13,17 +13,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.POIXMLDocument;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
@@ -226,16 +220,16 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  				if (!(inputstream.markSupported())) {
  					inputstream = new PushbackInputStream(inputstream, 8);
  				}
- 				if (POIFSFileSystem.hasPOIFSHeader(inputstream)) {
- 					book = new HSSFWorkbook(inputstream);
- 				} else if (POIXMLDocument.hasOOXMLHeader(inputstream)) {
- 					try {
- 						book = new XSSFWorkbook(OPCPackage.open(inputstream));
- 					} catch (InvalidFormatException e) {
- 						e.printStackTrace();
- 						Result.error("无效的文件！");
- 					}
- 				}
+// 				if (POIFSFileSystem.hasPOIFSHeader(inputstream)) {
+// 					book = new HSSFWorkbook(inputstream);
+// 				} else if (POIXMLDocument.hasOOXMLHeader(inputstream)) {
+// 					try {
+// 						book = new XSSFWorkbook(OPCPackage.open(inputstream));
+// 					} catch (InvalidFormatException e) {
+// 						e.printStackTrace();
+// 						Result.error("无效的文件！");
+// 					}
+// 				}
  				// 系统用户.
  				SysUser sysUser = getSystemUser(request);
  				Sheet sheet = book.getSheetAt(0);
