@@ -20,7 +20,7 @@
           <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
         </a-form-item>
         <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportId']" dict="tb_edu_sport,sport_name,sport_code" />
+          <j-search-select-tag v-decorator="['sportId']" dict="tb_edu_sport,sport_name,sport_code" @change="sportChange"/>
         </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-multi-select-tag type="list_multi" v-decorator="['althleteNos']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
@@ -42,12 +42,13 @@
 
 <script>
 
-  import { httpAction } from '@/api/manage'
+  import { getAction, httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import JDate from '@/components/jeecg/JDate'  
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
     name: "OutlineCoachModal",
@@ -87,8 +88,10 @@
         url: {
           add: "/edusport/outlineCoach/add",
           edit: "/edusport/outlineCoach/edit",
-        }
-     
+        },
+        dictOptions:{
+         althleteNos:[]
+        },
       }
     },
     created () {
@@ -108,6 +111,28 @@
       close () {
         this.$emit('close');
         this.visible = false;
+      },
+
+      // 运动项目选择.
+      sportChange(selectedValue){
+        let params = {};
+        let code = 'tb_edu_athlete,athlete_name,athlete_no,major_sport=' + selectedValue;
+        getAction(`/sys/dict/getDictItems/${code}`,params).then((res) => 
+        {
+          if (res.success) {
+            try{
+              console.log("查询结果：" + JSON.stringify(res.result));
+              this.$set(this.dictOptions, 'althleteNos', res.result);
+              this.form.setFieldsValue(pick(this.model,'althleteNos'));
+            } catch(e){
+              this.$message.warning(e.message);
+            }
+          } else {
+            this.$message.warning(res.message);
+          }
+        }).finally(() => {
+          // this.loadData(1);
+        })
       },
       handleOk () {
         const that = this;

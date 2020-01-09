@@ -15,9 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.compress.utils.Lists;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -62,9 +60,6 @@ import org.jeecg.modules.edusport.util.TestIOUtil;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
-import org.jeecgframework.poi.excel.def.NormalExcelConstants;
-import org.jeecgframework.poi.excel.entity.ExportParams;
-import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,6 +77,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
@@ -272,7 +268,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 			Athlete athlete = athleteMapper.getAthleteByNo(athleteNos[k]);
 			rows.add(TestIOUtil.createAthlete(athlete.getAthleteNo(), athlete.getAthleteName(),
 					"1".equals(athlete.getGender()) ? "男" : "女", athlete.getGrade(),
-					DateUtil.format(athlete.getBirthDate(), "yyy年M月"), testProjectList));
+					DateUtil.format(athlete.getBirthDate(), "yyyy-MM-DD"), testProjectList));
 		}
 
 		
@@ -281,14 +277,15 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 		TestIOUtil.outputTemplate(writer, rows, head12, testProjectList, jsonObject.toString());
 		// 关闭writer，释放内存
 		writer.close();
-		ModelAndView mv = new ModelAndView("");
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("status");
 //		ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
 //        mv.addObject(NormalExcelConstants.FILE_NAME, title); //此处设置的filename无效 ,前端会重更新设置一下
 //        mv.addObject(NormalExcelConstants.CLASS, OutlineCoach.class);
 //        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams(title + "报表", "导出人:", title));
 //        mv.addObject(NormalExcelConstants.DATA_LIST, null);
-        return mv;
-//        return super.exportXls(request, outlineCoach, OutlineCoach.class, "tb_edu_outline_coach");
+//        return mv;
+        return super.exportXls(request, outlineCoach, OutlineCoach.class, "tb_edu_outline_coach");
     }
 
     /**
