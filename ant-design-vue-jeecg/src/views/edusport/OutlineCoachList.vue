@@ -43,8 +43,8 @@
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus" disabled="disabled">新增</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('tb_edu_outline_coach')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
+      <a-upload name="file" :showUploadList="false" :format ="['xls']" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
+        <a-button type="primary" icon="import" @click="importExcel">导入</a-button>
       </a-upload>
       <a-dropdown v-if="selectedRowKeys.length > 0" disabled="disabled">
         <a-menu slot="overlay">
@@ -70,7 +70,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type:tabSelectType}"
         :scroll="tableScroll"
         @change="handleTableChange">
 
@@ -226,18 +226,18 @@
               return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
-          // {
-          //   title:'单据状态',
-          //   align:"center",
-          //   dataIndex: 'state',
-          //   customRender:(text)=>{
-          //     if(!text){
-          //       return ''
-          //     }else{
-          //       return filterMultiDictText(this.dictOptions['state'], text+"")
-          //     }
-          //   }
-          // },
+          {
+            title:'单据状态',
+            align:"center",
+            dataIndex: 'state',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['state'], text+"")
+              }
+            }
+          },
           {
             title: '操作',
             dataIndex: 'action',
@@ -247,6 +247,7 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
+        tabSelectType:"radio",
         url: {
           list: "/edusport/outlineCoach/list",
           delete: "/edusport/outlineCoach/delete",
@@ -264,7 +265,7 @@
     },
     computed: {
       importExcelUrl: function(){
-        return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
+        return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}?id:${this.queryParam.id}`;
       }
     },
     methods: {
@@ -308,11 +309,57 @@
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
+        this.queryParam.id = selectedRowKeys[0];
       },
       onClearSelected() {
         this.selectedRowKeys = [];
         this.selectionRows = [];
+        this.queryParam.id = [];
       },
+      importExcel(){
+        if(this.queryParam.id){
+          alert("已经选择一条记录");
+        } else {
+          alert("请选择一条记录");
+        }
+      },
+
+      handleImportExcel(info){
+        if(this.queryParam.id){
+          // console.log("info = " + JSON.stringify(info));
+          if (info.file.status !== 'uploading') {
+            console.log(info.file, info.fileList);
+          }
+          if (info.file.status === 'done') {
+            if (info.file.response.success) {
+              // this.$message.success(`${info.file.name} 文件上传成功`);
+              if (info.file.response.code === 201) {
+                let { message, result: { msg, fileUrl, fileName } } = info.file.response
+                let href = window._CONFIG['domianURL'] + fileUrl + '?id=' + this.queryParam.id;
+                console.log("href = " + heref);
+                this.$warning({
+                  title: message,
+                  content: (
+                    <div>
+                      <span>{msg}</span><br/>
+                      <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
+                    </div>
+                  )
+                })
+              } else {
+                this.$message.success(info.file.response.message || `${info.file.name} 文件上传成功`)
+              }
+                this.loadData()
+              } else {
+                this.$message.error(`${info.file.name} ${info.file.response.message}.`);
+              }
+            } else if (info.file.status === 'error') {
+              this.$message.error(`文件上传失败: ${info.file.msg} `);
+            }
+          } else {
+            alert("请选择一条记录。")
+          }
+        },
     }
   }
 </script>

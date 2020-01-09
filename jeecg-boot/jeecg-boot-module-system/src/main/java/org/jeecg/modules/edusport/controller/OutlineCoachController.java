@@ -299,7 +299,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
     * @return
     */
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
-    public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
+    public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response,@RequestParam(name="id",required=true) String id) {
 //        return super.importExcel(request, response, OutlineCoach.class);
     	 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
          Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
@@ -334,6 +334,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  				Sheet sheet = book.getSheetAt(0);
  				// 取得当前导入行的大纲教练信息.
 				OutlineCoach outlineCoach = outlineCoachService.getById("1214968966924894209");
+ 				outlineCoach = outlineCoachService.getById("1214968966924894209");
 				if(outlineCoach == null) {
 					Result.error("数据信息不存在，请确认！");
 				}

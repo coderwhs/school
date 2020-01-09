@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <a-card :bordered="false" style="width: 160%;text-align: center;margin-left:-25%">
     <a-steps class="steps" :current="currentTab">
       <a-step title="大纲" />
@@ -15,7 +15,7 @@
 
 <script>
   import Step1 from './modules/AthleteSelectionTestModal'
-  import Step2 from './OutlineList'
+  import Step2 from './OutlineCoachList'
   import Step3 from './AthleteSelectionAthleteScoreList'
   export default {
     name: "OutlineNavigation",
