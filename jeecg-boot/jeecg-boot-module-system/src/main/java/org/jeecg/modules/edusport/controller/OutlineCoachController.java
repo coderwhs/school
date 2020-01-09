@@ -233,7 +233,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
     @RequestMapping(value = "/exportXls")
     public ModelAndView exportXls(HttpServletRequest request, OutlineCoach outlineCoach) {
 		// 取得当前导入行的大纲教练信息.
-		OutlineCoach outlineCoachInfo = outlineCoachService.getById("1214968966924894209");
+		OutlineCoach outlineCoachInfo = outlineCoachService.getById(outlineCoach.getId());
 		JSONObject jsonObject = JSONUtil.createObj();
 		// 测试标题.
 		AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(outlineCoachInfo.getOutlineId());
@@ -281,12 +281,12 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 		TestIOUtil.outputTemplate(writer, rows, head12, testProjectList, jsonObject.toString());
 		// 关闭writer，释放内存
 		writer.close();
-
-		ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
-        mv.addObject(NormalExcelConstants.FILE_NAME, title); //此处设置的filename无效 ,前端会重更新设置一下
-        mv.addObject(NormalExcelConstants.CLASS, OutlineCoach.class);
-        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams(title + "报表", "导出人:", title));
-        mv.addObject(NormalExcelConstants.DATA_LIST, null);
+		ModelAndView mv = new ModelAndView("");
+//		ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
+//        mv.addObject(NormalExcelConstants.FILE_NAME, title); //此处设置的filename无效 ,前端会重更新设置一下
+//        mv.addObject(NormalExcelConstants.CLASS, OutlineCoach.class);
+//        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams(title + "报表", "导出人:", title));
+//        mv.addObject(NormalExcelConstants.DATA_LIST, null);
         return mv;
 //        return super.exportXls(request, outlineCoach, OutlineCoach.class, "tb_edu_outline_coach");
     }
@@ -299,7 +299,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
     * @return
     */
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
-    public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response,@RequestParam(name="id",required=true) String id) {
+    public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response,String id) {
 //        return super.importExcel(request, response, OutlineCoach.class);
     	 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
          Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
@@ -333,8 +333,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  				SysUser sysUser = getSystemUser(request);
  				Sheet sheet = book.getSheetAt(0);
  				// 取得当前导入行的大纲教练信息.
-				OutlineCoach outlineCoach = outlineCoachService.getById("1214968966924894209");
- 				outlineCoach = outlineCoachService.getById("1214968966924894209");
+				OutlineCoach outlineCoach = outlineCoachService.getById(id);
 				if(outlineCoach == null) {
 					Result.error("数据信息不存在，请确认！");
 				}

@@ -123,7 +123,7 @@
   import OutlineCoachModal from './modules/OutlineCoachModal'
   import JDate from '@/components/jeecg/JDate.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-
+  import {downFile } from '@/api/manage'
   export default {
     name: "OutlineCoachList",
     mixins:[JeecgListMixin],
@@ -318,48 +318,75 @@
       },
       importExcel(){
         if(this.queryParam.id){
-          alert("已经选择一条记录");
+          this.url.importExcelUrl = this.url.importExcelUrl + '?id=' + this.queryParam.id;
         } else {
-          alert("请选择一条记录");
+          alert("请选择一条记录!");
+          
         }
       },
-
-      handleImportExcel(info){
-        if(this.queryParam.id){
-          // console.log("info = " + JSON.stringify(info));
-          if (info.file.status !== 'uploading') {
-            console.log(info.file, info.fileList);
-          }
-          if (info.file.status === 'done') {
-            if (info.file.response.success) {
-              // this.$message.success(`${info.file.name} 文件上传成功`);
-              if (info.file.response.code === 201) {
-                let { message, result: { msg, fileUrl, fileName } } = info.file.response
-                let href = window._CONFIG['domianURL'] + fileUrl + '?id=' + this.queryParam.id;
-                console.log("href = " + heref);
-                this.$warning({
-                  title: message,
-                  content: (
-                    <div>
-                      <span>{msg}</span><br/>
-                      <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
-                    </div>
-                  )
-                })
-              } else {
-                this.$message.success(info.file.response.message || `${info.file.name} 文件上传成功`)
-              }
-                this.loadData()
-              } else {
-                this.$message.error(`${info.file.name} ${info.file.response.message}.`);
-              }
-            } else if (info.file.status === 'error') {
-              this.$message.error(`文件上传失败: ${info.file.msg} `);
-            }
+    handleImportExcel(info){
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        if (info.file.response.success) {
+          // this.$message.success(`${info.file.name} 文件上传成功`);
+          if (info.file.response.code === 201) {
+            let { message, result: { msg, fileUrl, fileName } } = info.file.response
+            let href = window._CONFIG['domianURL'] + fileUrl;
+            this.$warning({
+              title: message,
+              content: (
+                <div>
+                  <span>{msg}</span><br/>
+                  <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
+                </div>
+              )
+            })
           } else {
-            alert("请选择一条记录。")
+            this.$message.success(info.file.response.message || `${info.file.name} 文件上传成功`)
           }
-        },
+            this.loadData()
+          } else {
+            this.$message.error(`${info.file.name} ${info.file.response.message}.`);
+          }
+        } else if (info.file.status === 'error') {
+          this.$message.error(`文件上传失败: ${info.file.msg} `);
+        }
+      },
+      handleExportXls(fileName){
+        if(this.selectedRowKeys.length<=0){
+          alert("请选择一条记录!");
+        } else {
+          if(!fileName || typeof fileName != "string"){
+            fileName = "导出文件"
+          }
+          let param = {...this.queryParam};
+          if(this.selectedRowKeys && this.selectedRowKeys.length>0){
+            param['selections'] = this.selectedRowKeys.join(",")
+          }
+          console.log("导出参数",param)
+          downFile(this.url.exportXlsUrl,param).then((data)=>{
+            if (!data) {
+              this.$message.warning("文件下载失败")
+              return
+            }
+            if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                window.navigator.msSaveBlob(new Blob([data],{ type: 'application/vnd.ms-excel' }), fileName + moment(new Date()).format("YYYY-DD-MM") + '.xls')
+            }else{
+              let url = window.URL.createObjectURL(new Blob([data],{ type: 'application/vnd.ms-excel' }))
+              let link = document.createElement('a')
+              link.style.display = 'none'
+              link.href = url
+              link.setAttribute('download', fileName + moment(new Date()).format("YYYY-MM-DD") + '.xls')
+              document.body.appendChild(link)
+              link.click()
+              document.body.removeChild(link); //下载完成移除元素
+              window.URL.revokeObjectURL(url); //释放掉blob对象
+            }
+          })
+        }
+      },
     }
   }
 </script>
