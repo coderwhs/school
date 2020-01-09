@@ -15,7 +15,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.compress.utils.Lists;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -60,6 +62,9 @@ import org.jeecg.modules.edusport.util.TestIOUtil;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
+import org.jeecgframework.poi.excel.def.NormalExcelConstants;
+import org.jeecgframework.poi.excel.entity.ExportParams;
+import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,7 +82,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.common.collect.Lists;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
@@ -312,7 +316,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  					book = new HSSFWorkbook(inputstream);
  				} catch(Exception e) {
  					e.printStackTrace();
-					Result.error("无效的文件！");
+					return Result.error("无效的文件！");
  				}
  				
 // 				if (POIFSFileSystem.hasPOIFSHeader(inputstream)) {
@@ -331,7 +335,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  				// 取得当前导入行的大纲教练信息.
 				OutlineCoach outlineCoach = outlineCoachService.getById(id);
 				if(outlineCoach == null) {
-					Result.error("数据信息不存在，请确认！");
+					return Result.error("数据信息不存在，请确认！");
 				}
 				
 				// 校验.

@@ -44,7 +44,12 @@
       <a-button @click="handleAdd" type="primary" icon="plus" disabled="disabled">新增</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('tb_edu_outline_coach')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :format ="['xls']" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import" @click="importExcel">导入</a-button>
+        <div v-if="selectedRowKeys.length > 0">
+          <a-button type="primary" icon="import" @click="importExcelBtn">导入</a-button>
+        </div>
+        <div v-else>
+          <a-button type="primary" icon="import" @click.stop="importExcelBtn">导入</a-button>
+        </div>
       </a-upload>
       <a-dropdown v-if="selectedRowKeys.length > 0" disabled="disabled">
         <a-menu slot="overlay">
@@ -265,7 +270,7 @@
     },
     computed: {
       importExcelUrl: function(){
-        return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}?id:${this.queryParam.id}`;
+        return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
       }
     },
     methods: {
@@ -316,44 +321,45 @@
         this.selectionRows = [];
         this.queryParam.id = [];
       },
-      importExcel(){
+      importExcelBtn(event){
+        console.log("event.target = " + event.target);
+        console.log("event.currentTarget = " + event.currentTarget);
         if(this.queryParam.id){
           this.url.importExcelUrl = this.url.importExcelUrl + '?id=' + this.queryParam.id;
         } else {
           alert("请选择一条记录!");
-          
         }
       },
-    handleImportExcel(info){
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        if (info.file.response.success) {
-          // this.$message.success(`${info.file.name} 文件上传成功`);
-          if (info.file.response.code === 201) {
-            let { message, result: { msg, fileUrl, fileName } } = info.file.response
-            let href = window._CONFIG['domianURL'] + fileUrl;
-            this.$warning({
-              title: message,
-              content: (
-                <div>
-                  <span>{msg}</span><br/>
-                  <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
-                </div>
-              )
-            })
-          } else {
-            this.$message.success(info.file.response.message || `${info.file.name} 文件上传成功`)
-          }
-            this.loadData()
-          } else {
-            this.$message.error(`${info.file.name} ${info.file.response.message}.`);
-          }
-        } else if (info.file.status === 'error') {
-          this.$message.error(`文件上传失败: ${info.file.msg} `);
+      handleImportExcel(info){
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
         }
-      },
+        if (info.file.status === 'done') {
+          if (info.file.response.success) {
+            // this.$message.success(`${info.file.name} 文件上传成功`);
+            if (info.file.response.code === 201) {
+              let { message, result: { msg, fileUrl, fileName } } = info.file.response
+              let href = window._CONFIG['domianURL'] + fileUrl;
+              this.$warning({
+                title: message,
+                content: (
+                  <div>
+                    <span>{msg}</span><br/>
+                    <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
+                  </div>
+                )
+              })
+            } else {
+              this.$message.success(info.file.response.message || `${info.file.name} 文件上传成功`)
+            }
+              this.loadData()
+            } else {
+              this.$message.error(`${info.file.name} ${info.file.response.message}.`);
+            }
+          } else if (info.file.status === 'error') {
+            this.$message.error(`文件上传失败: ${info.file.msg} `);
+          }
+        },
       handleExportXls(fileName){
         if(this.selectedRowKeys.length<=0){
           alert("请选择一条记录!");
