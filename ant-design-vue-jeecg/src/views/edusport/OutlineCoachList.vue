@@ -41,8 +41,8 @@
     
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus" disabled="disabled">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('tb_edu_outline_coach')">导出</a-button>
+      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('教练表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :format ="['xls']" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <div v-if="selectedRowKeys.length > 0">
           <a-button type="primary" icon="import" @click="importExcelBtn">导入</a-button>
@@ -129,6 +129,10 @@
   import JDate from '@/components/jeecg/JDate.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import {downFile } from '@/api/manage'
+  import { filterObj } from '@/utils/util';
+  import Vue from 'vue'
+  import { ACCESS_TOKEN } from "@/store/mutation-types"
+  import moment from "moment"
   export default {
     name: "OutlineCoachList",
     mixins:[JeecgListMixin],

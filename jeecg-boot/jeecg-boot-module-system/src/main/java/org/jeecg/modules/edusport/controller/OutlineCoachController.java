@@ -1,8 +1,11 @@
 package org.jeecg.modules.edusport.controller;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -12,15 +15,24 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.POIXMLDocument;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
@@ -61,6 +73,7 @@ import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -227,7 +240,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
     * @param outlineCoach
     */
     @RequestMapping(value = "/exportXls")
-    public ModelAndView exportXls(HttpServletRequest request, OutlineCoach outlineCoach) {
+    public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response, OutlineCoach outlineCoach) {
 		// 取得当前导入行的大纲教练信息.
 		OutlineCoach outlineCoachInfo = outlineCoachService.getById(outlineCoach.getId());
 		JSONObject jsonObject = JSONUtil.createObj();
@@ -242,7 +255,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 		Sport sport = sportService.getById(outlineCoachInfo.getSportId());
 		jsonObject.put("project", sport.getSportName());
 		// 日期.
-		jsonObject.put("date", DateUtil.format(new Date(), "yyy年M月"));
+		jsonObject.put("date", DateUtil.format(new Date(), "yyyy年M月"));
 		
 		// 指标信息.
 		AthleteSelectionGroupIndex groupIndex = athleteSelectionGroupIndexMapper.getIndexByGroupId(outlineCoachInfo.getGroupId());
@@ -262,30 +275,43 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 		List<String> head12 = CollUtil.newArrayList(indexCatStr.toString().split(","));
 		List<String> testProjectList = CollUtil.newArrayList(indexStr.toString().split(","));
 		// 运动员信息.
-		List<Map<String, Object>> rows = Lists.newArrayList();
+		List<Map<String, Object>> athletes = Lists.newArrayList();
 		String[] athleteNos = outlineCoachInfo.getAlthleteNos().split(",");
 		for(int k = 0; k < athleteNos.length; k++) {
 			Athlete athlete = athleteMapper.getAthleteByNo(athleteNos[k]);
-			rows.add(TestIOUtil.createAthlete(athlete.getAthleteNo(), athlete.getAthleteName(),
+			athletes.add(TestIOUtil.createAthlete(athlete.getAthleteNo(), athlete.getAthleteName(),
 					"1".equals(athlete.getGender()) ? "男" : "女", athlete.getGrade(),
 					DateUtil.format(athlete.getBirthDate(), "yyyy-MM-DD"), testProjectList));
 		}
 
+    	String HSSF = ".xls";
+    	String XSSF = ".xlsx";
+    	String codedFileName = "导出文件";
+    	HSSFWorkbook workbook = new HSSFWorkbook();
+    	try {
+    		// 输出模板.
+    		TestIOUtil.outputCoachTemplate(workbook, athletes, head12, testProjectList, jsonObject.toString());
+    		if (workbook instanceof HSSFWorkbook) {
+    			codedFileName += HSSF;
+    		} else {
+    			codedFileName += XSSF;
+    		}
+    		if (isIE(request)) {
+    			codedFileName = java.net.URLEncoder.encode(codedFileName, "UTF8");
+    		} else {
+    			codedFileName = new String(codedFileName.getBytes("UTF-8"), "ISO-8859-1");
+    		}
+    		response.setHeader("content-disposition", "attachment;filename=" + codedFileName);
+    		ServletOutputStream out = response.getOutputStream();
+    		workbook.write(out);
+    		out.flush();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		
-		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("c:/temp/writeMapTest" + new Date().getTime() + ".xlsx");
-		TestIOUtil.outputTemplate(writer, rows, head12, testProjectList, jsonObject.toString());
-		// 关闭writer，释放内存
-		writer.close();
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("status");
-//		ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
-//        mv.addObject(NormalExcelConstants.FILE_NAME, title); //此处设置的filename无效 ,前端会重更新设置一下
-//        mv.addObject(NormalExcelConstants.CLASS, OutlineCoach.class);
-//        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams(title + "报表", "导出人:", title));
-//        mv.addObject(NormalExcelConstants.DATA_LIST, null);
-//        return mv;
-        return super.exportXls(request, outlineCoach, OutlineCoach.class, "tb_edu_outline_coach");
+        return mv;
     }
 
     /**
@@ -313,19 +339,18 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  					book = new HSSFWorkbook(inputstream);
  				} catch(Exception e) {
  					e.printStackTrace();
-					return Result.error("无效的文件！");
  				}
  				
-// 				if (POIFSFileSystem.hasPOIFSHeader(inputstream)) {
-// 					book = new HSSFWorkbook(inputstream);
-// 				} else if (POIXMLDocument.hasOOXMLHeader(inputstream)) {
-// 					try {
-// 						book = new XSSFWorkbook(OPCPackage.open(inputstream));
-// 					} catch (InvalidFormatException e) {
-// 						e.printStackTrace();
-// 						Result.error("无效的文件！");
-// 					}
-// 				}
+ 				if (POIFSFileSystem.hasPOIFSHeader(inputstream)) {
+ 					book = new HSSFWorkbook(inputstream);
+ 				} else if (POIXMLDocument.hasOOXMLHeader(inputstream)) {
+ 					try {
+ 						book = new XSSFWorkbook(OPCPackage.open(inputstream));
+ 					} catch (InvalidFormatException e) {
+ 						e.printStackTrace();
+ 						return Result.error("无效的文件！");
+ 					}
+ 				}
  				// 系统用户.
  				SysUser sysUser = getSystemUser(request);
  				Sheet sheet = book.getSheetAt(0);
@@ -575,6 +600,10 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 			}
 		}
 		return new MergedRegionResult(false, 0, 0, 0, 0);
+	}
+	
+	protected boolean isIE(HttpServletRequest request) {
+		return (request.getHeader("USER-AGENT").toLowerCase().indexOf("msie") > 0 || request.getHeader("USER-AGENT").toLowerCase().indexOf("rv:11.0") > 0) ? true : false;
 	}
 }
 
