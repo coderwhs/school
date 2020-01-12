@@ -14,6 +14,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.hssf.util.Region;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
 import com.google.common.collect.Lists;
@@ -58,7 +59,7 @@ public class TestIOUtil {
 		//workbook = new HSSFWorkbook();
 		//创建HSSFSheet对象
 		HSSFSheet sheet = workbook.createSheet("sheet0");
-		sheet.createFreezePane(5,4,6,4);// 冻结.
+//		sheet.createFreezePane(5,4,6,4);// 冻结.
 		
 		//sheet.autoSizeColumn(1, true);
 		//sheet.setColumnWidth(colIndex, length * 480);
@@ -134,11 +135,13 @@ public class TestIOUtil {
 				} else if(c == 4) {
 					cell.setCellValue(athleteMap.get("出生年月").toString());
 				} else {
+					cell.setCellType(Cell.CELL_TYPE_STRING);
 					cell.setCellValue("");
 				}
 			}
 		}
 		
+		// 行融合.
 		int cells = sheet.getRow(0).getPhysicalNumberOfCells();// 第一行.
 		Row rowNum = sheet.getRow(0);
 		sheet.addMergedRegion(new Region(0, (short)(0), 0, (short)(rowNum.getPhysicalNumberOfCells() -1)));

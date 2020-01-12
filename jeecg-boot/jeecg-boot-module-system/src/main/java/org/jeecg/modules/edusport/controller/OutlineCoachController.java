@@ -1,11 +1,8 @@
 package org.jeecg.modules.edusport.controller;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,13 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.POIXMLDocument;
 import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -74,7 +70,6 @@ import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,11 +90,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.poi.excel.ExcelUtil;
-import cn.hutool.poi.excel.ExcelWriter;
 import lombok.extern.slf4j.Slf4j;
 
  /**
@@ -325,12 +317,13 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
     * @return
     */
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
-    @Transactional(rollbackFor = Exception.class)
+    //@Transactional(rollbackFor = Exception.class)
+    @Transactional
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response,String id) {
 //        return super.importExcel(request, response, OutlineCoach.class);
-    	 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-			// 取得当前导入行的大纲教练信息.
-			OutlineCoach outlineCoach = outlineCoachService.getById(id);
+    	MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+		// 取得当前导入行的大纲教练信息.
+		OutlineCoach outlineCoach = outlineCoachService.getById(id);
          Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
          for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
              MultipartFile file = entity.getValue();// 获取上传文件对象
@@ -341,11 +334,11 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  					inputstream = new PushbackInputStream(inputstream, 8);
  				}
  				Workbook book = null;
- 				try {
- 					book = new HSSFWorkbook(inputstream);
- 				} catch(Exception e) {
- 					e.printStackTrace();
- 				}
+// 				try {
+// 					book = new HSSFWorkbook(inputstream);
+// 				} catch(Exception e) {
+// 					e.printStackTrace();
+// 				}
  				
  				if (POIFSFileSystem.hasPOIFSHeader(inputstream)) {
  					book = new HSSFWorkbook(inputstream);
@@ -373,8 +366,13 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 				}
 				
 				// 更新测试日期.
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				outlineCoach.setTestDate(sdf.parse(sheet.getRow(1).getCell(5).getStringCellValue()));
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				if(sheet.getRow(1).getCell(5).getStringCellValue() != null) {
+					outlineCoach.setTestDate(sdf.parse(sheet.getRow(1).getCell(5).getStringCellValue()));
+				} else {
+					outlineCoach.setTestDate(new Date());
+				}
+				
 				outlineCoachService.updateById(outlineCoach);
 				// 指标类别信息.
 				String indexCatName = "";
@@ -417,7 +415,6 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  						AthleteSelectionIndex athleteSelectionIndex = athleteSelectionIndexMapper.getIndexByName(indexName, indexCatName);
 
  						if(athleteSelectionIndex != null) {
- 							System.out.println("row = " + r + ", col = " + c + ", value = " + cell);// 当前单元格的值.
  							List<AthleteSelectionAthleteScoreDetail> athleteScoreDetailList = new ArrayList<AthleteSelectionAthleteScoreDetail>();
 
  							//指标信息.
@@ -428,10 +425,10 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  							athleteSelectionAthleteScoreDetail.setGroupId(outlineCoach.getGroupId());// 组
  							athleteSelectionAthleteScoreDetail.setIndexCode(athleteSelectionIndex.getL3Code());// 指标
  							athleteSelectionAthleteScoreDetail.setEventCode(outlineCoach.getEventCodes());// 运动项目
- 							athleteSelectionAthleteScoreDetail.setTestValue(Double.valueOf(cell.getNumericCellValue()).toString());// 测试值
-							athleteSelectionAthleteScoreDetail.setTestScore(calcTestScore(athlete.getId(),
+ 							athleteSelectionAthleteScoreDetail.setTestValue(getCellValue(cell));// 测试值
+ 							athleteSelectionAthleteScoreDetail.setTestScore(calcTestScore(athlete.getId(),
 									outlineCoach.getGroupId(), athleteSelectionIndex.getL3Code(),
-									Double.valueOf(cell.getNumericCellValue()), athleteMapper));// 根据测试值，计算分数.
+									Double.valueOf(getCellValue(cell)), athleteMapper));// 根据测试值，计算分数.
  							athleteSelectionAthleteScoreDetail.setCreateTime(Calendar.getInstance().getTime());
  							athleteSelectionAthleteScoreDetail.setCreateBy(sysUser.getUsername());
  							athleteSelectionAthleteScoreDetail.setUpdateTime(Calendar.getInstance().getTime());
@@ -530,7 +527,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 				}
 
 				// 教练判断.
-				if(rowNum == 1 && cellNum == 4) {// 教练.
+				if(rowNum == 1 && cellNum == 3) {// 教练.
 					String coachName = row.getCell(cellNum).getStringCellValue();
 					Coach coach = coachMapper.getCoachByName(coachName);
 					if(coach == null) {
@@ -615,6 +612,51 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 	protected boolean isIE(HttpServletRequest request) {
 		return (request.getHeader("USER-AGENT").toLowerCase().indexOf("msie") > 0 || request.getHeader("USER-AGENT").toLowerCase().indexOf("rv:11.0") > 0) ? true : false;
 	}
+	
+	public String getCellValue(Cell cell) {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+  		String type_cn = "";
+  		int type = cell.getCellType();
+		String value = "";
+		switch (type) {
+			case 0:
+				if(DateUtil.isCellDateFormatted(cell)){
+					type_cn = "NUMBER-DATE";
+					Date date = cell.getDateCellValue();
+					value = sf.format(date);
+				}else {
+					type_cn = "NUMBER";
+					double tempValue = cell.getNumericCellValue();
+					value = String.valueOf(tempValue);
+				}
+				break;
+			case 1:
+				type_cn = "STRING";
+				value = cell.getStringCellValue();
+				break;
+			case 2:
+				type_cn = "FORMULA";
+				value = cell.getCellFormula();
+				break;
+			case 3:
+				type_cn = "BLANK";
+				value = cell.getStringCellValue();
+				break;
+			case 4:
+				type_cn = "BOOLEAN";
+				boolean tempValue = cell.getBooleanCellValue();
+				value = String.valueOf(tempValue);
+				break;
+			case 5:
+				type_cn = "ERROR";
+				byte b = cell.getErrorCellValue();
+				value = String.valueOf(b);
+			default:
+				break;
+		}
+
+  		return value.isEmpty()?"0":value;
+  	}
 }
 
 class MergedRegionResult {

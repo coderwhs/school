@@ -128,11 +128,12 @@
   import OutlineCoachModal from './modules/OutlineCoachModal'
   import JDate from '@/components/jeecg/JDate.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-  import {downFile } from '@/api/manage'
   import { filterObj } from '@/utils/util';
   import Vue from 'vue'
   import { ACCESS_TOKEN } from "@/store/mutation-types"
   import moment from "moment"
+  import { deleteAction, getAction,downFile } from '@/api/manage'
+
   export default {
     name: "OutlineCoachList",
     mixins:[JeecgListMixin],
@@ -269,7 +270,8 @@
          eventCodes:[],
          state:[],
         },
-        tableScroll:{x :8*147+50}
+        tableScroll:{x :8*147+50},
+        ok: false,
       }
     },
     computed: {
@@ -319,22 +321,59 @@
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
         this.queryParam.id = selectedRowKeys[0];
+        this.url.importExcelUrl = this.url.importExcelUrl.split("?")[0];
       },
       onClearSelected() {
         this.selectedRowKeys = [];
         this.selectionRows = [];
         this.queryParam.id = [];
+        this.url.importExcelUrl = this.url.importExcelUrl.split("?")[0];
       },
       importExcelBtn(event){
-        console.log("event.target = " + event.target);
-        console.log("event.currentTarget = " + event.currentTarget);
-        if(this.queryParam.id){
+        if(this.selectedRowKeys.length > 0){
+          this.url.importExcelUrl = this.url.importExcelUrl.split("?")[0];
           this.url.importExcelUrl = this.url.importExcelUrl + '?id=' + this.queryParam.id;
         } else {
           alert("请选择一条记录!");
         }
       },
       
+      // /* 导入 */
+      // handleImportExcel(info){
+      //   if(this.selectedRowKeys.length<=0){
+      //     alert("请选择一条记录!");
+      //   } else {
+      //     if (info.file.status !== 'uploading') {
+      //       console.log(info.file, info.fileList);
+      //     }
+      //     if (info.file.status === 'done') {
+      //       if (info.file.response.success) {
+      //         // this.$message.success(`${info.file.name} 文件上传成功`);
+      //         if (info.file.response.code === 201) {
+      //           let { message, result: { msg, fileUrl, fileName } } = info.file.response
+      //           let href = window._CONFIG['domianURL'] + fileUrl;
+      //           this.$warning({
+      //             title: message,
+      //             content: (
+      //               <div>
+      //                 <span>{msg}</span><br/>
+      //                 <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
+      //               </div>
+      //             )
+      //           })
+      //         } else {
+      //           this.$message.success(info.file.response.message || `${info.file.name} 文件上传成功`)
+      //         }
+      //         this.loadData()
+      //       } else {
+      //         this.$message.error(`${info.file.name} ${info.file.response.message}.`);
+      //       }
+      //     } else if (info.file.status === 'error') {
+      //       this.$message.error(`文件上传失败: ${info.file.msg} `);
+      //     }
+      //   }
+      // },
+
       handleExportXls(fileName){
         if(this.selectedRowKeys.length<=0){
           alert("请选择一条记录!");
