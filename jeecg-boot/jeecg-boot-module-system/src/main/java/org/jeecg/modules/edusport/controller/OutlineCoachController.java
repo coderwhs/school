@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.PushbackInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -74,6 +75,7 @@ import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -255,7 +257,8 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 		Sport sport = sportService.getById(outlineCoachInfo.getSportId());
 		jsonObject.put("project", sport.getSportName());
 		// 日期.
-		jsonObject.put("date", DateUtil.format(new Date(), "yyyy年M月"));
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); 
+		jsonObject.put("date", format.format(new Date()));
 		
 		// 指标信息.
 		AthleteSelectionGroupIndex groupIndex = athleteSelectionGroupIndexMapper.getIndexByGroupId(outlineCoachInfo.getGroupId());
@@ -281,7 +284,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 			Athlete athlete = athleteMapper.getAthleteByNo(athleteNos[k]);
 			athletes.add(TestIOUtil.createAthlete(athlete.getAthleteNo(), athlete.getAthleteName(),
 					"1".equals(athlete.getGender()) ? "男" : "女", athlete.getGrade(),
-					DateUtil.format(athlete.getBirthDate(), "yyyy-MM-DD"), testProjectList));
+							format.format(athlete.getBirthDate()), testProjectList));
 		}
 
     	String HSSF = ".xls";
@@ -290,7 +293,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
     	HSSFWorkbook workbook = new HSSFWorkbook();
     	try {
     		// 输出模板.
-    		TestIOUtil.outputCoachTemplate(workbook, athletes, head12, testProjectList, jsonObject.toString());
+    		workbook = TestIOUtil.outputCoachTemplate(workbook, athletes, head12, testProjectList, jsonObject.toString());
     		if (workbook instanceof HSSFWorkbook) {
     			codedFileName += HSSF;
     		} else {
@@ -322,9 +325,12 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
     * @return
     */
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+    @Transactional(rollbackFor = Exception.class)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response,String id) {
 //        return super.importExcel(request, response, OutlineCoach.class);
     	 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+			// 取得当前导入行的大纲教练信息.
+			OutlineCoach outlineCoach = outlineCoachService.getById(id);
          Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
          for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
              MultipartFile file = entity.getValue();// 获取上传文件对象
@@ -354,8 +360,8 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
  				// 系统用户.
  				SysUser sysUser = getSystemUser(request);
  				Sheet sheet = book.getSheetAt(0);
- 				// 取得当前导入行的大纲教练信息.
-				OutlineCoach outlineCoach = outlineCoachService.getById(id);
+// 				// 取得当前导入行的大纲教练信息.
+//				OutlineCoach outlineCoach = outlineCoachService.getById(id);
 				if(outlineCoach == null) {
 					return Result.error("数据信息不存在，请确认！");
 				}
@@ -366,6 +372,10 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 					return Result.error(result);
 				}
 				
+				// 更新测试日期.
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				outlineCoach.setTestDate(sdf.parse(sheet.getRow(1).getCell(5).getStringCellValue()));
+				outlineCoachService.updateById(outlineCoach);
 				// 指标类别信息.
 				String indexCatName = "";
  				for(int r = 4; r < sheet.getPhysicalNumberOfRows(); r++) {
