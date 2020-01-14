@@ -25,26 +25,27 @@
          <a-row>
            <a-col :span="12">
              <a-form-item label="申请理由" :labelCol="labelCol" :wrapperCol="wrapperCol">
-               <!-- <a-input v-decorator="[ 'delegation', validatorRules.delegation]" placeholder="请输入申请理由"></a-input> -->
-               <a-textarea v-decorator="['delegation']" rows="4" placeholder="请输入申请理由" disabled="disabled"/>
+               <a-input v-decorator="[ 'delegation', validatorRules.delegation]" placeholder="请输入申请理由"></a-input>
+               <!-- <a-textarea v-decorator="['delegation']" rows="4" placeholder="请输入申请理由" disabled="disabled"/> -->
              </a-form-item>
            </a-col>
            <a-col :span="12">
-             <a-form-item label="审批意见" :labelCol="labelCol" :wrapperCol="wrapperCol">
-               <a-textarea v-decorator="['description']" rows="4" placeholder="请输入审批意见"/>
-             </a-form-item>
+              <a-form-item label="是否同意" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <j-dict-select-tag type="radio" v-decorator="['isAgree']" :trigger-change="true" dictCode="is_agree" placeholder="请选择是否同意"/>
+              </a-form-item>
            </a-col>
          </a-row>
          <a-row>
            <a-col :span="12">
              <a-form-item label="任务描述" :labelCol="labelCol" :wrapperCol="wrapperCol">
-               <a-input v-decorator="[ 'owner', validatorRules.owner]" placeholder="请输入owner" disabled="disabled"></a-input>
+               <!-- <a-input v-decorator="[ 'owner', validatorRules.owner]" placeholder="请输入owner" disabled="disabled"></a-input> -->
+               <a-textarea v-decorator="['owner']" rows="4" disabled="disabled" placeholder="请输入审批意见"/>
              </a-form-item>
            </a-col>
            <a-col :span="12">
-             <a-form-item label="是否同意" :labelCol="labelCol" :wrapperCol="wrapperCol">
-               <j-dict-select-tag type="radio" v-decorator="['isAgree']" :trigger-change="true" dictCode="is_agree" placeholder="请选择是否同意"/>
-             </a-form-item>
+              <a-form-item label="审批意见" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-textarea v-decorator="['description']" rows="4" placeholder="请输入审批意见"/>
+              </a-form-item>
            </a-col>
          </a-row>
          <a-row>
@@ -74,7 +75,7 @@
 
       </a-form>
     </a-spin>
-    <img alt="流程图" style="width: 100% height: 50%" :src="previewImage"/>
+    <img alt="流程图" style="width: 50% height: 50%" :src="previewImage"/>
   </a-modal>
 </template>
 

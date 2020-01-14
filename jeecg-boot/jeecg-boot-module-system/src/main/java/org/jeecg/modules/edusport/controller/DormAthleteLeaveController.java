@@ -1,6 +1,7 @@
 package org.jeecg.modules.edusport.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
@@ -19,6 +20,7 @@ import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.edusport.entity.DormAthleteLeave;
 import org.jeecg.modules.edusport.mapper.DormAthleteLeaveMapper;
 import org.jeecg.modules.edusport.service.IDormAthleteLeaveService;
+import org.jeecg.modules.edusport.util.UserUtil;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
@@ -87,7 +89,9 @@ public class DormAthleteLeaveController extends JeecgController<DormAthleteLeave
 	 * @return
 	 */
 	@PostMapping(value = "/add")
-	public Result<?> add(@RequestBody DormAthleteLeave dormAthleteLeave) {
+	public Result<?> add(HttpServletRequest request, @RequestBody DormAthleteLeave dormAthleteLeave) {
+		dormAthleteLeave.setCreateTime(new Date());
+		dormAthleteLeave.setCreateBy(UserUtil.getSystemUser(request).getUsername());
 		dormAthleteLeave.setBillType("1");// 运动员宿舍请假单
 		dormAthleteLeave.setWorkflowState("1");// 初始化.
 		dormAthleteLeaveService.save(dormAthleteLeave);
