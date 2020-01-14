@@ -9,7 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-<<<<<<< HEAD
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -20,7 +19,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.hssf.util.Region;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-=======
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -32,7 +31,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
->>>>>>> bc05ee33de8a1200e72a2d2c57e8f738864cc3c7
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -56,7 +54,7 @@ public class TestIOUtil {
 	 * @param testProjectList 测试项目列表
 	 * @param jsonStr         title等其他内容的json字符串
 	 */
-<<<<<<< HEAD
+
 	public static HSSFWorkbook outputCoachTemplate(HSSFWorkbook workbook, List<Map<String, Object>> athletes, List<String> head12,
 			List<String> testProjectList, String jsonStr) {
 		List<String> head11 = CollUtil.newArrayList("学号", "姓名", "性别", "年级", "出生年月");
@@ -194,9 +192,6 @@ public class TestIOUtil {
 	 * @param testProjectList 测试项目列表
 	 * @param jsonStr         title等其他内容的json字符串
 	 */
-=======
-	@Deprecated
->>>>>>> bc05ee33de8a1200e72a2d2c57e8f738864cc3c7
 	public static void outputTemplate(ExcelWriter writer, List<Map<String, Object>> athletes, List<String> head12,
 			List<String> testProjectList, String jsonStr) {
 		List<String> head11 = CollUtil.newArrayList("学号", "姓名", "性别", "年级", "出生年月");
@@ -406,11 +401,10 @@ public class TestIOUtil {
 		return createAthlete(number, name, "", "", "", testProjectList);
 	}
 
-<<<<<<< HEAD
-	public static void main(String[] args) {
+//	public static void main(String[] args) {
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("c:/temp/writeMapTest" + new Date().getTime() + ".xlsx");
-=======
+//		ExcelWriter writer = ExcelUtil.getWriter("c:/temp/writeMapTest" + new Date().getTime() + ".xlsx");
+
 //	public static void main(String[] args) {
 //
 //		// 通过工具类创建writer
@@ -453,60 +447,59 @@ public class TestIOUtil {
         RegionUtil.setBorderTop(border, region, sheet, wb);      //上边框
     }
 	
-
-    public static void main(String[] args) throws Exception {
-        Workbook wb;
->>>>>>> bc05ee33de8a1200e72a2d2c57e8f738864cc3c7
-
-        if(args.length > 0 && args[0].equals("-xls")) 
-        	wb = new HSSFWorkbook();
-        else wb = new XSSFWorkbook();
-
-//        Map<String, CellStyle> styles = createStyles(wb);
-        
-        
-		List<String> head12 = CollUtil.newArrayList("素质", "素质", "素质", "专项", "专项", "专项", "身体");
-		List<String> testProjectList = CollUtil.newArrayList("立定跳远", "后蹲", "窄硬拉", "抓举", "挺举", "总成绩", "体重");
-		String jsonStr = JSONUtil.createObj().put("title", "2019-2020年省体校冬训第一次素质、专项测试成绩").put("project", "举重")
-				.put("coach", "韩永生").put("date", DateUtil.format(new Date(), "yyy年M月")).toString();
-
-		List<Map<String, Object>> rows = Lists.newArrayList();
-		rows.add(createAthlete("S00001", "张三", "男", "初三", "", testProjectList));
-		rows.add(createAthlete("S00002", "李四", "女", "", "2005年6月", testProjectList));
-
-        Sheet sheet = wb.createSheet();
-        PrintSetup printSetup = sheet.getPrintSetup();
-        printSetup.setLandscape(true);
-        sheet.setFitToPage(true);
-        sheet.setHorizontallyCenter(true);
-        
-        outputTemplate(sheet, rows, head12, testProjectList, jsonStr);
-
-        // Write the output to a file
-        String file = "c:/temp/timesheet" + new Date().getTime() + ".xls";
-        if(wb instanceof XSSFWorkbook) file += "x";
-        FileOutputStream out = new FileOutputStream(file);
-        wb.write(out);
-        out.close();
-        
-//		ExcelReader reader = ExcelUtil.getReader("c:/temp/writeMapTest.xlsx");
-//		List<Map<String, Object>> readAll = testDataReader(reader);
-//		for (int i = 0; i < readAll.size(); i++) {
+//
+//    public static void main(String[] args) throws Exception {
+//        Workbook wb;
+//
+//        if(args.length > 0 && args[0].equals("-xls")) 
+//        	wb = new HSSFWorkbook();
+//        else wb = new XSSFWorkbook();
+//
+////        Map<String, CellStyle> styles = createStyles(wb);
+//        
+//        
+//		List<String> head12 = CollUtil.newArrayList("素质", "素质", "素质", "专项", "专项", "专项", "身体");
+//		List<String> testProjectList = CollUtil.newArrayList("立定跳远", "后蹲", "窄硬拉", "抓举", "挺举", "总成绩", "体重");
+//		String jsonStr = JSONUtil.createObj().put("title", "2019-2020年省体校冬训第一次素质、专项测试成绩").put("project", "举重")
+//				.put("coach", "韩永生").put("date", DateUtil.format(new Date(), "yyy年M月")).toString();
+//
+//		List<Map<String, Object>> rows = Lists.newArrayList();
+//		rows.add(createAthlete("S00001", "张三", "男", "初三", "", testProjectList));
+//		rows.add(createAthlete("S00002", "李四", "女", "", "2005年6月", testProjectList));
+//
+//        Sheet sheet = wb.createSheet();
+//        PrintSetup printSetup = sheet.getPrintSetup();
+//        printSetup.setLandscape(true);
+//        sheet.setFitToPage(true);
+//        sheet.setHorizontallyCenter(true);
+//        
+//        outputTemplate(sheet, rows, head12, testProjectList, jsonStr);
+//
+//        // Write the output to a file
+//        String file = "c:/temp/timesheet" + new Date().getTime() + ".xls";
+//        if(wb instanceof XSSFWorkbook) file += "x";
+//        FileOutputStream out = new FileOutputStream(file);
+//        wb.write(out);
+//        out.close();
+//        
+////		ExcelReader reader = ExcelUtil.getReader("c:/temp/writeMapTest.xlsx");
+////		List<Map<String, Object>> readAll = testDataReader(reader);
+////		for (int i = 0; i < readAll.size(); i++) {
+////			Map<String, Object> row = readAll.get(i);
+////			Console.log(row);
+////		}
+//        String xlsxpath = "c:/temp/writeMapTest.xlsx";
+//        FileInputStream fi = new FileInputStream(new File(xlsxpath));
+//        Workbook workbook = new XSSFWorkbook(fi);
+//        List<Map<String, Object>> readAll = testDataReader(workbook.getSheetAt(0));
+//        
+//        for (int i = 0; i < readAll.size(); i++) {
 //			Map<String, Object> row = readAll.get(i);
 //			Console.log(row);
 //		}
-        String xlsxpath = "c:/temp/writeMapTest.xlsx";
-        FileInputStream fi = new FileInputStream(new File(xlsxpath));
-        Workbook workbook = new XSSFWorkbook(fi);
-        List<Map<String, Object>> readAll = testDataReader(workbook.getSheetAt(0));
-        
-        for (int i = 0; i < readAll.size(); i++) {
-			Map<String, Object> row = readAll.get(i);
-			Console.log(row);
-		}
-        
-        fi.close();
-    }
+//        
+//        fi.close();
+//    }
 	
 	/**
      * Create a library of cell styles
