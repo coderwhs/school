@@ -11,8 +11,8 @@
     <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
-<!--    <div class="table-operator">-->
-<!--      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>-->
+   <!-- <div class="table-operator"> -->
+     <!-- <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button> -->
 <!--      <a-button type="primary" icon="download" @click="handleExportXls('tact_ru_task')">导出</a-button>-->
 <!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
 <!--        <a-button type="primary" icon="import">导入</a-button>-->
@@ -23,7 +23,7 @@
 <!--        </a-menu>-->
 <!--        <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>-->
 <!--      </a-dropdown>-->
-<!--    </div>-->
+   <!-- </div> -->
 
     <!-- table区域-begin -->
     <div>
@@ -69,7 +69,7 @@
           <a @click="handleEdit(record)"> 处理 |</a>
           <!-- <a @click="handleApply(record)"> 同意 |</a>
           <a @click="handleReject(record)"> 不同意 |</a> -->
-          <a @click="handleEdit(record)"> 跟踪 </a>
+          <a @click="handleProcessDiagram(record)"> 跟踪 </a>
 <!--          <a-divider type="vertical" />-->
           <!--<a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
@@ -93,13 +93,16 @@
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import TactRuTaskModal from './modules/TactRuTaskModal'
+  import TactRuTaskProcessDiagramModal from './modules/TactRuTaskProcessDiagramModal'
   import {getAction, httpAction} from '@/api/manage'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+
   export default {
     name: "TactRuTaskList",
     mixins:[JeecgListMixin],
     components: {
-      TactRuTaskModal
+      TactRuTaskModal,
+      TactRuTaskProcessDiagramModal,
     },
     data () {
       return {
@@ -116,36 +119,6 @@
               return parseInt(index)+1;
             }
           },
-          //  {
-          //   title:'parentTaskId',
-          //   align:"center",
-          //   dataIndex: 'parentTaskId'
-          // },
-          //  {
-          //   title:'procInstId',
-          //   align:"center",
-          //   dataIndex: 'procInstId'
-          // },
-          // {
-          //   title:'procDefId',
-          //   align:"center",
-          //   dataIndex: 'procDefId'
-          // },
-          // {
-          //   title:'taskDefId',
-          //   align:"center",
-          //   dataIndex: 'taskDefId'
-          // },
-          // {
-          //   title:'运动员ID',
-          //   align:"center",
-          //   dataIndex: 'scopeId'
-          // },
-          // {
-          //   title:'流程名称',
-          //   align:"center",
-          //   dataIndex: 'assignee'
-          // },
           {
             title:'当前步骤',
             align:"center",
@@ -241,9 +214,7 @@
           }
         })
       },
-      handleApply:function(record, id){
-        this.$refs.TactRuTaskModal.index = id;
-      },
+      // 同意.
       handleApply: function (record) {
         console.log("========================" + record.id);
         let httpurl = '';
@@ -265,7 +236,7 @@
           this.loadData(1);
         })
       },
-
+      // 拒绝.
       handleReject: function (record) {
         let httpurl = '';
         let method = '';
@@ -278,37 +249,41 @@
         httpAction(httpurl,formData,method).then((res)=>{
           if(res.success){
             this.$message.success(res.message);
-            alert("拒绝操作成功" + res.message);
+            // alert("拒绝操作成功" + res.message);
             //this.$emit('ok');
           }else{
             this.$message.warning(res.message);
-            alert("拒绝操作失败" + res.message);
+            // alert("拒绝操作失败" + res.message);
           }
         }).finally(() => {
           this.loadData(1);
         })
       },
-
-      handleProcessDiagram: function (procInstId) {
-        let httpurl = '';
-        let method = '';
-        httpurl+=this.url.processDiagram;
-        method = 'put';
-        // this.model = Object.assign({}, record);
-        // let formData = Object.assign(this.model, record);
-        // console.log("表单提交数据",formData);
-        getAction(httpurl,{procInstId: procInstId},method)
-        .then((res)=>{
-          console.log("res", res)
-          // if(res.success){
-          //   this.$message.success(res.message);
-          //   //this.$emit('ok');
-          // }else{
-          //   this.$message.warning(res.message);
-          // }
-        }).finally(() => {
-          // this.loadData(1);
+      // 生成流程图.
+      handleProcessDiagram: function (record) {
+        this.$nextTick(() => {
+          this.$refs.TactRuTaskProcessDiagramModal.tactRuTaskProcessDiagram(record);        
         })
+
+        // let httpurl = '';
+        // let method = '';
+        // httpurl+=this.url.processDiagram;
+        // method = 'put';
+        // // this.model = Object.assign({}, record);
+        // // let formData = Object.assign(this.model, record);
+        // // console.log("表单提交数据",formData);
+        // getAction(httpurl,{procInstId: procInstId},method)
+        // .then((res)=>{
+        //   console.log("res", res)
+        //   // if(res.success){
+        //   //   this.$message.success(res.message);
+        //   //   //this.$emit('ok');
+        //   // }else{
+        //   //   this.$message.warning(res.message);
+        //   // }
+        // }).finally(() => {
+        //   // this.loadData(1);
+        // })
       },
     }
   }

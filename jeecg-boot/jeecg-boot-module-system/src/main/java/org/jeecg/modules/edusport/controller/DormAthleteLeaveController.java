@@ -91,7 +91,7 @@ public class DormAthleteLeaveController extends JeecgController<DormAthleteLeave
 	@PostMapping(value = "/add")
 	public Result<?> add(HttpServletRequest request, @RequestBody DormAthleteLeave dormAthleteLeave) {
 		dormAthleteLeave.setCreateTime(new Date());
-		dormAthleteLeave.setCreateBy(UserUtil.getSystemUser(request).getUsername());
+		dormAthleteLeave.setCreateBy(UserUtil.getSystemUser(request, sysUserService).getUsername());
 		dormAthleteLeave.setBillType("1");// 运动员宿舍请假单
 		dormAthleteLeave.setWorkflowState("1");// 初始化.
 		dormAthleteLeaveService.save(dormAthleteLeave);

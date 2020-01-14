@@ -29,6 +29,7 @@ import org.jeecg.modules.edusport.entity.DormAthleteLeave;
 import org.jeecg.modules.edusport.entity.TactRuTask;
 import org.jeecg.modules.edusport.mapper.DormAthleteLeaveMapper;
 import org.jeecg.modules.edusport.service.IDormAthleteLeaveService;
+import org.jeecg.modules.edusport.util.UserUtil;
 import org.jeecg.modules.flowable.service.IProcessService;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
@@ -82,7 +83,7 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 
 		HashMap<String, Object> map1 = new HashMap<>();
 
-		String userName = getSystemUser(request).getUsername();
+		String userName = UserUtil.getSystemUser(request, sysUserService).getUsername();
 		map1.put("taskUser", userName);
 		map1.put("leaveType", 1);
 		processServices.addFlowable(userName, "Leave", dormAthleteLeave.getId(), map1);
@@ -129,7 +130,7 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 		// 启动流程
 		HashMap<String, Object> map = new HashMap<>();
 
-		String userName = getSystemUser(request).getUsername();
+		String userName = UserUtil.getSystemUser(request, sysUserService).getUsername();
 		map.put("taskUser", userName);
 		map.put("leaveType", 1);
 		return processServices.addFlowable(userName, "leave", billId, map);
@@ -176,7 +177,7 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 //		dormAthleteLeaveMapper.updateWorkflowState(dormAthleteLeave.getId());
 //		dormAthleteLeave.setWorkflowState("3");
 //		System.out.println("==============" + dormAthleteLeave.getId());
-		SysUser user = getSystemUser(request);
+		SysUser user = UserUtil.getSystemUser(request, sysUserService);
 		List<String> tasks = list(user.getUsername());
 		if (tasks != null && tasks.size() != 0) {
 			String taskId = tasks.get(0);
@@ -206,13 +207,13 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	 */
 	@Transactional
 	@PutMapping(value = "reject")
-	public String reject(HttpServletRequest request, @RequestBody DormAthleteLeave dormAthleteLeave) {
+	public String reject(HttpServletRequest request, @RequestBody TactRuTask tactRuTask) {
 		// 更改状态.
-		dormAthleteLeave = dormAthleteLeaveService.getById(dormAthleteLeave.getId());
+		DormAthleteLeave dormAthleteLeave = dormAthleteLeaveService.getById(tactRuTask.getParentTaskId());
 		dormAthleteLeave.setWorkflowState("4");// 驳回.
 		dormAthleteLeaveService.saveOrUpdate(dormAthleteLeave);
 		System.out.println("==============" + dormAthleteLeave.getId());
-		SysUser user = getSystemUser(request);
+		SysUser user = UserUtil.getSystemUser(request, sysUserService);
 		List<String> tasks = list(user.getUsername());
 		if (tasks != null && tasks.size() != 0) {
 			String taskId = tasks.get(0);
@@ -286,21 +287,5 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 
 	}
 
-	/**
-	 * 取得当前登录用户.
-	 * 
-	 * @param request
-	 * @return
-	 */
-	private SysUser getSystemUser(HttpServletRequest request) {
-		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
-		SysUser user = new SysUser();
-		if (!oConvertUtils.isEmpty(token)) {
-			String username = JwtUtil.getUsername(token);
-			System.out.println(">>> username: " + username);
-			user = sysUserService.getUserByName(username);
-		}
 
-		return user;
-	}
 }

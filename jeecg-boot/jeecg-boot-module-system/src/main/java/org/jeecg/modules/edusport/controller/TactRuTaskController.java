@@ -116,14 +116,15 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 			if(t == null) {
 				t = new TactRuTask();
 			}
-			t.setId(task.getId());
+			t.setId(task.getId());// 任务ID.
 			t.setProcDefId(task.getProcessDefinitionId());
 			t.setProcInstId(task.getProcessInstanceId());
 	        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
 	        if ("Leave".equals(processInstance.getProcessDefinitionKey())) {
 	        	DormAthleteLeave dormAthleteLeave = dormAthleteLeaveService.getById(processInstance.getBusinessKey());
-	        	System.out.println(athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName());
-	        	System.out.println("单据ID：" + processInstance.getBusinessKey());
+//	        	System.out.println(athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName());
+//	        	System.out.println("单据ID：" + processInstance.getBusinessKey());
+	        	
 		        // 申请理由.
 	        	t.setDelegation(dormAthleteLeave.getLeaveCause());
 		        // 任务描述.
@@ -141,7 +142,7 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 	        } else {
 	        	t.setCategory("考勤请假");
 	        }
-	        System.out.println("审批意见：" + t.getDescription());
+//	        System.out.println("审批意见：" + t.getDescription());
 			t.setName(task.getName());
 			t.setAssignee(task.getAssignee());
 			t.setParentTaskId(processInstance.getBusinessKey());// 单据ID.

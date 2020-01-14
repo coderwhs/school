@@ -124,7 +124,9 @@
               console.log("查询结果：" + JSON.stringify(res.result));
               this.dictOptions.althleteNos = [];
               this.$set(this.dictOptions, 'althleteNos', res.result);
-              this.form.setFieldsValue(pick(this.model,'althleteNos'));
+              this.$nextTick(() => {
+                this.form.setFieldsValue(pick(this.model,'althleteNos'));
+              })
             } catch(e){
               this.$message.warning(e.message);
             }

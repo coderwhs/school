@@ -7,13 +7,12 @@
     @ok="handleOk"
     @cancel="handleCancel"
     cancelText="关闭">
-    <a-spin :spinning="confirmLoading">
-      aaaaa
-    </a-spin>
+    <img alt="流程图" style="width: 50% height: 50%" :src="previewImage"/>
   </a-modal>
 </template>
 
 <script>
+  import pick from 'lodash.pick'
   export default {
     name: "TactRuTaskProcessDiagramModal",
     name: 'ImagPreview',
@@ -34,11 +33,13 @@
           xs: { span: 24 },
           sm: { span: 16 },
         },
-
+        previewVisible: false,
+        previewImage: '',
         confirmLoading: false,
         validatorRules:{
         },
         url: {
+          processDiagram:"/process/processDiagram",
         }
      
       }
@@ -46,6 +47,15 @@
     created () {
     },
     methods: {
+      tactRuTaskProcessDiagram(record) {
+        this.previewImage = window._CONFIG['domianURL'] + this.url.processDiagram + "?procInstId=" + record.procInstId;
+        this.visible = true;
+        this.previewVisible = true;
+      },
+      handlePicCancel() {
+         this.previewVisible = false
+         this.previewImage=''
+      },
     }
   }
 </script>

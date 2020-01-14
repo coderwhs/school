@@ -129,6 +129,8 @@
         url: {
           add: "/edusport/tactRuTask/add",
           edit: "/edusport/tactRuTask/edit",
+          apply:"/process/apply",
+          reject:"/process/reject",
           processDiagram:"/process/processDiagram",
         }
      
@@ -138,7 +140,7 @@
     },
     methods: {
       add () {
-        this.edit({});
+        this.edit({isAgree:'1'});
       },
       edit (record) {
         this.previewImage = window._CONFIG['domianURL'] + this.url.processDiagram + "?procInstId=" + record.procInstId;
@@ -176,6 +178,11 @@
               if(res.success){
                 that.$message.success(res.message);
                 that.$emit('ok');
+                if(this.model.isAgree === '1'){
+                  this.apply(this.model);
+                } else {
+                  this.reject(this.model);
+                }
               }else{
                 that.$message.warning(res.message);
               }
@@ -197,7 +204,51 @@
          this.previewVisible = false
          this.previewImage=''
        },
-      
+      // 同意.
+      apply: function (record) {
+        console.log("========================" + record.id);
+        let httpurl = '';
+        let method = '';
+        httpurl+=this.url.apply;
+        method = 'put';
+        this.model = Object.assign({}, record);
+        let formData = Object.assign(this.model, record);
+        console.log("表单提交数据",formData);
+        //formData.id = id;
+        httpAction(httpurl,formData,method).then((res)=>{
+          if(res.success){
+            this.$message.success(res.message);
+            //this.$emit('ok');
+          }else{
+            this.$message.warning(res.message);
+          }
+        }).finally(() => {
+          // this.loadData(1);
+        })
+      },
+      // 拒绝.
+      reject: function (record) {
+        let httpurl = '';
+        let method = '';
+        httpurl+=this.url.reject;
+        method = 'put';
+        this.model = Object.assign({}, record);
+        let formData = Object.assign(this.model, record);
+        console.log("表单提交数据",formData);
+        //formData.id = id;
+        httpAction(httpurl,formData,method).then((res)=>{
+          if(res.success){
+            this.$message.success(res.message);
+            // alert("拒绝操作成功" + res.message);
+            //this.$emit('ok');
+          }else{
+            this.$message.warning(res.message);
+            // alert("拒绝操作失败" + res.message);
+          }
+        }).finally(() => {
+          // this.loadData(1);
+        })
+      },
     }
   }
 </script>
