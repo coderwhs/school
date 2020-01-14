@@ -100,12 +100,12 @@
       //},
       add(dormId){
         this.hiding = true;
-        if (dormId) {
+        // if (dormId) {
           this.dormId = dormId;
           this.edit({dormId}, '');
-        } else {
-          this.$message.warning("请选择一个宿舍信息");
-        }
+        // } else {
+        //   this.$message.warning("请选择一个宿舍信息");
+        // }
       },
       edit (record) {// 如果是编辑，状态
         if(record.id && (record.workflowState == '2' || record.workflowState == '3')){

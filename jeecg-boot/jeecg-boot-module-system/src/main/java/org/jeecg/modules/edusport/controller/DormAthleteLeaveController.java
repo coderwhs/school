@@ -128,8 +128,6 @@ public class DormAthleteLeaveController extends JeecgController<DormAthleteLeave
 		HashMap<String, Object> map = new HashMap<>();
 		
 		LoginUser sysUser = (LoginUser)SecurityUtils.getSubject().getPrincipal();
-//		leaveType = 1;
-//		userId = "abcd";
 		map.put("taskUser", user.getId());
 		map.put("leaveType", dormAthleteLeave.getBillType());
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("Leave", map);

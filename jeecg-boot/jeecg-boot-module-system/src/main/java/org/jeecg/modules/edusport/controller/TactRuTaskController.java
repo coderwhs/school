@@ -1,6 +1,7 @@
 package org.jeecg.modules.edusport.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,8 +69,6 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 	private ProcessEngine processEngine;
 	@Autowired
 	private ISysUserService sysUserService;
-	
-
 	@Autowired
 	private IAthleteService athleteService;
 	@Autowired
@@ -112,6 +112,10 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 		List<TactRuTask> rs = Lists.newArrayList();
 		for (Task task :tasks) {
 			TactRuTask t = new TactRuTask();
+			t = tactRuTaskService.getById(task.getId());
+			if(t == null) {
+				t = new TactRuTask();
+			}
 			t.setId(task.getId());
 			t.setProcDefId(task.getProcessDefinitionId());
 			t.setProcInstId(task.getProcessInstanceId());
@@ -119,12 +123,31 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 	        if ("Leave".equals(processInstance.getProcessDefinitionKey())) {
 	        	DormAthleteLeave dormAthleteLeave = dormAthleteLeaveService.getById(processInstance.getBusinessKey());
 	        	System.out.println(athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName());
-		        t.setDescription("【任务】请审批【" + athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName() + "】的请假申请！" + "【请假原因】：" + dormAthleteLeave.getLeaveCause());
+	        	System.out.println("单据ID：" + processInstance.getBusinessKey());
+		        // 申请理由.
+	        	t.setDelegation(dormAthleteLeave.getLeaveCause());
+		        // 任务描述.
+		        t.setOwner("【任务】请审批【" + athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName() + "】的请假申请！" + "【请假原因】：" + dormAthleteLeave.getLeaveCause());
+		        // 审批意见.
+//		        t.setDescription("");
+		        // 运动员ID.
+		        t.setScopeId(dormAthleteLeave.getAthleteId());// 运动员ID.
+		        t.setCreateBy(dormAthleteLeave.getUpdateBy());
+		        t.setCreateTime(dormAthleteLeave.getUpdateTime());
 	        }
-	        
+	        // 流程名称.
+	        if("Leave".equals(processInstance.getProcessDefinitionKey())) {
+	        	t.setCategory("宿舍请假");
+	        } else {
+	        	t.setCategory("考勤请假");
+	        }
+	        System.out.println("审批意见：" + t.getDescription());
 			t.setName(task.getName());
 			t.setAssignee(task.getAssignee());
+			t.setParentTaskId(processInstance.getBusinessKey());// 单据ID.
+
 			rs.add(t);
+			tactRuTaskService.saveOrUpdate(t);
 		}
 		pageList.setRecords(rs);
 		
@@ -157,8 +180,17 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 	 * @return
 	 */
 	@PutMapping(value = "/edit")
-	public Result<?> edit(@RequestBody TactRuTask tactRuTask) {
+	@Transactional
+	public Result<?> edit(HttpServletRequest request, @RequestBody TactRuTask tactRuTask) {
+		tactRuTask.setUpdateBy(getSystemUser(request).getUsername());
+		tactRuTask.setUpdateTime(new Date());
 		tactRuTaskService.updateById(tactRuTask);
+		
+		if("1".equals(tactRuTask.getIsAgree())) {// 1:同意，2:不同意.
+			
+		} else {
+			
+		}
 		return Result.ok("编辑成功!");
 	}
 	

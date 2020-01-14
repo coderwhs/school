@@ -128,4 +128,7 @@ public class TactRuTask implements Serializable {
 	/**varCount*/
 	@Excel(name = "varCount", width = 15)
     private java.lang.Integer varCount;
+	/**是否同意*/
+	@Excel(name = "是否同意", width = 15)
+    private java.lang.String isAgree;
 }

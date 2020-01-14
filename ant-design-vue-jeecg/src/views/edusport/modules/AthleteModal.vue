@@ -409,3 +409,15 @@ labelCol: {
     }
   }
 </script>
+<style>
+    .verticalBar {
+        width: 2px;
+        height: 29px;
+        background: red;
+        display: inline-block;
+        margin-top: 31px;
+        vertical-align: top;
+        margin-right: 29px;
+        margin-left: 30px;
+    }
+</style>

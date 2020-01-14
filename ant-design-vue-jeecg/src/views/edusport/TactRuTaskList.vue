@@ -42,9 +42,9 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-
+        :scroll="tableScroll"
         @change="handleTableChange">
-        <!--        :scroll="tableScroll"-->
+               
         <template slot="htmlSlot" slot-scope="text">
           <div v-html="text"></div>
         </template>
@@ -66,9 +66,10 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleApply(record)"> 同意 |</a>
-          <a @click="handleReject(record)"> 不同意 |</a>
-          <a @click="handleEdit(record)"> 流程图 </a>
+          <a @click="handleEdit(record)"> 处理 |</a>
+          <!-- <a @click="handleApply(record)"> 同意 |</a>
+          <a @click="handleReject(record)"> 不同意 |</a> -->
+          <a @click="handleEdit(record)"> 跟踪 </a>
 <!--          <a-divider type="vertical" />-->
           <!--<a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
@@ -93,6 +94,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import TactRuTaskModal from './modules/TactRuTaskModal'
   import {getAction, httpAction} from '@/api/manage'
+  import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   export default {
     name: "TactRuTaskList",
     mixins:[JeecgListMixin],
@@ -114,31 +116,80 @@
               return parseInt(index)+1;
             }
           },
+          //  {
+          //   title:'parentTaskId',
+          //   align:"center",
+          //   dataIndex: 'parentTaskId'
+          // },
+          //  {
+          //   title:'procInstId',
+          //   align:"center",
+          //   dataIndex: 'procInstId'
+          // },
           // {
-          //   title:'任务执行人',
+          //   title:'procDefId',
+          //   align:"center",
+          //   dataIndex: 'procDefId'
+          // },
+          // {
+          //   title:'taskDefId',
+          //   align:"center",
+          //   dataIndex: 'taskDefId'
+          // },
+          // {
+          //   title:'运动员ID',
+          //   align:"center",
+          //   dataIndex: 'scopeId'
+          // },
+          // {
+          //   title:'流程名称',
           //   align:"center",
           //   dataIndex: 'assignee'
           // },
-          /*{
-            title:'category',
+          {
+            title:'当前步骤',
+            align:"center",
+            dataIndex: 'name'
+          },
+          {
+            title:'流程名称',
             align:"center",
             dataIndex: 'category'
           },
           {
-            title:'claimTime',
+            title:'申请理由',
             align:"center",
-            dataIndex: 'claimTime',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
+            dataIndex: 'delegation'
+          },
+          {
+            title:'是否同意',
+            align:"center",
+            dataIndex: 'isAgree',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['isAgree'], text+"")
+              }
             }
-          },*/
-          /*{
-            title:'创建人',
+          },
+          {
+            title:'审批意见',
+            align:"center",
+            dataIndex: 'description'
+          },
+          {
+            title:'任务描述',
+            align:"center",
+            dataIndex: 'owner'
+          },
+          {
+            title:'申请人',
             align:"center",
             dataIndex: 'createBy'
           },
           {
-            title:'createTime',
+            title:'申请时间',
             align:"center",
             dataIndex: 'createTime',
             customRender:function (text) {
@@ -146,151 +197,18 @@
             }
           },
           {
-            title:'delegation',
-            align:"center",
-            dataIndex: 'delegation'
-          },
-          {
-            title:'description',
-            align:"center",
-            dataIndex: 'description'
-          },
-          {
-            title:'dueDate',
-            align:"center",
-            dataIndex: 'dueDate',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
-            }
-          },
-          {
-            title:'executionId',
-            align:"center",
-            dataIndex: 'executionId'
-          },
-          {
-            title:'formKey',
-            align:"center",
-            dataIndex: 'formKey'
-          },*/
-          // {
-          //   title:'任务ID',
-          //   align:"center",
-          //   dataIndex: 'id'
-          // },
-          /*{
-            title:'idLinkCount',
-            align:"center",
-            dataIndex: 'idLinkCount'
-          },
-          {
-            title:'isCountEnabled',
-            align:"center",
-            dataIndex: 'isCountEnabled'
-          },*/
-          {
-            title:'任务描述',
-            align:"left",
-            dataIndex: 'description'
-          },
-          {
-            title:'当前步骤',
-            align:"center",
-            dataIndex: 'name'
-          },
-          /*{
-            title:'owner',
-            align:"center",
-            dataIndex: 'owner'
-          },
-          {
-            title:'parentTaskId',
-            align:"center",
-            dataIndex: 'parentTaskId'
-          },
-          {
-            title:'priority',
-            align:"center",
-            dataIndex: 'priority'
-          },
-          {
-            title:'procDefId',
-            align:"center",
-            dataIndex: 'procDefId'
-          },*/
-          // {
-          //   title:'流程ID',
-          //   align:"center",
-          //   dataIndex: 'procInstId'
-          // },
-          /*{
-            title:'rev',
-            align:"center",
-            dataIndex: 'rev'
-          },
-          {
-            title:'scopeDefinitionId',
-            align:"center",
-            dataIndex: 'scopeDefinitionId'
-          },
-          {
-            title:'scopeId',
-            align:"center",
-            dataIndex: 'scopeId'
-          },
-          {
-            title:'scopeType',
-            align:"center",
-            dataIndex: 'scopeType'
-          },
-          {
-            title:'subScopeId',
-            align:"center",
-            dataIndex: 'subScopeId'
-          },
-          {
-            title:'subTaskCount',
-            align:"center",
-            dataIndex: 'subTaskCount'
-          },
-          {
-            title:'suspensionState',
-            align:"center",
-            dataIndex: 'suspensionState'
-          },
-          {
-            title:'taskDefId',
-            align:"center",
-            dataIndex: 'taskDefId'
-          },
-          {
-            title:'taskDefKey',
-            align:"center",
-            dataIndex: 'taskDefKey'
-          },
-          {
-            title:'tenantId',
-            align:"center",
-            dataIndex: 'tenantId'
-          },*/
-          /*{
-            title:'更新人',
+            title:'审核人',
             align:"center",
             dataIndex: 'updateBy'
           },
           {
-            title:'更新时间',
+            title:'审核时间',
             align:"center",
             dataIndex: 'updateTime',
             customRender:function (text) {
               return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
-          {
-            title:'varCount',
-            align:"center",
-            dataIndex: 'varCount'
-          },*/
           {
             title: '操作',
             dataIndex: 'action',
@@ -305,9 +223,9 @@
           processDiagram:"/process/processDiagram"
         },
         dictOptions:{
-
+          isAgree:[],
         },
-        // tableScroll:{x :10*147+50}
+        tableScroll:{x :10*147+50}
       }
     },
     computed: {
@@ -317,8 +235,15 @@
     },
     methods: {
       initDictConfig(){
+        initDictOptions('is_agree').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'isAgree', res.result)
+          }
+        })
       },
-
+      handleApply:function(record, id){
+        this.$refs.TactRuTaskModal.index = id;
+      },
       handleApply: function (record) {
         console.log("========================" + record.id);
         let httpurl = '';

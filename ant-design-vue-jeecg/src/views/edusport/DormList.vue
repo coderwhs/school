@@ -111,9 +111,9 @@
       <a-tab-pane tab="运动员入住名单" key="1">
         <Dorm-Athlete-Living-List ref="DormAthleteLivingList"></Dorm-Athlete-Living-List>
       </a-tab-pane>
-      <a-tab-pane tab="运动员请假" key="2" forceRender>
+      <!-- <a-tab-pane tab="运动员请假" key="2" forceRender>
         <Dorm-Athlete-LeaveList ref="DormAthleteLeaveList"></Dorm-Athlete-LeaveList>
-      </a-tab-pane>
+      </a-tab-pane> -->
     </a-tabs>
 
     <dorm-modal ref="modalForm" @ok="modalFormOk"></dorm-modal>
