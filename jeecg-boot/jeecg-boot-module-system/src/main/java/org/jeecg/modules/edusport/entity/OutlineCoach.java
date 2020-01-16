@@ -45,6 +45,9 @@ public class OutlineCoach implements Serializable {
 	/**测试项目*/
 	@Excel(name = "测试项目", width = 15)
     private java.lang.String eventCodes;
+	/**指标*/
+	@Excel(name = "指标", width = 15)
+    private java.lang.String indexCodes;
 	/**测试日期*/
 	@Excel(name = "测试日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")

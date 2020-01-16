@@ -41,7 +41,7 @@
     
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <!-- <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button> -->
       <a-button type="primary" icon="download" @click="handleExportXls('教练表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :format ="['xls']" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <div v-if="selectedRowKeys.length > 0">
@@ -216,15 +216,27 @@
               }
             }
           },
+          // {
+          //   title:'测试项目',
+          //   align:"center",
+          //   dataIndex: 'eventCodes',
+          //   customRender:(text)=>{
+          //     if(!text){
+          //       return ''
+          //     }else{
+          //       return filterMultiDictText(this.dictOptions['eventCodes'], text+"")
+          //     }
+          //   }
+          // },
           {
-            title:'测试项目',
+            title:'指标',
             align:"center",
-            dataIndex: 'eventCodes',
+            dataIndex: 'indexCodes',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['eventCodes'], text+"")
+                return filterMultiDictText(this.dictOptions['indexCodes'], text+"")
               }
             }
           },
@@ -268,6 +280,7 @@
         dictOptions:{
          althleteNos:[],
          eventCodes:[],
+         indexCodes:[],
          state:[],
         },
         tableScroll:{x :8*147+50},
@@ -309,6 +322,11 @@
         initDictOptions('tb_edu_sport_small,event_name,event_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'eventCodes', res.result)
+          }
+        })
+        initDictOptions('tb_edu_athlete_selection_index,cn_name,l3_code').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'indexCodes', res.result)
           }
         })
         initDictOptions('bill_state').then((res) => {

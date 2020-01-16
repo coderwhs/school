@@ -24,8 +24,11 @@
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-multi-select-tag type="list_multi" v-decorator="['athleteNos']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
         </a-form-item>
-        <a-form-item label="发布日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-date placeholder="请选择发布日期" v-decorator="[ 'publishDate', validatorRules.publishDate]" :trigger-change="true" style="width: 100%"/>
+        <a-form-item label="指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-multi-select-tag type="list_multi" v-decorator="['indexCodes']" :trigger-change="true" dictCode="tb_edu_athlete_selection_index,cn_name,l3_code" placeholder="请选择指标"/>
+        </a-form-item>
+        <a-form-item label="业务日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-date placeholder="请选择业务日期" v-decorator="[ 'publishDate', validatorRules.publishDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['billState']" :trigger-change="true" dictCode="bill_state" placeholder="请选择状态"/>
@@ -76,7 +79,9 @@
         testName:{rules: [{ required: true, message: '请输入名称!' }]},
         sportCode:{rules: [{ required: true, message: '请输入大项!' }]},
         groupId:{rules: [{ required: true, message: '请输入组别!' }]},
-        publishDate:{rules: [{ required: true, message: '请输入发布日期!' }]},
+        indexCodes:{rules: [{ required: true, message: '请输入指标!' }]},
+        publishDate:{rules: [{ required: true, message: '请输入业务日期!' }]},
+        billState:{'billState':1},
         },
         url: {
           add: "/edusport/athleteSelectionTest/add",
@@ -96,7 +101,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'testCode','testName','sportCode','groupId','athleteNos','publishDate','billState'))
+          this.form.setFieldsValue(pick(this.model,'testCode','testName','sportCode','groupId','athleteNos','indexCodes','publishDate','billState'))
         })
       },
       close () {
@@ -139,7 +144,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'testCode','testName','sportCode','groupId','athleteNos','publishDate','billState'))
+        this.form.setFieldsValue(pick(row,'testCode','testName','sportCode','groupId','athleteNos','indexCodes','publishDate','billState'))
       },
 
       sportChange(e){

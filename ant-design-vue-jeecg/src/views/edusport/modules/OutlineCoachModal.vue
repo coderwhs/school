@@ -28,6 +28,9 @@
         <a-form-item label="测试项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-multi-select-tag type="list_multi" v-decorator="['eventCodes']" :trigger-change="true" dictCode="tb_edu_sport_small,event_name,event_code" placeholder="请选择测试项目"/>
         </a-form-item>
+        <a-form-item label="指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-multi-select-tag type="list_multi" v-decorator="['indexCodes']" :trigger-change="true" dictCode="tb_edu_athlete_selection_index,cn_name,l3_code" placeholder="请选择指标"/>
+        </a-form-item>
         <a-form-item label="测试日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择测试日期" v-decorator="[ 'testDate', validatorRules.testDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
@@ -82,6 +85,7 @@
         sportId:{},
         althleteNos:{},
         eventCodes:{},
+        indexCodes:{},
         testDate:{},
         state:{},
         },
@@ -105,7 +109,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'coachId','outlineId','groupId','sportId','althleteNos','eventCodes','testDate','state'))
+          this.form.setFieldsValue(pick(this.model,'coachId','outlineId','groupId','sportId','althleteNos','eventCodes','indexCodes','testDate','state'))
         })
       },
       close () {
@@ -173,7 +177,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'coachId','outlineId','groupId','sportId','althleteNos','eventCodes','testDate','state'))
+        this.form.setFieldsValue(pick(row,'coachId','outlineId','groupId','sportId','althleteNos','eventCodes','indexCodes','testDate','state'))
       },
 
       

@@ -23,7 +23,7 @@
               </a-form-item>
             </a-col>
             <a-col :md="12" :sm="16">
-              <a-form-item label="发布日期">
+              <a-form-item label="业务日期">
                 <j-date placeholder="请选择开始日期" class="query-group-cust" v-model="queryParam.publishDate_begin"></j-date>
                 <span class="query-group-split-cust"></span>
                 <j-date placeholder="请选择结束日期" class="query-group-cust" v-model="queryParam.publishDate_end"></j-date>
@@ -49,13 +49,13 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button @click="handleNavigation" type="primary" icon="plus">导航</a-button>
+      <!-- <a-button @click="handleNavigation" type="primary" icon="plus">导航</a-button> -->
       <a-button @click="handleAudit" type="primary" icon="plus">启用</a-button>
       <a-button @click="handleUnAudit" type="primary" icon="plus">禁用</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试表')">导出</a-button>
+      <!-- <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+      </a-upload> -->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -233,7 +233,19 @@
             }
           },
           {
-            title:'发布日期',
+            title:'指标',
+            align:"center",
+            dataIndex: 'indexCodes',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['indexCodes'], text+"")
+              }
+            }
+          },
+          {
+            title:'业务日期日期',
             align:"center",
             dataIndex: 'publishDate',
             customRender:function (text) {
@@ -272,6 +284,9 @@
           unAudit:"/edusport/athleteSelectionTest/unAudit",
         },
         dictOptions:{
+         athleteNos:[],
+         indexCodes:[],
+         billState:[],
         },
         tableScroll:{x :4*147+50}
       }
@@ -298,6 +313,11 @@
             this.$set(this.dictOptions, 'athleteNos', res.result)
           }
         })
+        initDictOptions('tb_edu_athlete_selection_index,cn_name,l3_code').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'indexCodes', res.result)
+          }
+        })
         initDictOptions('bill_state').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'billState', res.result)
@@ -319,7 +339,7 @@
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
         this.queryParam.id = selectionRows[0].id;
-        this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(selectionRows[0].id,selectionRows[0].groupId);
+        // this.$refs.AthleteSelectionAthleteScoreList.getAthleteScore(selectionRows[0].id,selectionRows[0].groupId);
 
         // // 成绩明细.
         // this.$refs.AthleteSelectionAthleteScoreDetailList.queryParam.athleteScoreId = null;

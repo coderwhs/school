@@ -42,8 +42,11 @@ public class AthleteSelectionTest implements Serializable {
 	/**运动员*/
 	@Excel(name = "运动员", width = 15)
     private java.lang.String athleteNos;
-	/**发布日期*/
-	@Excel(name = "发布日期", width = 15, format = "yyyy-MM-dd")
+	/**指标*/
+	@Excel(name = "指标", width = 15)
+    private java.lang.String indexCodes;
+	/**业务日期*/
+	@Excel(name = "业务日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private java.util.Date publishDate;

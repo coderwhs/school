@@ -3,6 +3,7 @@ package org.jeecg.modules.edusport.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import org.jeecg.modules.edusport.service.IAthleteSelectionGroupService;
 import org.jeecg.modules.edusport.service.IAthleteSelectionTestService;
 import org.jeecg.modules.edusport.service.IAthleteService;
 import org.jeecg.modules.edusport.service.IOutlineCoachService;
+import org.jeecg.modules.edusport.util.UserUtil;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
@@ -95,6 +97,8 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	private AthleteSelectionAthleteScoreDetailMapper athleteSelectionAthleteScoreDetailMapper;
 	@Autowired
 	private ISysUserService sysUserService;
+	private static String enabled = "1";
+	private static String disabled = "2";
 	/**
 	 * 分页列表查询
 	 *
@@ -133,10 +137,10 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		String resultInfo = "启用成功！";
 		AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(id);
 		if(athleteSelectionTest != null) {
-			if("1".equals(athleteSelectionTest.getBillState())){
+			if(enabled.equals(athleteSelectionTest.getBillState())){
 				resultInfo = "大纲已经启用，请确认!";
 			} else {
-				athleteSelectionTest.setBillState("1"); // 1：启用，2：禁用
+				athleteSelectionTest.setBillState(enabled); // 1：启用，2：禁用
 				athleteSelectionTestService.updateById(athleteSelectionTest);
 			}
 		} else {
@@ -157,10 +161,10 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		String resultInfo = "禁用成功！";
 		AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(id);
 		if(athleteSelectionTest != null) {
-			if("2".equals(athleteSelectionTest.getBillState())){
+			if(disabled.equals(athleteSelectionTest.getBillState())){
 				resultInfo = "大纲已经禁用，请确认!";
 			} else {
-				athleteSelectionTest.setBillState("2"); // 1：启用，2：禁用
+				athleteSelectionTest.setBillState(disabled); // 1：启用，2：禁用
 				athleteSelectionTestService.updateById(athleteSelectionTest);
 			}
 		} else {
@@ -179,6 +183,9 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	@PostMapping(value = "/add")
 	@Transactional
 	public Result<?> add(HttpServletRequest request, @RequestBody AthleteSelectionTest athleteSelectionTest) {
+		athleteSelectionTest.setBillState(enabled);// 启用.
+		athleteSelectionTest.setCreateTime(new Date());
+		athleteSelectionTest.setCreateBy(UserUtil.getSystemUser(request, sysUserService).getUsername());
 		athleteSelectionTestService.save(athleteSelectionTest);
 
 		// 系统用户.
@@ -199,7 +206,7 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	public Result<?> edit(HttpServletRequest request, @RequestBody AthleteSelectionTest athleteSelectionTest) {
 		AthleteSelectionTest test = athleteSelectionTestService.getById(athleteSelectionTest.getId());
 		if(test != null) {
-			if("2".equals(test.getBillState())) {// 1:启用，2:禁用
+			if(disabled.equals(test.getBillState())) {// 1:启用，2:禁用
 				athleteSelectionTestService.updateById(athleteSelectionTest);
 				String testId = test.getId();
 				outlineCoachMapper.deleteCoachByTestId(testId);
@@ -231,7 +238,7 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	public Result<?> delete(HttpServletRequest request, @RequestParam(name="id",required=true) String id) {
 		AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(id);
 		if(athleteSelectionTest != null) {
-			if(!"1".equals(athleteSelectionTest.getBillState())) {// 1:启用，2:禁用
+			if(disabled.equals(athleteSelectionTest.getBillState())) {// 1:启用，2:禁用
 				athleteSelectionTestService.removeById(id);
 				String testId = athleteSelectionTest.getId();
 				outlineCoachMapper.deleteCoachByTestId(testId);
@@ -258,7 +265,7 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		for(int i = 0; i < testIds.length; i++) {
 			AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(testIds[i]);
 			if(athleteSelectionTest != null) {
-				if("1".equals(athleteSelectionTest.getBillState())) {// 1:启用，2:禁用
+				if(enabled.equals(athleteSelectionTest.getBillState())) {// 1:启用，2:禁用
 					return Result.ok("启用状态，不允许删除!");
 				}
 			}
@@ -342,8 +349,9 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 			if(sport != null) {
 				outlineCoach.setSportId(sport.getId());// 运动项目.
 			}
+			outlineCoach.setIndexCodes(athleteSelectionTest.getIndexCodes());// 指标信息
 			outlineCoach.setTestDate(athleteSelectionTest.getPublishDate());// 测试日期
-			outlineCoach.setState("1");// 状态
+			outlineCoach.setState(enabled);// 状态
 			outlineCoach.setCreateTime(Calendar.getInstance().getTime());
 			outlineCoach.setCreateBy(sysUser.getUsername());
 			outlineCoach.setUpdateTime(Calendar.getInstance().getTime());

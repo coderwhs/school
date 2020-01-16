@@ -15,7 +15,7 @@
   import pick from 'lodash.pick'
   export default {
     name: "TactRuTaskProcessDiagramModal",
-    name: 'ImagPreview',
+    // name: 'ImagPreview',
     components: { 
     },
     data () {

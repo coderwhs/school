@@ -25,6 +25,9 @@
         <a-form-item label="年级" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'grade', validatorRules.grade]" placeholder="请输入年级"></a-input>
         </a-form-item>
+        <a-form-item label="测试日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-date placeholder="请选择测试日期" v-decorator="[ 'testDate', validatorRules.testDate]" :trigger-change="true" style="width: 100%"/>
+        </a-form-item>
         <a-form-item label="所属测试" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['testId']" dict="tb_edu_athlete_selection_test,test_name,id" disabled="disabled"/>
         </a-form-item>
@@ -87,6 +90,7 @@
         birthday:{},
         gender:{},
         grade:{},
+        testDate:{},
         testId:{},
         groupId:{},
         // eventCode:{},
@@ -117,7 +121,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteId','coachId','birthday','gender','grade','testId','groupId','testScore','testGrade','auditState'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','coachId','birthday','gender','grade','testDate','testId','groupId','testScore','testGrade','auditState'))
         })
       },
       close () {
@@ -160,7 +164,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteId','coachId','birthday','gender','grade','testId','groupId','testScore','testGrade','auditState'))
+        this.form.setFieldsValue(pick(row,'athleteId','coachId','birthday','gender','grade','testDate','testId','groupId','testScore','testGrade','auditState'))
       },
 
       

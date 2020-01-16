@@ -255,6 +255,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 		// 指标信息.
 		AthleteSelectionGroupIndex groupIndex = athleteSelectionGroupIndexMapper.getIndexByGroupId(outlineCoachInfo.getGroupId());
 		String[] indexCode = groupIndex.getIndexId().split(",");
+		indexCode = athleteSelectionTest.getIndexCodes().split(",");// 指标.
 		StringBuffer indexCatStr = new StringBuffer("");
 		StringBuffer indexStr = new StringBuffer("");
 		for(int i = 0; i < indexCode.length; i++) {
@@ -367,10 +368,10 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 				
 				// 更新测试日期.
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date testDate = new Date();
 				if(sheet.getRow(1).getCell(5).getStringCellValue() != null) {
-					outlineCoach.setTestDate(sdf.parse(sheet.getRow(1).getCell(5).getStringCellValue()));
-				} else {
-					outlineCoach.setTestDate(new Date());
+					testDate = sdf.parse(sheet.getRow(1).getCell(5).getStringCellValue());
+					outlineCoach.setTestDate(testDate);
 				}
 				
 				outlineCoachService.updateById(outlineCoach);
@@ -386,6 +387,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 					athleteSelectionAthleteScore.setBirthday(athlete.getBirthDate());// 出生日期.
 					athleteSelectionAthleteScore.setGender(athlete.getGender());// 性别.
 					athleteSelectionAthleteScore.setGrade(athlete.getGrade());// 年级
+					athleteSelectionAthleteScore.setTestDate(testDate);// 测试日期 
 					athleteSelectionAthleteScore.setCoachId(athlete.getMajorSportTeacherCode());// 教练员
 					athleteSelectionAthleteScore.setGroupId(outlineCoach.getGroupId());// 组
 					athleteSelectionAthleteScore.setTestId(outlineCoach.getOutlineId());// 大纲ID
