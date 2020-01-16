@@ -25,7 +25,8 @@
           <j-multi-select-tag type="list_multi" v-decorator="['athleteNos']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
         </a-form-item>
         <a-form-item label="指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-multi-select-tag type="list_multi" v-decorator="['indexCodes']" :trigger-change="true" dictCode="tb_edu_athlete_selection_index,cn_name,l3_code" placeholder="请选择指标"/>
+          <!-- <j-multi-select-tag type="list_multi" v-decorator="['indexCodes']" :trigger-change="true" dictCode="tb_edu_athlete_selection_index,cn_name,l3_code" placeholder="请选择指标"/> -->
+          <j-multi-select-tag type="checkbox" v-decorator="['indexCodes']" :trigger-change="true" dictCode="tb_edu_athlete_selection_index,cn_name,l3_code" placeholder="请选择指标"/>
         </a-form-item>
         <a-form-item label="业务日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择业务日期" v-decorator="[ 'publishDate', validatorRules.publishDate]" :trigger-change="true" style="width: 100%"/>

@@ -253,9 +253,15 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 		jsonObject.put("date", format.format(new Date()));
 		
 		// 指标信息.
-		AthleteSelectionGroupIndex groupIndex = athleteSelectionGroupIndexMapper.getIndexByGroupId(outlineCoachInfo.getGroupId());
-		String[] indexCode = groupIndex.getIndexId().split(",");
-		indexCode = athleteSelectionTest.getIndexCodes().split(",");// 指标.
+		String[] indexCode;
+		if(athleteSelectionTest.getIndexCodes() != null && !"".equals(athleteSelectionTest.getIndexCodes())) {
+			indexCode = athleteSelectionTest.getIndexCodes().split(",");// 指标.
+		} else {
+			AthleteSelectionGroupIndex groupIndex = athleteSelectionGroupIndexMapper.getIndexByGroupId(outlineCoachInfo.getGroupId());
+			indexCode = groupIndex.getIndexId().split(",");
+		}
+
+		
 		StringBuffer indexCatStr = new StringBuffer("");
 		StringBuffer indexStr = new StringBuffer("");
 		for(int i = 0; i < indexCode.length; i++) {
