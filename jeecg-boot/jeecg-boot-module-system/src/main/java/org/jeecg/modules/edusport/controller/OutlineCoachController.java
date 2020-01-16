@@ -558,10 +558,11 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 					int rn = rowNum -1;// 指标类别固定行号.
 					int cn = cellNum;
 					MergedRegionResult mergeRegionResult = isMergedRegion(sheet, rn, cn);
+					System.out.println("rowNum = " + rowNum + ", cellNum = " + cellNum);
 					if(mergeRegionResult.merged) {// 合并单元格.
 						indexCatName = sheet.getRow(rn).getCell(mergeRegionResult.startCol).getStringCellValue();
 					} else {
-						indexCatName = sheet.getRow(rowNum).getCell(cellNum).getStringCellValue();
+						indexCatName = sheet.getRow(rn).getCell(cellNum).getStringCellValue();
 					}
 					
 					String indexName = row.getCell(cellNum).getStringCellValue();// 指标.
