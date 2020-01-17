@@ -16,14 +16,14 @@
           <a-input v-decorator="[ 'testName', validatorRules.testName]" placeholder="请输入测试名称"></a-input>
         </a-form-item>
         <a-form-item label="大项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" :trigger-change="true" @change="sportChange"/>
+          <j-search-select-tag v-decorator="['sportCode', validatorRules.sportCode]" dict="tb_edu_sport,sport_name,sport_code" :trigger-change="true" @change="sportChange"/>
         </a-form-item>
         <a-form-item label="组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
+          <j-search-select-tag v-decorator="['groupId', validatorRules.groupId]" dict="tb_edu_athlete_selection_group,group_name,id" />
         </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <!-- <j-multi-select-tag type="list_multi" v-decorator="['athleteNos']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/> -->
-          <j-multi-select-tag type="checkbox" v-decorator="['athleteNos']" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
+          <j-multi-select-tag type="checkbox" v-decorator="['athleteNos', validatorRules.athleteNos]" :trigger-change="true" dictCode="tb_edu_athlete,athlete_name,athlete_no" placeholder="请选择运动员"/>
         </a-form-item>
         <a-form-item label="指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <!-- <j-multi-select-tag type="list_multi" v-decorator="['indexCodes']" :trigger-change="true" dictCode="tb_edu_athlete_selection_index,cn_name,l3_code" placeholder="请选择指标"/> -->
