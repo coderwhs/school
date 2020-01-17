@@ -98,12 +98,16 @@
         this.edit({});
       },
       edit (record) {
-        this.form.resetFields();
-        this.model = Object.assign({}, record);
-        this.visible = true;
-        this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'testCode','testName','sportCode','groupId','athleteNos','indexCodes','publishDate','billState'))
-        })
+        if(record.billState === '1'){
+          alert("启用状态，不允许编辑!");
+        }  else {
+          this.form.resetFields();
+          this.model = Object.assign({}, record);
+          this.visible = true;
+          this.$nextTick(() => {
+            this.form.setFieldsValue(pick(this.model,'testCode','testName','sportCode','groupId','athleteNos','indexCodes','publishDate','billState'))
+          })
+        }
       },
       close () {
         this.$emit('close');

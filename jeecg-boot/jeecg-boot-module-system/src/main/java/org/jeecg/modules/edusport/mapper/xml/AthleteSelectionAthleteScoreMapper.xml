@@ -3,13 +3,18 @@
 <mapper namespace="org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreMapper">
 
 	<update id="updateScoreAndRatingByWrapper">
-        UPDATE tb_edu_athlete_selection_athlete_score_detail 
+        UPDATE tb_edu_athlete_selection_athlete_score 
         SET test_score = #{athleteSelectionAthleteScore.testScore},
         test_grade = #{athleteSelectionAthleteScore.testGrade} ${ew.customSqlSegment}
     </update>
 	
 	<delete id="deleteScoreByTestId">
-        delete from tb_edu_athlete_selection_athlete_score_detail 
+        delete from tb_edu_athlete_selection_athlete_score 
         where test_id = #{testId}
     </delete>
+    
+	<select id="getCountByTestId" resultType="java.lang.Integer" parameterType="map">
+        SELECT count(*) s FROM tb_edu_athlete_selection_athlete_score 
+		WHERE test_id = #{testId}
+    </select>
 </mapper>

@@ -123,7 +123,7 @@
       <a-tab-pane tab="运动员运动员参赛记录" key="1">
         <Athlete-Contest-List ref="AthleteContestList"></Athlete-Contest-List>
       </a-tab-pane>
-      <a-tab-pane tab="运动员文件成绩" key="2" forceRender>
+      <a-tab-pane tab="运动员文化成绩" key="2" forceRender>
         <Athlete-Literacy-Score-List ref="AthleteLiteracyScoreList"></Athlete-Literacy-Score-List>
       </a-tab-pane>
       <a-tab-pane tab="运动员输送记录" key="3" forceRender>

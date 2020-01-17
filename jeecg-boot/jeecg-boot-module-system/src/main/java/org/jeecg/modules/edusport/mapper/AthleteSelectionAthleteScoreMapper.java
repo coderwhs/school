@@ -20,4 +20,5 @@ public interface AthleteSelectionAthleteScoreMapper extends BaseMapper<AthleteSe
 	int updateScoreAndRatingByWrapper(@Param(Constants.WRAPPER) Wrapper<AthleteSelectionAthleteScore> userWrapper,
 			@Param("athleteSelectionAthleteScore") AthleteSelectionAthleteScore athleteSelectionAthleteScore);
 	void deleteScoreByTestId(@Param("testId") String testId);
+	Integer getCountByTestId(@Param("testId") String testId);
 }

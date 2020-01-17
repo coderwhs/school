@@ -138,7 +138,7 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 	        }
 	        // 流程名称.
 	        if("Leave".equals(processInstance.getProcessDefinitionKey())) {
-	        	t.setCategory("宿舍请假");
+	        	t.setCategory("请假申请");
 	        } else {
 	        	t.setCategory("考勤请假");
 	        }

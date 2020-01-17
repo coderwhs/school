@@ -245,7 +245,7 @@
             }
           },
           {
-            title:'业务日期日期',
+            title:'业务日期',
             align:"center",
             dataIndex: 'publishDate',
             customRender:function (text) {

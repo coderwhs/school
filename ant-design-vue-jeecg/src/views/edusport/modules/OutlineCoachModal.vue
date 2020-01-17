@@ -34,8 +34,8 @@
         <a-form-item label="测试日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择测试日期" v-decorator="[ 'testDate', validatorRules.testDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
-        <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['state']" :trigger-change="true" dictCode="bill_state" placeholder="请选择单据状态"/>
+        <a-form-item label="导入状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-dict-select-tag type="list" v-decorator="['state']" :trigger-change="true" dictCode="import_status" placeholder="请选择导入状态"/>
         </a-form-item>
 
       </a-form>

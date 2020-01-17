@@ -66,10 +66,10 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)"> 处理 |</a>
+          <a @click="handleEdit(record)"> 处理 </a>
           <!-- <a @click="handleApply(record)"> 同意 |</a>
           <a @click="handleReject(record)"> 不同意 |</a> -->
-          <a @click="handleProcessDiagram(record)"> 跟踪 </a>
+          <!-- <a @click="handleProcessDiagram(record)"> | 跟踪 </a> -->
 <!--          <a-divider type="vertical" />-->
           <!--<a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
@@ -134,54 +134,54 @@
             align:"center",
             dataIndex: 'delegation'
           },
-          {
-            title:'是否同意',
-            align:"center",
-            dataIndex: 'isAgree',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['isAgree'], text+"")
-              }
-            }
-          },
+          // {
+          //   title:'是否同意',
+          //   align:"center",
+          //   dataIndex: 'isAgree',
+          //   customRender:(text)=>{
+          //     if(!text){
+          //       return ''
+          //     }else{
+          //       return filterMultiDictText(this.dictOptions['isAgree'], text+"")
+          //     }
+          //   }
+          // },
           {
             title:'审批意见',
             align:"center",
             dataIndex: 'description'
           },
-          {
-            title:'任务描述',
-            align:"center",
-            dataIndex: 'owner'
-          },
+          // {
+          //   title:'任务描述',
+          //   align:"center",
+          //   dataIndex: 'owner'
+          // },
           {
             title:'申请人',
             align:"center",
             dataIndex: 'createBy'
           },
-          {
-            title:'申请时间',
-            align:"center",
-            dataIndex: 'createTime',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
-            }
-          },
-          {
-            title:'审核人',
-            align:"center",
-            dataIndex: 'updateBy'
-          },
-          {
-            title:'审核时间',
-            align:"center",
-            dataIndex: 'updateTime',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
-            }
-          },
+          // {
+          //   title:'申请时间',
+          //   align:"center",
+          //   dataIndex: 'createTime',
+          //   customRender:function (text) {
+          //     return !text?"":(text.length>10?text.substr(0,10):text)
+          //   }
+          // },
+          // {
+          //   title:'审核人',
+          //   align:"center",
+          //   dataIndex: 'updateBy'
+          // },
+          // {
+          //   title:'审核时间',
+          //   align:"center",
+          //   dataIndex: 'updateTime',
+          //   customRender:function (text) {
+          //     return !text?"":(text.length>10?text.substr(0,10):text)
+          //   }
+          // },
           {
             title: '操作',
             dataIndex: 'action',

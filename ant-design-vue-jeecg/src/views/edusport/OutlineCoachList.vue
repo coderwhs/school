@@ -249,7 +249,7 @@
             }
           },
           {
-            title:'单据状态',
+            title:'导入状态',
             align:"center",
             dataIndex: 'state',
             customRender:(text)=>{
@@ -329,7 +329,7 @@
             this.$set(this.dictOptions, 'indexCodes', res.result)
           }
         })
-        initDictOptions('bill_state').then((res) => {
+        initDictOptions('import_status').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'state', res.result)
           }

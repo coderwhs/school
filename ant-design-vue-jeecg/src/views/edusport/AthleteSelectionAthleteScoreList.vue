@@ -55,7 +55,7 @@
       <a-button @click="handleAdd" type="primary" icon="plus" disabled="disabled">新增</a-button>
 <!--            <a-button @click="handleImportAthlete"  type="primary" icon="plus">引入</a-button>-->
             <a-button @click="handleCalculateScore"  type="primary" icon="plus">计算</a-button>
-            <a-button @click="handleAudit" type="primary" icon="plus">审核</a-button>
+            <!-- <a-button @click="handleAudit" type="primary" icon="plus">审核</a-button> -->
 <!--      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试成绩表')">导出</a-button>-->
 <!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
 <!--        <a-button type="primary" icon="import">导入</a-button>-->

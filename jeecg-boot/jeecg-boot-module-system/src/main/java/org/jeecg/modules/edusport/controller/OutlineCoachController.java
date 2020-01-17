@@ -144,6 +144,7 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 	private AthleteSelectionAthleteScoreDetailMapper athleteSelectionAthleteScoreDetailMapper;
 	@Resource
 	private AthleteSelectionGroupRatingMapper athleteSelectionGroupRatingMapper;
+	private static String enabled = "1"; // 1：导入状态，2：未导入.
 	/**
 	 * 分页列表查询
 	 *
@@ -264,8 +265,22 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
 		
 		StringBuffer indexCatStr = new StringBuffer("");
 		StringBuffer indexStr = new StringBuffer("");
-		for(int i = 0; i < indexCode.length; i++) {
-			HashMap<?, ?> indexMap = athleteSelectionIndexMapper.getIndexCatByIndexCode(indexCode[i]);
+		
+		// 代码调整如下.
+//		for(int i = 0; i < indexCode.length; i++) {
+//			HashMap<?, ?> indexMap = athleteSelectionIndexMapper.getIndexCatByIndexCode(indexCode[i]);
+//			if(i == 0) {
+//				indexCatStr.append(indexMap.get("indexCatName"));
+//				indexStr.append(indexMap.get("indexName"));
+//			} else {
+//				indexCatStr.append("," + indexMap.get("indexCatName"));
+//				indexStr.append("," + indexMap.get("indexName"));
+//			}
+//		}
+		
+		List<HashMap<?, ?>> indexList = athleteSelectionIndexMapper.getIndexCatByIndexCodeList(indexCode);
+		for(int i = 0; i < indexList.size(); i++) {
+			HashMap<?, ?> indexMap = indexList.get(i);
 			if(i == 0) {
 				indexCatStr.append(indexMap.get("indexCatName"));
 				indexStr.append(indexMap.get("indexName"));
@@ -331,6 +346,10 @@ public class OutlineCoachController extends JeecgController<OutlineCoach, IOutli
     	MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		// 取得当前导入行的大纲教练信息.
 		OutlineCoach outlineCoach = outlineCoachService.getById(id);
+		Integer count = athleteSelectionAthleteScoreMapper.getCountByTestId(outlineCoach.getOutlineId());
+		if(enabled.equals(outlineCoach.getState()) || count.intValue() > 0) {
+			return Result.error("数据已经导入，请确认！");
+		}
          Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
          for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
              MultipartFile file = entity.getValue();// 获取上传文件对象

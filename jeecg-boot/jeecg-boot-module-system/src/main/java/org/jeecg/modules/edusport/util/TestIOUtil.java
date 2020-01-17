@@ -157,8 +157,8 @@ public class TestIOUtil {
 			}
 		}
 		
-		// 行融合.
-		int cells = sheet.getRow(0).getPhysicalNumberOfCells();// 第一行.
+		// 第二行融合.
+		int cells = sheet.getRow(0).getPhysicalNumberOfCells();// 第一行单元格.
 		Row rowNum = sheet.getRow(0);
 		sheet.addMergedRegion(new Region(0, (short)(0), 0, (short)(rowNum.getPhysicalNumberOfCells() -1)));
 		rowNum = sheet.getRow(2);// 第二行.
@@ -176,6 +176,7 @@ public class TestIOUtil {
 		}
 		sheet.addMergedRegion(new Region(2, (short)(startCell), 2, (short)endCell));
 
+		// 第一行.
 		for(int i = 0; i < 5; i++) {
 			sheet.addMergedRegion(new Region(2, (short)(i), 3, (short)i));
 		}

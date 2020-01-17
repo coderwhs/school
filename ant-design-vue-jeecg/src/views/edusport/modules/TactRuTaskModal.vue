@@ -25,7 +25,7 @@
          <a-row>
            <a-col :span="12">
              <a-form-item label="申请理由" :labelCol="labelCol" :wrapperCol="wrapperCol">
-               <a-input v-decorator="[ 'delegation', validatorRules.delegation]" placeholder="请输入申请理由"></a-input>
+               <a-input v-decorator="[ 'delegation', validatorRules.delegation]" disabled="disabled" placeholder="请输入申请理由"></a-input>
                <!-- <a-textarea v-decorator="['delegation']" rows="4" placeholder="请输入申请理由" disabled="disabled"/> -->
              </a-form-item>
            </a-col>
@@ -37,9 +37,8 @@
          </a-row>
          <a-row>
            <a-col :span="12">
-             <a-form-item label="任务描述" :labelCol="labelCol" :wrapperCol="wrapperCol">
-               <!-- <a-input v-decorator="[ 'owner', validatorRules.owner]" placeholder="请输入owner" disabled="disabled"></a-input> -->
-               <a-textarea v-decorator="['owner']" rows="4" disabled="disabled" placeholder="请输入审批意见"/>
+             <a-form-item label="申请人" :labelCol="labelCol" :wrapperCol="wrapperCol">
+               <a-input v-decorator="[ 'createBy', validatorRules.createBy]" placeholder="请输入申请人" disabled="disabled"></a-input>
              </a-form-item>
            </a-col>
            <a-col :span="12">
@@ -48,10 +47,11 @@
               </a-form-item>
            </a-col>
          </a-row>
-         <a-row>
+         <!-- <a-row>
            <a-col :span="12">
-             <a-form-item label="申请人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-               <a-input v-decorator="[ 'createBy', validatorRules.createBy]" placeholder="请输入申请人" disabled="disabled"></a-input>
+             <a-form-item label="任务描述" :labelCol="labelCol" :wrapperCol="wrapperCol">
+               <!-- <a-input v-decorator="[ 'owner', validatorRules.owner]" placeholder="请输入owner" disabled="disabled"></a-input> -->
+               <a-textarea v-decorator="['owner']" rows="4" disabled="disabled" placeholder="请输入审批意见"/>
              </a-form-item>
            </a-col>
            <a-col :span="12">
@@ -59,8 +59,8 @@
                <j-date placeholder="请选择申请时间" v-decorator="[ 'createTime', validatorRules.createTime]" disabled="disabled" :trigger-change="true" style="width: 100%"/>
              </a-form-item>
            </a-col>
-         </a-row>
-         <a-row>
+         </a-row> -->
+         <!-- <a-row>
            <a-col :span="12">
              <a-form-item label="审核人" :labelCol="labelCol" :wrapperCol="wrapperCol">
                <a-input v-decorator="[ 'updateBy', validatorRules.updateBy]" placeholder="请输入审核人" disabled="disabled"></a-input>
@@ -71,7 +71,7 @@
                <j-date placeholder="请选择审核时间" v-decorator="[ 'updateTime', validatorRules.updateTime]" disabled="disabled" :trigger-change="true" style="width: 100%"/>
              </a-form-item>
            </a-col>
-         </a-row>
+         </a-row> -->
 
       </a-form>
     </a-spin>
