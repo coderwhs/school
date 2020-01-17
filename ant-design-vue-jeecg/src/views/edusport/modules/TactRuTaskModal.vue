@@ -50,7 +50,7 @@
          <!-- <a-row>
            <a-col :span="12">
              <a-form-item label="任务描述" :labelCol="labelCol" :wrapperCol="wrapperCol">
-               <!-- <a-input v-decorator="[ 'owner', validatorRules.owner]" placeholder="请输入owner" disabled="disabled"></a-input> -->
+               <a-input v-decorator="[ 'owner', validatorRules.owner]" placeholder="请输入owner" disabled="disabled"></a-input> 
                <a-textarea v-decorator="['owner']" rows="4" disabled="disabled" placeholder="请输入审批意见"/>
              </a-form-item>
            </a-col>
