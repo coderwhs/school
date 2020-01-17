@@ -108,7 +108,7 @@
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical" />
-          <a-dropdown>
+          <a-dropdown  disabled="disabled">
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
               <a-menu-item>
@@ -460,4 +460,9 @@
 </script>
 <style scoped>
   @import '~@assets/less/common.less'
+
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

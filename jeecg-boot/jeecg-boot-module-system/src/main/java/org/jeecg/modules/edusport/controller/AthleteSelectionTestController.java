@@ -349,9 +349,13 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 			if(sport != null) {
 				outlineCoach.setSportId(sport.getId());// 运动项目.
 			}
-			outlineCoach.setIndexCodes(athleteSelectionTest.getIndexCodes());// 指标信息
+			if(athleteSelectionTest.getIndexCodes() != null && !"".equals(athleteSelectionTest.getIndexCodes())) {
+				outlineCoach.setIndexCodes(athleteSelectionTest.getIndexCodes());// 指标信息
+			} else {
+				outlineCoach.setIndexCodes(athleteSelectionGroupIndexMapper.getIndexByGroupId(groupId).getIndexId());
+			}
 			outlineCoach.setTestDate(athleteSelectionTest.getPublishDate());// 测试日期
-			outlineCoach.setState(enabled);// 状态
+			outlineCoach.setState(disabled);// 未状态
 			outlineCoach.setCreateTime(Calendar.getInstance().getTime());
 			outlineCoach.setCreateBy(sysUser.getUsername());
 			outlineCoach.setUpdateTime(Calendar.getInstance().getTime());
