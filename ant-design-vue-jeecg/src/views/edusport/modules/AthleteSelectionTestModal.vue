@@ -81,9 +81,10 @@
         testName:{rules: [{ required: true, message: '请输入名称!' }]},
         sportCode:{rules: [{ required: true, message: '请输入大项!' }]},
         groupId:{rules: [{ required: true, message: '请输入组别!' }]},
-        indexCodes:{rules: [{ required: true, message: '请输入指标!' }]},
-        publishDate:{rules: [{ required: true, message: '请输入业务日期!' }]},
-        billState:{'billState':1},
+        athleteNos:{rules: [{ required: true, message: '请输入运动员!' }]},
+        indexCodes:{},
+        publishDate:{},
+        billState:{},
         },
         url: {
           add: "/edusport/athleteSelectionTest/add",

@@ -186,6 +186,9 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		athleteSelectionTest.setBillState(enabled);// 启用.
 		athleteSelectionTest.setCreateTime(new Date());
 		athleteSelectionTest.setCreateBy(UserUtil.getSystemUser(request, sysUserService).getUsername());
+		if(athleteSelectionTest.getIndexCodes().isEmpty()) {
+			athleteSelectionTest.setIndexCodes(athleteSelectionGroupIndexMapper.getIndexByGroupId(athleteSelectionTest.getGroupId()).getIndexId());
+		}
 		athleteSelectionTestService.save(athleteSelectionTest);
 
 		// 系统用户.
@@ -205,6 +208,10 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	@Transactional
 	public Result<?> edit(HttpServletRequest request, @RequestBody AthleteSelectionTest athleteSelectionTest) {
 		AthleteSelectionTest test = athleteSelectionTestService.getById(athleteSelectionTest.getId());
+		if(test.getIndexCodes().isEmpty()) {
+			test.setIndexCodes(athleteSelectionGroupIndexMapper.getIndexByGroupId(test.getGroupId()).getIndexId());
+		}
+
 		if(test != null) {
 			if(disabled.equals(test.getBillState())) {// 1:启用，2:禁用
 				athleteSelectionTestService.updateById(athleteSelectionTest);
