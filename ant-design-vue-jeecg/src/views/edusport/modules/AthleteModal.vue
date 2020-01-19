@@ -24,7 +24,7 @@
         <a-row>
           <a-col :span="12">
             <a-form-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
+              <j-dict-select-tag type="list" v-decorator="['gender',validatorRules.gender]" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
             </a-form-item>
           </a-col>
           <a-col :span="12">
@@ -48,12 +48,12 @@
         <a-row>
           <a-col :span="12">
             <a-form-item label="专业项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <j-search-select-tag v-decorator="['majorSport']" dict="tb_edu_sport,sport_name,sport_code" />
+              <j-search-select-tag v-decorator="['majorSport',validatorRules.majorSport]" dict="tb_edu_sport,sport_name,sport_code" />
             </a-form-item>
           </a-col>
           <a-col :span="12">
             <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <j-search-select-tag v-decorator="['majorSportTeacherCode']" dict="tb_edu_coach,coach_name,coach_no" />
+              <j-search-select-tag v-decorator="['majorSportTeacherCode',validatorRules.majorSportTeacherCode]" dict="tb_edu_coach,coach_name,coach_no" />
             </a-form-item>
           </a-col>
         </a-row>

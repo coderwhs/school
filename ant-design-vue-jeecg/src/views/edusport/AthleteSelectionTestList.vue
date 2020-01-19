@@ -80,7 +80,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:tabSelectType}"
+        :rowSelection="{fixed:false,selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type:tabSelectType}"
         :scroll="tableScroll"
         @change="handleTableChange">
 
@@ -268,7 +268,7 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            fixed:"right",
+            // fixed:"right",
             width:147,
             scopedSlots: { customRender: 'action' }
           }

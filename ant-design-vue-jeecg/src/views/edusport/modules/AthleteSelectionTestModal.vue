@@ -15,6 +15,9 @@
         <a-form-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'testName', validatorRules.testName]" placeholder="请输入测试名称"></a-input>
         </a-form-item>
+        <a-form-item label="业务日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-date placeholder="请选择业务日期" v-decorator="[ 'publishDate', validatorRules.publishDate]" :trigger-change="true" style="width: 100%"/>
+        </a-form-item>
         <a-form-item label="大项" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['sportCode', validatorRules.sportCode]" dict="tb_edu_sport,sport_name,sport_code" :trigger-change="true" @change="sportChange"/>
         </a-form-item>
@@ -28,9 +31,6 @@
         <a-form-item label="指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <!-- <j-multi-select-tag type="list_multi" v-decorator="['indexCodes']" :trigger-change="true" dictCode="tb_edu_athlete_selection_index,cn_name,l3_code" placeholder="请选择指标"/> -->
           <j-multi-select-tag type="checkbox" v-decorator="['indexCodes']" :trigger-change="true" dictCode="tb_edu_athlete_selection_index,cn_name,l3_code" placeholder="请选择指标"/>
-        </a-form-item>
-        <a-form-item label="业务日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-date placeholder="请选择业务日期" v-decorator="[ 'publishDate', validatorRules.publishDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['billState']" :trigger-change="true" dictCode="bill_state" placeholder="请选择状态"/>
@@ -83,7 +83,7 @@
         groupId:{rules: [{ required: true, message: '请输入组别!' }]},
         athleteNos:{rules: [{ required: true, message: '请输入运动员!' }]},
         indexCodes:{},
-        publishDate:{},
+        publishDate:{rules: [{ required: true, message: '请输入运动员业务日期!' }]},
         billState:{},
         },
         url: {

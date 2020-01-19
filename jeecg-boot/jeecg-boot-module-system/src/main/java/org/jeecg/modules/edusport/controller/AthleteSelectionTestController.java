@@ -186,7 +186,7 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		athleteSelectionTest.setBillState(enabled);// 启用.
 		athleteSelectionTest.setCreateTime(new Date());
 		athleteSelectionTest.setCreateBy(UserUtil.getSystemUser(request, sysUserService).getUsername());
-		if(athleteSelectionTest.getIndexCodes().isEmpty()) {
+		if(athleteSelectionTest.getIndexCodes() == null || "".equals(athleteSelectionTest.getIndexCodes())) {
 			athleteSelectionTest.setIndexCodes(athleteSelectionGroupIndexMapper.getIndexByGroupId(athleteSelectionTest.getGroupId()).getIndexId());
 		}
 		athleteSelectionTestService.save(athleteSelectionTest);
@@ -348,8 +348,13 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		for(int i = 0; i < coachList.size(); i++) {
 			HashMap<?, ?> map = coachList.get(i);
 			OutlineCoach outlineCoach = new OutlineCoach();
-			outlineCoach.setAlthleteNos(map.get("athlete").toString());// 运动员.
-			outlineCoach.setCoachId(map.get("id").toString());// 教练.
+			if(map.get("athlete") != null && !"".equals(map.get("athlete").toString())) {
+				outlineCoach.setAlthleteNos(map.get("athlete").toString());// 运动员.
+			}
+			if(map.get("id") != null && !"".equals(map.get("id").toString())) {
+				outlineCoach.setCoachId(map.get("id").toString());// 教练.
+			}
+
 			outlineCoach.setEventCodes(athleteSelectionGroup.getEventCodes());// 运动项目.
 			outlineCoach.setGroupId(groupId);// 组.
 			outlineCoach.setOutlineId(athleteSelectionTest.getId());// 大纲ID.
