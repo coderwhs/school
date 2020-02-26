@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员选材测试组别标准表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2020-02-15
  * @Version: V1.0
  */
 @Data
@@ -30,12 +30,18 @@ public class AthleteSelectionGroup implements Serializable {
 	/**组别名称*/
 	@Excel(name = "组别名称", width = 15)
     private java.lang.String groupName;
+	/**启用状态*/
+	@Excel(name = "启用状态", width = 15)
+    private java.lang.String enableStatus;
 	/**大项*/
 	@Excel(name = "大项", width = 15)
     private java.lang.String sportCode;
 	/**小项*/
 	@Excel(name = "小项", width = 15)
     private java.lang.String eventCodes;
+	/**测试指标*/
+	@Excel(name = "测试指标", width = 15)
+    private java.lang.String indexCodes;
 	/**创建人*/
 	@Excel(name = "创建人", width = 15)
     private java.lang.String createBy;

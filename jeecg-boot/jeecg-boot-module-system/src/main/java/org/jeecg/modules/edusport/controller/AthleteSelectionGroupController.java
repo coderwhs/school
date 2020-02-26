@@ -13,6 +13,7 @@ import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.edusport.entity.AthleteSelectionGroup;
+import org.jeecg.modules.edusport.entity.AthleteSelectionGroupIndexGrade;
 import org.jeecg.modules.edusport.service.IAthleteSelectionGroupService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -32,11 +33,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
  /**
  * @Description: 运动员选材测试组别标准表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2020-02-15
  * @Version: V1.0
  */
 @RestController
@@ -61,6 +63,7 @@ public class AthleteSelectionGroupController extends JeecgController<AthleteSele
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionGroup> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionGroup, req.getParameterMap());
+		queryWrapper.orderByAsc("enable_status", "sport_code", "group_name");
 		Page<AthleteSelectionGroup> page = new Page<AthleteSelectionGroup>(pageNo, pageSize);
 		IPage<AthleteSelectionGroup> pageList = athleteSelectionGroupService.page(page, queryWrapper);
 		return Result.ok(pageList);

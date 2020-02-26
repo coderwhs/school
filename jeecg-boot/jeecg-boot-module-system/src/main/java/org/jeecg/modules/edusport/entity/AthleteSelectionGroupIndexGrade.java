@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -16,7 +17,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员选材测试指标评分标准列表
  * @Author: jeecg-boot
- * @Date:   2019-12-21
+ * @Date:   2020-02-13
  * @Version: V1.0
  */
 @Data
@@ -32,7 +33,7 @@ public class AthleteSelectionGroupIndexGrade implements Serializable {
     private java.lang.String groupId;
 	/**指标*/
 	@Excel(name = "指标", width = 15)
-    private java.lang.String indexId;
+    private java.lang.String indexCode;
 	/**性别*/
 	@Excel(name = "性别", width = 15)
     private java.lang.String gender;
@@ -67,4 +68,9 @@ public class AthleteSelectionGroupIndexGrade implements Serializable {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private java.util.Date updateTime;
+	
+	
+	/**等级*/
+	@TableField(exist = false)
+    private java.lang.String rating;
 }

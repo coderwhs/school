@@ -82,7 +82,12 @@
         handler(){
           this.initDictData()
         }
-      }
+      },
+      "dictOptions":{
+        handler(){
+          this.initDictData()
+        }
+      },
     },
     methods:{
       initSelectValue(){
@@ -131,12 +136,15 @@
           if(this.dictOptions && this.dictOptions.length>0){
             this.options = [...this.dictOptions]
           }else{
-            //根据字典Code, 初始化字典数组
-            ajaxGetDictItems(this.dict, null).then((res) => {
-              if (res.success) {
-                this.options = res.result;
-              }
-            })
+            console.log("jSearchSelectTag.initDictData.dict: ", this.dict);
+            if (this.dict) {
+              //根据字典Code, 初始化字典数组
+              ajaxGetDictItems(this.dict, null).then((res) => {
+                if (res.success) {
+                  this.options = res.result;
+                }
+              })
+            }
           }
         }
       },
@@ -144,7 +152,7 @@
         return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
       },
       handleChange (selectedValue) {
-        console.log("selectedValue",selectedValue)
+        // console.log("jSearchSelectTag.handleChange.selectedValue",selectedValue)
         this.selectedValue = selectedValue
         this.callback()
       },
@@ -154,6 +162,7 @@
         this.callback()
       },
       callback(){
+        // console.log("jSearchSelectTag.callback: ","change")
         this.$emit('change', this.selectedValue);
       },
       setCurrentDictOptions(dictOptions){

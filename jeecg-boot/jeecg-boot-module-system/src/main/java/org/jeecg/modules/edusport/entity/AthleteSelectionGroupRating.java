@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员选材测试等级评定标准表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2020-02-22
  * @Version: V1.0
  */
 @Data
@@ -30,12 +30,12 @@ public class AthleteSelectionGroupRating implements Serializable {
 	/**所属组别*/
 	@Excel(name = "所属组别", width = 15)
     private java.lang.String groupId;
-	/**最大分值*/
-	@Excel(name = "最大分值", width = 15)
-    private java.lang.Integer maxData;
 	/**最小分值*/
 	@Excel(name = "最小分值", width = 15)
     private java.lang.Integer minData;
+	/**最大分值*/
+	@Excel(name = "最大分值", width = 15)
+    private java.lang.Integer maxData;
 	/**等级*/
 	@Excel(name = "等级", width = 15)
     private java.lang.String rating;

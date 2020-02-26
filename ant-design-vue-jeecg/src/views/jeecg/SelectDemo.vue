@@ -246,7 +246,34 @@
                 placeholder="请选择菜单"
                 dict="sys_permission,name,id"
                 pidField="parent_id"
-                pidValue=""
+                pidValue="1227588554696167426"
+                multiple
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :spapn="12">选中的值(v-model)：{{ formData.treeSelectMultiple }}</a-col>
+        </a-row>
+
+        <!--  字典表下拉 -->
+        <a-row :gutter="24">
+          <a-col :span="12">
+            <a-form-item label="字典表下拉">
+              <j-dict-select-tag v-model="formData.user" placeholder="请选择指标分类" dictCode="tb_edu_athlete_selection_index_cat,index_cat_name,index_cat_code" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">选中值：{{ formData.user}}</a-col>
+        </a-row>
+
+        <a-row :gutter="24">
+          <a-col :span="12">
+            <a-form-item label="指标下拉树多选">
+              <j-tree-select
+                v-model="formData.treeSelectMultiple"
+                placeholder="请选择菜单"
+                dict="tb_edu_athlete_selection_index, cn_name, index_code"
+                pidField="parent_code"
+                :pidValue="indexCatCode"
+                condition='{"enable_status":"1"}'
                 multiple
               />
             </a-form-item>
@@ -367,6 +394,11 @@ sayHi('hello, world!')`
           names.push(this.selectList[a].name)
         }
         return names
+      },
+
+      indexCatCode: function() {
+        console.log("this.formData.user: ", this.formData.user);
+        return this.formData.user;
       }
     },
     methods: {

@@ -36,24 +36,24 @@
         <a-row>
           <a-col :span="12">
             <a-form-item label="身高(cm)" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number v-decorator="[ 'studentHeight', validatorRules.studentHeight]" placeholder="请输入身高(cm)" style="width: 100%"/>
+              <a-input-number v-decorator="[ 'athleteHeight', validatorRules.athleteHeight]" placeholder="请输入身高(cm)" style="width: 100%"/>
             </a-form-item>
           </a-col>
           <a-col :span="12">
             <a-form-item label="体重(kg)" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number v-decorator="[ 'studentWeight', validatorRules.studentWeight]" placeholder="请输入体重(kg)" style="width: 100%"/>
+              <a-input-number v-decorator="[ 'athleteWeight', validatorRules.athleteWeight]" placeholder="请输入体重(kg)" style="width: 100%"/>
             </a-form-item>
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="12">
             <a-form-item label="专业项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <j-search-select-tag v-decorator="['majorSport',validatorRules.majorSport]" dict="tb_edu_sport,sport_name,sport_code" />
+              <j-search-select-tag v-decorator="['sportCode',validatorRules.sportCode]" dict="tb_edu_sport,sport_name,sport_code" />
             </a-form-item>
           </a-col>
           <a-col :span="12">
-            <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <j-search-select-tag v-decorator="['majorSportTeacherCode',validatorRules.majorSportTeacherCode]" dict="tb_edu_coach,coach_name,coach_no" />
+            <a-form-item label="带训教练" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <j-search-select-tag v-decorator="['coachId',validatorRules.coachId]" dict="tb_edu_coach,coach_name,id" />
             </a-form-item>
           </a-col>
         </a-row>
@@ -306,38 +306,38 @@ labelCol: {
  */
         confirmLoading: false,
         validatorRules:{
-        athleteNo:{rules: [{ required: true, message: '请输入学号!' }]},
-        athleteName:{rules: [{ required: true, message: '请输入姓名!' }]},
-        gender:{rules: [{ required: true, message: '请输入性别!' }]},
-        nation:{rules: [{ required: true, message: '请输入民族!' }]},
-        birthDate:{rules: [{ required: true, message: '请输入出生日期!' }]},
-        studentHeight:{rules: [{ required: true, message: '请输入身高(cm)!' }]},
-        studentWeight:{rules: [{ required: true, message: '请输入体重(kg)!' }]},
-        majorSport:{rules: [{ required: true, message: '请输入专业项目!' }]},
-        majorSportTeacherCode:{rules: [{ required: true, message: '请输入教练员!' }]},
-        nativeProvince:{rules: [{ required: true, message: '请输入籍贯省!' }]},
-        nativeCity:{rules: [{ required: true, message: '请输入籍贯市!' }]},
-        idNo:{rules: [{ required: true, message: '请输入身份证号!' }]},
-        mobile:{rules: [{ required: true, message: '请输入手机号码!' }]},
-        homeAddress:{rules: [{ required: true, message: '请输入家庭住址!' }]},
-        zipcode:{rules: [{ required: true, message: '请输入邮政编码!' }]},
-        policeStation:{rules: [{ required: true, message: '请输入户籍所在派出所!' }]},
-        father:{rules: [{ required: true, message: '请输入父亲姓名!' }]},
-        fatherHeight:{rules: [{ required: true, message: '请输入父亲身高!' }]},
-        fatherMobile:{rules: [{ required: true, message: '请输入父亲电话!' }]},
-        mother:{rules: [{ required: true, message: '请输入母亲姓名!' }]},
-        motherHeight:{rules: [{ required: true, message: '请输入母亲身高!' }]},
-        motherMobile:{rules: [{ required: true, message: '请输入母亲电话!' }]},
-        transportDepartmentCity:{rules: [{ required: true, message: '请输入输送单位区县!' }]},
-        transportDepartmentSchool:{rules: [{ required: true, message: '请输入输送单位名称!' }]},
-        admissionDate:{},
-        grade:{rules: [{ required: true, message: '请输入就读年级!' }]},
-        majorSportAttendDate:{},
-        retireDate:{rules: [{ required: true, message: '请输入退役时间!' }]},
-        acceptDepartmentType:{rules: [{ required: true, message: '请输入吸收单位类别!' }]},
-        acceptDepartment:{rules: [{ required: true, message: '请输入吸收单位!' }]},
-        photoPath:{rules: [{ required: true, message: '请输入照片路径!' }]},
-        resume:{rules: [{ required: true, message: '请输入简介!' }]},
+          athleteNo:{rules: [{ required: true, message: '请输入学号!' }]},
+          athleteName:{rules: [{ required: true, message: '请输入姓名!' }]},
+          gender:{rules: [{ required: true, message: '请输入性别!' }]},
+          nation:{rules: [{ required: true, message: '请输入民族!' }]},
+          birthDate:{rules: [{ required: true, message: '请输入出生日期!' }]},
+          idNo:{rules: [{ required: true, message: '请输入身份证号!' }]},
+          mobile:{rules: [{ required: true, message: '请输入手机号码!' }]},
+          // homeAddress:{rules: [{ required: true, message: '请输入家庭住址!' }]},
+          // nativeProvince:{rules: [{ required: true, message: '请输入籍贯省!' }]},
+          // nativeCity:{rules: [{ required: true, message: '请输入籍贯市!' }]},
+          // zipcode:{rules: [{ required: true, message: '请输入邮政编码!' }]},
+          // policeStation:{rules: [{ required: true, message: '请输入户籍所在派出所!' }]},
+          // father:{rules: [{ required: true, message: '请输入父亲姓名!' }]},
+          // mother:{rules: [{ required: true, message: '请输入母亲姓名!' }]},
+          // fatherHeight:{rules: [{ required: true, message: '请输入父亲身高!' }]},
+          // motherHeight:{rules: [{ required: true, message: '请输入母亲身高!' }]},
+          // fatherMobile:{rules: [{ required: true, message: '请输入父亲电话!' }]},
+          // motherMobile:{rules: [{ required: true, message: '请输入母亲电话!' }]},
+          // transportDepartmentCity:{rules: [{ required: true, message: '请输入输送单位区县!' }]},
+          // transportDepartmentSchool:{rules: [{ required: true, message: '请输入输送单位名称!' }]},
+          // admissionDate:{rules: [{ required: true, message: '请输入入学日期!' }]},
+          // grade:{rules: [{ required: true, message: '请输入就读年级!' }]},
+          sportCode:{rules: [{ required: true, message: '请输入专业项目!' }]},
+          coachId:{rules: [{ required: true, message: '请输入带训教练!' }]},
+          // athleteHeight:{rules: [{ required: true, message: '请输入身高(cm)!' }]},
+          // athleteWeight:{rules: [{ required: true, message: '请输入体重(kg)!' }]},
+          majorSportAttendDate:{rules: [{ required: true, message: '请输入入队时间!' }]},
+          // retireDate:{rules: [{ required: true, message: '请输入退役时间!' }]},
+          // acceptDepartmentType:{rules: [{ required: true, message: '请输入吸收单位类别!' }]},
+          // acceptDepartment:{rules: [{ required: true, message: '请输入吸收单位!' }]},
+          // photoPath:{rules: [{ required: true, message: '请输入照片路径!' }]},
+          // resume:{rules: [{ required: true, message: '请输入简介!' }]},
         },
         url: {
           add: "/edusport/athlete/add",
@@ -359,7 +359,7 @@ labelCol: {
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteNo','athleteName','gender','nation','birthDate','studentHeight','studentWeight','majorSport','majorSportTeacherCode','nativeProvince','nativeCity','idNo','mobile','homeAddress','zipcode','policeStation','father','fatherHeight','fatherMobile','mother','motherHeight','motherMobile','transportDepartmentCity','transportDepartmentSchool','admissionDate','grade','majorSportAttendDate','retireDate','acceptDepartmentType','acceptDepartment','photoPath','resume'))
+          this.form.setFieldsValue(pick(this.model,'athleteNo','athleteName','gender','nation','birthDate','athleteHeight','athleteWeight','sportCode','coachId','nativeProvince','nativeCity','idNo','mobile','homeAddress','zipcode','policeStation','father','fatherHeight','fatherMobile','mother','motherHeight','motherMobile','transportDepartmentCity','transportDepartmentSchool','admissionDate','grade','majorSportAttendDate','retireDate','acceptDepartmentType','acceptDepartment','photoPath','resume'))
         })
       },
       close () {
@@ -402,7 +402,7 @@ labelCol: {
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteNo','athleteName','gender','nation','birthDate','studentHeight','studentWeight','majorSport','majorSportTeacherCode','nativeProvince','nativeCity','idNo','mobile','homeAddress','zipcode','policeStation','father','fatherHeight','fatherMobile','mother','motherHeight','motherMobile','transportDepartmentCity','transportDepartmentSchool','admissionDate','grade','majorSportAttendDate','retireDate','acceptDepartmentType','acceptDepartment','photoPath','resume'))
+        this.form.setFieldsValue(pick(row,'athleteNo','athleteName','gender','nation','birthDate','athleteHeight','athleteWeight','sportCode','coachId','nativeProvince','nativeCity','idNo','mobile','homeAddress','zipcode','policeStation','father','fatherHeight','fatherMobile','mother','motherHeight','motherMobile','transportDepartmentCity','transportDepartmentSchool','admissionDate','grade','majorSportAttendDate','retireDate','acceptDepartmentType','acceptDepartment','photoPath','resume'))
       },
 
       

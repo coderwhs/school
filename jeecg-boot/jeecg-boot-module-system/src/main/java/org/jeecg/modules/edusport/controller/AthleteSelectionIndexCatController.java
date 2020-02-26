@@ -36,7 +36,7 @@ import com.alibaba.fastjson.JSON;
  /**
  * @Description: 运动员选材指标分类信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2020-02-13
  * @Version: V1.0
  */
 @RestController
@@ -61,8 +61,8 @@ public class AthleteSelectionIndexCatController extends JeecgController<AthleteS
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionIndexCat> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionIndexCat, req.getParameterMap());
+		queryWrapper.orderByAsc("index_cat_code","index_cat_name");
 		Page<AthleteSelectionIndexCat> page = new Page<AthleteSelectionIndexCat>(pageNo, pageSize);
-		queryWrapper.orderByAsc("index_cat_no","index_cat_name");
 		IPage<AthleteSelectionIndexCat> pageList = athleteSelectionIndexCatService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}

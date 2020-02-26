@@ -1,23 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.edusport.mapper.AthleteSelectionGroupIndexGradeMapper">
-	<select id="getAthleteScoreByTestValue" resultType="java.lang.Integer">
-		SELECT 
-			IFNULL(score,0)
-		FROM tb_edu_athlete_selection_group_index_grade grade
-		LEFT JOIN tb_edu_athlete_selection_group g ON g.id = grade.group_id
-		LEFT JOIN (/* 指标信息 */
-		SELECT 
-			ic.index_cat_name, /* 运动员选材指标信息表 */
-			i.id, i.index_cat_id, i.l1_code, i.l2_code,i.l3_code,i.cn_name,i.unit
-		FROM tb_edu_athlete_selection_index i /* 运动员选材指标信息表 */
-		LEFT JOIN tb_edu_athlete_selection_index_cat ic ON ic.id = i.index_cat_id/* 运动员选材指标分类信息表 */
-		) norm ON norm.id = grade.index_id
-		WHERE
-		grade.index_id = #{indexCode} /* 指标 */
-		AND grade.group_id = #{groupId} /* 组别 */
-		AND grade.gender = #{gender} /* 性别 */
-		<![CDATA[ AND grade.start_age <= #{age} ]]> AND grade.end_age >= #{age} /* 年龄范围 */
-		<![CDATA[ AND grade.min_data <= #{testValue} ]]>AND grade.max_data >= #{testValue} /* 测试值范围 */
-    </select>
+
 </mapper>

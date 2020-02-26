@@ -6,24 +6,18 @@
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
             <a-form-item label="指标类别">
-<!--              <a-input placeholder="请输入指标类别" v-model="queryParam.indexCatId"></a-input>-->
-              <j-search-select-tag v-decorator="['indexCatId']" v-model="queryParam.indexCatId" dict="tb_edu_athlete_selection_index_cat,index_cat_name,id" />
+              <j-dict-select-tag placeholder="请选择指标类别" v-model="queryParam.indexCatCode" dictCode="tb_edu_athlete_selection_index_cat,index_cat_name,index_cat_code"/>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="大类代码">
-              <a-input placeholder="请输入大类代码" v-model="queryParam.l1Code"></a-input>
+            <a-form-item label="指标代码">
+              <a-input placeholder="请输入指标代码" v-model="queryParam.indexCode"></a-input>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
-<!--            <a-col :md="6" :sm="8">-->
-<!--              <a-form-item label="中类代码">-->
-<!--                <a-input placeholder="请输入中类代码" v-model="queryParam.l2Code"></a-input>-->
-<!--              </a-form-item>-->
-<!--            </a-col>-->
             <a-col :md="6" :sm="8">
-              <a-form-item label="小类代码">
-                <a-input placeholder="请输入小类代码" v-model="queryParam.l3Code"></a-input>
+              <a-form-item label="中文名称">
+                <a-input placeholder="请输入中文名称" v-model="queryParam.cnName"></a-input>
               </a-form-item>
             </a-col>
           </template>
@@ -75,7 +69,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        :scroll="tableScroll"
+        
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -125,17 +119,15 @@
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import AthleteSelectionIndexModal from './modules/AthleteSelectionIndexModal'
+  import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-  import JDictSelectTag from "@/components/dict/JDictSelectTag"
-  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
 
   export default {
     name: "AthleteSelectionIndexList",
     mixins:[JeecgListMixin],
     components: {
-      AthleteSelectionIndexModal,
       JDictSelectTag,
-      JSearchSelectTag,
+      AthleteSelectionIndexModal
     },
     data () {
       return {
@@ -155,29 +147,43 @@
           {
             title:'指标类别',
             align:"center",
-            dataIndex: 'indexCatId',
+            dataIndex: 'indexCatCode',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['indexCatId'], text+"")
+                return filterMultiDictText(this.dictOptions['indexCatCode'], text+"")
               }
             }
           },
           {
-            title:'大类代码',
+            title:'上级指标代码',
             align:"center",
-            dataIndex: 'l1Code'
+            dataIndex: 'parentCode',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['parentCode'], text+"")
+              }
+            }
           },
-          // {
-          //   title:'中类代码',
-          //   align:"center",
-          //   dataIndex: 'l2Code'
-          // },
           {
-            title:'小类代码',
+            title:'指标代码',
             align:"center",
-            dataIndex: 'l3Code'
+            dataIndex: 'indexCode'
+          },
+          {
+            title:'是否叶节点',
+            align:"center",
+            dataIndex: 'isLeaf',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['isLeaf'], text+"")
+              }
+            }
           },
           {
             title:'中文名称',
@@ -197,14 +203,7 @@
           {
             title:'单位',
             align:"center",
-            dataIndex: 'unit',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['unit'], text+"")
-              }
-            }
+            dataIndex: 'unit'
           },
           {
             title:'启用状态',
@@ -222,11 +221,14 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            fixed:"right",
-            width:147,
             scopedSlots: { customRender: 'action' }
           }
         ],
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
         url: {
           list: "/edusport/athleteSelectionIndex/list",
           delete: "/edusport/athleteSelectionIndex/delete",
@@ -235,10 +237,10 @@
           importExcelUrl: "edusport/athleteSelectionIndex/importExcel",
         },
         dictOptions:{
-         unit:[],
+         indexCatCode:[],
+         isLeaf:[],
          enableStatus:[],
         },
-        tableScroll:{x :9*147+50}
       }
     },
     computed: {
@@ -248,17 +250,22 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete_selection_index_cat,index_cat_name,id').then((res) => {
+        initDictOptions('tb_edu_athlete_selection_index_cat,index_cat_name,index_cat_code').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'indexCatId', res.result)
+            this.$set(this.dictOptions, 'indexCatCode', res.result)
           }
         })
-        initDictOptions('unit_measurement').then((res) => {
+        initDictOptions('tb_edu_athlete_selection_index,cn_name,index_code').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'unit', res.result)
+            this.$set(this.dictOptions, 'parentCode', res.result)
           }
         })
-        initDictOptions('bill_state').then((res) => {
+        initDictOptions('').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'isLeaf', res.result)
+          }
+        })
+        initDictOptions('enable_status').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'enableStatus', res.result)
           }

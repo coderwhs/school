@@ -33,7 +33,7 @@
       }
     },
     watch:{
-      dictCode:{
+      "dictCode": {
         immediate:true,
         handler() {
           this.initDictData()
@@ -53,12 +53,16 @@
     methods: {
       initDictData() {
         //根据字典Code, 初始化字典数组
-        ajaxGetDictItems(this.dictCode, null).then((res) => {
-          if (res.success) {
-//                console.log(res.result);
-            this.dictOptions = res.result;
-          }
-        })
+        console.log("jdictSelectTag.initDictData.dictCode: ", this.dictCode);
+        if (this.dictCode) {
+          ajaxGetDictItems(this.dictCode, null).then((res) => {
+            if (res.success) {
+
+//                console.log("", res.result);
+              this.dictOptions = res.result;
+            }
+          })
+        }
       },
       handleInput(e) {
         let val;

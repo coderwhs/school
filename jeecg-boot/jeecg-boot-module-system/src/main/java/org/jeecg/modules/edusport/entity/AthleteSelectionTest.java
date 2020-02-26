@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员选材测试表
  * @Author: jeecg-boot
- * @Date:   2020-01-05
+ * @Date:   2020-02-18
  * @Version: V1.0
  */
 @Data
@@ -27,32 +27,20 @@ public class AthleteSelectionTest implements Serializable {
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
-	/**编码*/
-	@Excel(name = "编码", width = 15)
-    private java.lang.String testCode;
-	/**名称*/
-	@Excel(name = "名称", width = 15)
+	/**测试名称*/
+	@Excel(name = "测试名称", width = 15)
     private java.lang.String testName;
-	/**大项*/
-	@Excel(name = "大项", width = 15)
-    private java.lang.String sportCode;
-	/**组别*/
-	@Excel(name = "组别", width = 15)
+	/**测试组别*/
+	@Excel(name = "测试组别", width = 15)
     private java.lang.String groupId;
-	/**运动员*/
-	@Excel(name = "运动员", width = 15)
-    private java.lang.String athleteNos;
-	/**指标*/
-	@Excel(name = "指标", width = 15)
-    private java.lang.String indexCodes;
-	/**业务日期*/
-	@Excel(name = "业务日期", width = 15, format = "yyyy-MM-dd")
+	/**测试大项*/
+	@Excel(name = "测试大项", width = 15)
+    private java.lang.String sportCode;
+	/**发布日期*/
+	@Excel(name = "发布日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private java.util.Date publishDate;
-	/**状态*/
-	@Excel(name = "状态", width = 15)
-    private java.lang.String billState;
 	/**创建人*/
 	@Excel(name = "创建人", width = 15)
     private java.lang.String createBy;

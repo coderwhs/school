@@ -16,7 +16,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 /**
  * @Description: 运动员选材指标信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2020-02-18
  * @Version: V1.0
  */
 @Data
@@ -29,16 +29,16 @@ public class AthleteSelectionIndex implements Serializable {
     private java.lang.String id;
 	/**指标类别*/
 	@Excel(name = "指标类别", width = 15)
-    private java.lang.String indexCatId;
-	/**大类代码*/
-	@Excel(name = "大类代码", width = 15)
-    private java.lang.String l1Code;
-	/**中类代码*/
-	@Excel(name = "中类代码", width = 15)
-    private java.lang.String l2Code;
-	/**小类代码*/
-	@Excel(name = "小类代码", width = 15)
-    private java.lang.String l3Code;
+    private java.lang.String indexCatCode;
+	/**上级指标代码*/
+	@Excel(name = "上级指标代码", width = 15)
+    private java.lang.String parentCode;
+	/**指标代码*/
+	@Excel(name = "指标代码", width = 15)
+    private java.lang.String indexCode;
+	/**是否叶节点*/
+	@Excel(name = "是否叶节点", width = 15)
+    private java.lang.String isLeaf;
 	/**中文名称*/
 	@Excel(name = "中文名称", width = 15)
     private java.lang.String cnName;

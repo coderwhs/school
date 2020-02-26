@@ -131,33 +131,86 @@ public class SysDictController {
 		Result<List<DictModel>> result = new Result<List<DictModel>>();
 		List<DictModel> ls = null;
 		try {
-			if(dictCode.indexOf(",")!=-1) {
-				//关联表字典（举例：sys_user,realname,id）
-				String[] params = dictCode.split(",");
+			if(dictCode.indexOf("|")!=-1) {
+				// 查询指定单表（及联合表）的字典
+				//关联表字典（举例：t1, t1_name, t1_code, t1_condition; t2, t2_name, t2_code; t3, t3_name, t3_code）
+				String[] tables = dictCode.split("\\|");
 				
-				if(params.length<3) {
-					result.error500("字典Code格式不正确！");
-					return result;
+				String[] t1Params = new String[4];
+				if (tables[0] != null) {
+					t1Params = tables[0].split(",");
+					if(t1Params.length<3) {
+						result.error500("字典Code格式不正确！");
+						return result;
+					}
+					//SQL注入校验（只限制非法串改数据库）
+					final String[] sqlInjCheck = {t1Params[0],t1Params[1],t1Params[2]};
+					SqlInjectionUtil.filterContent(sqlInjCheck);
 				}
-				//SQL注入校验（只限制非法串改数据库）
-				final String[] sqlInjCheck = {params[0],params[1],params[2]};
-				SqlInjectionUtil.filterContent(sqlInjCheck);
 				
-				if(params.length==4) {
+				String[] t2Params = new String[] {null, null, null};
+				if (tables[1] != null) {
+					t2Params = tables[1].split(",");
+					if(t2Params.length<3) {
+						result.error500("字典Code格式不正确！");
+						return result;
+					}
+					//SQL注入校验（只限制非法串改数据库）
+					final String[] sqlInjCheck = {t2Params[0],t2Params[1],t2Params[2]};
+					SqlInjectionUtil.filterContent(sqlInjCheck);
+				}
+				
+				String[] t3Params = new String[] {null, null, null};
+				if (tables[2] != null) {
+					t3Params = tables[2].split(",");
+					if(t3Params.length<3) {
+						result.error500("字典Code格式不正确！");
+						return result;
+					}
+					//SQL注入校验（只限制非法串改数据库）
+					final String[] sqlInjCheck = {t3Params[0],t3Params[1],t3Params[2]};
+					SqlInjectionUtil.filterContent(sqlInjCheck);
+				}
+				
+				if(t1Params.length==4) {
+					log.info("t1_filterSql: ", t1Params[3]);
 					//SQL注入校验（查询条件SQL 特殊check，此方法仅供此处使用）
-					SqlInjectionUtil.specialFilterContent(params[3]);
-					ls = sysDictService.queryTableDictItemsByCodeAndFilter(params[0],params[1],params[2],params[3]);
-				}else if (params.length==3) {
-					ls = sysDictService.queryTableDictItemsByCode(params[0],params[1],params[2]);
-				}else{
-					result.error500("字典Code格式不正确！");
-					return result;
+					SqlInjectionUtil.specialFilterContent(t1Params[3]);
+					ls = sysDictService.queryTableDictItemsByCodeAndFilterWithJoin(t1Params[0], t1Params[1], t1Params[2], t1Params[3],
+							t2Params[0], t2Params[1], t2Params[2], t3Params[0], t3Params[1], t3Params[2]);
+				} else if (t1Params.length==3) {
+					ls = sysDictService.queryTableDictItemsByCodeAndFilterWithJoin(t1Params[0], t1Params[1], t1Params[2], null,
+							t2Params[0], t2Params[1], t2Params[2], t3Params[0], t3Params[1], t3Params[2]);
 				}
-			}else {
-				//字典表
-				 ls = sysDictService.queryDictItemsByCode(dictCode);
+			} else {
+				// 查询指定单表的字典
+				if(dictCode.indexOf(",")!=-1) {
+					//关联表字典（举例：sys_user,realname,id）
+					String[] params = dictCode.split(",");
+					
+					if(params.length<3) {
+						result.error500("字典Code格式不正确！");
+						return result;
+					}
+					//SQL注入校验（只限制非法串改数据库）
+					final String[] sqlInjCheck = {params[0],params[1],params[2]};
+					SqlInjectionUtil.filterContent(sqlInjCheck);
+					
+					if(params.length==4) {
+						//SQL注入校验（查询条件SQL 特殊check，此方法仅供此处使用）
+						SqlInjectionUtil.specialFilterContent(params[3]);
+						ls = sysDictService.queryTableDictItemsByCodeAndFilter(params[0],params[1],params[2],params[3]);
+					}else if (params.length==3) {
+						ls = sysDictService.queryTableDictItemsByCode(params[0],params[1],params[2]);
+					}else{
+						result.error500("字典Code格式不正确！");
+						return result;
+					}
+				}else {
+					//字典表
+					 ls = sysDictService.queryDictItemsByCode(dictCode);
+				}
 			}
-
 			 result.setSuccess(true);
 			 result.setResult(ls);
 			 log.info(result.toString());

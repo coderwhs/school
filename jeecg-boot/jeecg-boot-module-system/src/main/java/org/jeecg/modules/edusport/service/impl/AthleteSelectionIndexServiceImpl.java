@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 /**
  * @Description: 运动员选材指标信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2020-02-18
  * @Version: V1.0
  */
 @Service

@@ -196,7 +196,9 @@
           getAction(this.url.orderCustomerList,params).then((res)=>{
             if(res.success){
               this.orderMainModel.jeecgOrderCustomerList = res.result;
+              console.log("res.result: ", res.result)
               this.$forceUpdate()
+              console.log("this.orderMainModel.jeecgOrderCustomerList: ", this.orderMainModel.jeecgOrderCustomerList)
             }
           })
           //初始化订单客户列表

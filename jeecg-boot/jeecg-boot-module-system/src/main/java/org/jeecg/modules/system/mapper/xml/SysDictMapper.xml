@@ -30,6 +30,28 @@
 		</if>
 	</select>
 	
+	<!--通过查询指定table的 text code 获取字典（指定查询条件）-->
+	<select id="queryTableDictItemsByCodeAndFilterWithJoin" parameterType="String"  resultType="org.jeecg.common.system.vo.DictModel">
+		<if test="(table2 != null and table2 != '') and (table3 != null and table3 != '') ">
+		    select concat_ws('-', ${t2_name}, ${t3_name}, ${t1_name}) as "text", ${t1_code} as "value" from ${table1}
+			left join  ${table2} on ${t2_code}
+			left join  ${table3} on ${t3_code}
+		</if>
+		<if test="(table2 != null and table2 != '') and table3 == null">
+		    select concat_ws('-', ${t2_name}, ${t1_name}) as "text", ${t1_code} as "value" from ${table1}
+			left join  ${table2} on ${t2_code}
+		</if>
+		<if test="t1_filterSql != null and t1_filterSql != ''">
+			where ${t1_filterSql}
+		</if>
+		<if test="(table2 != null and table2 != '') and (table3 != null and table3 != '') ">
+			order by CONVERT(${t2_name} USING GBK), CONVERT(${t3_name} USING GBK), CONVERT(${t1_name} USING GBK) asc
+		</if>
+		<if test="(table2 != null and table2 != '') and table3 == null">
+			order by CONVERT(${t2_name} USING GBK), CONVERT(${t1_name} USING GBK) asc
+		</if>
+	</select>
+	
 	<!--通过查询指定table的 text code key 获取字典值-->
 	<select id="queryTableDictTextByKey" parameterType="String" resultType="String">
 		   select ${text} as "text" from ${table} where ${code}= #{key}

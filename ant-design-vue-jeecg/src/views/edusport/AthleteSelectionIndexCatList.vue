@@ -5,8 +5,8 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="指标类别编码">
-              <a-input placeholder="请输入指标类别编码" v-model="queryParam.indexCatNo"></a-input>
+            <a-form-item label="指标类别代码">
+              <a-input placeholder="请输入指标类别代码" v-model="queryParam.indexCatCode"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
@@ -135,9 +135,9 @@
             }
           },
           {
-            title:'指标类别编码',
+            title:'指标类别代码',
             align:"center",
-            dataIndex: 'indexCatNo'
+            dataIndex: 'indexCatCode'
           },
           {
             title:'指标类别名称',
@@ -151,6 +151,11 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
         url: {
           list: "/edusport/athleteSelectionIndexCat/list",
           delete: "/edusport/athleteSelectionIndexCat/delete",

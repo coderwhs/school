@@ -87,6 +87,15 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
 		return sysDictMapper.queryTableDictItemsByCodeAndFilter(table,text,code,filterSql);
 	}
 	
+	@Override
+	public List<DictModel> queryTableDictItemsByCodeAndFilterWithJoin(String table1, String t1_name, String t1_code, String t1_filterSql, 
+			String table2, String t2_name, String t2_code, 
+			String table3, String t3_name, String t3_code) {
+		log.info("无缓存dictTableList的时候调用这里！");
+		return sysDictMapper.queryTableDictItemsByCodeAndFilterWithJoin(table1, t1_name, t1_code, t1_filterSql, 
+				table2, t2_name, t2_code, table3, t3_name, t3_code);
+	}
+	
 	/**
 	 * 通过查询指定table的 text code 获取字典值text
 	 * dictTableCache采用redis缓存有效期10分钟

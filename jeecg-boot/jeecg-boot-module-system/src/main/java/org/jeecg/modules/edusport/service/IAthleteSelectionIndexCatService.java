@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 /**
  * @Description: 运动员选材指标分类信息表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2020-02-13
  * @Version: V1.0
  */
 public interface IAthleteSelectionIndexCatService extends IService<AthleteSelectionIndexCat> {

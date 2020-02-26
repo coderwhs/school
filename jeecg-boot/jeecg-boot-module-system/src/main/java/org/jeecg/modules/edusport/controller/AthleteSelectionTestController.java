@@ -2,65 +2,59 @@ package org.jeecg.modules.edusport.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-
-import javax.annotation.Resource;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.jeecg.common.api.vo.Result;
-import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
-import org.jeecg.common.system.util.JwtUtil;
+import org.jeecg.common.util.DateUtils;
+import org.jeecg.common.util.UUIDGenerator;
 import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.edusport.entity.AthleteSelectionGroup;
+import org.jeecg.modules.edusport.entity.Athlete;
+import org.jeecg.modules.edusport.entity.AthleteSelectionGroupIndexGrade;
 import org.jeecg.modules.edusport.entity.AthleteSelectionTest;
-import org.jeecg.modules.edusport.entity.OutlineCoach;
-import org.jeecg.modules.edusport.entity.Sport;
-import org.jeecg.modules.edusport.mapper.AthleteMapper;
-import org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreDetailMapper;
-import org.jeecg.modules.edusport.mapper.AthleteSelectionAthleteScoreMapper;
-import org.jeecg.modules.edusport.mapper.AthleteSelectionGroupIndexMapper;
-import org.jeecg.modules.edusport.mapper.AthleteSelectionTestMapper;
-import org.jeecg.modules.edusport.mapper.CoachMapper;
-import org.jeecg.modules.edusport.mapper.OutlineCoachMapper;
-import org.jeecg.modules.edusport.mapper.SportMapper;
-import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreDetailService;
-import org.jeecg.modules.edusport.service.IAthleteSelectionAthleteScoreService;
-import org.jeecg.modules.edusport.service.IAthleteSelectionGroupService;
+import org.jeecg.modules.edusport.entity.AthleteSelectionTestAthleteScore;
+import org.jeecg.modules.edusport.entity.AthleteSelectionTestAthleteScoreDetail;
+import org.jeecg.modules.edusport.entity.AthleteSelectionTestCoach;
+import org.jeecg.modules.edusport.service.IAthleteSelectionTestAthleteScoreDetailService;
+import org.jeecg.modules.edusport.service.IAthleteSelectionTestAthleteScoreService;
+import org.jeecg.modules.edusport.service.IAthleteSelectionTestCoachService;
 import org.jeecg.modules.edusport.service.IAthleteSelectionTestService;
 import org.jeecg.modules.edusport.service.IAthleteService;
-import org.jeecg.modules.edusport.service.IOutlineCoachService;
-import org.jeecg.modules.edusport.util.UserUtil;
-import org.jeecg.modules.shiro.vo.DefContants;
-import org.jeecg.modules.system.entity.SysUser;
-import org.jeecg.modules.system.service.ISysUserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+
 import lombok.extern.slf4j.Slf4j;
+
+import org.jeecgframework.poi.excel.ExcelImportUtil;
+import org.jeecgframework.poi.excel.def.NormalExcelConstants;
+import org.jeecgframework.poi.excel.entity.ExportParams;
+import org.jeecgframework.poi.excel.entity.ImportParams;
+import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
+import org.jeecg.common.system.base.controller.JeecgController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
  /**
  * @Description: 运动员选材测试表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2020-02-18
  * @Version: V1.0
  */
 @RestController
@@ -70,35 +64,14 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	@Autowired
 	private IAthleteSelectionTestService athleteSelectionTestService;
 	@Autowired
-	private IAthleteService athleteService; // 运动员.
+	private IAthleteSelectionTestCoachService athleteSelectionTestCoachService;
 	@Autowired
-	private IOutlineCoachService outlineCoachService; // 教练.
+	private IAthleteSelectionTestAthleteScoreService athleteSelectionTestAthleteScoreService;
 	@Autowired
-	private IAthleteSelectionGroupService athleteSelectionGroupService; // 组 .
+	private IAthleteSelectionTestAthleteScoreDetailService athleteSelectionTestAthleteScoreDetailService;
 	@Autowired
-	private IAthleteSelectionAthleteScoreService athleteSelectionAthleteScoreService;
-	@Autowired
-	private IAthleteSelectionAthleteScoreDetailService athleteSelectionAthleteScoreDetailService;
-	@Resource
-	private AthleteSelectionGroupIndexMapper athleteSelectionGroupIndexMapper;
-	@Resource
-	private AthleteSelectionTestMapper athleteSelectionTestMapper;
-	@Resource
-	private AthleteMapper athleteMapper;
-	@Resource
-	private CoachMapper coachMapper;
-	@Resource
-	private SportMapper sportMapper;
-	@Resource
-	private OutlineCoachMapper outlineCoachMapper;
-	@Resource
-	private AthleteSelectionAthleteScoreMapper athleteSelectionAthleteScoreMapper;
-	@Resource
-	private AthleteSelectionAthleteScoreDetailMapper athleteSelectionAthleteScoreDetailMapper;
-	@Autowired
-	private ISysUserService sysUserService;
-	private static String enabled = "1";
-	private static String disabled = "2";
+	private IAthleteService athleteService;
+	
 	/**
 	 * 分页列表查询
 	 *
@@ -114,64 +87,10 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionTest> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionTest, req.getParameterMap());
+		queryWrapper.orderByAsc("publish_date", "test_name", "group_id", "sport_code");
 		Page<AthleteSelectionTest> page = new Page<AthleteSelectionTest>(pageNo, pageSize);
-//		queryWrapper.orderByDesc("publish_date","test_name");
 		IPage<AthleteSelectionTest> pageList = athleteSelectionTestService.page(page, queryWrapper);
 		return Result.ok(pageList);
-	}
-	
-	@GetMapping(value = "/navigation")
-	public Result<?> navigation(HttpServletRequest req) {
-
-		return Result.ok("");
-	}
-	
-	/**
-	 *   审核
-	 *
-	 * @param athleteSelectionTest
-	 * @return
-	 */
-	@GetMapping(value = "/audit")
-	public Result<?> audit(@RequestParam(name="id",required=true) String id)  {
-		String resultInfo = "启用成功！";
-		AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(id);
-		if(athleteSelectionTest != null) {
-			if(enabled.equals(athleteSelectionTest.getBillState())){
-				resultInfo = "大纲已经启用，请确认!";
-			} else {
-				athleteSelectionTest.setBillState(enabled); // 1：启用，2：禁用
-				athleteSelectionTestService.updateById(athleteSelectionTest);
-			}
-		} else {
-			resultInfo = "大纲信息不存在，请确认!";
-		}
-
-		return Result.ok(resultInfo);
-	}
-	
-	/**
-	 *   反审核
-	 *
-	 * @param athleteSelectionTest
-	 * @return
-	 */
-	@GetMapping(value = "/unAudit")
-	public Result<?> unAudit(@RequestParam(name="id",required=true) String id) {
-		String resultInfo = "禁用成功！";
-		AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(id);
-		if(athleteSelectionTest != null) {
-			if(disabled.equals(athleteSelectionTest.getBillState())){
-				resultInfo = "大纲已经禁用，请确认!";
-			} else {
-				athleteSelectionTest.setBillState(disabled); // 1：启用，2：禁用
-				athleteSelectionTestService.updateById(athleteSelectionTest);
-			}
-		} else {
-			resultInfo = "大纲信息不存在，请确认!";
-		}
-
-		return Result.ok(resultInfo);
 	}
 	
 	/**
@@ -181,20 +100,8 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	 * @return
 	 */
 	@PostMapping(value = "/add")
-	@Transactional
-	public Result<?> add(HttpServletRequest request, @RequestBody AthleteSelectionTest athleteSelectionTest) {
-		athleteSelectionTest.setBillState(enabled);// 启用.
-		athleteSelectionTest.setCreateTime(new Date());
-		athleteSelectionTest.setCreateBy(UserUtil.getSystemUser(request, sysUserService).getUsername());
-		if(athleteSelectionTest.getIndexCodes() == null || "".equals(athleteSelectionTest.getIndexCodes())) {
-			athleteSelectionTest.setIndexCodes(athleteSelectionGroupIndexMapper.getIndexByGroupId(athleteSelectionTest.getGroupId()).getIndexId());
-		}
+	public Result<?> add(@RequestBody AthleteSelectionTest athleteSelectionTest) {
 		athleteSelectionTestService.save(athleteSelectionTest);
-
-		// 系统用户.
-		SysUser sysUser = getSystemUser(request);
-		saveCoachInfo(athleteSelectionTest, sysUser);
-
 		return Result.ok("添加成功！");
 	}
 	
@@ -205,34 +112,128 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	 * @return
 	 */
 	@PutMapping(value = "/edit")
-	@Transactional
-	public Result<?> edit(HttpServletRequest request, @RequestBody AthleteSelectionTest athleteSelectionTest) {
-		AthleteSelectionTest test = athleteSelectionTestService.getById(athleteSelectionTest.getId());
-		if(test.getIndexCodes().isEmpty()) {
-			test.setIndexCodes(athleteSelectionGroupIndexMapper.getIndexByGroupId(test.getGroupId()).getIndexId());
-		}
-
-		if(test != null) {
-			if(disabled.equals(test.getBillState())) {// 1:启用，2:禁用
-				athleteSelectionTestService.updateById(athleteSelectionTest);
-				String testId = test.getId();
-				outlineCoachMapper.deleteCoachByTestId(testId);
-				athleteSelectionAthleteScoreMapper.deleteScoreByTestId(testId);
-				athleteSelectionAthleteScoreDetailMapper.deleteScoreDetailByTestId(testId);
-				
-				// 系统用户.
-				SysUser sysUser = getSystemUser(request);
-				// 教练信息.
-				saveCoachInfo(athleteSelectionTest, sysUser);
-			} else {
-				return Result.ok("启用状态，不允许编辑!");
-			}
-		} else {
-			return Result.ok("大纲信息不存在，请确认!");
-		}
-
+	public Result<?> edit(@RequestBody AthleteSelectionTest athleteSelectionTest) {
+		athleteSelectionTestService.updateById(athleteSelectionTest);
 		return Result.ok("编辑成功!");
 	}
+	
+	/**
+	 *   添加
+	 *
+	 * @param athleteSelectionGroup
+	 * @return
+	 */
+	@PostMapping(value = "/addByStep")
+	public Result<?> addByStep(@RequestBody JSONObject jsonObject) {
+		AthleteSelectionTest athleteSelectionTest = new AthleteSelectionTest();
+		athleteSelectionTestService.save(athleteSelectionTest);
+		return Result.ok("添加成功！");
+	}
+	
+	/**
+	 *  编辑
+	 *
+	 * @param athleteSelectionGroup
+	 * @return
+	 */
+	@PutMapping(value = "/editByStep")
+	@Transactional
+	public Result<?> editByStep(@RequestBody JSONObject jsonObject) {
+		log.info("editByStep.jsonObject: {}", jsonObject);
+
+		// 运动员选材测试表
+		AthleteSelectionTest athleteSelectionTest = new AthleteSelectionTest();
+		athleteSelectionTest.setTestName(jsonObject.getString("testName"));
+		athleteSelectionTest.setPublishDate(jsonObject.getDate("publishDate"));
+		athleteSelectionTest.setGroupId(jsonObject.getString("groupId"));
+		log.info("editByStep.athleteSelectionTest: {}", athleteSelectionTest.toString());
+		
+		String testId = jsonObject.getString("id");
+		String groupId = jsonObject.getString("groupId");
+		String sportCode = jsonObject.getString("sportCode");
+		String sportEventCodes = jsonObject.getString("eventCodes");
+		String groupIndexCodes = jsonObject.getString("indexCodes");
+		String coachIds = jsonObject.getString("coachIds");
+		String athleteIds = jsonObject.getString("athleteIds");
+		// 测试指标
+		String[] groupIndexCodeList = groupIndexCodes.split(",");
+		
+		// 查询待删除教练员和测试运动员
+		AthleteSelectionTestCoach removeTestCoach = athleteSelectionTestCoachService.getOne(new QueryWrapper<AthleteSelectionTestCoach>().select("group_concat(id) as id").eq("test_id", testId).last("LIMIT 1"));
+		if (removeTestCoach != null) {
+			AthleteSelectionTestAthleteScore removeTestAthleteScore = athleteSelectionTestAthleteScoreService.getOne(new QueryWrapper<AthleteSelectionTestAthleteScore>().select("group_concat(id) as id").inSql("test_coach_id", "'"+removeTestCoach.getId().replace(",", "', '")+"'"));
+			
+			// 删除已有教练员、测试运动员总成绩及明细记录
+			athleteSelectionTestCoachService.remove(new QueryWrapper<AthleteSelectionTestCoach>().eq("test_id", testId));
+			if (removeTestAthleteScore != null) {
+				athleteSelectionTestAthleteScoreService.remove(new QueryWrapper<AthleteSelectionTestAthleteScore>().inSql("test_coach_id", "'"+removeTestCoach.getId().replace(",", "', '")+"'"));
+				athleteSelectionTestAthleteScoreDetailService.remove(new QueryWrapper<AthleteSelectionTestAthleteScoreDetail>().inSql("athlete_score_id", "'"+removeTestAthleteScore.getId().replace(",", "', '")+"'"));
+			}
+		}
+
+		// 查询待更新测试教练及运动员
+		ArrayList<AthleteSelectionTestCoach> testCoachList = new ArrayList<AthleteSelectionTestCoach>();
+		ArrayList<AthleteSelectionTestAthleteScore> testAthleteScoreList = new ArrayList<AthleteSelectionTestAthleteScore>();
+		ArrayList<AthleteSelectionTestAthleteScoreDetail> testAthleteScoreDetailList = new ArrayList<AthleteSelectionTestAthleteScoreDetail>();
+
+		ArrayList<Athlete> athleteCoachList = (ArrayList<Athlete>) athleteService.list(new QueryWrapper<Athlete>().select("coach_id", "group_concat(id) as id").inSql("id", "'"+athleteIds.replace(",", "', '")+"'").groupBy("coach_id"));
+		for (Athlete athleteCoach : athleteCoachList) {
+			// 测试教练表
+			String coachId = athleteCoach.getCoachId();
+			AthleteSelectionTestCoach testCoach = new AthleteSelectionTestCoach();
+			String testCoachId = UUIDGenerator.generate();
+			testCoach.setId(testCoachId);
+			testCoach.setTestId(testId);
+			testCoach.setCoachId(coachId);
+			testCoach.setGroupId(groupId);
+			testCoach.setSportCode(sportCode);
+			testCoach.setEventCodes(sportEventCodes);
+			testCoach.setIndexCodes(groupIndexCodes);
+			testCoachList.add(testCoach);
+			
+			
+			ArrayList<Athlete> subAthleteList = (ArrayList<Athlete>) athleteService.list(new QueryWrapper<Athlete>().inSql("id", "'"+athleteCoach.getId().replace(",", "', '")+"'" ));
+			for (Athlete subAthlete : subAthleteList) {
+				// 测试运动员总成绩表
+				AthleteSelectionTestAthleteScore testAthleteScore = new AthleteSelectionTestAthleteScore();
+				String testAthleteScoreId = UUIDGenerator.generate();
+				testAthleteScore.setId(testAthleteScoreId);
+				testAthleteScore.setTestCoachId(testCoachId);
+				testAthleteScore.setAthleteId(subAthlete.getId());
+				testAthleteScore.setGender(subAthlete.getGender());
+				testAthleteScore.setGrade(subAthlete.getGrade());
+				testAthleteScore.setBirthDate(subAthlete.getBirthDate());
+				testAthleteScore.setTestRating("");
+				try {
+					testAthleteScore.setAge(DateUtils.getAge(subAthlete.getBirthDate()));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				testAthleteScoreList.add(testAthleteScore);
+				
+				// 测试运动员成绩明细表
+				for (String groupIndexCode : groupIndexCodeList) {
+					AthleteSelectionTestAthleteScoreDetail athleteScoreDetail = new AthleteSelectionTestAthleteScoreDetail();
+					athleteScoreDetail.setId(UUIDGenerator.generate());
+					athleteScoreDetail.setAthleteScoreId(testAthleteScoreId);
+					athleteScoreDetail.setGroupId(groupId);
+					athleteScoreDetail.setIndexCode(groupIndexCode);
+					athleteScoreDetail.setTestRating("");
+					
+					testAthleteScoreDetailList.add(athleteScoreDetail);
+				}
+			}
+		}
+		
+		athleteSelectionTestCoachService.saveBatch(testCoachList);
+		athleteSelectionTestAthleteScoreService.saveBatch(testAthleteScoreList);
+		athleteSelectionTestAthleteScoreDetailService.saveBatch(testAthleteScoreDetailList);
+		
+//		athleteSelectionTestService.updateById(athleteSelectionTest);
+		return Result.ok("编辑成功!");
+	}	
+	
 	
 	/**
 	 *   通过id删除
@@ -241,21 +242,8 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	 * @return
 	 */
 	@DeleteMapping(value = "/delete")
-	@Transactional
-	public Result<?> delete(HttpServletRequest request, @RequestParam(name="id",required=true) String id) {
-		AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(id);
-		if(athleteSelectionTest != null) {
-			if(disabled.equals(athleteSelectionTest.getBillState())) {// 1:启用，2:禁用
-				athleteSelectionTestService.removeById(id);
-				String testId = athleteSelectionTest.getId();
-				outlineCoachMapper.deleteCoachByTestId(testId);
-				athleteSelectionAthleteScoreMapper.deleteScoreByTestId(testId);
-				athleteSelectionAthleteScoreDetailMapper.deleteScoreDetailByTestId(testId);
-			} else {
-				return Result.ok("启用状态，不允许删除!");
-			}
-		}
-
+	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
+		athleteSelectionTestService.removeById(id);
 		return Result.ok("删除成功!");
 	}
 	
@@ -266,27 +254,8 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 	 * @return
 	 */
 	@DeleteMapping(value = "/deleteBatch")
-	@Transactional
-	public Result<?> deleteBatch(HttpServletRequest request, @RequestParam(name="ids",required=true) String ids) {
-		String[] testIds = ids.split(",");
-		for(int i = 0; i < testIds.length; i++) {
-			AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(testIds[i]);
-			if(athleteSelectionTest != null) {
-				if(enabled.equals(athleteSelectionTest.getBillState())) {// 1:启用，2:禁用
-					return Result.ok("启用状态，不允许删除!");
-				}
-			}
-		}
-
-		for(int i = 0; i < testIds.length; i++) {
-			AthleteSelectionTest athleteSelectionTest = athleteSelectionTestService.getById(testIds[i]);
-			String testId = athleteSelectionTest.getId();
-			outlineCoachMapper.deleteCoachByTestId(testId);
-			athleteSelectionAthleteScoreMapper.deleteScoreByTestId(testId);
-			athleteSelectionAthleteScoreDetailMapper.deleteScoreDetailByTestId(testId);
-		}
+	public Result<?> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		this.athleteSelectionTestService.removeByIds(Arrays.asList(ids.split(",")));
-		
 		return Result.ok("批量删除成功!");
 	}
 	
@@ -328,70 +297,4 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
         return super.importExcel(request, response, AthleteSelectionTest.class);
     }
 
-	
-	/**
-	 * 保存教练信息.
-	 * @param athleteSelectionTest
-	 * @param sysUser
-	 */
-	private void saveCoachInfo(AthleteSelectionTest athleteSelectionTest, SysUser sysUser) {
-		String groupId = athleteSelectionTest.getGroupId();
-		// 取得组信息.
-		AthleteSelectionGroup athleteSelectionGroup = athleteSelectionGroupService.getById(groupId);
-
-		Sport sport = sportMapper.getSportByCode(athleteSelectionTest.getSportCode());
-		// 教练信息处理.
-		// 取得所有选择的学生.
-		List<OutlineCoach> outlineCoachList = new ArrayList<OutlineCoach>();
-		@SuppressWarnings("rawtypes")
-		List<HashMap> coachList = coachMapper.getCoachByAthleteId(athleteSelectionTest.getAthleteNos().split(","));
-		for(int i = 0; i < coachList.size(); i++) {
-			HashMap<?, ?> map = coachList.get(i);
-			OutlineCoach outlineCoach = new OutlineCoach();
-			if(map.get("athlete") != null && !"".equals(map.get("athlete").toString())) {
-				outlineCoach.setAlthleteNos(map.get("athlete").toString());// 运动员.
-			}
-			if(map.get("id") != null && !"".equals(map.get("id").toString())) {
-				outlineCoach.setCoachId(map.get("id").toString());// 教练.
-			}
-
-			outlineCoach.setEventCodes(athleteSelectionGroup.getEventCodes());// 运动项目.
-			outlineCoach.setGroupId(groupId);// 组.
-			outlineCoach.setOutlineId(athleteSelectionTest.getId());// 大纲ID.
-			if(sport != null) {
-				outlineCoach.setSportId(sport.getId());// 运动项目.
-			}
-			if(athleteSelectionTest.getIndexCodes() != null && !"".equals(athleteSelectionTest.getIndexCodes())) {
-				outlineCoach.setIndexCodes(athleteSelectionTest.getIndexCodes());// 指标信息
-			} else {
-				outlineCoach.setIndexCodes(athleteSelectionGroupIndexMapper.getIndexByGroupId(groupId).getIndexId());
-			}
-			outlineCoach.setTestDate(athleteSelectionTest.getPublishDate());// 测试日期
-			outlineCoach.setState(disabled);// 未状态
-			outlineCoach.setCreateTime(Calendar.getInstance().getTime());
-			outlineCoach.setCreateBy(sysUser.getUsername());
-			outlineCoach.setUpdateTime(Calendar.getInstance().getTime());
-			outlineCoach.setUpdateBy(sysUser.getUsername());
-			outlineCoachList.add(outlineCoach);
-		}
-		outlineCoachService.saveBatch(outlineCoachList);// 保存教练表信息.
-	}
-	
-    /**
-	 * 取得当前登录用户.
-	 * 
-	 * @param request
-	 * @return
-	 */
-	private SysUser getSystemUser(HttpServletRequest request) {
-		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
-		SysUser user = new SysUser();
-		if (!oConvertUtils.isEmpty(token)) {
-			String username = JwtUtil.getUsername(token);
-//			System.out.println(">>> username: " + username);
-			user = sysUserService.getUserByName(username);
-		}
-
-		return user;
-	}
 }

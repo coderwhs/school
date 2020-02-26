@@ -240,22 +240,22 @@
           {
             title:'身高(cm)',
             align:"center",
-            dataIndex: 'studentHeight'
+            dataIndex: 'athleteHeight'
           },
           {
             title:'体重(kg)',
             align:"center",
-            dataIndex: 'studentWeight'
+            dataIndex: 'athleteWeight'
           },
           {
             title:'专业项目',
             align:"center",
-            dataIndex: 'majorSport',
+            dataIndex: 'sportCode',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['majorSport'], text+"")
+                return filterMultiDictText(this.dictOptions['sportCode'], text+"")
               }
             }
           },
@@ -311,7 +311,7 @@
         })
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'majorSport', res.result)
+            this.$set(this.dictOptions, 'sportCode', res.result)
           }
         })
       },

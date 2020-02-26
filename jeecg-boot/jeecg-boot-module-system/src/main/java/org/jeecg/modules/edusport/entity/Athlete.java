@@ -46,16 +46,10 @@ public class Athlete implements Serializable {
     private java.util.Date birthDate;
 	/**身高(cm)*/
 	@Excel(name = "身高(cm)", width = 15)
-    private java.lang.Integer studentHeight;
+    private java.lang.Integer athleteHeight;
 	/**体重(kg)*/
 	@Excel(name = "体重(kg)", width = 15)
-    private java.math.BigDecimal studentWeight;
-	/**专业项目*/
-	@Excel(name = "专业项目", width = 15)
-    private java.lang.String majorSport;
-	/**教练员*/
-	@Excel(name = "教练员", width = 15)
-    private java.lang.String majorSportTeacherCode;
+    private java.math.BigDecimal athleteWeight;
 	/**籍贯省*/
 	@Excel(name = "籍贯省", width = 15)
     private java.lang.String nativeProvince;
@@ -114,9 +108,12 @@ public class Athlete implements Serializable {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private java.util.Date majorSportAttendDate;
-	/**带训教练姓名*/
-	@Excel(name = "带训教练姓名", width = 15)
-    private java.lang.String majorSportTeacherName;
+	/**专业项目*/
+	@Excel(name = "专业项目", width = 15)
+    private java.lang.String sportCode;
+	/**教练员*/
+	@Excel(name = "带训教练", width = 15)
+    private java.lang.String coachId;
 	/**退役时间*/
 	@Excel(name = "退役时间", width = 15)
     private java.lang.String retireDate;

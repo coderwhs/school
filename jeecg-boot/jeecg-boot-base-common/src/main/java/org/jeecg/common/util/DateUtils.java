@@ -356,6 +356,9 @@ public class DateUtils extends PropertyEditorSupport {
 	 * @return 指定日期按“年-月-日“格式显示
 	 */
 	public static String formatDate(Date date) {
+		if (date == null) {
+			return null;
+		}
 		return date_sdf.format(date);
 	}
 
@@ -619,4 +622,31 @@ public class DateUtils extends PropertyEditorSupport {
 		return calendar.get(Calendar.YEAR);
 	}
 
+	//由出生日期获得年龄  
+    public static  int getAge(Date birthDay) throws Exception {  
+        Calendar cal = Calendar.getInstance();  
+  
+        if (cal.before(birthDay)) {  
+            throw new IllegalArgumentException("出生日期小于当前时间，无效的日期!");  
+        }  
+        int yearNow = cal.get(Calendar.YEAR);  
+        int monthNow = cal.get(Calendar.MONTH);  
+        int dayOfMonthNow = cal.get(Calendar.DAY_OF_MONTH);  
+        cal.setTime(birthDay);  
+  
+        int yearBirth = cal.get(Calendar.YEAR);  
+        int monthBirth = cal.get(Calendar.MONTH);  
+        int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);  
+  
+        int age = yearNow - yearBirth;  
+  
+        if (monthNow <= monthBirth) {  
+            if (monthNow == monthBirth) {  
+                if (dayOfMonthNow < dayOfMonthBirth) age--;  
+            }else{  
+                age--;  
+            }  
+        }  
+        return age;  
+    }
 }

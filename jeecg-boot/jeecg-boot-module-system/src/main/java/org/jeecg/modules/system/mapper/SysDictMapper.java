@@ -34,6 +34,9 @@ public interface SysDictMapper extends BaseMapper<SysDict> {
 	public List<DictModel> queryDictItemsByCode(@Param("code") String code);
 	public List<DictModel> queryTableDictItemsByCode(@Param("table") String table,@Param("text") String text,@Param("code") String code);
 	public List<DictModel> queryTableDictItemsByCodeAndFilter(@Param("table") String table,@Param("text") String text,@Param("code") String code,@Param("filterSql") String filterSql);
+	public List<DictModel> queryTableDictItemsByCodeAndFilterWithJoin(@Param("table1") String table1, @Param("t1_name") String t1_name, @Param("t1_code") String t1_code, @Param("t1_filterSql") String t1_filterSql, 
+			@Param("table2") String table2, @Param("t2_name") String t2_name, @Param("t2_code") String t2_code, 
+			@Param("table3") String table3, @Param("t3_name") String t3_name, @Param("t3_code") String t3_code);
 
 
 	public String queryDictTextByKey(@Param("code") String code,@Param("key") String key);

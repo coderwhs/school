@@ -61,6 +61,9 @@
         }else{
           this.arrayValue = this.value.split(",")
         }
+      },
+      dictCode: function() {
+        this.initDictData();
       }
     },
     methods: {
@@ -68,14 +71,16 @@
         if(this.options && this.options.length>0){
           this.dictOptions = [...this.options]
         }else{
-          //根据字典Code, 初始化字典数组
-          ajaxGetDictItems(this.dictCode, null).then((res) => {
-            if (res.success) {
-              this.dictOptions = res.result;
-            }
-          })
+          console.log("this.dictCode: ", this.dictCode);
+          if (this.dictCode) {
+            //根据字典Code, 初始化字典数组
+            ajaxGetDictItems(this.dictCode, null).then((res) => {
+              if (res.success) {
+                this.dictOptions = res.result;
+              }
+            })
+          }
         }
-
       },
       onChange (selectedValue) {
         this.$emit('change', selectedValue.join(","));

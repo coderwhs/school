@@ -18,6 +18,9 @@ import org.jeecg.modules.edusport.service.IAthleteSelectionGroupIndexGradeServic
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+import freemarker.template.utility.StringUtil;
+import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import org.jeecgframework.poi.excel.ExcelImportUtil;
@@ -26,17 +29,20 @@ import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.jeecg.common.system.base.controller.JeecgController;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
  /**
  * @Description: 运动员选材测试指标评分标准列表
  * @Author: jeecg-boot
- * @Date:   2019-12-18
+ * @Date:   2020-02-13
  * @Version: V1.0
  */
 @RestController
@@ -61,8 +67,8 @@ public class AthleteSelectionGroupIndexGradeController extends JeecgController<A
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
 		QueryWrapper<AthleteSelectionGroupIndexGrade> queryWrapper = QueryGenerator.initQueryWrapper(athleteSelectionGroupIndexGrade, req.getParameterMap());
+		queryWrapper.orderByAsc("group_id", "index_code", "gender", "start_age", "min_data", "score");
 		Page<AthleteSelectionGroupIndexGrade> page = new Page<AthleteSelectionGroupIndexGrade>(pageNo, pageSize);
-		queryWrapper.orderByDesc("group_id","index_id","gender");
 		IPage<AthleteSelectionGroupIndexGrade> pageList = athleteSelectionGroupIndexGradeService.page(page, queryWrapper);
 		return Result.ok(pageList);
 	}
@@ -88,6 +94,80 @@ public class AthleteSelectionGroupIndexGradeController extends JeecgController<A
 	@PutMapping(value = "/edit")
 	public Result<?> edit(@RequestBody AthleteSelectionGroupIndexGrade athleteSelectionGroupIndexGrade) {
 		athleteSelectionGroupIndexGradeService.updateById(athleteSelectionGroupIndexGrade);
+		return Result.ok("编辑成功!");
+	}
+	
+	/**
+	 *   添加
+	 *
+	 * @param jsonObject
+	 * @return
+	 */
+	@PostMapping(value = "/addBatch")
+	public Result<?> addBatch(@RequestBody JSONObject jsonObject) {
+		log.info("editBatch.jsonObject: {}", jsonObject);
+		log.info("editBatch.groupId: {}", jsonObject.getString("groupId"));
+		log.info("editBatch.indexCode: {}", jsonObject.getString("indexCode"));
+		log.info("editBatch.gender: {}", jsonObject.getString("gender"));
+		log.info("editBatch.getJSONArray.indexGradeList: {}", jsonObject.getJSONArray("indexGradeList").toJavaList(AthleteSelectionGroupIndexGrade.class));
+		
+		String groupId = jsonObject.getString("groupId");
+		String indexCode = jsonObject.getString("indexCode");
+		String gender = jsonObject.getString("gender");
+		JSONArray indexGradeJsonArray = jsonObject.getJSONArray("indexGradeList");
+		
+		if (!StringUtils.isBlank(groupId) && !StringUtils.isBlank(indexCode) && !StringUtils.isBlank(indexCode) && indexGradeJsonArray != null) {
+			// 删除已有记录
+			athleteSelectionGroupIndexGradeService.remove(new QueryWrapper<AthleteSelectionGroupIndexGrade>()
+					.eq("group_id", groupId).eq("index_code", indexCode).eq("gender", gender));
+			
+			// 新增测试评分标准列表
+			List<AthleteSelectionGroupIndexGrade> indexGradeList = indexGradeJsonArray.toJavaList(AthleteSelectionGroupIndexGrade.class);
+			for (AthleteSelectionGroupIndexGrade indexGrade: indexGradeList) {
+				indexGrade.setGroupId(groupId);
+				indexGrade.setIndexCode(indexCode);
+				indexGrade.setGender(gender);
+				athleteSelectionGroupIndexGradeService.save(indexGrade);
+			}
+		}
+		
+		return Result.ok("添加成功！");
+	}
+	
+	/**
+	 *  编辑
+	 *
+	 * @param athleteSelectionGroupIndexGrade
+	 * @return
+	 */
+	@PutMapping(value = "/editBatch")
+	public Result<?> editBatch(@RequestBody JSONObject jsonObject) {
+		log.info("editBatch.jsonObject: {}", jsonObject);
+		log.info("editBatch.groupId: {}", jsonObject.getString("groupId"));
+		log.info("editBatch.indexCode: {}", jsonObject.getString("indexCode"));
+		log.info("editBatch.gender: {}", jsonObject.getString("gender"));
+		log.info("editBatch.getJSONArray.indexGradeList: {}", jsonObject.getJSONArray("indexGradeList").toJavaList(AthleteSelectionGroupIndexGrade.class));
+		
+		String groupId = jsonObject.getString("groupId");
+		String indexCode = jsonObject.getString("indexCode");
+		String gender = jsonObject.getString("gender");
+		JSONArray indexGradeJsonArray = jsonObject.getJSONArray("indexGradeList");
+		
+		if (!StringUtils.isBlank(groupId) && !StringUtils.isBlank(indexCode) && !StringUtils.isBlank(indexCode) && indexGradeJsonArray != null) {
+			// 删除已有记录
+			athleteSelectionGroupIndexGradeService.remove(new QueryWrapper<AthleteSelectionGroupIndexGrade>()
+					.eq("group_id", groupId).eq("index_code", indexCode).eq("gender", gender));
+			
+			// 新增测试评分标准列表
+			List<AthleteSelectionGroupIndexGrade> indexGradeList = indexGradeJsonArray.toJavaList(AthleteSelectionGroupIndexGrade.class);
+			for (AthleteSelectionGroupIndexGrade indexGrade: indexGradeList) {
+				indexGrade.setGroupId(groupId);
+				indexGrade.setIndexCode(indexCode);
+				indexGrade.setGender(gender);
+				athleteSelectionGroupIndexGradeService.save(indexGrade);
+			}
+		}
+		
 		return Result.ok("编辑成功!");
 	}
 	

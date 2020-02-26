@@ -13,11 +13,13 @@
         <a-form-item label="测试名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'testName', validatorRules.testName]" placeholder="请输入测试名称"></a-input>
         </a-form-item>
-        <a-form-item label="测试大项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'sportCode', validatorRules.sportCode]" placeholder="请输入测试大项"></a-input>
-        </a-form-item>
         <a-form-item label="测试组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'groupId', validatorRules.groupId]" placeholder="请输入测试组别"></a-input>
+          <j-search-select-tag placeholder="请选择测试组别" v-decorator="['groupId', validatorRules.groupId]" dict="tb_edu_athlete_selection_group, group_name, id" @change="handleGroupIdChange"/>
+        </a-form-item>
+        <a-form-item label="测试大项" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-form-container disabled>
+            <j-search-select-tag placeholder="请选择测试大项" v-decorator="['sportCode', validatorRules.sportCode]" dict="tb_edu_sport, sport_name, sport_code" @change="handleSportCodeChange"/>
+          </j-form-container>
         </a-form-item>
         <a-form-item label="发布日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择发布日期" v-decorator="[ 'publishDate', validatorRules.publishDate]" :trigger-change="true" style="width: 100%"/>
@@ -60,9 +62,9 @@
         confirmLoading: false,
         validatorRules:{
         testName:{rules: [{ required: true, message: '请输入测试名称!' }]},
-        sportCode:{rules: [{ required: true, message: '请输入测试大项!' }]},
         groupId:{rules: [{ required: true, message: '请输入测试组别!' }]},
-        publishDate:{rules: [{ required: true, message: '请输入发布日期!' }]},
+        sportCode:{rules: [{ required: true, message: '请输入测试大项!' }]},
+        publishDate:{},
         },
         url: {
           add: "/edusport/athleteSelectionTest/add",
@@ -82,7 +84,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'testName','sportCode','groupId','publishDate'))
+          this.form.setFieldsValue(pick(this.model,'testName','groupId','sportCode','publishDate'))
         })
       },
       close () {
@@ -125,8 +127,9 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'testName','sportCode','groupId','publishDate'))
-      }
+        this.form.setFieldsValue(pick(row,'testName','groupId','sportCode','publishDate'))
+      },
+
       
     }
   }

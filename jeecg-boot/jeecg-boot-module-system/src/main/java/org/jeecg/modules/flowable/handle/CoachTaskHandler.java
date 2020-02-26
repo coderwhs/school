@@ -33,9 +33,9 @@ public class CoachTaskHandler implements TaskListener {
 			DormAthleteLeave dormAthleteLeave = dormAthleteLeaveService.getById(billId);
 			
 			Athlete athlete = athleteService.getById(dormAthleteLeave.getAthleteId());
-			String coachCode = athlete.getMajorSportTeacherCode();
-			delegateTask.setAssignee(coachCode);
-			System.out.println(">>>>>>>>>>>>coachCode>>>>>>>>>>>" + coachCode);
+			String coachId = athlete.getCoachId();
+			delegateTask.setAssignee(coachId);
+			System.out.println(">>>>>>>>>>>>coachId>>>>>>>>>>>" + coachId);
 			System.out.println("getExecutionId="+delegateTask.getExecutionId() + "ProcessInstanceId="+delegateTask.getProcessInstanceId()+
 	                "assignee"+delegateTask.getAssignee()+"  "+" name="+delegateTask.getName()+
 	                " 下一活动节点 getEventName= "+delegateTask.getEventName()+" 下一任务id="+delegateTask.getId());

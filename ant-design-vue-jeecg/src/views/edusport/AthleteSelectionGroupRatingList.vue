@@ -6,8 +6,7 @@
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
             <a-form-item label="所属组别">
-<!--              <a-input placeholder="请输入所属组别" v-model="queryParam.groupId"></a-input>-->
-              <j-search-select-tag v-decorator="['groupId']" v-model="queryParam.groupId" dict="tb_edu_athlete_selection_group,group_name,id" />
+              <j-dict-select-tag placeholder="请选择所属组别" v-model="queryParam.groupId" dictCode="tb_edu_athlete_selection_group,group_name,id"/>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8" >
@@ -27,12 +26,12 @@
     <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
+    <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试等级评定标准表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+<!--      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试等级评定标准表')">导出</a-button>-->
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -108,14 +107,15 @@
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import AthleteSelectionGroupRatingModal from './modules/AthleteSelectionGroupRatingModal'
+  import JDictSelectTag from '@/components/dict/JDictSelectTag'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+
   export default {
     name: "AthleteSelectionGroupRatingList",
     mixins:[JeecgListMixin],
     components: {
-      AthleteSelectionGroupRatingModal,
-      JSearchSelectTag
+      JDictSelectTag,
+      AthleteSelectionGroupRatingModal
     },
     data () {
       return {
@@ -145,19 +145,26 @@
             }
           },
           {
-            title:'最大分值',
-            align:"center",
-            dataIndex: 'maxData'
-          },
-          {
             title:'最小分值',
             align:"center",
             dataIndex: 'minData'
           },
           {
+            title:'最大分值',
+            align:"center",
+            dataIndex: 'maxData'
+          },
+          {
             title:'等级',
             align:"center",
-            dataIndex: 'rating'
+            dataIndex: 'rating',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['rating'], text+"")
+              }
+            }
           },
           {
             title: '操作',
@@ -166,6 +173,11 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
         url: {
           list: "/edusport/athleteSelectionGroupRating/list",
           delete: "/edusport/athleteSelectionGroupRating/delete",
@@ -174,6 +186,8 @@
           importExcelUrl: "edusport/athleteSelectionGroupRating/importExcel",
         },
         dictOptions:{
+          groupId:[],
+          rating:[]
         },
       }
     },
@@ -189,11 +203,27 @@
             this.$set(this.dictOptions, 'groupId', res.result)
           }
         })
-      }
-       
+        initDictOptions('index_rating').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'rating', res.result)
+          }
+        })
+      },
+      getListByGroupId(groupId) {
+        this.queryParam.groupId = groupId;
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.groupId);
+        this.$refs.modalForm.title = "添加测试等级评定标准";
+        this.$refs.modalForm.disableSubmit = false;
+      },
     }
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

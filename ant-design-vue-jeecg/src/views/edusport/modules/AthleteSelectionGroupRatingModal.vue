@@ -11,16 +11,18 @@
       <a-form :form="form">
 
         <a-form-item label="所属组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['groupId']" dict="tb_edu_athlete_selection_group,group_name,id" />
-        </a-form-item>
-        <a-form-item label="最大分值" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'maxData', validatorRules.maxData]" placeholder="请输入最大分值" style="width: 100%"/>
+          <j-form-container disabled>
+            <j-dict-select-tag type="list" v-decorator="[ 'groupId', validatorRules.groupId]"  :trigger-change="true" dictCode="tb_edu_athlete_selection_group,group_name,id" placeholder="请选择所属组别"/>
+          </j-form-container>
         </a-form-item>
         <a-form-item label="最小分值" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'minData', validatorRules.minData]" placeholder="请输入最小分值" style="width: 100%"/>
         </a-form-item>
+        <a-form-item label="最大分值" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input-number v-decorator="[ 'maxData', validatorRules.maxData]" placeholder="请输入最大分值" style="width: 100%"/>
+        </a-form-item>
         <a-form-item label="等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'rating', validatorRules.rating]" placeholder="请输入等级"></a-input>
+          <j-dict-select-tag type="list" v-decorator="[ 'rating', validatorRules.rating]" :trigger-change="true" dictCode="index_rating" placeholder="请选择等级"/>
         </a-form-item>
 
       </a-form>
@@ -32,12 +34,12 @@
 
   import { httpAction } from '@/api/manage'
   import pick from 'lodash.pick'
-  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import JDictSelectTag from "@/components/dict/JDictSelectTag"
 
   export default {
     name: "AthleteSelectionGroupRatingModal",
-    components: { 
-      JSearchSelectTag,
+    components: {
+      JDictSelectTag,
     },
     data () {
       return {
@@ -58,9 +60,9 @@
         confirmLoading: false,
         validatorRules:{
         groupId:{rules: [{ required: true, message: '请输入所属组别!' }]},
-        maxData:{},
-        minData:{},
-        rating:{},
+        minData:{rules: [{ required: true, message: '请输入最小分值!' }]},
+        maxData:{rules: [{ required: true, message: '请输入最大分值!' }]},
+        rating:{rules: [{ required: true, message: '请输入等级!' }]},
         },
         url: {
           add: "/edusport/athleteSelectionGroupRating/add",
@@ -72,15 +74,21 @@
     created () {
     },
     methods: {
-      add () {
-        this.edit({});
+      add(groupId) {
+        this.hiding = true;
+        if (groupId) {
+          this.groupId = groupId;
+          this.edit({groupId}, '');
+        } else {
+          this.$message.warning("请选择一个测试组别");
+        }
       },
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'groupId','maxData','minData','rating'))
+          this.form.setFieldsValue(pick(this.model,'groupId','minData','maxData','rating'))
         })
       },
       close () {
@@ -123,7 +131,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'groupId','maxData','minData','rating'))
+        this.form.setFieldsValue(pick(row,'groupId','minData','maxData','rating'))
       },
 
       

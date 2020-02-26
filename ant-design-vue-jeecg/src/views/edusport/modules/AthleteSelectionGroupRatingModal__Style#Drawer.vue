@@ -13,11 +13,11 @@
         <a-form-item label="所属组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'groupId', validatorRules.groupId]" placeholder="请输入所属组别"></a-input>
         </a-form-item>
-        <a-form-item label="最大分值" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input-number v-decorator="[ 'maxData', validatorRules.maxData]" placeholder="请输入最大分值" style="width: 100%"/>
-        </a-form-item>
         <a-form-item label="最小分值" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'minData', validatorRules.minData]" placeholder="请输入最小分值" style="width: 100%"/>
+        </a-form-item>
+        <a-form-item label="最大分值" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input-number v-decorator="[ 'maxData', validatorRules.maxData]" placeholder="请输入最大分值" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'rating', validatorRules.rating]" placeholder="请输入等级"></a-input>
@@ -58,9 +58,9 @@
         confirmLoading: false,
         validatorRules:{
         groupId:{rules: [{ required: true, message: '请输入所属组别!' }]},
-        maxData:{},
         minData:{},
-        rating:{},
+        maxData:{},
+        rating:{rules: [{ required: true, message: '请输入等级!' }]},
         },
         url: {
           add: "/edusport/athleteSelectionGroupRating/add",
@@ -72,15 +72,21 @@
     created () {
     },
     methods: {
-      add () {
-        this.edit({});
+      add(groupId) {
+        this.hiding = true;
+        if (groupId) {
+          this.groupId = groupId;
+          this.edit({groupId}, '');
+        } else {
+          this.$message.warning("请选择一个测试组别");
+        }
       },
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'groupId','maxData','minData','rating'))
+          this.form.setFieldsValue(pick(this.model,'groupId','minData','maxData','rating'))
         })
       },
       close () {
@@ -123,7 +129,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'groupId','maxData','minData','rating'))
+        this.form.setFieldsValue(pick(row,'groupId','minData','maxData','rating'))
       }
       
     }

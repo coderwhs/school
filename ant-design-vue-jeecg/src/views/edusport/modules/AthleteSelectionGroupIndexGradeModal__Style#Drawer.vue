@@ -14,10 +14,10 @@
           <a-input v-decorator="[ 'groupId', validatorRules.groupId]" placeholder="请输入所属组别"></a-input>
         </a-form-item>
         <a-form-item label="指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="[ 'indexId', validatorRules.indexId]" placeholder="请输入指标"></a-input>
+          <a-input v-decorator="[ 'indexCode', validatorRules.indexCode]" placeholder="请输入指标"></a-input>
         </a-form-item>
         <a-form-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
+          <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="gender" placeholder="请选择性别"/>
         </a-form-item>
         <a-form-item label="起始年龄" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'startAge', validatorRules.startAge]" placeholder="请输入起始年龄" style="width: 100%"/>
@@ -71,14 +71,19 @@
 
         confirmLoading: false,
         validatorRules:{
-        groupId:{rules: [{ required: true, message: '请输入所属组别!' }]},
-        indexId:{rules: [{ required: true, message: '请输入指标!' }]},
-        gender:{rules: [{ required: true, message: '请输入性别!' }]},
-        startAge:{rules: [{ required: true, message: '请输入起始年龄!' }]},
-        endAge:{rules: [{ required: true, message: '请输入截止年龄!' }]},
-        minData:{rules: [{ required: true, message: '请输入最小数值!' }]},
-        maxData:{rules: [{ required: true, message: '请输入最大数值!' }]},
-        score:{rules: [{ required: true, message: '请输入得分!' }]},
+          groupId:{rules: [{ required: true, message: '请输入所属组别!' }]},
+          indexCode:{rules: [{ required: true, message: '请输入指标!' }]},
+          gender:{rules: [{ required: true, message: '请输入性别!' }]},
+          startAge:{},
+          endAge:{},
+          minData:{},
+          maxData:{},
+          score:{},
+        },
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
         },
         url: {
           add: "/edusport/athleteSelectionGroupIndexGrade/add",
@@ -90,15 +95,21 @@
     created () {
     },
     methods: {
-      add () {
-        this.edit({});
+      add(groupId) {
+        this.hiding = true;
+        if (groupId) {JeecgOrderDMainList
+          this.groupId = groupId;
+          this.edit({groupId}, '');
+        } else {
+          this.$message.warning("请选择一个测试组别");
+        }
       },
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'groupId','indexId','gender','startAge','endAge','minData','maxData','score'))
+          this.form.setFieldsValue(pick(this.model,'groupId','indexCode','gender','startAge','endAge','minData','maxData','score'))
         })
       },
       close () {
@@ -141,7 +152,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'groupId','indexId','gender','startAge','endAge','minData','maxData','score'))
+        this.form.setFieldsValue(pick(row,'groupId','indexCode','gender','startAge','endAge','minData','maxData','score'))
       }
       
     }
