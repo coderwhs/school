@@ -33,7 +33,6 @@ import org.jeecg.modules.edusport.service.IAthleteSelectionGroupRatingService;
 import org.jeecg.modules.edusport.service.IAthleteSelectionTestAthleteScoreDetailService;
 import org.jeecg.modules.edusport.service.IAthleteSelectionTestAthleteScoreService;
 import org.jeecg.modules.edusport.service.IAthleteSelectionTestCoachService;
-import org.jeecg.modules.edusport.vo.AthleteSelectionTestCoachVo;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
