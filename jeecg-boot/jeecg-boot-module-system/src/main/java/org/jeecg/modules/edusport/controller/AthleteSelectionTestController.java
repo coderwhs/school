@@ -90,6 +90,39 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		queryWrapper.orderByAsc("publish_date", "test_name", "group_id", "sport_code");
 		Page<AthleteSelectionTest> page = new Page<AthleteSelectionTest>(pageNo, pageSize);
 		IPage<AthleteSelectionTest> pageList = athleteSelectionTestService.page(page, queryWrapper);
+		
+		if (pageList.getTotal() > 0) {
+			for (int i = 0; i < pageList.getRecords().size(); i++) {
+				AthleteSelectionTest test = pageList.getRecords().get(i);
+				
+				// 获取测试教练员
+				StringBuffer selectCoachSql = new StringBuffer();
+				selectCoachSql.append("  GROUP_CONCAT(\"'\", id, \"'\") AS id,");
+				selectCoachSql.append("  GROUP_CONCAT(coach_id) AS coach_id");
+				
+				AthleteSelectionTestCoach testCoach = athleteSelectionTestCoachService.getOne(
+						new QueryWrapper<AthleteSelectionTestCoach>().select(selectCoachSql.toString()).eq("test_id", test.getId()).groupBy("test_id"));
+				
+				log.info("athleteSelectionTest.testCoach: {}", testCoach);
+				if (testCoach != null) {
+					test.setCoachIds(testCoach.getCoachId());
+					
+					// 获取测试运动员
+					StringBuffer selectAthleteSql = new StringBuffer();
+					selectAthleteSql.append("  GROUP_CONCAT(athlete_id) AS athlete_id");
+					
+					AthleteSelectionTestAthleteScore testAthleteScore = athleteSelectionTestAthleteScoreService.getOne(
+							new QueryWrapper<AthleteSelectionTestAthleteScore>().select(selectAthleteSql.toString()).inSql("test_coach_id", testCoach.getId()));
+					log.info("athleteSelectionTest.testAthleteScore: {}", testAthleteScore);
+					if (testAthleteScore != null) {
+						test.setAthleteIds(testAthleteScore.getAthleteId());
+					}
+				}
+				
+				pageList.getRecords().set(i, test);
+			}
+		}
+		
 		return Result.ok(pageList);
 	}
 	
@@ -142,10 +175,11 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		log.info("editByStep.jsonObject: {}", jsonObject);
 
 		// 运动员选材测试表
-		AthleteSelectionTest athleteSelectionTest = new AthleteSelectionTest();
-		athleteSelectionTest.setTestName(jsonObject.getString("testName"));
-		athleteSelectionTest.setPublishDate(jsonObject.getDate("publishDate"));
-		athleteSelectionTest.setGroupId(jsonObject.getString("groupId"));
+		AthleteSelectionTest athleteSelectionTest = jsonObject.toJavaObject(AthleteSelectionTest.class);
+//		AthleteSelectionTest athleteSelectionTest = new AthleteSelectionTest();
+//		athleteSelectionTest.setTestName(jsonObject.getString("testName"));
+//		athleteSelectionTest.setPublishDate(jsonObject.getDate("publishDate"));
+//		athleteSelectionTest.setGroupId(jsonObject.getString("groupId"));
 		log.info("editByStep.athleteSelectionTest: {}", athleteSelectionTest.toString());
 		
 		String testId = jsonObject.getString("id");
@@ -225,6 +259,10 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 				}
 			}
 		}
+		
+		log.info("editByStep.testCoachList: {}", testCoachList.toString());
+		log.info("editByStep.testAthleteScoreList: {}", testAthleteScoreList.toString());
+		log.info("editByStep.testAthleteScoreDetailList: {}", testAthleteScoreDetailList.toString());
 		
 		athleteSelectionTestCoachService.saveBatch(testCoachList);
 		athleteSelectionTestAthleteScoreService.saveBatch(testAthleteScoreList);

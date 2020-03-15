@@ -21,7 +21,7 @@ import org.jeecg.common.aspect.annotation.Dict;
  * @Version: V1.0
  */
 @Data
-@TableName("tb_edu_athlete_selection_test_coach AS t")
+@TableName("tb_edu_athlete_selection_test_coach")
 public class AthleteSelectionTestCoach implements Serializable {
     private static final long serialVersionUID = 1L;
     

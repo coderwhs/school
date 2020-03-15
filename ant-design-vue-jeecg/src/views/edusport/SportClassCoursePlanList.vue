@@ -11,7 +11,7 @@
     <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
+    <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
 <!--      <a-button type="primary" icon="download" @click="handleExportXls('课训练计划信息表')">导出</a-button>-->
 <!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
@@ -103,6 +103,28 @@
     data () {
       return {
         description: '课训练计划信息表管理页面',
+        /* 查询条件 */
+        queryParam: {
+        },
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+        /* 排序参数 */
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
+
         // 表头
         columns: [
           {
@@ -175,11 +197,30 @@
             this.$set(this.dictOptions, 'sportClassId', res.result)
           }
         })
-      }
+      },
+      getListByWeeklySportClassId(sportClassId, startDate, endDate) {
+        this.queryParam.sportClassId = sportClassId;
+        this.queryParam.startDate = startDate;
+        this.queryParam.endDate = endDate;
+
+        this.loadData(1);
+      },
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.queryParam.sportClassId);
+        this.$refs.modalForm.title = "添加课训练计划";
+        this.$refs.modalForm.disableSubmit = false;
+      },
        
     }
   }
 </script>
 <style scoped>
   @import '~@assets/less/common.less'
+</style>
+
+<style scoped>
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

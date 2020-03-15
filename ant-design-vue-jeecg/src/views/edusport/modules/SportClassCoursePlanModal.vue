@@ -126,8 +126,14 @@
     created () {
     },
     methods: {
-      add () {
-        this.edit({});
+      add(sportClassId) {
+        this.hiding = true;
+        if (sportClassId) {
+          this.sportClassId = sportClassId;
+          this.edit({sportClassId}, '');
+        } else {
+          this.$message.warning("请选择课训练计划");
+        }
       },
       edit (record) {
         this.form.resetFields();

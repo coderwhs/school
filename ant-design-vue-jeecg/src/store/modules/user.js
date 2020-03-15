@@ -112,7 +112,10 @@ const user = {
       return new Promise((resolve, reject) => {
         let v_token = Vue.ls.get(ACCESS_TOKEN);
         let params = {token:v_token};
+        console.log("userjs.queryPermissionsByUser.params: ", params);
         queryPermissionsByUser(params).then(response => {
+          console.log("userjs.queryPermissionsByUser.response: ", response);
+
           const menuData = response.result.menu;
           const authData = response.result.auth;
           const allAuthData = response.result.allAuth;

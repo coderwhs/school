@@ -1,38 +1,37 @@
 <template>
   <a-card :bordered="false">
     <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="所属测试">
-              <j-dict-select-tag placeholder="请选择所属测试" v-model="queryParam.testId" dictCode="tb_edu_athlete_selection_test,test_name,id"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="教练员">
-              <j-dict-select-tag placeholder="请选择教练员" v-model="queryParam.coachId" dictCode="tb_edu_coach,coach_name,id"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
+<!--    <div class="table-page-search-wrapper">-->
+<!--      <a-form layout="inline" @keyup.enter.native="searchQuery">-->
+<!--        <a-row :gutter="24">-->
+<!--          <a-col :md="6" :sm="8">-->
+<!--            <a-form-item label="所属测试">-->
+<!--              <j-dict-select-tag placeholder="请选择所属测试" v-model="queryParam.testId" dictCode="tb_edu_athlete_selection_test,test_name,id"/>-->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--          <a-col :md="6" :sm="8">-->
+<!--            <a-form-item label="教练员">-->
+<!--              <j-dict-select-tag placeholder="请选择教练员" v-model="queryParam.coachId" dictCode="tb_edu_coach,coach_name,id"/>-->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--          <a-col :md="6" :sm="8" >-->
+<!--            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">-->
+<!--              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>-->
+<!--              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>-->
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
+<!--            </span>-->
+<!--          </a-col>-->
 
-        </a-row>
-      </a-form>
-    </div>
+<!--        </a-row>-->
+<!--      </a-form>-->
+<!--    </div>-->
     <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+    <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试教练表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
@@ -61,8 +60,8 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+        :rowSelection="{fixed:false, selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: tabSelectType}"
+        :customRow="clickThenCheck"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -110,10 +109,12 @@
 
 <script>
 
+  import { downFile } from '@/api/manage'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import AthleteSelectionTestCoachModal from './modules/AthleteSelectionTestCoachModal'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import moment from 'moment'
 
   export default {
     name: "AthleteSelectionTestCoachList",
@@ -125,6 +126,30 @@
     data () {
       return {
         description: '运动员选材测试教练表管理页面',
+        // Table记录选择器修改为单选框
+        tabSelectType: "radio",
+        /* 查询条件 */
+        queryParam: {
+        },
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+        /* 排序参数 */
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
+
         // 表头
         columns: [
           {
@@ -246,11 +271,6 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
-        isorter: {
-          // 排序由后端处理
-          column: '',
-          order: ''
-        },
         url: {
           list: "/edusport/athleteSelectionTestCoach/list",
           delete: "/edusport/athleteSelectionTestCoach/delete",
@@ -312,11 +332,77 @@
             this.$set(this.dictOptions, 'athleteIds', res.result)
           }
         })
-      }
+      },
+      getListByTestId(testId) {
+        this.queryParam.testId = testId;
+        this.loadData(1);
+      },
+
+      clickThenCheck(record) {
+        return {
+          on: {
+            click: () => {
+              this.onSelectChange(record.id.split(","), [record]);
+            }
+          }
+        };
+      },
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectionRows = selectionRows;
+      },
+
+      handleExportXls(fileName){
+        console.log("this.selectedRowKeys: ", this.selectedRowKeys);
+        //
+        if (!this.selectedRowKeys || this.selectedRowKeys.length == 0) {
+          this.$message.warning("请选择一条运动员信息");
+          return;
+        }
+
+        let testCoachId2Download = this.selectedRowKeys[0];
+
+        if(!fileName || typeof fileName != "string"){
+          fileName = "导出文件"
+        }
+        // if (!this.model.id) {
+        //   this.$message.warning("新增状态下不能导出文件！");
+        //   return;
+        // }
+
+        console.log("handleExportXls.testCoachId: ", testCoachId2Download);
+        let param = {testCoachId: testCoachId2Download};
+        downFile(this.url.exportXlsUrl, param).then((data)=>{
+          if (!data) {
+            this.$message.warning("文件下载失败")
+            return
+          }
+          if (typeof window.navigator.msSaveBlob !== 'undefined') {
+            window.navigator.msSaveBlob(new Blob([data],{ type: 'application/vnd.ms-excel' }), fileName + moment(new Date()).format("YYYY-DD-MM") + '.xls')
+          }else{
+            let url = window.URL.createObjectURL(new Blob([data],{ type: 'application/vnd.ms-excel' }))
+            let link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.setAttribute('download', fileName + moment(new Date()).format("YYYY-MM-DD") + '.xls')
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link); //下载完成移除元素
+            window.URL.revokeObjectURL(url); //释放掉blob对象
+          }
+        })
+      },
        
     }
   }
 </script>
 <style scoped>
   @import '~@assets/less/common.less'
+</style>
+
+<style scoped>
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

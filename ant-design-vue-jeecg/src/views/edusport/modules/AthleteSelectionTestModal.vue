@@ -25,9 +25,7 @@
           </j-form-container>
         </a-form-item>
         <a-form-item label="在训小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-form-container disabled>
             <j-multi-select-tag type="list_multi" v-decorator="['eventCodes', validatorRules.eventCodes]" :trigger-change="true" :dictCode="fnDictCodeSportEvent" placeholder="请选择测在训小项"/>
-          </j-form-container>
         </a-form-item>
         <a-form-item label="测试指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <j-multi-select-tag type="list_multi" v-decorator="['indexCodes', validatorRules.indexCodes]" :trigger-change="true" :dictCode="fnDictCodeGroupIndexCodes" placeholder="请选择测试指标"/>
@@ -134,8 +132,17 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'testName','groupId','sportCode','publishDate'))
-        })
+          this.form.setFieldsValue(pick(this.model,'testName','publishDate', 'groupId','sportCode','eventCodes','indexCodes', 'coachIds','athleteIds'))
+        });
+
+        // 初始化项目大项字典
+        if (this.model.sportCode) {
+          this.dictCodeSport = "tb_edu_sport, sport_name, sport_code, sport_code = " + this.model.sportCode;
+        }
+        // 初始化在训小项字典
+        if (this.model.eventCodes) {
+          this.dictCodeSportEvent = "tb_edu_sport_event as t1, t1.event_name, t1.event_code, t1.enable_status=1 and (t1.event_code='" + this.model.eventCodes.replace(/,/g,"' or t1.event_code = '") + "') | tb_edu_sport t2, t2.sport_name, t2.sport_code = t1.sport_code | tb_edu_sport_disciplines t3, t3.disciplines_name, t3.disciplines_code=t1.disciplines_code";
+        }
       },
       close () {
         this.$emit('close');

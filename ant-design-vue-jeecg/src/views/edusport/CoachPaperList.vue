@@ -13,6 +13,8 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="handleSearch(1)" type="primary" icon="search">奥运周期</a-button>
+      <a-button @click="handleSearch(0)" type="primary" icon="search">全部</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -26,6 +28,7 @@
       <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
         <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
         <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+        <span style="margin-left: 48px">默认显示上个奥运以来的论文发表</span>
       </div>
 
       <a-table
@@ -100,6 +103,28 @@
     data () {
       return {
         description: '教练员论文发表信息表管理页面',
+        /* 查询条件 */
+        queryParam: {
+        },
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+        /* 排序参数 */
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
+
         // 表头
         columns: [
           {

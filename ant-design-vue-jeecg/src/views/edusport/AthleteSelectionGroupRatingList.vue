@@ -1,28 +1,27 @@
 <template>
   <a-card :bordered="false">
     <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="所属组别">
-              <j-dict-select-tag placeholder="请选择所属组别" v-model="queryParam.groupId" dictCode="tb_edu_athlete_selection_group,group_name,id"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
-
-        </a-row>
-      </a-form>
-    </div>
+<!--    <div class="table-page-search-wrapper">-->
+<!--      <a-form layout="inline" @keyup.enter.native="searchQuery">-->
+<!--        <a-row :gutter="24">-->
+<!--          <a-col :md="6" :sm="8">-->
+<!--            <a-form-item label="所属组别">-->
+<!--              <j-dict-select-tag placeholder="请选择所属组别" v-model="queryParam.groupId" dictCode="tb_edu_athlete_selection_group,group_name,id"/>-->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--          <a-col :md="6" :sm="8" >-->
+<!--            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">-->
+<!--              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>-->
+<!--              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>-->
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
+<!--            </span>-->
+<!--          </a-col>-->
+<!--        </a-row>-->
+<!--      </a-form>-->
+<!--    </div>-->
     <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
@@ -120,6 +119,28 @@
     data () {
       return {
         description: '运动员选材测试等级评定标准表管理页面',
+        /* 查询条件 */
+        queryParam: {
+        },
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+        /* 排序参数 */
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
+
         // 表头
         columns: [
           {

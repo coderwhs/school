@@ -127,12 +127,11 @@ public class AthleteSelectionTestCoachController extends JeecgController<Athlete
 				selectSql.append("	) AS test_rating ");
 				selectSql.append("	, GROUP_CONCAT(athlete_id) AS athlete_id");
 				
-				AthleteSelectionTestAthleteScore testestAthleteScore;
-				testestAthleteScore = athleteSelectionTestAthleteScoreService.getOne(
+				AthleteSelectionTestAthleteScore testAthleteScore = athleteSelectionTestAthleteScoreService.getOne(
 						new QueryWrapper<AthleteSelectionTestAthleteScore>().select(selectSql.toString()).eq("test_coach_id", testCoach.getId()).groupBy("test_coach_id"));
-				if (testestAthleteScore != null) {
-					testCoach.setAthleteIds(testestAthleteScore.getAthleteId());
-					testCoach.setTestRatings(testestAthleteScore.getTestRating());
+				if (testAthleteScore != null) {
+					testCoach.setAthleteIds(testAthleteScore.getAthleteId());
+					testCoach.setTestRatings(testAthleteScore.getTestRating());
 					log.info("testCoach: {}", testCoach);
 					pageList.getRecords().set(i, testCoach);
 				}
@@ -332,11 +331,11 @@ public class AthleteSelectionTestCoachController extends JeecgController<Athlete
     	// 获取教练测试表数据
 		// 统计测试运动员及成绩评分等级
 		StringBuffer testCoachSelectSql = new StringBuffer();
-		testCoachSelectSql.append("	  ( SELECT test_name FROM tb_edu_athlete_selection_test WHERE id = t.test_id) AS test_name ");
-		testCoachSelectSql.append("	, ( SELECT coach_name FROM tb_edu_coach WHERE id = t.coach_id) AS coach_name ");
-		testCoachSelectSql.append("	, ( SELECT sport_name FROM tb_edu_sport WHERE sport_code = t.sport_code) AS sport_name ");
-		testCoachSelectSql.append("	, ( SELECT GROUP_CONCAT(DISTINCT(event_name)) FROM tb_edu_sport_event WHERE  FIND_IN_SET(event_code, t.event_codes) GROUP BY sport_code) AS event_name ");
-		testCoachSelectSql.append("	, t.*");
+		testCoachSelectSql.append("	  ( SELECT test_name FROM tb_edu_athlete_selection_test WHERE id = tb_edu_athlete_selection_test_coach.test_id) AS test_name ");
+		testCoachSelectSql.append("	, ( SELECT coach_name FROM tb_edu_coach WHERE id = tb_edu_athlete_selection_test_coach.coach_id) AS coach_name ");
+		testCoachSelectSql.append("	, ( SELECT sport_name FROM tb_edu_sport WHERE sport_code = tb_edu_athlete_selection_test_coach.sport_code) AS sport_name ");
+		testCoachSelectSql.append("	, ( SELECT GROUP_CONCAT(DISTINCT(event_name)) FROM tb_edu_sport_event WHERE  FIND_IN_SET(event_code, tb_edu_athlete_selection_test_coach.event_codes) GROUP BY sport_code) AS event_name ");
+		testCoachSelectSql.append("	, tb_edu_athlete_selection_test_coach.*");
     	AthleteSelectionTestCoach testCoach = athleteSelectionTestCoachService.getOne(
     			new QueryWrapper<AthleteSelectionTestCoach>().select(testCoachSelectSql.toString()).eq("id", testCoachId).last("LIMIT 1"));
     	
@@ -350,14 +349,14 @@ public class AthleteSelectionTestCoachController extends JeecgController<Athlete
 		
     	// 获取测试运动员成绩及明细数据
 		StringBuffer testAthleteScoreSelectSql = new StringBuffer();
-		testAthleteScoreSelectSql.append("	  ( SELECT athlete_name FROM tb_edu_athlete WHERE id = t.athlete_id) AS athlete_name ");
+		testAthleteScoreSelectSql.append("	  ( SELECT athlete_name FROM tb_edu_athlete WHERE id = tb_edu_athlete_selection_test_athlete_score.athlete_id) AS athlete_name ");
 		testAthleteScoreSelectSql.append("	, ( SELECT s.item_text FROM sys_dict_item s WHERE s.dict_id  ");
-		testAthleteScoreSelectSql.append("	      = (SELECT id FROM sys_dict WHERE dict_code = 'sex' AND s.item_value = t.gender) ");
+		testAthleteScoreSelectSql.append("	      = (SELECT id FROM sys_dict WHERE dict_code = 'sex' AND s.item_value = tb_edu_athlete_selection_test_athlete_score.gender) ");
 		testAthleteScoreSelectSql.append("	  ) AS gender_name  ");
 		testAthleteScoreSelectSql.append("	, ( SELECT s.item_text FROM sys_dict_item s WHERE s.dict_id  ");
-		testAthleteScoreSelectSql.append("	      = (SELECT id FROM sys_dict WHERE dict_code = 'edu_grade' AND s.item_value = t.grade) ");
+		testAthleteScoreSelectSql.append("	      = (SELECT id FROM sys_dict WHERE dict_code = 'edu_grade' AND s.item_value = tb_edu_athlete_selection_test_athlete_score.grade) ");
 		testAthleteScoreSelectSql.append("	  ) AS grade_name  ");
-		testAthleteScoreSelectSql.append("	, t.* ");
+		testAthleteScoreSelectSql.append("	, tb_edu_athlete_selection_test_athlete_score.* ");
 		ArrayList<AthleteSelectionTestAthleteScore> testAthleteScoreList = 
 				(ArrayList<AthleteSelectionTestAthleteScore>) athleteSelectionTestAthleteScoreService.list(
 						new QueryWrapper<AthleteSelectionTestAthleteScore>().select(testAthleteScoreSelectSql.toString())
@@ -372,8 +371,8 @@ public class AthleteSelectionTestCoachController extends JeecgController<Athlete
 				
 				// 获取测试运动员成绩明细表
 				StringBuffer testAthleteScoreDetailSelectSql = new StringBuffer();
-				testAthleteScoreDetailSelectSql.append("	  ( SELECT cn_name FROM tb_edu_athlete_selection_index WHERE index_code = t.index_code) AS index_name ");
-				testAthleteScoreDetailSelectSql.append("	, t.* ");
+				testAthleteScoreDetailSelectSql.append("	  ( SELECT cn_name FROM tb_edu_athlete_selection_index WHERE index_code = tb_edu_athlete_selection_test_athlete_score_detail.index_code) AS index_name ");
+				testAthleteScoreDetailSelectSql.append("	, tb_edu_athlete_selection_test_athlete_score_detail.* ");
 				ArrayList<AthleteSelectionTestAthleteScoreDetail> testAthleteScoreDetailList = 
 						(ArrayList<AthleteSelectionTestAthleteScoreDetail>) athleteSelectionTestAthleteScoreDetailService.list(
 								new QueryWrapper<AthleteSelectionTestAthleteScoreDetail>().select(testAthleteScoreDetailSelectSql.toString())
@@ -613,14 +612,14 @@ public class AthleteSelectionTestCoachController extends JeecgController<Athlete
     			
             	// 获取待更新的测试运动员成绩表
     			StringBuffer testAthleteScoreSelectSql = new StringBuffer();
-    			testAthleteScoreSelectSql.append("	  ( SELECT athlete_name FROM tb_edu_athlete WHERE id = t.athlete_id) AS athlete_name ");
+    			testAthleteScoreSelectSql.append("	  ( SELECT athlete_name FROM tb_edu_athlete WHERE id = tb_edu_athlete_selection_test_athlete_score.athlete_id) AS athlete_name ");
     			testAthleteScoreSelectSql.append("	, ( SELECT s.item_text FROM sys_dict_item s WHERE s.dict_id  ");
-    			testAthleteScoreSelectSql.append("	      = (SELECT id FROM sys_dict WHERE dict_code = 'sex' AND s.item_value = t.gender) ");
+    			testAthleteScoreSelectSql.append("	      = (SELECT id FROM sys_dict WHERE dict_code = 'sex' AND s.item_value = tb_edu_athlete_selection_test_athlete_score.gender) ");
     			testAthleteScoreSelectSql.append("	  ) AS gender_name  ");
     			testAthleteScoreSelectSql.append("	, ( SELECT s.item_text FROM sys_dict_item s WHERE s.dict_id  ");
-    			testAthleteScoreSelectSql.append("	      = (SELECT id FROM sys_dict WHERE dict_code = 'edu_grade' AND s.item_value = t.grade) ");
+    			testAthleteScoreSelectSql.append("	      = (SELECT id FROM sys_dict WHERE dict_code = 'edu_grade' AND s.item_value = tb_edu_athlete_selection_test_athlete_score.grade) ");
     			testAthleteScoreSelectSql.append("	  ) AS grade_name  ");
-    			testAthleteScoreSelectSql.append("	, t.* ");
+    			testAthleteScoreSelectSql.append("	, tb_edu_athlete_selection_test_athlete_score.* ");
             	ArrayList<AthleteSelectionTestAthleteScore> testAthleteScoreList = 
         				(ArrayList<AthleteSelectionTestAthleteScore>) athleteSelectionTestAthleteScoreService.list(
         						new QueryWrapper<AthleteSelectionTestAthleteScore>().select(testAthleteScoreSelectSql.toString())
@@ -636,8 +635,8 @@ public class AthleteSelectionTestCoachController extends JeecgController<Athlete
         				// 获取待更新的测试运动员成绩明细表
         				// 获取测试运动员成绩明细表
         				StringBuffer testAthleteScoreDetailSelectSql = new StringBuffer();
-        				testAthleteScoreDetailSelectSql.append("	  ( SELECT cn_name FROM tb_edu_athlete_selection_index WHERE index_code = t.index_code) AS index_name ");
-        				testAthleteScoreDetailSelectSql.append("	, t.* ");
+        				testAthleteScoreDetailSelectSql.append("	  ( SELECT cn_name FROM tb_edu_athlete_selection_index WHERE index_code = tb_edu_athlete_selection_test_athlete_score_detail.index_code) AS index_name ");
+        				testAthleteScoreDetailSelectSql.append("	, tb_edu_athlete_selection_test_athlete_score_detail.* ");
         				ArrayList<AthleteSelectionTestAthleteScoreDetail> testAthleteScoreDetailList = 
         						(ArrayList<AthleteSelectionTestAthleteScoreDetail>) athleteSelectionTestAthleteScoreDetailService.list(
         								new QueryWrapper<AthleteSelectionTestAthleteScoreDetail>().select(testAthleteScoreDetailSelectSql.toString())

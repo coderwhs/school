@@ -41,8 +41,8 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: tabSelectType}"
+        :customRow="clickThenCheck"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -84,6 +84,14 @@
       </a-table>
     </div>
 
+    <!-- table区域-end -->
+
+    <a-tabs defaultActiveKey="1">
+      <a-tab-pane tab="课训练计划" key="1">
+        <Sport-Class-Course-Plan-List ref="SportClassCoursePlanList"></Sport-Class-Course-Plan-List>
+      </a-tab-pane>
+    </a-tabs>
+
     <sportClassWeekPlan-modal ref="modalForm" @ok="modalFormOk"></sportClassWeekPlan-modal>
   </a-card>
 </template>
@@ -93,17 +101,46 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   // import SportClassWeekPlanModal from './modules/SportClassWeekPlanModal'
   import SportClassWeekPlanModal from './modules/SportClassWeekPlanModal__Style#Drawer'
+  import SportClassCoursePlanModal from './modules/SportClassCoursePlanModal'
+  import SportClassCoursePlanList from './SportClassCoursePlanList'
+
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
     name: "SportClassWeekPlanList",
     mixins:[JeecgListMixin],
     components: {
-      SportClassWeekPlanModal
+      SportClassWeekPlanModal,
+      SportClassCoursePlanList,
+      SportClassCoursePlanModal
     },
     data () {
       return {
         description: '周训练计划信息表管理页面',
+        // Table记录选择器修改为单选框
+        tabSelectType: "radio",
+        /* 查询条件 */
+        queryParam: {
+        },
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+        /* 排序参数 */
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
+
         // 表头
         columns: [
           {
@@ -184,6 +221,50 @@
             this.$set(this.dictOptions, 'sportClassId', res.result)
           }
         })
+      },
+      clickThenCheck(record) {
+        return {
+          on: {
+            click: () => {
+              this.onSelectChange(record.id.split(","), [record]);
+            }
+          }
+        };
+      },
+
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectionRows = selectionRows;
+        // 训练队
+        let sportClassId = this.selectedRowKeys[0];
+        // 周开始日期
+        let startDate = this.selectionRows[0].startDate;
+        // 周结束日期
+        let endDate = this.selectionRows[0].endDate;
+
+        this.$refs.SportClassCoursePlanList.getListByWeeklySportClassId(sportClassId, startDate, endDate);
+      },
+
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+
+        this.$refs.SportClassCoursePlanList.queryParam.sportClassId = null;
+        this.$refs.SportClassCoursePlanList.loadData();
+        this.$refs.SportClassCoursePlanList.selectedRowKeys = [];
+        this.$refs.SportClassCoursePlanList.selectionRows = [];
+      },
+
+      searchQuery:function(){
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+
+        this.$refs.SportClassCoursePlanList.queryParam.sportClassId = null;
+        this.$refs.SportClassCoursePlanList.loadData();
+        this.$refs.SportClassCoursePlanList.selectedRowKeys = [];
+        this.$refs.SportClassCoursePlanList.selectionRows = [];
+
+        this.loadData();
       }
        
     }

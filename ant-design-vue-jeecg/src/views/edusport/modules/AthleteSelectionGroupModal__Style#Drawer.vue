@@ -16,21 +16,21 @@
           <a-input v-decorator="[ 'groupName', validatorRules.groupName]" placeholder="请输入组别名称"></a-input>
         </a-form-item>
         <a-form-item label="启用状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['enableStatus']" :trigger-change="true" dictCode="enable_status" placeholder="请选择启用状态"/>
+          <j-dict-select-tag type="list" v-decorator="['enableStatus', validatorRules.enableStatus]" :trigger-change="true" dictCode="enable_status" placeholder="请选择启用状态"/>
         </a-form-item>
         <a-form-item label="选择运动项目大项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" @change="handleSportCodeChange"/>
+          <j-search-select-tag v-decorator="['sportCode', validatorRules.sportCode]" dict="tb_edu_sport,sport_name,sport_code" @change="handleSportCodeChange"/>
         </a-form-item>
         <a-form-item label="选择在训小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-multi-select-tag type="list_multi" v-decorator="['eventCodes']" :trigger-change="true" :dictCode="sportEventDictCode" placeholder="请选择小项"/>
+          <j-multi-select-tag type="list_multi" v-decorator="['eventCodes', validatorRules.eventCodes]" :trigger-change="true" :dictCode="sportEventDictCode" placeholder="请选择小项"/>
         </a-form-item>
         <a-form-item label="选择指标分类" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <!-- @change="handleIndexCatCodeChange"-->
-          <j-dict-select-tag v-model="indexCatCode" placeholder="请选择指标分类" dictCode="tb_edu_athlete_selection_index_cat,index_cat_name,index_cat_code" />
+          <j-dict-select-tag type="list" v-model="indexCatCode" :trigger-change="true" dictCode="tb_edu_athlete_selection_index_cat,index_cat_name,index_cat_code" placeholder="请选择指标分类"/>
         </a-form-item>
         <a-form-item label="选择测试指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-tree-select
-            v-decorator="['indexCodes']"
+            v-decorator="['indexCodes', validatorRules.indexCodes]"
             placeholder="请选择测试指标"
             dict="tb_edu_athlete_selection_index, cn_name, index_code"
             pidField="parent_code"
@@ -90,10 +90,10 @@
         confirmLoading: false,
         validatorRules:{
         groupName:{rules: [{ required: true, message: '请输入组别名称!' }]},
-        enableStatus:{rules: [{ required: true, message: '请输入启用状态!' }]},
-        sportCode:{rules: [{ required: true, message: '请输入大项!' }]},
-        eventCodes:{rules: [{ required: true, message: '请输入小项!' }]},
-        indexCodes:{rules: [{ required: true, message: '请输入测试指标!' }]},
+        enableStatus:{rules: [{ required: true, message: '请选择启用状态!' }]},
+        sportCode:{rules: [{ required: true, message: '请选择大项!' }]},
+        eventCodes:{rules: [{ required: true, message: '请选择小项!' }]},
+        indexCodes:{rules: [{ required: true, message: '请选择测试指标!' }]},
         },
 
         // sportEventDictCode: 'tb_edu_sport_event,event_name,event_code, enable_status=1',

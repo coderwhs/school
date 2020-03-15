@@ -1,40 +1,40 @@
 <template>
   <a-card :bordered="false">
     <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="所属组别">
-              <a-input placeholder="请输入所属组别" v-model="queryParam.groupId"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="指标">
-              <a-input placeholder="请输入指标" v-model="queryParam.indexCode"></a-input>
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="性别">
-                <j-dict-select-tag placeholder="请选择性别" v-model="queryParam.gender" dictCode="gender"/>
-              </a-form-item>
-            </a-col>
-          </template>
-          <a-col :md="6" :sm="8" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
+<!--    <div class="table-page-search-wrapper">-->
+<!--      <a-form layout="inline" @keyup.enter.native="searchQuery">-->
+<!--        <a-row :gutter="24">-->
+<!--          <a-col :md="6" :sm="8">-->
+<!--            <a-form-item label="所属组别">-->
+<!--              <a-input placeholder="请输入所属组别" v-model="queryParam.groupId"></a-input>-->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--          <a-col :md="6" :sm="8">-->
+<!--            <a-form-item label="指标">-->
+<!--              <a-input placeholder="请输入指标" v-model="queryParam.indexCode"></a-input>-->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--          <template v-if="toggleSearchStatus">-->
+<!--            <a-col :md="6" :sm="8">-->
+<!--              <a-form-item label="性别">-->
+<!--                <j-dict-select-tag placeholder="请选择性别" v-model="queryParam.gender" dictCode="gender"/>-->
+<!--              </a-form-item>-->
+<!--            </a-col>-->
+<!--          </template>-->
+<!--          <a-col :md="6" :sm="8" >-->
+<!--            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">-->
+<!--              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>-->
+<!--              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>-->
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
+<!--            </span>-->
+<!--          </a-col>-->
 
-        </a-row>
-      </a-form>
-    </div>
+<!--        </a-row>-->
+<!--      </a-form>-->
+<!--    </div>-->
     <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
@@ -132,6 +132,28 @@
     data () {
       return {
         description: '运动员选材测试指标评分标准列表管理页面',
+        /* 查询条件 */
+        queryParam: {
+        },
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+        /* 排序参数 */
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
+
         indexGradeList:[{}],
 
         // 表头
@@ -214,11 +236,6 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
-        isorter: {
-          // 排序由后端处理
-          column: '',
-          order: ''
-        },
         url: {
           list: "/edusport/athleteSelectionGroupIndexGrade/list",
           delete: "/edusport/athleteSelectionGroupIndexGrade/delete",

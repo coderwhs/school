@@ -876,16 +876,17 @@ DROP TABLE IF EXISTS tb_edu_athlete_selection_test;;/*SkipError*/
 CREATE TABLE tb_edu_athlete_selection_test(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
     test_name VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '测试名称' ,
-    sport_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试大项' ,
-    group_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试组别' ,
     publish_date DATE    COMMENT '发布日期' ,
+    group_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试组别' ,
+    sport_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试大项' ,
+    event_codes VARCHAR(512) NOT NULL   COMMENT '测试小项' ,
+    index_codes VARCHAR(3072) NOT NULL   COMMENT '测试指标' ,
     create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
     create_time DATETIME    COMMENT '创建时间' ,
     update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
     update_time DATETIME    COMMENT '更新时间' ,
     PRIMARY KEY (id)
 ) COMMENT = '运动员选材测试表 ';;
-
 
 DROP TABLE IF EXISTS tb_edu_athlete_selection_test_coach;;/*SkipError*/
 CREATE TABLE tb_edu_athlete_selection_test_coach(
@@ -894,7 +895,7 @@ CREATE TABLE tb_edu_athlete_selection_test_coach(
     coach_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '教练员' ,
     group_id VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试组别' ,
     sport_code VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '测试项目' ,
-    event_codes VARCHAR(256) NOT NULL  DEFAULT '' COMMENT '测试小项' ,
+    event_codes VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '测试小项' ,
     index_codes VARCHAR(3072) NOT NULL  DEFAULT '' COMMENT '测试指标' ,
     athlete_ids VARCHAR(3072)    COMMENT '测试运动员' ,
     test_ratings VARCHAR(128)    COMMENT '测试等级评定' ,

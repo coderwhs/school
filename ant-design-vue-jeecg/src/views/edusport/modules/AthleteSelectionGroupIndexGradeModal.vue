@@ -180,7 +180,7 @@
       // 初始化测试大纲指标等级字典
       initDictOptions('index_rating').then((res) => {
         if (res.success) {
-          this.$set(this.dictOptions, 'indexRating', es.resultr)
+          this.$set(this.dictOptions, 'indexRating', res.result)
         }
       })
     },

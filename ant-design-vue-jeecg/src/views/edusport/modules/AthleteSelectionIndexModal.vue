@@ -11,16 +11,26 @@
       <a-form :form="form">
 
         <a-form-item label="指标类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['indexCatCode']" :trigger-change="true" dictCode="tb_edu_athlete_selection_index_cat,index_cat_name,index_cat_code" placeholder="请选择指标类别"/>
+          <j-dict-select-tag type="list" v-decorator="['indexCatCode', validatorRules.indexCatCode]" :trigger-change="true" dictCode="tb_edu_athlete_selection_index_cat,index_cat_name,index_cat_code" placeholder="请选择指标类别"/>
         </a-form-item>
         <a-form-item label="上级指标代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['parentCode']" dict="tb_edu_athlete_selection_index,cn_name,index_code" />
+          <j-tree-select
+            v-decorator="['parentCode', validatorRules.parentCode]"
+            placeholder="请选择上级指标代码"
+            dict="tb_edu_athlete_selection_index, cn_name, index_code"
+            pidField="parent_code"
+            :pidValue="indexCatCode"
+            condition='{"enable_status":"1"}'
+          />
         </a-form-item>
+<!--        <a-form-item label="上级指标代码" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
+<!--          <j-search-select-tag v-decorator="['parentCode', validatorRules.parentCode]" dict="tb_edu_athlete_selection_index,cn_name,index_code" />-->
+<!--        </a-form-item>-->
         <a-form-item label="指标代码" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'indexCode', validatorRules.indexCode]" placeholder="请输入指标代码"></a-input>
         </a-form-item>
         <a-form-item label="是否叶节点" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['isLeaf']" :trigger-change="true" dictCode="" placeholder="请选择是否叶节点"/>
+          <j-dict-select-tag type="list" v-decorator="['isLeaf', validatorRules.isLeaf]" :trigger-change="true" dictCode="is_leaf" placeholder="请选择是否叶节点"/>
         </a-form-item>
         <a-form-item label="中文名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'cnName', validatorRules.cnName]" placeholder="请输入中文名称"></a-input>
@@ -35,7 +45,7 @@
           <a-input v-decorator="[ 'unit', validatorRules.unit]" placeholder="请输入单位"></a-input>
         </a-form-item>
         <a-form-item label="启用状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['enableStatus']" :trigger-change="true" dictCode="enable_status" placeholder="请选择启用状态"/>
+          <j-dict-select-tag type="list" v-decorator="['enableStatus', validatorRules.enableStatus]" :trigger-change="true" dictCode="enable_status" placeholder="请选择启用状态"/>
         </a-form-item>
 
       </a-form>
@@ -49,12 +59,14 @@
   import pick from 'lodash.pick'
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import JTreeSelect from '@/components/jeecg/JTreeSelect'
 
   export default {
     name: "AthleteSelectionIndexModal",
     components: { 
       JDictSelectTag,
       JSearchSelectTag,
+      JTreeSelect
     },
     data () {
       return {
@@ -73,16 +85,17 @@
         },
 
         confirmLoading: false,
+        indexCatCode:'',
         validatorRules:{
         indexCatCode:{rules: [{ required: true, message: '请输入指标类别!' }]},
-        parentCode:{rules: [{ required: true, message: '请输入上级指标代码!' }]},
+        parentCode:{},
         indexCode:{rules: [{ required: true, message: '请输入指标代码!' }]},
         isLeaf:{rules: [{ required: true, message: '请输入是否叶节点!' }]},
-        cnName:{},
+        cnName:{rules: [{ required: true, message: '请输入中文名称!' }]},
         enName:{},
         enShortName:{},
         unit:{},
-        enableStatus:{},
+        enableStatus:{rules: [{ required: true, message: '请选择启用状态!' }]},
         },
         url: {
           add: "/edusport/athleteSelectionIndex/add",

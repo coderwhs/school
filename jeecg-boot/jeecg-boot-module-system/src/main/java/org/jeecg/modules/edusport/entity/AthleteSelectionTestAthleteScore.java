@@ -22,7 +22,7 @@ import org.jeecg.common.aspect.annotation.Dict;
  * @Version: V1.0
  */
 @Data
-@TableName("tb_edu_athlete_selection_test_athlete_score AS t")
+@TableName("tb_edu_athlete_selection_test_athlete_score")
 public class AthleteSelectionTestAthleteScore implements Serializable {
     private static final long serialVersionUID = 1L;
     

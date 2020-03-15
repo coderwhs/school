@@ -11,24 +11,18 @@
           </a-col>
           <a-col :md="6" :sm="8">
             <a-form-item label="测试组别">
-              <a-input placeholder="请输入测试组别" v-model="queryParam.groupId"></a-input>
+              <j-search-select-tag placeholder="请选择测试组别" v-model="queryParam.groupId" dict="tb_edu_athlete_selection_group,group_name,id" />
             </a-form-item>
           </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="测试大项">
-                <a-input placeholder="请输入测试大项" v-model="queryParam.sportCode"></a-input>
-              </a-form-item>
-            </a-col>
-          </template>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="测试大项">
+              <j-search-select-tag placeholder="请选择测试大项" v-model="queryParam.sportCode" dict="tb_edu_sport,sport_name,sport_code" />
+            </a-form-item>
+          </a-col>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
             </span>
           </a-col>
 
@@ -40,16 +34,10 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
-      </a-dropdown>
+<!--      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试表')">导出</a-button>-->
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
     </div>
 
     <!-- table区域-begin -->
@@ -68,8 +56,8 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+        :rowSelection="{fixed:false, selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: tabSelectType}"
+        :customRow="clickThenCheck"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -111,6 +99,14 @@
       </a-table>
     </div>
 
+    <!--table区域-end-->
+
+    <a-tabs defaultActiveKey="1">
+      <a-tab-pane tab="各教练员测试成绩" key="1">
+        <Athlete-Selection-Test-Coach-List ref="AthleteSelectionTestCoachList"></Athlete-Selection-Test-Coach-List>
+      </a-tab-pane>
+    </a-tabs>
+
     <athleteSelectionTest-modal ref="modalForm" @ok="modalFormOk"></athleteSelectionTest-modal>
   </a-card>
 </template>
@@ -118,18 +114,46 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   import AthleteSelectionTestModal from './modules/AthleteSelectionTestModal'
+  import AthleteSelectionTestCoachList from './AthleteSelectionTestCoachList'
+  import AthleteSelectionTestCoachModal from './modules/AthleteSelectionTestCoachModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
     name: "AthleteSelectionTestList",
     mixins:[JeecgListMixin],
     components: {
-      AthleteSelectionTestModal
+      JDictSelectTag,
+      JSearchSelectTag,
+      AthleteSelectionTestModal,
+      AthleteSelectionTestCoachList,
+      AthleteSelectionTestCoachModal,
     },
     data () {
       return {
         description: '运动员选材测试表管理页面',
+        // Table记录选择器修改为单选框
+        tabSelectType: "radio",
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+
         // 表头
         columns: [
           {
@@ -162,7 +186,14 @@
           {
             title:'测试大项',
             align:"center",
-            dataIndex: 'sportCode'
+            dataIndex: 'sportCode',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['sportCode'], text+"")
+              }
+            }
           },
           {
             title:'发布日期',
@@ -179,11 +210,6 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
-        isorter: {
-          // 排序由后端处理
-          column: '',
-          order: ''
-        },
         url: {
           list: "/edusport/athleteSelectionTest/list",
           delete: "/edusport/athleteSelectionTest/delete",
@@ -192,6 +218,8 @@
           importExcelUrl: "edusport/athleteSelectionTest/importExcel",
         },
         dictOptions:{
+          groupId:[],
+          sportCode:[],
         },
       }
     },
@@ -207,8 +235,55 @@
             this.$set(this.dictOptions, 'groupId', res.result)
           }
         })
+        initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'sportCode', res.result)
+          }
+        })
+      },
+
+      clickThenCheck(record) {
+        return {
+          on: {
+            click: () => {
+              this.onSelectChange(record.id.split(","), [record]);
+            }
+          }
+        };
+      },
+
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectionRows = selectionRows;
+        let testId = this.selectedRowKeys[0];
+
+        this.$refs.AthleteSelectionTestCoachList.getListByTestId(testId);
+      },
+
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+
+        this.$refs.AthleteSelectionTestCoachList.queryParam.testId = null;
+        this.$refs.AthleteSelectionTestCoachList.loadData();
+        this.$refs.AthleteSelectionTestCoachList.selectedRowKeys = [];
+        this.$refs.AthleteSelectionTestCoachList.selectionRows = [];
+      },
+
+      searchQuery: function() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+        this.loadData();
+
+        // Tab内容检索
+          this.$refs.AthleteSelectionTestCoachList.queryParam.testId = this.queryParam.testName;
+          this.$refs.AthleteSelectionTestCoachList.queryParam.groupId = this.queryParam.groupId;
+          this.$refs.AthleteSelectionTestCoachList.queryParam.sportCode = this.queryParam.sportCode;
+          this.$refs.AthleteSelectionTestCoachList.loadData();
+          this.$refs.AthleteSelectionTestCoachList.selectedRowKeys = [];
+          this.$refs.AthleteSelectionTestCoachList.selectionRows = [];
       }
-       
+
     }
   }
 </script>

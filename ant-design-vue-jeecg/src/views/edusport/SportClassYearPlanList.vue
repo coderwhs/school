@@ -141,6 +141,11 @@
     data () {
       return {
         description: '年度训练计划信息表管理页面',
+        // Table记录选择器修改为单选框
+        tabSelectType: "radio",
+        /* 查询条件 */
+        queryParam: {
+        },
         /* 分页参数 */
         ipagination:{
           current: 1,
@@ -152,6 +157,12 @@
           showQuickJumper: true,
           showSizeChanger: true,
           total: 0
+        },
+        /* 排序参数 */
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
         },
 
         // 表头
@@ -190,7 +201,6 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
-        tabSelectType: "radio",
         url: {
           list: "/edusport/sportClassYearPlan/list",
           delete: "/edusport/sportClassYearPlan/delete",

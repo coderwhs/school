@@ -11,17 +11,23 @@
       <a-form :form="form">
 
         <a-form-item label="所属测试" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['testId']" :trigger-change="true" dictCode="tb_edu_athlete_selection_test,test_name,id" placeholder="请选择所属测试"/>
+          <j-form-container disabled>
+            <j-dict-select-tag type="list" v-decorator="['testId', validatorRules.testId]" :trigger-change="true" :dictCode="fnDictCodeTest" placeholder="请选择所属测试"/>
+          </j-form-container>
         </a-form-item>
         <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['coachId']" :trigger-change="true" dictCode="tb_edu_coach,coach_name,id" placeholder="请选择教练员"/>
+          <j-form-container disabled>
+            <j-dict-select-tag type="list" v-decorator="['coachId', validatorRules.coachId]" :trigger-change="true" :dictCode="fnDictCodeCoach" placeholder="请选择教练员"/>
+          </j-form-container>
         </a-form-item>
         <a-form-item label="测试组别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['groupId']" :trigger-change="true" dictCode="tb_edu_athlete_selection_group,group_name,id" placeholder="请选择测试组别"/>
+          <j-form-container disabled>
+            <j-dict-select-tag type="list" v-decorator="['groupId', validatorRules.groupId]" :trigger-change="true" :dictCode="fnDictCodeGroup" placeholder="请选择测试组别"/>
+          </j-form-container>
         </a-form-item>
         <a-form-item label="测试项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-form-container disabled>
-            <j-search-select-tag placeholder="请选择测试大项" v-decorator="['sportCode', validatorRules.sportCode]" dict="tb_edu_sport,sport_name,sport_code"/>
+            <j-search-select-tag placeholder="请选择测试大项" v-decorator="['sportCode', validatorRules.sportCode]" :dict="fnDictCodeSport"/>
           </j-form-container>
         </a-form-item>
         <a-form-item label="在训小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -30,7 +36,9 @@
           </j-form-container>
         </a-form-item>
         <a-form-item label="测试指标" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-multi-select-tag type="list_multi" v-decorator="['indexCodes', validatorRules.indexCodes]" :trigger-change="true" :options="dictOptions.indexCodes"  placeholder="请选择测试指标"/>
+          <j-form-container disabled>
+            <j-multi-select-tag type="list_multi" v-decorator="['indexCodes', validatorRules.indexCodes]" :trigger-change="true" :options="dictOptions.indexCodes"  placeholder="请选择测试指标"/>
+          </j-form-container>
         </a-form-item>
 
         <a-form-item label="测试日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -43,10 +51,10 @@
         <!-- 子表单区域 -->
         <a-tabs defaultActiveKey="1" >
           <!-- 操作按钮区域 -->
-          <a-button slot="tabBarExtraContent"  type="primary" icon="download" @click="handleExportXls('运动员选材测试运动员成绩表')">导出成绩</a-button>
-          <a-upload slot="tabBarExtraContent" name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="url.importExcelUrl" @change="handleImportExcel">
-            <a-button type="primary" icon="import" >导入成绩</a-button>
-          </a-upload>
+<!--          <a-button slot="tabBarExtraContent"  type="primary" icon="download" @click="handleExportXls('运动员选材测试运动员成绩表')">导出成绩</a-button>-->
+<!--          <a-upload slot="tabBarExtraContent" name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="url.importExcelUrl" @change="handleImportExcel">-->
+<!--            <a-button type="primary" icon="import" >导入成绩</a-button>-->
+<!--          </a-upload>-->
           <a-tab-pane tab="测试运动员成绩" key="1" >
             <div style="text-align: center">
               <a-row type="flex" style="margin-bottom:16px; text-align:center;" :gutter="10">
@@ -172,11 +180,14 @@
         },
 
         confirmLoading: false,
+        // 字典
+        dictCodeTest: '',
+        dictCodeCoach: '',
+        dictCodeGroup: '',
         dictCodeSport: '',
         dictCodeSportEvent: '',
         dictCodeGroupIndexCodes: '',
-        dictCodeCoach: '',
-        dictCodeAthlete: '',
+
         validatorRules:{
           testId:{rules: [{ required: true, message: '请输入所属测试!' }]},
           coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
@@ -209,8 +220,6 @@
           testAthleteScoreList: "/edusport/athleteSelectionTestAthleteScore/list",
           add: "/edusport/athleteSelectionTestCoach/add",
           edit: "/edusport/athleteSelectionTestCoach/editBatch",
-          exportXlsUrl: "/edusport/athleteSelectionTestCoach/exportXls",
-          importExcelUrl: "edusport/athleteSelectionTestCoach/importExcel",
         },
         dictOptions:{
           eventCodes:[],
@@ -244,6 +253,18 @@
       })
     },
     computed: {
+      fnDictCodeTest: function() {
+        console.log("fnDictCodeTest: ", this.dictCodeTest);
+        return this.dictCodeTest;
+      },
+      fnDictCodeCoach: function() {
+        console.log("fnDictCodeCoach: ", this.dictCodeCoach);
+        return this.dictCodeCoach;
+      },
+      fnDictCodeGroup: function() {
+        console.log("fnDictCodeGroup: ", this.dictCodeGroup);
+        return this.dictCodeGroup;
+      },
       fnDictCodeSport: function() {
         console.log("fnDictCodeSport: ", this.dictCodeSport);
         return this.dictCodeSport;
@@ -256,16 +277,6 @@
         console.log("fnDictCodeGroupIndexCodes: ", this.dictCodeGroupIndexCodes);
         return this.dictCodeGroupIndexCodes;
       },
-
-      fnDictCodeCoach: function() {
-        console.log("fnDictCodeCoach: ", this.dictCodeCoach);
-        return this.dictCodeCoach;
-      },
-      fnDictCodeAthlete: function() {
-        console.log("fnDictCodeAthlete: ", this.dictCodeAthlete);
-        return this.dictCodeAthlete;
-      }
-
     },
     methods: {
       add () {
@@ -279,6 +290,24 @@
           this.form.setFieldsValue(pick(this.model,'testId','coachId','groupId','sportCode','eventCodes','indexCodes','testDate','status'))
         })
 
+        // 初始化所属大项字典
+        if (this.model.testId) {
+          this.dictCodeTest = "tb_edu_athlete_selection_test,test_name,id, id = '" + this.model.testId + "'";
+        }
+        // 初始化教练员字典
+        if (this.model.coachId) {
+          this.dictCodeCoach = "tb_edu_coach,coach_name,id, id = '" + this.model.coachId + "'";
+        }
+        // 初始化测试组别字典
+        if (this.model.groupId) {
+          this.dictCodeGroup = "tb_edu_athlete_selection_group,group_name,id, id = '" + this.model.groupId + "'";
+        }
+
+        // 初始化项目大项字典
+        if (this.model.sportCode) {
+          this.dictCodeSport = "tb_edu_sport, sport_name, sport_code, sport_code = '" + this.model.sportCode + "'";
+        }
+
         // 初始化在训小项字典
         if (this.model.eventCodes) {
           this.dictCodeSportEvent = "tb_edu_sport_event as t1, t1.event_name, t1.event_code, t1.enable_status=1 and (t1.event_code='" + this.model.eventCodes.replace(/,/g,"' or t1.event_code = '") + "') | tb_edu_sport t2, t2.sport_name, t2.sport_code = t1.sport_code | tb_edu_sport_disciplines t3, t3.disciplines_name, t3.disciplines_code=t1.disciplines_code";
@@ -286,21 +315,14 @@
 
         // 初始化测试组别指标字典
         if (this.model.indexCodes) {
-          this.dictCodeGroupIndexCodes = 'tb_edu_athlete_selection_index, cn_name, index_code, index_code=' + this.model.indexCodes.replace(/,/g," or index_code = ") ;
+          this.dictCodeGroupIndexCodes = "tb_edu_athlete_selection_index, cn_name, index_code, index_code='" + this.model.indexCodes.replace(/,/g,"' or index_code = '") + "'";
+          initDictOptions(this.dictCodeGroupIndexCodes).then((res) => {
+            if (res.success) {
+              console.log("indexCodes: ", res.result)
+              this.$set(this.dictOptions, 'indexCodes', res.result)
+            }
+          })
         }
-        initDictOptions(this.dictCodeGroupIndexCodes).then((res) => {
-          if (res.success) {
-            console.log("indexCodes: ", res.result)
-            this.$set(this.dictOptions, 'indexCodes', res.result)
-          }
-        })
-        // 初始化运动员字典
-        initDictOptions('tb_edu_athlete, athlete_name, id').then((res) => {
-          if (res.success) {
-            console.log("athleteIds: ", res.result)
-            this.$set(this.dictOptions, 'athleteIds', res.result)
-          }
-        })
 
         // 初始化测试运动员成绩及明细列表
         this.testAthleteScoreList = [];
@@ -370,6 +392,21 @@
             console.log("getTestAthleteScoreList.res.result: ", res.result);
             that.testAthleteScoreList = res.result.records;
             that.testAthleteScorePagination.total = res.result.total;
+
+            // 初始化运动员字典
+            if (that.testAthleteScoreList) {
+              let athleteIds = that.testAthleteScoreList.map(function(item, index) {
+                return item.athleteId;
+              }).join(",");
+              console.log("athleteIds: ", athleteIds);
+              let dictCodeAthlete = "tb_edu_athlete, athlete_name, id, id='" + athleteIds.replace(/,/g,"' or id = '") + "'";
+              initDictOptions(dictCodeAthlete).then((res) => {
+                if (res.success) {
+                  console.log("athleteIds: ", res.result)
+                  this.$set(that.dictOptions, 'athleteIds', res.result)
+                }
+              })
+            }
 
             this.$forceUpdate();
           }
@@ -452,36 +489,36 @@
         })
       },
       /* 导入 */
-      handleImportExcel(info){
-        if (info.file.status !== 'uploading') {
-          console.log(info.file, info.fileList);
-        }
-        if (info.file.status === 'done') {
-          if (info.file.response.success) {
-            // this.$message.success(`${info.file.name} 文件上传成功`);
-            if (info.file.response.code === 201) {
-              let { message, result: { msg, fileUrl, fileName } } = info.file.response
-              let href = window._CONFIG['domianURL'] + fileUrl
-              this.$warning({
-                  title: message,
-                  content: (
-                    <div>
-                    <span>{msg}</span><br/>
-                    <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
-                </div>
-              )
-            })
-            } else {
-              this.$message.success(info.file.response.message || `${info.file.name} 文件上传成功`)
-            }
-            this.loadData()
-          } else {
-            this.$message.error(`${info.file.name} ${info.file.response.message}.`);
-          }
-        } else if (info.file.status === 'error') {
-          this.$message.error(`文件上传失败: ${info.file.msg} `);
-        }
-      },
+      // handleImportExcel(info){
+      //   if (info.file.status !== 'uploading') {
+      //     console.log(info.file, info.fileList);
+      //   }
+      //   if (info.file.status === 'done') {
+      //     if (info.file.response.success) {
+      //       // this.$message.success(`${info.file.name} 文件上传成功`);
+      //       if (info.file.response.code === 201) {
+      //         let { message, result: { msg, fileUrl, fileName } } = info.file.response
+      //         let href = window._CONFIG['domianURL'] + fileUrl
+      //         this.$warning({
+      //             title: message,
+      //             content: (
+      //               <div>
+      //               <span>{msg}</span><br/>
+      //               <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
+      //           </div>
+      //         )
+      //       })
+      //       } else {
+      //         this.$message.success(info.file.response.message || `${info.file.name} 文件上传成功`)
+      //       }
+      //       this.loadData()
+      //     } else {
+      //       this.$message.error(`${info.file.name} ${info.file.response.message}.`);
+      //     }
+      //   } else if (info.file.status === 'error') {
+      //     this.$message.error(`文件上传失败: ${info.file.msg} `);
+      //   }
+      // },
     }
   }
 </script>

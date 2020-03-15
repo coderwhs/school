@@ -17,8 +17,8 @@
         :type="collapsed ? 'menu-unfold' : 'menu-fold'"
         @click.native="toggle"/>
 
-      <span v-if="device === 'desktop'">欢迎进入 江西省高水平体育人才信息管理平台</span>
-      <span v-else>江西省高水平体育人才信息管理平台</span>
+      <span v-if="device === 'desktop'">欢迎进入 青少年体育后备人才信息管理平台</span>
+      <span v-else>青少年体育后备人才信息管理平台</span>
 
       <user-menu :theme="theme"/>
     </div>

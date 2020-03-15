@@ -10,14 +10,19 @@
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="指标代码">
-              <a-input placeholder="请输入指标代码" v-model="queryParam.indexCode"></a-input>
+            <a-form-item label="中文名称">
+              <a-input placeholder="请输入中文名称" v-model="queryParam.cnName"></a-input>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
-              <a-form-item label="中文名称">
-                <a-input placeholder="请输入中文名称" v-model="queryParam.cnName"></a-input>
+              <a-form-item label="启用状态">
+                <j-dict-select-tag placeholder="请选择启用状态" v-model="queryParam.enableStatus" dictCode="enable_status"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="8">
+              <a-form-item label="指标代码">
+                <a-input placeholder="请输入指标代码" v-model="queryParam.indexCode"></a-input>
               </a-form-item>
             </a-col>
           </template>
@@ -40,10 +45,10 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材指标信息表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+<!--      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材指标信息表')">导出</a-button>-->
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -132,6 +137,29 @@
     data () {
       return {
         description: '运动员选材指标信息表管理页面',
+        /* 查询条件 */
+        queryParam: {
+          enableStatus: '1',
+        },
+        /* 分页参数 */
+        ipagination:{
+          current: 1,
+          pageSize: 5,
+          pageSizeOptions: ['5', '10', '20'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
+        /* 排序参数 */
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
+
         // 表头
         columns: [
           {
@@ -224,11 +252,6 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
-        isorter: {
-          // 排序由后端处理
-          column: '',
-          order: ''
-        },
         url: {
           list: "/edusport/athleteSelectionIndex/list",
           delete: "/edusport/athleteSelectionIndex/delete",
@@ -260,7 +283,7 @@
             this.$set(this.dictOptions, 'parentCode', res.result)
           }
         })
-        initDictOptions('').then((res) => {
+        initDictOptions('is_leaf').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'isLeaf', res.result)
           }

@@ -148,6 +148,9 @@
     data () {
       return {
         description: '训练队表管理页面',
+        /* 查询条件 */
+        queryParam: {
+        },
         /* 分页参数 */
         ipagination:{
           current: 1,
@@ -159,6 +162,12 @@
           showQuickJumper: true,
           showSizeChanger: true,
           total: 0
+        },
+        /* 排序参数 */
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
         },
 
         // 表头

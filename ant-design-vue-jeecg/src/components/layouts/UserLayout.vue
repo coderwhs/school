@@ -4,12 +4,11 @@
       <div class="top">
         <div class="header">
           <a href="/">
-
-            <span class="title">江西省高水平体育人才信息管理平台</span>
+            <span class="title">青少年体育后备人才信息管理平台</span>
           </a>
         </div>
         <div class="desc">
-
+          江西省体育运动学校
         </div>
       </div>
 

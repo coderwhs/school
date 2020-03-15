@@ -10,30 +10,19 @@
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
+            <a-form-item label="大项">
+              <j-search-select-tag placeholder="请选择大项" v-model="queryParam.sportCode" dict="tb_edu_sport,sport_name,sport_code" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8">
             <a-form-item label="启用状态">
               <j-dict-select-tag placeholder="请选择启用状态" v-model="queryParam.enableStatus" dictCode="enable_status"/>
             </a-form-item>
           </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="大项">
-                <a-input placeholder="请输入大项" v-model="queryParam.sportCode"></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="8">
-              <a-form-item label="小项">
-                <a-input placeholder="请输入小项" v-model="queryParam.eventCodes"></a-input>
-              </a-form-item>
-            </a-col>
-          </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
             </span>
           </a-col>
 
@@ -45,10 +34,10 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试组别标准表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+<!--      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材测试组别标准表')">导出</a-button>-->
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -135,6 +124,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import AthleteSelectionGroupModal from './modules/AthleteSelectionGroupModal__Style#Drawer'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import AthleteSelectionGroupIndexGradeList from './AthleteSelectionGroupIndexGradeList'
   import AthleteSelectionGroupIndexGradeModal from './modules/AthleteSelectionGroupIndexGradeModal__Style#Drawer'
@@ -146,6 +136,7 @@
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
+      JSearchSelectTag,
       AthleteSelectionGroupModal,
       AthleteSelectionGroupIndexGradeList,
       AthleteSelectionGroupIndexGradeModal,
@@ -155,7 +146,12 @@
     data () {
       return {
         description: '运动员选材测试组别标准表管理页面',
-
+        // Table记录选择器修改为单选框
+        tabSelectType: "radio",
+        /* 查询条件 */
+        queryParam: {
+          enableStatus: '1',
+        },
         /* 分页参数 */
         ipagination:{
           current: 1,
@@ -168,8 +164,12 @@
           showSizeChanger: true,
           total: 0
         },
-        // Table记录选择器修改为单选框
-        tabSelectType: "radio",
+        /* 排序参数 */
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
 
         // 表头
         columns: [
@@ -245,11 +245,6 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
-        isorter: {
-          // 排序由后端处理
-          column: '',
-          order: ''
-        },
         url: {
           list: "/edusport/athleteSelectionGroup/list",
           delete: "/edusport/athleteSelectionGroup/delete",
@@ -263,6 +258,8 @@
           indexCodes:[],
         },
       }
+    },
+    created () {
     },
     computed: {
       importExcelUrl: function(){
@@ -281,7 +278,8 @@
             this.$set(this.dictOptions, 'sportCode', res.result)
           }
         })
-        initDictOptions('tb_edu_sport_event,event_name,event_code, t1.enable_status=1| tb_edu_sport, sport_name, sport_code| tb_edu_sport_disciplines, disciplines_name, disciplines_code').then((res) => {
+
+        initDictOptions('tb_edu_sport_event as t1, t1.event_name, t1.event_code, t1.enable_status=1 | tb_edu_sport t2, t2.sport_name, t2.sport_code = t1.sport_code | tb_edu_sport_disciplines t3, t3.disciplines_name, t3.disciplines_code=t1.disciplines_code').then((res) => {
           if (res.success) {
             console.log("eventCodes: ", res.result)
             this.$set(this.dictOptions, 'eventCodes', res.result)
@@ -328,18 +326,28 @@
       searchQuery: function() {
         this.selectedRowKeys = [];
         this.selectionRows = [];
-
-        this.$refs.AthleteSelectionGroupIndexGradeList.queryParam.groupId = null;
-        this.$refs.AthleteSelectionGroupIndexGradeList.loadData();
-        this.$refs.AthleteSelectionGroupIndexGradeList.selectedRowKeys = [];
-        this.$refs.AthleteSelectionGroupIndexGradeList.selectionRows = [];
-
-        this.$refs.AthleteSelectionGroupRatingList.queryParam.groupId = null;
-        this.$refs.AthleteSelectionGroupRatingList.loadData();
-        this.$refs.AthleteSelectionGroupRatingList.selectedRowKeys = [];
-        this.$refs.AthleteSelectionGroupRatingList.selectionRows = [];
-
         this.loadData();
+
+        if (this.queryParam.groupName || this.queryParam.sportCode) {
+          this.$refs.AthleteSelectionGroupIndexGradeList.dataSource=[];
+          this.$refs.AthleteSelectionGroupIndexGradeList.selectedRowKeys = [];
+          this.$refs.AthleteSelectionGroupIndexGradeList.selectionRows = [];
+
+          this.$refs.AthleteSelectionGroupRatingList.dataSource=[];
+          this.$refs.AthleteSelectionGroupRatingList.selectedRowKeys = [];
+          this.$refs.AthleteSelectionGroupRatingList.selectionRows = [];
+        } else {
+          this.$refs.AthleteSelectionGroupIndexGradeList.queryParam.groupId = null;
+          this.$refs.AthleteSelectionGroupIndexGradeList.loadData();
+          this.$refs.AthleteSelectionGroupIndexGradeList.selectedRowKeys = [];
+          this.$refs.AthleteSelectionGroupIndexGradeList.selectionRows = [];
+
+          this.$refs.AthleteSelectionGroupRatingList.queryParam.groupId = null;
+          this.$refs.AthleteSelectionGroupRatingList.loadData();
+          this.$refs.AthleteSelectionGroupRatingList.selectedRowKeys = [];
+          this.$refs.AthleteSelectionGroupRatingList.selectionRows = [];
+        }
+
       }
        
     }

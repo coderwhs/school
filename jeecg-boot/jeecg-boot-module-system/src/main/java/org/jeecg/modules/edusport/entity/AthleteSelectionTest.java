@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -36,6 +37,12 @@ public class AthleteSelectionTest implements Serializable {
 	/**测试大项*/
 	@Excel(name = "测试大项", width = 15)
     private java.lang.String sportCode;
+	/**测试小项*/
+	@Excel(name = "测试小项", width = 15)
+    private java.lang.String eventCodes;
+	/**测试指标*/
+	@Excel(name = "测试指标", width = 15)
+    private java.lang.String indexCodes;
 	/**发布日期*/
 	@Excel(name = "发布日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
@@ -57,4 +64,14 @@ public class AthleteSelectionTest implements Serializable {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private java.util.Date updateTime;
+	
+	
+	
+	/**教练员*/
+	@TableField(exist = false)
+    private java.lang.String coachIds;
+	
+	/**运动员*/
+	@TableField(exist = false)
+    private java.lang.String athleteIds;
 }

@@ -43,7 +43,7 @@
     <!-- 查询区域-END -->
 
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
+    <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('运动员文化课成绩信息表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
@@ -139,6 +139,9 @@
     data () {
       return {
         description: '运动员文化课成绩信息表管理页面',
+        /* 查询条件 */
+        queryParam: {
+        },
         /* 分页参数 */
         ipagination:{
           current: 1,
@@ -151,6 +154,13 @@
           showSizeChanger: true,
           total: 0
         },
+        /* 排序参数 */
+        isorter: {
+          // 排序由后端处理
+          column: '',
+          order: ''
+        },
+
         // 表头
         columns: [
           {
@@ -323,10 +333,11 @@
 </script>
 <style scoped>
   @import '~@assets/less/common.less'
-  <style scoped>
+</style>
+
+<style scoped>
   .ant-card {
     margin-left: -30px;
     margin-right: -30px;
   }
-  </style>
 </style>
