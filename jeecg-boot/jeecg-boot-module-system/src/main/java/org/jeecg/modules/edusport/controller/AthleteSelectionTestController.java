@@ -268,7 +268,7 @@ public class AthleteSelectionTestController extends JeecgController<AthleteSelec
 		athleteSelectionTestAthleteScoreService.saveBatch(testAthleteScoreList);
 		athleteSelectionTestAthleteScoreDetailService.saveBatch(testAthleteScoreDetailList);
 		
-//		athleteSelectionTestService.updateById(athleteSelectionTest);
+		athleteSelectionTestService.updateById(athleteSelectionTest);
 		return Result.ok("编辑成功!");
 	}	
 	

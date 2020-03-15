@@ -12,7 +12,9 @@
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+          <j-form-container disabled>
+            <j-search-select-tag v-decorator="['athleteId', validatorRules.athleteId]" :dict="fnDictCodeAthlete" />
+          </j-form-container>
         </a-form-item>
         <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" />
@@ -81,6 +83,7 @@
         },
 
         confirmLoading: false,
+        dictCodeAthlete: '',
         validatorRules:{
           athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
           sportCode:{rules: [{ required: true, message: '请输入运动项目!' }]},
@@ -99,6 +102,11 @@
       }
     },
     created () {
+    },
+    computed: {
+      fnDictCodeAthlete: function() {
+        return this.dictCodeAthlete;
+      }
     },
     methods: {
       /*add () {
@@ -121,6 +129,10 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'athleteId','sportCode','athleteTechGrade','transportDepartment','transportCoachId','transportDate','acceptDepartmentType','acceptDepartment'))
         })
+        // 初始化运动员字典
+        if (this.model.athleteId) {
+          this.dictCodeAthlete = "tb_edu_athlete, athlete_name, id, id = '" + this.model.athleteId + "'";
+        }
       },
       close () {
         this.$emit('close');

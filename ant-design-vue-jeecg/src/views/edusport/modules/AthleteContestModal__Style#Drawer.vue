@@ -13,16 +13,18 @@
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+          <j-form-container disabled>
+            <j-search-select-tag v-decorator="['athleteId', validatorRules.athleteId]" :dict="fnDictCodeAthlete" />
+          </j-form-container>
         </a-form-item>
         <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
+          <j-search-select-tag v-decorator="['coachId', validatorRules.coachId]" dict="tb_edu_coach,coach_name,id" />
         </a-form-item>
         <a-form-item label="比赛名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'contestName', validatorRules.contestName]" placeholder="请输入比赛名称"></a-input>
         </a-form-item>
         <a-form-item label="比赛项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['contestSportCode']" dict="tb_edu_sport,sport_name,sport_code" />
+          <j-search-select-tag v-decorator="['contestSportCode', validatorRules.contestSportCode]" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
         <a-form-item label="比赛日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择比赛日期" v-decorator="[ 'contestDate', validatorRules.contestDate]" :trigger-change="true" style="width: 100%"/>
@@ -40,7 +42,7 @@
           <a-input v-decorator="[ 'athleteDepartment', validatorRules.athleteDepartment]" placeholder="请输入所在单位"></a-input>
         </a-form-item>
         <a-form-item label="授予技术等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['awardedTechGrade']" :trigger-change="true" dictCode="athlete_tech_grade" placeholder="请选择授予技术等级"/>
+          <j-dict-select-tag type="list" v-decorator="['awardedTechGrade', validatorRules.awardedTechGrade]" :trigger-change="true" dictCode="athlete_tech_grade" placeholder="请选择授予技术等级"/>
         </a-form-item>
         <a-form-item label="授予单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'awardedDepartment', validatorRules.awardedDepartment]" placeholder="请输入授予单位"></a-input>
@@ -61,7 +63,6 @@
       <a-button type="primary" @click="handleOk" :loading="confirmLoading">提交</a-button>
     </div>
   </a-drawer>
-</template>
 </template>
 
 <script>
@@ -100,11 +101,12 @@
         },
 
         confirmLoading: false,
+        dictCodeAthlete: '',
         validatorRules:{
           athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
-          coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+          coachId:{rules: [{ required: true, message: '请选择教练员!' }]},
           contestName:{rules: [{ required: true, message: '请输入比赛名称!' }]},
-          contestSportCode:{rules: [{ required: true, message: '请输入比赛项目!' }]},
+          contestSportCode:{rules: [{ required: true, message: '请选择比赛项目!' }]},
           contestDate:{},
           contestAddress:{},
           contestEvent:{},
@@ -123,6 +125,11 @@
       }
     },
     created () {
+    },
+    computed: {
+      fnDictCodeAthlete: function() {
+        return this.dictCodeAthlete;
+      }
     },
     methods: {
       /*   add () {
@@ -144,6 +151,10 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'athleteId','coachId','contestName','contestSportCode','contestDate','contestAddress','contestEvent','contestResult','athleteDepartment','awardedTechGrade','awardedDepartment','awardedDate','athleteNews'))
         })
+        // 初始化运动员字典
+        if (this.model.athleteId) {
+          this.dictCodeAthlete = "tb_edu_athlete, athlete_name, id, id = '" + this.model.athleteId + "'";
+        }
       },
       close () {
         this.$emit('close');

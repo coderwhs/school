@@ -25,6 +25,7 @@
 <script>
 
   import { httpAction } from '@/api/manage'
+  import { duplicateCheck } from '@/api/api'
   import pick from 'lodash.pick'
 
   export default {
@@ -49,8 +50,8 @@
 
         confirmLoading: false,
         validatorRules:{
-        indexCatCode:{rules: [{ required: true, message: '请输入指标类别代码!' }]},
-        indexCatName:{rules: [{ required: true, message: '请输入指标类别名称!' }]},
+        indexCatCode:{rules: [{ required: true, message: '请输入指标类别代码!' }, {validator: this.validateUnionDuplicateCheck}]},
+        indexCatName:{rules: [{ required: true, message: '请输入指标类别名称!' }, {validator: this.validateUnionDuplicateCheck}]},
         },
         url: {
           add: "/edusport/athleteSelectionIndexCat/add",
@@ -71,6 +72,24 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'indexCatCode','indexCatName'))
+        })
+      },
+      validateUnionDuplicateCheck(rule, value, callback) {
+        // 重复校验
+        var params = {
+          tableName: 'tb_edu_athlete_selection_index_cat',
+          fieldName: "concat_ws(',', index_cat_code, index_cat_name)",
+          fieldVal: this.form.getFieldValue("indexCatCode") + "," + this.form.getFieldValue("indexCatName"),
+          dataId: this.model.id
+        }
+        duplicateCheck(params).then((res) => {
+          if (res.success) {
+            this.form.setFields({indexCatCode: {value: this.form.getFieldValue("indexCatCode")}});
+            this.form.setFields({indexCatName: {value: this.form.getFieldValue("indexCatName")}});
+            callback()
+          } else {
+            callback("该值不可用，系统中已存在您输入的（指标类别代码+指标类别名称）组合！")
+          }
         })
       },
       close () {

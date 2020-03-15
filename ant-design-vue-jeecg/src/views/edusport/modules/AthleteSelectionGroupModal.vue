@@ -64,7 +64,7 @@
 
         confirmLoading: false,
         validatorRules:{
-        groupName:{rules: [{ required: true, message: '请输入组别名称!' }]},
+        groupName:{rules: [{ required: true, message: '请输入组别名称!' }, {validator: this.validateDuplicateCheckGroupName}]},
         enableStatus:{rules: [{ required: true, message: '请输入启用状态!' }]},
         sportCode:{rules: [{ required: true, message: '请输入大项!' }]},
         eventCodes:{rules: [{ required: true, message: '请输入小项!' }]},
@@ -89,6 +89,22 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'groupName','enableStatus','sportCode','eventCodes','indexCodes'))
+        })
+      },
+      validateDuplicateCheckGroupName(rule, value, callback) {
+        // 重复校验
+        var params = {
+          tableName: 'tb_edu_athlete_selection_group',
+          fieldName: 'group_name',
+          fieldVal: value,
+          dataId: this.model.id
+        }
+        duplicateCheck(params).then((res) => {
+          if (res.success) {
+            callback()
+          } else {
+            callback(res.message)
+          }
         })
       },
       close () {

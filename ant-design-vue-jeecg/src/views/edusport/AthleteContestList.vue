@@ -235,11 +235,6 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'athleteId', res.result)
-          }
-        })
         initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'coachId', res.result)
@@ -256,23 +251,39 @@
           }
         })
       },
-      loadData(arg) {/* Tab修改@2019-12-12 */
+      loadData(arg) {
+        if(!this.url.list){
+          this.$message.error("请设置url.list属性!")
+          return
+        }
+        //加载数据 若传入参数1则加载第一页的内容
         if (arg === 1) {
           this.ipagination.current = 1;
         }
-        //update-begin--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
-        var params = this.getQueryParams();
-        getAction(this.url.list, {athleteId: params.athleteId, pageNo : this.ipagination.current,
-          pageSize :this.ipagination.pageSize}).then((res) => {
+        var params = this.getQueryParams();//查询条件
+        this.loading = true;
+        getAction(this.url.list, params).then((res) => {
           if (res.success) {
             this.dataSource = res.result.records;
             this.ipagination.total = res.result.total;
-          } else {
-            this.dataSource = null;
-          }
-        })
-        //update-end--Author:kangxiaolin  Date:20190905 for：[442]主子表分开维护，生成的代码子表的分页改为真实的分页--------------------
 
+            // 初始化运动员字典
+            let athleteIds = this.dataSource.map(function(item, index) {
+              return item.athleteId;
+            }).join(",");
+            console.log("athleteIds: ", athleteIds);
+            let dictCodeAthlete = "tb_edu_athlete, athlete_name, id, id = '" +  athleteIds.replace(/,/g, "' or id = '") + "'";
+            initDictOptions(dictCodeAthlete).then((res) => {
+              if (res.success) {
+                this.$set(this.dictOptions, 'athleteId', res.result)
+              }
+            })
+          }
+          if(res.code===510){
+            this.$message.warning(res.message)
+          }
+          this.loading = false;
+        })
       },
       getAthleteByAthleteId(athleteId) {/* Tab修改@2019-12-12 */
         this.queryParam.athleteId = athleteId;

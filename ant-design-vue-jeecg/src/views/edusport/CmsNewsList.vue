@@ -5,27 +5,15 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="指标类别">
-              <j-dict-select-tag placeholder="请选择指标类别" v-model="queryParam.indexCatCode" dictCode="tb_edu_athlete_selection_index_cat,index_cat_name,index_cat_code"/>
+            <a-form-item label="新闻类别">
+              <j-dict-select-tag placeholder="请选择新闻类别" v-model="queryParam.newsCat" dictCode="news_cat"/>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="中文名称">
-              <a-input placeholder="请输入中文名称" v-model="queryParam.cnName"></a-input>
+            <a-form-item label="标题">
+              <a-input placeholder="请输入标题" v-model="queryParam.newsTitle"></a-input>
             </a-form-item>
           </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="启用状态">
-                <j-dict-select-tag placeholder="请选择启用状态" v-model="queryParam.enableStatus" dictCode="enable_status"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="8">
-              <a-form-item label="指标代码">
-                <a-input placeholder="请输入指标代码" v-model="queryParam.indexCode"></a-input>
-              </a-form-item>
-            </a-col>
-          </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
@@ -45,10 +33,10 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-<!--      <a-button type="primary" icon="download" @click="handleExportXls('运动员选材指标信息表')">导出</a-button>-->
-<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
-<!--        <a-button type="primary" icon="import">导入</a-button>-->
-<!--      </a-upload>-->
+      <a-button type="primary" icon="download" @click="handleExportXls('公告消息表')">导出</a-button>
+      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
+        <a-button type="primary" icon="import">导入</a-button>
+      </a-upload>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -116,50 +104,27 @@
       </a-table>
     </div>
 
-    <athleteSelectionIndex-modal ref="modalForm" @ok="modalFormOk"></athleteSelectionIndex-modal>
+    <cmsNews-modal ref="modalForm" @ok="modalFormOk"></cmsNews-modal>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import AthleteSelectionIndexModal from './modules/AthleteSelectionIndexModal'
+  import CmsNewsModal from './modules/CmsNewsModal__Style#Drawer'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: "AthleteSelectionIndexList",
+    name: "CmsNewsList",
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
-      AthleteSelectionIndexModal
+      CmsNewsModal
     },
     data () {
       return {
-        description: '运动员选材指标信息表管理页面',
-        /* 查询条件 */
-        queryParam: {
-          enableStatus: '1',
-        },
-        /* 分页参数 */
-        ipagination:{
-          current: 1,
-          pageSize: 10,
-          pageSizeOptions: ['5', '10', '20'],
-          showTotal: (total, range) => {
-            return range[0] + "-" + range[1] + " 共" + total + "条"
-          },
-          showQuickJumper: true,
-          showSizeChanger: true,
-          total: 0
-        },
-        /* 排序参数 */
-        isorter: {
-          // 排序由后端处理
-          column: '',
-          order: ''
-        },
-
+        description: '公告消息表管理页面',
         // 表头
         columns: [
           {
@@ -173,65 +138,38 @@
             }
           },
           {
-            title:'指标类别',
+            title:'新闻类别',
             align:"center",
-            dataIndex: 'indexCatCode',
+            dataIndex: 'newsCat',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['indexCatCode'], text+"")
+                return filterMultiDictText(this.dictOptions['newsCat'], text+"")
               }
             }
           },
           {
-            title:'上级指标代码',
+            title:'标题',
             align:"center",
-            dataIndex: 'parentCode',
+            dataIndex: 'newsTitle'
+          },
+          {
+            title:'置顶状态',
+            align:"center",
+            dataIndex: 'topStatus',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['parentCode'], text+"")
+                return filterMultiDictText(this.dictOptions['topStatus'], text+"")
               }
             }
           },
           {
-            title:'指标代码',
+            title:'显示顺序',
             align:"center",
-            dataIndex: 'indexCode'
-          },
-          {
-            title:'是否叶节点',
-            align:"center",
-            dataIndex: 'isLeaf',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['isLeaf'], text+"")
-              }
-            }
-          },
-          {
-            title:'中文名称',
-            align:"center",
-            dataIndex: 'cnName'
-          },
-          {
-            title:'英文名称',
-            align:"center",
-            dataIndex: 'enName'
-          },
-          {
-            title:'英文简称',
-            align:"center",
-            dataIndex: 'enShortName'
-          },
-          {
-            title:'单位',
-            align:"center",
-            dataIndex: 'unit'
+            dataIndex: 'newsOrder'
           },
           {
             title:'启用状态',
@@ -246,22 +184,35 @@
             }
           },
           {
+            title:'报道时间',
+            align:"center",
+            dataIndex: 'publishDate',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
+            }
+          },
+          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
             scopedSlots: { customRender: 'action' }
           }
         ],
+        /* 排序参数 */
+        isorter:{
+          column: 'newsOrder',
+          order: 'desc',
+        },
         url: {
-          list: "/edusport/athleteSelectionIndex/list",
-          delete: "/edusport/athleteSelectionIndex/delete",
-          deleteBatch: "/edusport/athleteSelectionIndex/deleteBatch",
-          exportXlsUrl: "/edusport/athleteSelectionIndex/exportXls",
-          importExcelUrl: "edusport/athleteSelectionIndex/importExcel",
+          list: "/edusport/cmsNews/list",
+          delete: "/edusport/cmsNews/delete",
+          deleteBatch: "/edusport/cmsNews/deleteBatch",
+          exportXlsUrl: "/edusport/cmsNews/exportXls",
+          importExcelUrl: "edusport/cmsNews/importExcel",
         },
         dictOptions:{
-         indexCatCode:[],
-         isLeaf:[],
+         newsCat:[],
+         topStatus:[],
          enableStatus:[],
         },
       }
@@ -273,19 +224,14 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_athlete_selection_index_cat,index_cat_name,index_cat_code').then((res) => {
+        initDictOptions('news_cat').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'indexCatCode', res.result)
+            this.$set(this.dictOptions, 'newsCat', res.result)
           }
         })
-        initDictOptions('tb_edu_athlete_selection_index,cn_name,index_code').then((res) => {
+        initDictOptions('enable_status').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'parentCode', res.result)
-          }
-        })
-        initDictOptions('is_leaf').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'isLeaf', res.result)
+            this.$set(this.dictOptions, 'topStatus', res.result)
           }
         })
         initDictOptions('enable_status').then((res) => {

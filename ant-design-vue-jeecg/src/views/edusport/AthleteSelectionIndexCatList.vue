@@ -128,7 +128,7 @@
         /* 分页参数 */
         ipagination:{
           current: 1,
-          pageSize: 5,
+          pageSize: 10,
           pageSizeOptions: ['5', '10', '20'],
           showTotal: (total, range) => {
             return range[0] + "-" + range[1] + " 共" + total + "条"

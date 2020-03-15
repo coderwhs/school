@@ -1049,6 +1049,28 @@ CREATE TABLE tb_edu_athlete_selection_index_cat(
 ) COMMENT = '运动员选材指标分类信息表 ';;
 
 
+DROP TABLE IF EXISTS tb_edu_cms_news;;/*SkipError*/
+CREATE TABLE tb_edu_cms_news(
+    id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
+    news_cat VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '新闻类别' ,
+    news_title VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '标题' ,
+    news_sub_title VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '副标题' ,
+    top_status VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '置顶状态' ,
+    news_order INT    COMMENT '显示顺序' ,
+    enable_status VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '启用状态' ,
+    news_from VARCHAR(128) NOT NULL  DEFAULT '' COMMENT '来源' ,
+    publish_date DATETIME    COMMENT '报道时间' ,
+    title_image VARCHAR(256) NOT NULL  DEFAULT '' COMMENT '标题图片' ,
+    news_summary VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '摘要' ,
+    news_content TEXT    COMMENT '内容' ,
+    news_link VARCHAR(256)    COMMENT '链接地址' ,
+    news_hits INT    COMMENT '阅览次数' ,
+    create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
+    create_time DATETIME    COMMENT '创建时间' ,
+    update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
+    update_time DATETIME    COMMENT '更新时间' ,
+    PRIMARY KEY (id)
+) COMMENT = '公告消息表 ';;
 
 
 

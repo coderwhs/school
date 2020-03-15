@@ -13,16 +13,18 @@
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+          <j-form-container disabled>
+            <j-search-select-tag v-decorator="['athleteId', validatorRules.athleteId]" :dict="fnDictCodeAthlete" />
+          </j-form-container>
         </a-form-item>
         <a-form-item label="年级" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['grade']" :trigger-change="true" dictCode="edu_grade" placeholder="请选择年级"/>
+          <j-dict-select-tag type="list" v-decorator="['grade', validatorRules.grade]" :trigger-change="true" dictCode="edu_grade" placeholder="请选择年级"/>
         </a-form-item>
         <a-form-item label="教学年度" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'academicYear', validatorRules.academicYear]" placeholder="请输入教学年度"></a-input>
         </a-form-item>
         <a-form-item label="学期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['semester']" :trigger-change="true" dictCode="edu_semester" placeholder="请选择学期"/>
+          <j-dict-select-tag type="list" v-decorator="['semester', validatorRules.semester]" :trigger-change="true" dictCode="edu_semester" placeholder="请选择学期"/>
         </a-form-item>
         <a-form-item label="语文" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'chineseScore', validatorRules.chineseScore]" placeholder="请输入语文" style="width: 100%"/>
@@ -116,11 +118,12 @@
         },
 
         confirmLoading: false,
+        dictCodeAthlete: '',
         validatorRules:{
           athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
-          grade:{rules: [{ required: true, message: '请输入年级!' }]},
+          grade:{rules: [{ required: true, message: '请选择年级!' }]},
           academicYear:{rules: [{ required: true, message: '请输入教学年度!' }]},
-          semester:{rules: [{ required: true, message: '请输入学期!' }]},
+          semester:{rules: [{ required: true, message: '请选择学期!' }]},
           chineseScore:{},
           mathsScore:{},
           englishScore:{},
@@ -147,6 +150,11 @@
     },
     created () {
     },
+    computed: {
+      fnDictCodeAthlete: function() {
+        return this.dictCodeAthlete;
+      }
+    },
     methods: {
       add(athleteId) {/* Tab修改@2019-12-12 */
         this.hiding = true;
@@ -165,6 +173,10 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'athleteId','grade','academicYear','semester','chineseScore','mathsScore','englishScore','politicsScore','physicsScore','chemistryScore','historyScore','geographyScore','biologyScore','musicScore','artScore','peScore','itScore','gtScore','societyScore','scienceScore'))
         })
+        // 初始化运动员字典
+        if (this.model.athleteId) {
+          this.dictCodeAthlete = "tb_edu_athlete, athlete_name, id, id = '" + this.model.athleteId + "'";
+        }
       },
       close () {
         this.$emit('close');

@@ -5,19 +5,29 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="学号">
-              <a-input placeholder="请输入学号" v-model="queryParam.athleteNo"></a-input>
+            <a-form-item label="姓名">
+              <a-input placeholder="请输入姓名" v-model="queryParam.athleteName"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="姓名">
-              <a-input placeholder="请输入姓名" v-model="queryParam.athleteName"></a-input>
+            <a-form-item label="专业项目">
+              <j-search-select-tag placeholder="请选择专业项目" v-model="queryParam.sportCode" dict="tb_edu_sport,sport_name,sport_code" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="带训教练">
+              <j-search-select-tag placeholder="请选择教练员" v-model="queryParam.coachId" dict="tb_edu_coach,coach_name,id" />
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
               <a-form-item label="性别">
                 <j-dict-select-tag placeholder="请选择性别" v-model="queryParam.gender" dictCode="sex"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="8">
+              <a-form-item label="学号">
+                <a-input placeholder="请输入学号" v-model="queryParam.athleteNo"></a-input>
               </a-form-item>
             </a-col>
           </template>
@@ -158,6 +168,7 @@
   import AthleteOtherTrianningInfoModal from './modules/AthleteOtherTrianningInfoModal'
   import AthleteContestModal from './modules/AthleteContestModal'/* Tab修改@2019-12-12 */
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import {deleteAction, putAction} from '@/api/manage'
 
@@ -167,6 +178,7 @@
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
+      JSearchSelectTag,
       AthleteModal,
       AthleteTransportList,
       // AthleteSportScoreList,
@@ -248,16 +260,6 @@
             }
           },
           {
-            title:'身高(cm)',
-            align:"center",
-            dataIndex: 'athleteHeight'
-          },
-          {
-            title:'体重(kg)',
-            align:"center",
-            dataIndex: 'athleteWeight'
-          },
-          {
             title:'专业项目',
             align:"center",
             dataIndex: 'sportCode',
@@ -270,6 +272,18 @@
             }
           },
           {
+            title:'带训教练',
+            align:"center",
+            dataIndex: 'coachId',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['coachId'], text+"")
+              }
+            }
+          },
+          {
             title:'入队时间',
             align:"center",
             dataIndex: 'majorSportAttendDate',
@@ -277,6 +291,16 @@
               return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
+          // {
+          //   title:'身高(cm)',
+          //   align:"center",
+          //   dataIndex: 'athleteHeight'
+          // },
+          // {
+          //   title:'体重(kg)',
+          //   align:"center",
+          //   dataIndex: 'athleteWeight'
+          // },
           {
             title: '操作',
             dataIndex: 'action',
@@ -324,6 +348,11 @@
             this.$set(this.dictOptions, 'sportCode', res.result)
           }
         })
+        initDictOptions('tb_edu_coach,coach_name,id').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'coachId', res.result)
+          }
+        })
       },
 
       handleSignUp: function (record) {
@@ -363,36 +392,41 @@
         this.selectionRows = selectionRows;
         let athleteId = this.selectedRowKeys[0];
         console.log("athleteId = " + athleteId)
+
         this.$refs.AthleteContestList.getAthleteByAthleteId(athleteId);
-        // this.$refs.AthleteSportScoreList.getAthleteByAthleteId(athleteId);
+        this.$refs.AthleteLiteracyScoreList.getAthleteByAthleteId(athleteId);
         this.$refs.AthleteTransportList.getAthleteByAthleteId(athleteId);
         this.$refs.AthleteOtherTrianningInfoList.getAthleteByAthleteId(athleteId);
-        this.$refs.AthleteLiteracyScoreList.getAthleteByAthleteId(athleteId);
+        // this.$refs.AthleteSportScoreList.getAthleteByAthleteId(athleteId);
         /* Tab修改@2019-12-12 */
       },
       onClearSelected() {/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
-        this.$refs.AthleteTransportList.queryParam.athleteId = null;
-        // this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
-        this.$refs.AthleteOtherTrianningInfoList.queryParam.athleteId = null;
+
         this.$refs.AthleteContestList.queryParam.athleteId = null;
         this.$refs.AthleteLiteracyScoreList.queryParam.athleteId = null;
-        this.$refs.AthleteTransportList.loadData();
-        // this.$refs.AthleteSportScoreList.loadData();
-        this.$refs.AthleteOtherTrianningInfoList.loadData();
-        this.$refs.AthleteContestList.loadData();
-        this.$refs.AthleteLiteracyScoreList.loadData();
-        this.$refs.AthleteTransportList.selectedRowKeys = [];
-        this.$refs.AthleteTransportList.selectionRows = [];
-        // this.$refs.AthleteSportScoreList.selectedRowKeys = [];
-        // this.$refs.AthleteSportScoreList.selectionRows = [];
-        this.$refs.AthleteOtherTrianningInfoList.selectedRowKeys = [];
-        this.$refs.AthleteOtherTrianningInfoList.selectionRows = [];
+        this.$refs.AthleteTransportList.queryParam.athleteId = null;
+        this.$refs.AthleteOtherTrianningInfoList.queryParam.athleteId = null;
+        // this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
+
+        this.$refs.AthleteContestList.loadData(1);
+        this.$refs.AthleteLiteracyScoreList.loadData(1);
+        this.$refs.AthleteTransportList.loadData(1);
+        this.$refs.AthleteOtherTrianningInfoList.loadData(1);
+        // this.$refs.AthleteSportScoreList.loadData(1);
+
         this.$refs.AthleteContestList.selectedRowKeys = [];
         this.$refs.AthleteContestList.selectionRows = [];
         this.$refs.AthleteLiteracyScoreList.selectedRowKeys = [];
         this.$refs.AthleteLiteracyScoreList.selectionRows = [];
+        this.$refs.AthleteTransportList.selectedRowKeys = [];
+        this.$refs.AthleteTransportList.selectionRows = [];
+        this.$refs.AthleteOtherTrianningInfoList.selectedRowKeys = [];
+        this.$refs.AthleteOtherTrianningInfoList.selectionRows = [];
+        // this.$refs.AthleteSportScoreList.selectedRowKeys = [];
+        // this.$refs.AthleteSportScoreList.selectionRows = [];
+
       },
 
       handleDelete: function (id) {/* Tab修改@2019-12-12 */
@@ -400,45 +434,59 @@
         deleteAction(that.url.delete, {id: id}).then((res) => {
           if (res.success) {
             that.$message.success(res.message);
-            that.loadData();
-            this.$refs.AthleteTransportList.loadData();
-            // this.$refs.AthleteSportScoreList.loadData();
-            this.$refs.AthleteOtherTrianningInfoList.loadData();
-            this.$refs.AthleteContestList.loadData();
-            this.$refs.AthleteLiteracyScoreList.loadData();
+
+            that.loadData(1);
+            this.$refs.AthleteTransportList.loadData(1);
+            this.$refs.AthleteOtherTrianningInfoList.loadData(1);
+            this.$refs.AthleteContestList.loadData(1);
+            this.$refs.AthleteLiteracyScoreList.loadData(1);
+            // this.$refs.AthleteSportScoreList.loadData(1);
+
           } else {
             that.$message.warning(res.message);
           }
         });
       },
+
       searchQuery:function(){/* Tab修改@2019-12-12 */
         this.selectedRowKeys = [];
         this.selectionRows = [];
-        this.$refs.AthleteTransportList.queryParam.athleteId = null;
+        this.loadData(1);
+
+        this.$refs.AthleteContestList.queryParam.athleteName = this.queryParam.athleteName;
+        this.$refs.AthleteContestList.queryParam.contestSportCode = this.queryParam.sportCode;
+        this.$refs.AthleteContestList.queryParam.coachId = this.queryParam.coachId;
+
+        this.$refs.AthleteLiteracyScoreList.queryParam.athleteId = this.queryParam.athleteName;
+        this.$refs.AthleteLiteracyScoreList.queryParam.sportCode = this.queryParam.sportCode;
+        this.$refs.AthleteLiteracyScoreList.queryParam.coachId = this.queryParam.coachId;
+
+        this.$refs.AthleteTransportList.queryParam.athleteId = this.queryParam.athleteName;
+        this.$refs.AthleteTransportList.queryParam.sportCode = this.queryParam.sportCode;
+        this.$refs.AthleteTransportList.queryParam.transportCoachId = this.queryParam.coachId;
+
         // this.$refs.AthleteSportScoreList.queryParam.athleteId = null;
-        this.$refs.AthleteOtherTrianningInfoList.queryParam.athleteId = null;
-        this.$refs.AthleteContestList.queryParam.athleteId = null;
-        this.$refs.AthleteLiteracyScoreList.queryParam.athleteId = null;
-        this.$refs.AthleteTransportList.loadData();
-        // this.$refs.AthleteSportScoreList.loadData();
-        this.$refs.AthleteOtherTrianningInfoList.loadData();
-        this.$refs.AthleteContestList.loadData();
-        this.$refs.AthleteLiteracyScoreList.loadData();
-        this.$refs.AthleteTransportList.selectedRowKeys = [];
-        this.$refs.AthleteTransportList.selectionRows = [];
-        // this.$refs.AthleteSportScoreList.selectedRowKeys = [];
-        // this.$refs.AthleteSportScoreList.selectionRows = [];
-        this.$refs.AthleteOtherTrianningInfoList.selectedRowKeys = [];
-        this.$refs.AthleteOtherTrianningInfoList.selectionRows = [];
+        this.$refs.AthleteOtherTrianningInfoList.queryParam.athleteId = this.queryParam.athleteName;
+        this.$refs.AthleteOtherTrianningInfoList.queryParam.sportCode = this.queryParam.sportCode;
+        this.$refs.AthleteOtherTrianningInfoList.queryParam.coachId = this.queryParam.coachId;
+
+        this.$refs.AthleteContestList.loadData(1);
+        this.$refs.AthleteLiteracyScoreList.loadData(1);
+        this.$refs.AthleteTransportList.loadData(1);
+        this.$refs.AthleteOtherTrianningInfoList.loadData(1);
+        // this.$refs.AthleteSportScoreList.loadData(1);
+
         this.$refs.AthleteContestList.selectedRowKeys = [];
         this.$refs.AthleteContestList.selectionRows = [];
-        this.$refs.AthleteLiteracyScoreList.selectedRowKeys = [];
         this.$refs.AthleteLiteracyScoreList.selectionRows = [];
-        this.loadData();
+        this.$refs.AthleteTransportList.selectionRows = [];
+        this.$refs.AthleteOtherTrianningInfoList.selectedRowKeys = [];
+        this.$refs.AthleteOtherTrianningInfoList.selectionRows = [];
+        // this.$refs.AthleteSportScoreList.selectedRowKeys = [];
+        // this.$refs.AthleteSportScoreList.selectionRows = [];
       }
     }
   }
 </script>
 <style scoped>
   @import '~@assets/less/common.less'
-</style>

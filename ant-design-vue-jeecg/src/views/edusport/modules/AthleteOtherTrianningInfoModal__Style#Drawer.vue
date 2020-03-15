@@ -12,7 +12,9 @@
       <a-form :form="form">
 
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+          <j-form-container disabled>
+            <j-search-select-tag v-decorator="['athleteId', validatorRules.athleteId]" :dict="fnDictCodeAthlete" />
+          </j-form-container>
         </a-form-item>
         <a-form-item label="记录时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择记录时间" v-decorator="[ 'recordDate', validatorRules.recordDate]" :trigger-change="true" style="width: 100%"/>
@@ -65,6 +67,7 @@
         },
 
         confirmLoading: false,
+        dictCodeAthlete: '',
         validatorRules:{
           athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
           recordDate:{rules: [{ required: true, message: '请输入记录时间!' }]},
@@ -78,6 +81,11 @@
       }
     },
     created () {
+    },
+    computed: {
+      fnDictCodeAthlete: function() {
+        return this.dictCodeAthlete;
+      }
     },
     methods: {
       /*add () {
@@ -100,6 +108,10 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'athleteId','recordDate','content'))
         })
+        // 初始化运动员字典
+        if (this.model.athleteId) {
+          this.dictCodeAthlete = "tb_edu_athlete, athlete_name, id, id = '" + this.model.athleteId + "'";
+        }
       },
       close () {
         this.$emit('close');

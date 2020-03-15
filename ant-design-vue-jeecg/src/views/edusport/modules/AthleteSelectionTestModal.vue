@@ -47,6 +47,7 @@
 <script>
 
   import { httpAction } from '@/api/manage'
+  import { duplicateCheck } from '@/api/api'
   import pick from 'lodash.pick'
   import JDate from '@/components/jeecg/JDate'
   import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
@@ -83,7 +84,7 @@
         dictCodeCoach: '',
         dictCodeAthlete: '',
         validatorRules:{
-          testName:{rules: [{ required: true, message: '请输入测试名称!' }]},
+          testName:{rules: [{ required: true, message: '请输入测试名称!' }, {validator: this.validateDuplicateCheckTestName}]},
           groupId:{rules: [{ required: true, message: '请选择测试组别!' }]},
           // sportCode:{rules: [{ required: true, message: '请选择测试大项!' }]},
           // eventCodes:{rules: [{ required: true, message: '请选择在训小项!' }]},
@@ -143,6 +144,39 @@
         if (this.model.eventCodes) {
           this.dictCodeSportEvent = "tb_edu_sport_event as t1, t1.event_name, t1.event_code, t1.enable_status=1 and (t1.event_code='" + this.model.eventCodes.replace(/,/g,"' or t1.event_code = '") + "') | tb_edu_sport t2, t2.sport_name, t2.sport_code = t1.sport_code | tb_edu_sport_disciplines t3, t3.disciplines_name, t3.disciplines_code=t1.disciplines_code";
         }
+
+        // 初始化测试指标字典
+        if (this.model.indexCodes) {
+          this.dictCodeGroupIndexCodes = "tb_edu_athlete_selection_index, cn_name, index_code, index_code='" + this.model.indexCodes.replace(/,/g,"' or index_code = '") + "'";
+        }
+
+        // 初始化教练员字典
+        if (this.model.coachIds) {
+          this.dictCodeCoach = "tb_edu_coach, coach_name, id, id = '" + this.model.coachIds.replace(/,/g, "' or id = '") + "'";
+        }
+
+        // 初始化运动员字典
+        if (this.model.athleteIds) {
+          this.dictCodeAthlete = "tb_edu_athlete as t1, t1.athlete_name, t1.id, t1.id = '" + this.model.athleteIds.replace(/,/g, "' or t1.id = '") + "' | tb_edu_sport as t2, t2.sport_name, t2.sport_code=t1.sport_code | tb_edu_coach as t3, t3.coach_name, t3.id=t1.coach_id";
+        }
+      },
+
+      // validateUnionDuplicateCheck(rule, value, callback) {
+      validateDuplicateCheckTestName(rule, value, callback) {
+        // 重复校验
+        var params = {
+          tableName: 'tb_edu_athlete_selection_test',
+          fieldName: 'test_name',
+          fieldVal: value,
+          dataId: this.model.id
+        }
+        duplicateCheck(params).then((res) => {
+          if (res.success) {
+            callback()
+          } else {
+            callback(res.message)
+          }
+        })
       },
       close () {
         this.$emit('close');

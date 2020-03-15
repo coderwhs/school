@@ -54,6 +54,7 @@
 <script>
 
   import { httpAction } from '@/api/manage'
+  import { duplicateCheck } from '@/api/api'
   import pick from 'lodash.pick'
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JMultiSelectTag from "@/components/dict/JMultiSelectTag"
@@ -89,7 +90,7 @@
 
         confirmLoading: false,
         validatorRules:{
-        groupName:{rules: [{ required: true, message: '请输入组别名称!' }]},
+        groupName:{rules: [{ required: true, message: '请输入组别名称!' }, {validator: this.validateDuplicateCheckGroupName}]},
         enableStatus:{rules: [{ required: true, message: '请选择启用状态!' }]},
         sportCode:{rules: [{ required: true, message: '请选择大项!' }]},
         eventCodes:{rules: [{ required: true, message: '请选择小项!' }]},
@@ -136,6 +137,22 @@
         if (this.model.eventCodes) {
           this.sportEventDictCode = "tb_edu_sport_event as t1, t1.event_name, t1.event_code, t1.enable_status=1 and (t1.event_code='" + this.model.eventCodes.replace(/,/g,"' or t1.event_code = '") + "') | tb_edu_sport t2, t2.sport_name, t2.sport_code = t1.sport_code | tb_edu_sport_disciplines t3, t3.disciplines_name, t3.disciplines_code=t1.disciplines_code";
         }
+      },
+      validateDuplicateCheckGroupName(rule, value, callback) {
+        // 重复校验
+        var params = {
+          tableName: 'tb_edu_athlete_selection_group',
+          fieldName: 'group_name',
+          fieldVal: value,
+          dataId: this.model.id
+        }
+        duplicateCheck(params).then((res) => {
+          if (res.success) {
+            callback()
+          } else {
+            callback(res.message)
+          }
+        })
       },
       close () {
         this.$emit('close');

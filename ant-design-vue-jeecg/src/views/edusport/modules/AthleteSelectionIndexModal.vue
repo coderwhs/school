@@ -56,6 +56,7 @@
 <script>
 
   import { httpAction } from '@/api/manage'
+  import { duplicateCheck } from '@/api/api'
   import pick from 'lodash.pick'
   import JDictSelectTag from "@/components/dict/JDictSelectTag"
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
@@ -87,11 +88,11 @@
         confirmLoading: false,
         indexCatCode:'',
         validatorRules:{
-        indexCatCode:{rules: [{ required: true, message: '请输入指标类别!' }]},
+        indexCatCode:{rules: [{ required: true, message: '请输入指标类别!' }, {validator: this.validateUnionDuplicateCheck}]},
         parentCode:{},
-        indexCode:{rules: [{ required: true, message: '请输入指标代码!' }]},
+        indexCode:{rules: [{ required: true, message: '请输入指标代码!' }, {validator: this.validateUnionDuplicateCheck}]},
         isLeaf:{rules: [{ required: true, message: '请输入是否叶节点!' }]},
-        cnName:{rules: [{ required: true, message: '请输入中文名称!' }]},
+        cnName:{rules: [{ required: true, message: '请输入中文名称!' }, {validator: this.validateUnionDuplicateCheck}]},
         enName:{},
         enShortName:{},
         unit:{},
@@ -116,6 +117,25 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'indexCatCode','parentCode','indexCode','isLeaf','cnName','enName','enShortName','unit','enableStatus'))
+        })
+      },
+      validateUnionDuplicateCheck(rule, value, callback) {
+        // 重复校验
+        var params = {
+          tableName: 'tb_edu_athlete_selection_index',
+          fieldName: "concat_ws(',', index_cat_code, index_code, cn_name)",
+          fieldVal: this.form.getFieldValue("indexCatCode") + "," + this.form.getFieldValue("indexCode") + "," + this.form.getFieldValue("cnName"),
+          dataId: this.model.id
+        }
+        duplicateCheck(params).then((res) => {
+          if (res.success) {
+            this.form.setFields({indexCatCode: {value: this.form.getFieldValue("indexCatCode")}});
+            this.form.setFields({indexCatName: {value: this.form.getFieldValue("indexCode")}});
+            this.form.setFields({indexCatName: {value: this.form.getFieldValue("cnName")}});
+            callback()
+          } else {
+            callback("该值不可用，系统中已存在您输入的（指标类别代码+指标代码+中文名称）组合！")
+          }
         })
       },
       close () {
