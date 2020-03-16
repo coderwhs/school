@@ -173,7 +173,14 @@
           {
             title:'获得最高等级',
             align:"center",
-            dataIndex: 'awardedHighestGrade'
+            dataIndex: 'awardedHighestGrade',
+            customRender:(text)=>{
+              if(!text){
+                return ''
+              }else{
+                return filterMultiDictText(this.dictOptions['awardedHighestGrade'], text+"")
+              }
+            }
           },
           {
             title:'获得年度(年)',
@@ -213,6 +220,11 @@
         initDictOptions('tb_edu_sport,sport_name,sport_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'sportCode', res.result)
+          }
+        })
+        initDictOptions('athlete_tech_grade').then((res) => {
+          if (res.success) {
+            this.$set(this.dictOptions, 'awardedHighestGrade', res.result)
           }
         })
       },

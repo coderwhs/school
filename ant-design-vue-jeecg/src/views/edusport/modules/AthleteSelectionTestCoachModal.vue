@@ -120,7 +120,7 @@
                         <a-input style="width:1px" v-decorator="['testAthleteScoreList['+index+'].testAthleteScoreDetailList['+detailIndex+'].indexCode', {'initialValue':detailItem.indexCode}]" />
                       </div>
                       <a-input v-decorator="['testAthleteScoreList['+index+'].testAthleteScoreDetailList['+detailIndex+'].testValue', {'initialValue':detailItem.testValue}]" :placeholder="dictTextIndexCode(detailItem.indexCode)" style="width:70px"/>
-                      {{detailItem.testRating?dictTextTestRating(detailItem.testRating):"未匹配"}}
+<!--                      {{detailItem.testRating?dictTextTestRating(detailItem.testRating):"未匹配"}}-->
                   </a-form-item>
                 </a-col>
 
@@ -167,7 +167,7 @@
         tokenHeader: {'X-Access-Token': Vue.ls.get(ACCESS_TOKEN)},
         form: this.$form.createForm(this),
         title:"操作",
-        width:1300,
+        width:1400,
         visible: false,
         model: {},
         labelCol: {

@@ -13,16 +13,18 @@
       <a-form :form="form">
 
         <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
+          <j-form-container disabled>
+            <j-search-select-tag v-decorator="['coachId', validatorRules.coachId]" dict="tb_edu_coach,coach_name,id" />
+          </j-form-container>
         </a-form-item>
         <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" />
+          <j-search-select-tag v-decorator="['sportCode', validatorRules.sportCode]" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
         <a-form-item label="参加时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择参加时间" v-decorator="[ 'attendDate', validatorRules.attendDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="获得最高等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['awardedHighestGrade']" :trigger-change="true" dictCode="athlete_tech_grade" placeholder="请选择获得最高等级"/>
+          <j-dict-select-tag type="list" v-decorator="['awardedHighestGrade', validatorRules.awardedHighestGrade]" :trigger-change="true" dictCode="athlete_tech_grade" placeholder="请选择获得最高等级"/>
         </a-form-item>
         <a-form-item label="获得年度(年)" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'awardedDate', validatorRules.awardedDate]" placeholder="请输入获得年度(年)"></a-input>
@@ -87,14 +89,14 @@
 
         confirmLoading: false,
         validatorRules:{
-          coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
-          sportCode:{rules: [{ required: true, message: '请输入运动项目!' }]},
-          attendDate:{rules: [{ required: true, message: '请输入参加时间!' }]},
-          awardedHighestGrade:{rules: [{ required: true, message: '请输入获得最高等级!' }]},
+          coachId:{rules: [{ required: true, message: '请选择教练员!' }]},
+          sportCode:{rules: [{ required: true, message: '请选择运动项目!' }]},
+          attendDate:{rules: [{ required: true, message: '请选择参加时间!' }]},
+          awardedHighestGrade:{rules: [{ required: true, message: '请选择获得最高等级!' }]},
           awardedDate:{rules: [{ required: true, message: '请输入获得年度(年)!' }]},
           highestTrainingUnit:{rules: [{ required: true, message: '请输入最高训练单位!' }]},
           trainingDate:{rules: [{ required: true, message: '请输入训练年度(年)!' }]},
-          contestEvent:{rules: [{ required: true, message: '请输入比赛小项!' }]},
+          contestEvent:{rules: [{ required: true, message: '请选择比赛小项!' }]},
           contestScore:{rules: [{ required: true, message: '请输入最好成绩!' }]},
         },
         url: {

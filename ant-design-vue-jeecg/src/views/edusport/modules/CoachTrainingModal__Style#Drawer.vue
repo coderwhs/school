@@ -13,7 +13,9 @@
       <a-form :form="form">
 
         <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
+          <j-form-container disabled>
+            <j-search-select-tag v-decorator="['coachId', validatorRules.coachId]" dict="tb_edu_coach,coach_name,id" />
+          </j-form-container>
         </a-form-item>
         <a-form-item label="培训名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'trainingCourse', validatorRules.trainingCourse]" placeholder="请输入培训名称"></a-input>
@@ -31,7 +33,7 @@
           <a-input v-decorator="[ 'trainingPlace', validatorRules.trainingPlace]" placeholder="请输入培训地点"></a-input>
         </a-form-item>
         <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['remark']" rows="4" placeholder="请输入备注"/>
+          <a-textarea v-decorator="['remark', validatorRules.remark]" rows="4" placeholder="请输入备注"/>
         </a-form-item>
 
       </a-form>
@@ -82,13 +84,13 @@
 
         confirmLoading: false,
         validatorRules:{
-          coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+          coachId:{rules: [{ required: true, message: '请选择教练员!' }]},
           trainingCourse:{rules: [{ required: true, message: '请输入培训名称!' }]},
           startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
           endDate:{},
           trainingPlace:{rules: [{ required: true, message: '请输入培训地点!' }]},
           organizer:{rules: [{ required: true, message: '请输入主办单位!' }]},
-          remark:{rules: [{ required: true, message: '请输入备注!' }]},
+          // remark:{rules: [{ required: true, message: '请输入备注!' }]},
         },
         url: {
           add: "/edusport/coachTraining/add",

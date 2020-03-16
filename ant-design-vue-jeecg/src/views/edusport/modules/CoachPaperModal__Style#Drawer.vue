@@ -13,7 +13,9 @@
       <a-form :form="form">
 
         <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
+          <j-form-container disabled>
+            <j-search-select-tag v-decorator="['coachId', validatorRules.coachId]" dict="tb_edu_coach,coach_name,id" />
+          </j-form-container>
         </a-form-item>
         <a-form-item label="论文名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'paperTitle', validatorRules.paperTitle]" placeholder="请输入论文名称"></a-input>
@@ -22,7 +24,7 @@
           <a-input v-decorator="[ 'publicationName', validatorRules.publicationName]" placeholder="请输入刊物名称"></a-input>
         </a-form-item>
         <a-form-item label="刊物等级" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['publicationLevel']" :trigger-change="true" dictCode="publication_level" placeholder="请选择刊物等级"/>
+          <j-dict-select-tag type="list" v-decorator="['publicationLevel', validatorRules.publicationLevel]" :trigger-change="true" dictCode="publication_level" placeholder="请选择刊物等级"/>
         </a-form-item>
         <a-form-item label="发表日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择发表日期" v-decorator="[ 'publishDate', validatorRules.publishDate]" :trigger-change="true" style="width: 100%"/>
@@ -75,7 +77,7 @@
 
         confirmLoading: false,
         validatorRules:{
-          coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+          coachId:{rules: [{ required: true, message: '请选择教练员!' }]},
           paperTitle:{rules: [{ required: true, message: '请输入论文名称!' }]},
           publicationName:{rules: [{ required: true, message: '请输入刊物名称!' }]},
           publicationLevel:{rules: [{ required: true, message: '请输入刊物等级!' }]},

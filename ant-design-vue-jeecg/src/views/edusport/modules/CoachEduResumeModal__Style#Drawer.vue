@@ -13,7 +13,9 @@
       <a-form :form="form">
 
         <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" disabled />
+          <j-form-container disabled>
+            <j-search-select-tag v-decorator="['coachId', validatorRules.coachId]" dict="tb_edu_coach,coach_name,id" />
+          </j-form-container>
         </a-form-item>
         <a-form-item label="开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
@@ -22,7 +24,7 @@
           <j-date placeholder="请选择结束日期" v-decorator="[ 'endDate', validatorRules.endDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="从事何种工作" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['resume']" rows="4" placeholder="请输入从事何种工作"/>
+          <a-textarea v-decorator="['resume', validatorRules.resume]" rows="4" placeholder="请输入从事何种工作"/>
         </a-form-item>
 
       </a-form>
@@ -70,8 +72,8 @@
 
         confirmLoading: false,
         validatorRules:{
-          coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
-          startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
+          coachId:{rules: [{ required: true, message: '请选择教练员!' }]},
+          startDate:{rules: [{ required: true, message: '请选择开始日期!' }]},
           endDate:{},
           resume:{rules: [{ required: true, message: '请输入从事何种工作!' }]},
         },

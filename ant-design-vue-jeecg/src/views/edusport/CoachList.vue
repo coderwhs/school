@@ -5,23 +5,28 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
+            <a-form-item label="教练员姓名">
+              <a-input placeholder="请输入教练员姓名" v-model="queryParam.coachName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8">
             <a-form-item label="教练员代码">
               <a-input placeholder="请输入教练员代码" v-model="queryParam.coachNo"></a-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="教练员姓名">
-              <a-input placeholder="请输入教练员姓名" v-model="queryParam.coachName"></a-input>
+            <a-form-item label="性别">
+              <j-dict-select-tag placeholder="请选择性别" v-model="queryParam.gender" dictCode="sex"/>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="8" >
+          <a-col :md="6" :sm="8">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
             </span>
           </a-col>
 
@@ -358,9 +363,6 @@
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
         let coachId = this.selectedRowKeys[0];
-        console.log("selectedRowKeys: " + selectedRowKeys);
-        console.log("selectionRows: " + JSON.stringify(selectionRows));
-        console.log("selectionRows.coachId: " + JSON.stringify(coachId));
 
         this.$refs.CoachEduResumeList.getListByCoachId(coachId);
         this.$refs.CoachSportResumeList.getListByCoachId(coachId);
@@ -376,10 +378,10 @@
         this.$refs.CoachTrainingList.queryParam.coachNo = null;
         this.$refs.CoachPaperList.queryParam.coachNo = null;
 
-        this.$refs.CoachEduResumeList.loadData();
-        this.$refs.CoachSportResumeList.loadData();
-        this.$refs.CoachTrainingList.loadData();
-        this.$refs.CoachPaperList.loadData();
+        this.$refs.CoachEduResumeList.loadData(1);
+        this.$refs.CoachSportResumeList.loadData(1);
+        this.$refs.CoachTrainingList.loadData(1);
+        this.$refs.CoachPaperList.loadData(1);
 
         this.$refs.CoachEduResumeList.selectedRowKeys = [];
         this.$refs.CoachEduResumeList.selectionRows = [];
@@ -402,10 +404,10 @@
         this.$refs.CoachTrainingList.queryParam.coachNo = null;
         this.$refs.CoachPaperList.queryParam.coachNo = null;
 
-        this.$refs.CoachEduResumeList.loadData();
-        this.$refs.CoachSportResumeList.loadData();
-        this.$refs.CoachTrainingList.loadData();
-        this.$refs.CoachPaperList.loadData();
+        this.$refs.CoachEduResumeList.loadData(1);
+        this.$refs.CoachSportResumeList.loadData(1);
+        this.$refs.CoachTrainingList.loadData(1);
+        this.$refs.CoachPaperList.loadData(1);
 
         this.$refs.CoachEduResumeList.selectedRowKeys = [];
         this.$refs.CoachEduResumeList.selectionRows = [];
@@ -419,7 +421,7 @@
         this.$refs.CoachPaperList.selectedRowKeys = [];
         this.$refs.CoachPaperList.selectionRows = [];
 
-        this.loadData();
+        this.loadData(1);
       }
 
 

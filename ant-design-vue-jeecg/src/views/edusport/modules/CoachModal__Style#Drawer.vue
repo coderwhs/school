@@ -29,12 +29,12 @@
             <a-row>
               <a-col :span="12">
                 <a-form-item label="性别" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
-                  <j-dict-select-tag type="list" v-decorator="['gender']" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
+                  <j-dict-select-tag type="list" v-decorator="['gender', validatorRules.gender]" :trigger-change="true" dictCode="sex" placeholder="请选择性别"/>
                 </a-form-item>
               </a-col>
               <a-col :span="12">
                 <a-form-item label="民族" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
-                  <j-dict-select-tag type="list" v-decorator="['nation']" :trigger-change="true" dictCode="nation" placeholder="请选择民族"/>
+                  <j-dict-select-tag type="list" v-decorator="['nation', validatorRules.nation]" :trigger-change="true" dictCode="nation" placeholder="请选择民族"/>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -103,24 +103,24 @@
         <a-row>
           <a-col :span="12">
             <a-form-item label="学历" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
-              <j-dict-select-tag type="list" v-decorator="['eduBackground']" :trigger-change="true" dictCode="edu_background" placeholder="请选择学历"/>
+              <j-dict-select-tag type="list" v-decorator="['eduBackground', validatorRules.eduBackground]" :trigger-change="true" dictCode="edu_background" placeholder="请选择学历"/>
             </a-form-item>
           </a-col>
           <a-col :span="12">
             <a-form-item label="学位" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
-              <j-dict-select-tag type="list" v-decorator="['eduDegree']" :trigger-change="true" dictCode="edu_degree" placeholder="请选择学位"/>
+              <j-dict-select-tag type="list" v-decorator="['eduDegree', validatorRules.eduDegree]" :trigger-change="true" dictCode="edu_degree" placeholder="请选择学位"/>
             </a-form-item>
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="12">
             <a-form-item label="编制类型" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
-              <j-dict-select-tag type="list" v-decorator="['staffType']" :trigger-change="true" dictCode="staff_type" placeholder="请选择编制类型"/>
+              <j-dict-select-tag type="list" v-decorator="['staffType', validatorRules.staffType]" :trigger-change="true" dictCode="staff_type" placeholder="请选择编制类型"/>
             </a-form-item>
           </a-col>
           <a-col :span="12">
             <a-form-item label="政治面貌" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
-              <j-dict-select-tag type="list" v-decorator="['politicalStatus']" :trigger-change="true" dictCode="political_status" placeholder="请选择政治面貌"/>
+              <j-dict-select-tag type="list" v-decorator="['politicalStatus', validatorRules.politicalStatus]" :trigger-change="true" dictCode="political_status" placeholder="请选择政治面貌"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -204,6 +204,7 @@
 <script>
 
   import { httpAction } from '@/api/manage'
+  import { duplicateCheck } from '@/api/api'
   import pick from 'lodash.pick'
   import Vue from 'vue'
   import {ACCESS_TOKEN} from "@/store/mutation-types"
@@ -270,17 +271,17 @@
 
         confirmLoading: false,
         validatorRules:{
-          coachNo:{rules: [{ required: true, message: '请输入教练员代码!' }]},
+          coachNo:{rules: [{ required: true, message: '请输入教练员代码!' }, {validator: this.validateDuplicateCheckCoachNo}]},
           coachName:{rules: [{ required: true, message: '请输入教练员姓名!' }]},
           gender:{rules: [{ required: true, message: '请输入性别!' }]},
           nation:{rules: [{ required: true, message: '请输入民族!' }]},
           birthDate:{rules: [{ required: true, message: '请输入出生日期!' }]},
-          idNo:{rules: [{ required: true, message: '请输入身份证号!' }]},
+          idNo:{rules: [{ required: true, message: '请输入身份证号!' }, {validator: this.validateDuplicateCheckIdNo}]},
           // nativeProvince:{rules: [{ required: true, message: '请输入籍贯省!' }]},
           // nativeCity:{rules: [{ required: true, message: '请输入籍贯市!' }]},
           // politicalStatus:{rules: [{ required: true, message: '请输入政治面貌!' }]},
           // homeAddress:{rules: [{ required: true, message: '请输入家庭地址!' }]},
-          mobile:{rules: [{ required: true, message: '请输入手机号码!' }]},
+          mobile:{rules: [{ required: true, message: '请输入手机号码!' }, {validator: this.validateDuplicateCheckMobile}]},
           eduBackground:{rules: [{ required: true, message: '请输入学历!' }]},
           eduDegree:{rules: [{ required: true, message: '请输入学位!' }]},
           staffType:{rules: [{ required: true, message: '请输入编制类型!' }]},
@@ -330,6 +331,54 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'coachNo','coachName','gender','nation','birthDate','idNo','nativeProvince','nativeCity','politicalStatus','homeAddress','mobile','eduBackground','eduDegree','staffType','hireDate','hireYears','marjorInfo','coachStartDate','l3AppointmentDate','l2AppointmentDate','l1AppointmentDate','ladvCertDate','ladvAppointmentDate','lcnCertDate','lcnAppointmentDate'))
+        })
+      },
+      validateDuplicateCheckCoachNo(rule, value, callback) {
+        // 重复校验
+        var params = {
+          tableName: 'tb_edu_coach',
+          fieldName: 'coach_no',
+          fieldVal: value,
+          dataId: this.model.id
+        }
+        duplicateCheck(params).then((res) => {
+          if (res.success) {
+            callback()
+          } else {
+            callback(res.message)
+          }
+        })
+      },
+      validateDuplicateCheckIdNo(rule, value, callback) {
+        // 重复校验
+        var params = {
+          tableName: 'tb_edu_coach',
+          fieldName: 'id_no',
+          fieldVal: value,
+          dataId: this.model.id
+        }
+        duplicateCheck(params).then((res) => {
+          if (res.success) {
+            callback()
+          } else {
+            callback(res.message)
+          }
+        })
+      },
+      validateDuplicateCheckMobile(rule, value, callback) {
+        // 重复校验
+        var params = {
+          tableName: 'tb_edu_coach',
+          fieldName: 'mobile',
+          fieldVal: value,
+          dataId: this.model.id
+        }
+        duplicateCheck(params).then((res) => {
+          if (res.success) {
+            callback()
+          } else {
+            callback(res.message)
+          }
         })
       },
       close () {

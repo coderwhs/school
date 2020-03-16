@@ -13,7 +13,7 @@
       <a-form :form="form">
 
         <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
+          <j-search-select-tag v-decorator="['coachId', validatorRules.coachId]" dict="tb_edu_coach,coach_name,id" />
         </a-form-item>
         <a-form-item label="业务年度" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'performanceYear', validatorRules.performanceYear]" placeholder="请输入业务年度" style="width: 100%"/>
@@ -85,7 +85,7 @@
           <a-input v-decorator="[ 'isScTeam', validatorRules.isScTeam]" placeholder="请输入是否年度少儿锦标赛精神文明运动队"></a-input>
         </a-form-item>
         <a-form-item label="奖惩情况" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['rewardsPunishments']" rows="4" placeholder="请输入奖惩情况"/>
+          <a-textarea v-decorator="['rewardsPunishments', validatorRules.rewardsPunishments]" rows="4" placeholder="请输入奖惩情况"/>
         </a-form-item>
         <a-form-item label="年度业务考核得分" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'appraisalScore', validatorRules.appraisalScore]" placeholder="请输入年度业务考核得分"></a-input>
@@ -94,7 +94,7 @@
           <a-input v-decorator="[ 'appraisalGrade', validatorRules.appraisalGrade]" placeholder="请输入年度业务考核等级"></a-input>
         </a-form-item>
         <a-form-item label="训练部门审核意见" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['auditOpinion']" rows="4" placeholder="请输入训练部门审核意见"/>
+          <a-textarea v-decorator="['auditOpinion', validatorRules.appraisalGrade]" rows="4" placeholder="请输入训练部门审核意见"/>
         </a-form-item>
 
       </a-form>
@@ -139,7 +139,7 @@
 
         confirmLoading: false,
         validatorRules:{
-          coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
+          coachId:{rules: [{ required: true, message: '请选择教练员!' }]},
           performanceYear:{rules: [{ required: true, message: '请输入业务年度!' }]},
           athleteNum:{},
           attendNum:{},

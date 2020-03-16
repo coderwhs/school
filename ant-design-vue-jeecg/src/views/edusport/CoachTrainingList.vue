@@ -159,6 +159,11 @@
             dataIndex: 'trainingCourse'
           },
           {
+            title:'主办单位',
+            align:"center",
+            dataIndex: 'organizer'
+          },
+          {
             title:'开始日期',
             align:"center",
             dataIndex: 'startDate',
@@ -178,11 +183,6 @@
             title:'培训地点',
             align:"center",
             dataIndex: 'trainingPlace'
-          },
-          {
-            title:'主办单位',
-            align:"center",
-            dataIndex: 'organizer'
           },
           {
             title: '操作',

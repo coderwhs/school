@@ -181,7 +181,7 @@
               </a-col>
               <a-col :span="12">
                 <a-form-item label="带训教练" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
-                  <j-search-select-tag v-decorator="['coachId', validatorRules.coachId]" dict="tb_edu_coach,coach_name,id" />
+                  <j-search-select-tag v-decorator="['coachId', validatorRules.coachId]" dict="tb_edu_athlete,coach_name,id" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -238,6 +238,7 @@
     <script>
 
       import { httpAction } from '@/api/manage'
+      import { duplicateCheck } from '@/api/api'
       import pick from 'lodash.pick'
       import JDate from '@/components/jeecg/JDate'
       import JDictSelectTag from "@/components/dict/JDictSelectTag"
@@ -246,6 +247,7 @@
       import JUpload from '@/components/jeecg/JUpload'
       import Vue from 'vue'
       import {ACCESS_TOKEN} from "@/store/mutation-types"
+
       export default {
         name: "AthleteModal",
         components: {
@@ -305,13 +307,13 @@
 
             confirmLoading: false,
             validatorRules:{
-              athleteNo:{rules: [{ required: true, message: '请输入学号!' }]},
+              athleteNo:{rules: [{ required: true, message: '请输入学号!' }, {validator: this.validateDuplicateCheckAthleteNo}]},
               athleteName:{rules: [{ required: true, message: '请输入姓名!' }]},
               gender:{rules: [{ required: true, message: '请输入性别!' }]},
               nation:{rules: [{ required: true, message: '请输入民族!' }]},
               birthDate:{rules: [{ required: true, message: '请输入出生日期!' }]},
-              idNo:{rules: [{ required: true, message: '请输入身份证号!' }]},
-              mobile:{rules: [{ required: true, message: '请输入手机号码!' }]},
+              idNo:{rules: [{ required: true, message: '请输入身份证号!' }, {validator: this.validateDuplicateCheckIdNo}]},
+              mobile:{rules: [{ required: true, message: '请输入手机号码!' }, {validator: this.validateDuplicateCheckMobile}]},
               // homeAddress:{rules: [{ required: true, message: '请输入家庭住址!' }]},
               // nativeProvince:{rules: [{ required: true, message: '请输入籍贯省!' }]},
               // nativeCity:{rules: [{ required: true, message: '请输入籍贯市!' }]},
@@ -375,6 +377,54 @@
               this.form.setFieldsValue(pick(this.model,'athleteNo','athleteName','gender','nation','birthDate','athleteHeight','athleteWeight','sportCode','coachId','nativeProvince','nativeCity','idNo','mobile','homeAddress','zipcode','policeStation','father','fatherHeight','fatherMobile','mother','motherHeight','motherMobile','transportDepartmentCity','transportDepartmentSchool','admissionDate','grade','majorSportAttendDate','retireDate','acceptDepartmentType','acceptDepartment','photoPath','resume'))
             })
           },
+          validateDuplicateCheckAthleteNo(rule, value, callback) {
+            // 重复校验
+            var params = {
+              tableName: 'tb_edu_athlete',
+              fieldName: 'athlete_no',
+              fieldVal: value,
+              dataId: this.model.id
+            }
+            duplicateCheck(params).then((res) => {
+              if (res.success) {
+                callback()
+              } else {
+                callback(res.message)
+              }
+            })
+          },
+          validateDuplicateCheckIdNo(rule, value, callback) {
+            // 重复校验
+            var params = {
+              tableName: 'tb_edu_athlete',
+              fieldName: 'id_no',
+              fieldVal: value,
+              dataId: this.model.id
+            }
+            duplicateCheck(params).then((res) => {
+              if (res.success) {
+                callback()
+              } else {
+                callback(res.message)
+              }
+            })
+          },
+          validateDuplicateCheckMobile(rule, value, callback) {
+            // 重复校验
+            var params = {
+              tableName: 'tb_edu_athlete',
+              fieldName: 'mobile',
+              fieldVal: value,
+              dataId: this.model.id
+            }
+            duplicateCheck(params).then((res) => {
+              if (res.success) {
+                callback()
+              } else {
+                callback(res.message)
+              }
+            })
+          },
           close () {
             this.$emit('close');
             this.visible = false;
@@ -390,8 +440,7 @@
               this.drawerWidth = 700;
             }
           },
-
-
+          
           handleOk () {
             const that = this;
             // 触发表单验证

@@ -176,6 +176,7 @@
           },
           {
             title:'教练员',
+            width:80,
             align:"center",
             dataIndex: 'coachId',
             customRender:(text)=>{
@@ -188,6 +189,7 @@
           },
           {
             title:'测试组别',
+            width:120,
             align:"center",
             dataIndex: 'groupId',
             customRender:(text)=>{
@@ -198,18 +200,19 @@
               }
             }
           },
-          {
-            title:'测试项目',
-            align:"center",
-            dataIndex: 'sportCode',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['sportCode'], text+"")
-              }
-            }
-          },
+          // {
+          //   title:'测试项目',
+          //   width:100,
+          //   align:"center",
+          //   dataIndex: 'sportCode',
+          //   customRender:(text)=>{
+          //     if(!text){
+          //       return ''
+          //     }else{
+          //       return filterMultiDictText(this.dictOptions['sportCode'], text+"")
+          //     }
+          //   }
+          // },
           {
             title:'测试小项',
             align:"center",
@@ -236,6 +239,7 @@
           },
           {
             title:'测试等级评定',
+            width:150,
             align:"center",
             dataIndex: 'testRatings',
           },
@@ -253,14 +257,16 @@
           },
           {
             title:'测试日期',
+            width:80,
             align:"center",
             dataIndex: 'testDate',
             customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
+              return !text?"":(text.length>=10?text.substr(5,5):text)
             }
           },
           {
             title:'单据状态',
+            width:80,
             align:"center",
             dataIndex: 'status'
           },
