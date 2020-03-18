@@ -184,7 +184,7 @@
     },
     methods: {
       initDictConfig(){
-        initDictOptions('tb_edu_sport_class_athlete_year_goal,year_plan_id,id').then((res) => {
+        initDictOptions('tb_edu_sport_class_year_plan,plan_name,id').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'yearPlanId', res.result)
           }
@@ -204,7 +204,10 @@
         this.$refs.modalForm.title = "添加运动员年度成绩目标";
         this.$refs.modalForm.disableSubmit = false;
       },
-       
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+      }
     }
   }
 </script>

@@ -42,7 +42,7 @@ public class SportClassWeekPlan implements Serializable {
 	@Excel(name = "周结束日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    private java.util.Date endTime;
+    private java.util.Date endDate;
 	/**目的任务*/
 	@Excel(name = "目的任务", width = 15)
     private java.lang.String taskGoal;

@@ -90,7 +90,7 @@
 
         if (athleteId) {
           this.athleteId = athleteId;
-          this.edit({athleteId:athleteId},'');
+          this.edit({athleteId: athleteId});
         } else {
           this.$message.warning("请选择一条运动员信息");
         }

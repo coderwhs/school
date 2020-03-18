@@ -81,7 +81,7 @@
         this.hiding = true;
         if (dormId) {
           this.dormId = dormId;
-          this.edit({dormId}, '');
+          this.edit({dormId: dormId});
         } else {
           this.$message.warning("请选择一个宿舍信息");
         }

@@ -85,7 +85,7 @@
         this.hiding = true;
         if (sportClassId) {
           this.sportClassId = sportClassId;
-          this.edit({sportClassId}, '');
+          this.edit({sportClassId: sportClassId});
         } else {
           this.$message.warning("请选择一个训练队信息");
         }

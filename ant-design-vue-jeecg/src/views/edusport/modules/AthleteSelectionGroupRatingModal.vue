@@ -78,7 +78,7 @@
         this.hiding = true;
         if (groupId) {
           this.groupId = groupId;
-          this.edit({groupId}, '');
+          this.edit({groupId: groupId});
         } else {
           this.$message.warning("请选择一个测试组别");
         }

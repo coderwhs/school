@@ -70,12 +70,12 @@ public class GraphReportController extends JeecgController<GraphReport, IGraphRe
     public Result<?> getAthleteTechGradeGroupData() throws Exception {
     	StringBuffer querySql = new StringBuffer();
     	querySql.append("(");
-    	querySql.append(" select t.item_text as x, count(1) as y from tb_edu_athlete_contest ");
+    	querySql.append(" select t2.item_text as x, count(1) as y from tb_edu_athlete_contest t1");
     	querySql.append(" left join ");
     	querySql.append(" (select item_value, item_text from sys_dict_item where dict_id in ");
-    	querySql.append("  (select id from sys_dict t where t.dict_code='athlete_tech_grade')) as t");
-    	querySql.append(" on t.item_value = awarded_tech_grade ");
-    	querySql.append(" GROUP BY awarded_tech_grade ");
+    	querySql.append("  (select id from sys_dict t where t.dict_code='athlete_tech_grade')) as t2");
+    	querySql.append(" on t2.item_value = t1.awarded_tech_grade ");
+    	querySql.append(" GROUP BY t2.item_text ");
     	querySql.append(") as t");
     	
     	List<GraphReport> graphReportList = this.mapper.getGroupData(querySql.toString(), Wrappers.query().select("*"));

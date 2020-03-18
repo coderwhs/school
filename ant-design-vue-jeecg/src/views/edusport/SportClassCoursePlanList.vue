@@ -91,7 +91,7 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportClassCoursePlanModal from './modules/SportClassCoursePlanModal'
+  import SportClassCoursePlanModal from './modules/SportClassCoursePlanModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
@@ -200,8 +200,8 @@
       },
       getListByWeeklySportClassId(sportClassId, startDate, endDate) {
         this.queryParam.sportClassId = sportClassId;
-        this.queryParam.startDate = startDate;
-        this.queryParam.endDate = endDate;
+        this.queryParam.courseDate_begin = startDate;
+        this.queryParam.courseDate_end = endDate;
 
         this.loadData(1);
       },
@@ -210,7 +210,10 @@
         this.$refs.modalForm.title = "添加课训练计划";
         this.$refs.modalForm.disableSubmit = false;
       },
-       
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+      }
     }
   }
 </script>

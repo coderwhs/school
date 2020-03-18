@@ -126,7 +126,7 @@
             }
           },
           {
-            title:'训练班',
+            title:'训练队',
             align:"center",
             dataIndex: 'sportClassId',
             customRender:(text)=>{

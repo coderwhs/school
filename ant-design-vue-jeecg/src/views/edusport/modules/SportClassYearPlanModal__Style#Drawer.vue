@@ -13,16 +13,16 @@
       <a-form :form="form">
 
         <a-form-item label="训练队" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
+          <j-search-select-tag v-decorator="['sportClassId', validatorRules.sportClassId]" dict="tb_edu_sport_class,class_name,id" placeholder="请选择训练队"/>
         </a-form-item>
         <a-form-item label="训练计划名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'planName', validatorRules.planName]" placeholder="请输入训练计划名称"></a-input>
         </a-form-item>
         <a-form-item label="初始情况" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-editor v-decorator="['teamSituation',{trigger:'input'}]"/>
+          <j-editor v-decorator="['teamSituation', validatorRules.teamSituation]"/>
         </a-form-item>
         <a-form-item label="全年任务" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-editor v-decorator="['yearGoal',{trigger:'input'}]"/>
+          <j-editor v-decorator="['yearGoal', validatorRules.yearGoal]"/>
         </a-form-item>
         <a-divider orientation="left">准备期</a-divider>
         <a-form-item label="准备期开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -38,7 +38,7 @@
           <a-input addonBefore="天数" v-decorator="[ 'prepareDays', validatorRules.prepareDays]" placeholder="请输入准备期天数"></a-input>
         </a-form-item>
         <a-form-item label="准备期训练任务" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['prepareGoal']" rows="4" placeholder="请输入准备期训练任务"/>
+          <a-textarea v-decorator="['prepareGoal', validatorRules.prepareGoal]" rows="4" placeholder="请输入准备期训练任务"/>
         </a-form-item>
         <a-form-item label="准备期身体训练" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'prepareBodyPercent', validatorRules.prepareBodyPercent]" placeholder="请输入准备期身体训练"></a-input>
@@ -53,7 +53,7 @@
           <a-input v-decorator="[ 'prepareOtherPercent', validatorRules.prepareOtherPercent]" placeholder="请输入准备期其他训练"></a-input>
         </a-form-item>
         <a-form-item label="准备期训练手段" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['prepareMethod']" rows="4" placeholder="请输入准备期训练手段"/>
+          <a-textarea v-decorator="['prepareMethod', validatorRules.prepareMethod]" rows="4" placeholder="请输入准备期训练手段"/>
         </a-form-item>
         <a-form-item label="比赛期开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择比赛期开始日期" v-decorator="[ 'contestStartDate', validatorRules.contestStartDate]" :trigger-change="true" style="width: 100%"/>
@@ -68,7 +68,7 @@
           <a-input v-decorator="[ 'contestDays', validatorRules.contestDays]" placeholder="请输入比赛期天数"></a-input>
         </a-form-item>
         <a-form-item label="比赛期训练任务" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['contestGoal']" rows="4" placeholder="请输入比赛期训练任务"/>
+          <a-textarea v-decorator="['contestGoal', validatorRules.contestGoal]" rows="4" placeholder="请输入比赛期训练任务"/>
         </a-form-item>
         <a-form-item label="比赛期身体训练" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'contestBodyPercent', validatorRules.contestBodyPercent]" placeholder="请输入比赛期身体训练"></a-input>
@@ -83,7 +83,7 @@
           <a-input v-decorator="[ 'contestOtherPercent', validatorRules.contestOtherPercent]" placeholder="请输入比赛期其他训练"></a-input>
         </a-form-item>
         <a-form-item label="比赛期训练手段" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['contestMethod']" rows="4" placeholder="请输入比赛期训练手段"/>
+          <a-textarea v-decorator="['contestMethod', validatorRules.contestMethod]" rows="4" placeholder="请输入比赛期训练手段"/>
         </a-form-item>
         <a-form-item label="过渡期开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择过渡期开始日期" v-decorator="[ 'transitionStartDate', validatorRules.transitionStartDate]" :trigger-change="true" style="width: 100%"/>
@@ -98,7 +98,7 @@
           <a-input v-decorator="[ 'transitionDays', validatorRules.transitionDays]" placeholder="请输入过渡期天数"></a-input>
         </a-form-item>
         <a-form-item label="过渡期训练任务" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['transitionGoal']" rows="4" placeholder="请输入过渡期训练任务"/>
+          <a-textarea v-decorator="['transitionGoal', validatorRules.transitionGoal]" rows="4" placeholder="请输入过渡期训练任务"/>
         </a-form-item>
         <a-form-item label="过渡期身体训练" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'transitionBodyPercent', validatorRules.transitionBodyPercent]" placeholder="请输入过渡期身体训练"></a-input>
@@ -113,7 +113,7 @@
           <a-input v-decorator="[ 'transitionOtherPercent', validatorRules.transitionOtherPercent]" placeholder="请输入过渡期其他训练"></a-input>
         </a-form-item>
         <a-form-item label="过渡期训练手段" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['transitionMethod']" rows="4" placeholder="请输入过渡期训练手段"/>
+          <a-textarea v-decorator="['transitionMethod', validatorRules.transitionMethod]" rows="4" placeholder="请输入过渡期训练手段"/>
         </a-form-item>
         <a-form-item label="1月训练量" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'm1Workload', validatorRules.m1Workload]" placeholder="请输入1月训练量" style="width: 100%"/>
@@ -188,22 +188,22 @@
           <a-input-number v-decorator="[ 'm12Intensity', validatorRules.m12Intensity]" placeholder="请输入12月训练强度" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="考核安排" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['performanceCheck']" rows="4" placeholder="请输入考核安排"/>
+          <a-textarea v-decorator="['performanceCheck', validatorRules.performanceCheck]" rows="4" placeholder="请输入考核安排"/>
         </a-form-item>
         <a-form-item label="指标检查标准" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['targetCheck']" rows="4" placeholder="请输入指标检查标准"/>
+          <a-textarea v-decorator="['targetCheck', validatorRules.targetCheck]" rows="4" placeholder="请输入指标检查标准"/>
         </a-form-item>
         <a-form-item label="实施措施" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['actionSteps']" rows="4" placeholder="请输入实施措施"/>
+          <a-textarea v-decorator="['actionSteps', validatorRules.actionSteps]" rows="4" placeholder="请输入实施措施"/>
         </a-form-item>
         <a-form-item label="竞赛科评价" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['deptEvaluation']" rows="4" placeholder="请输入竞赛科评价"/>
+          <a-textarea v-decorator="['deptEvaluation', validatorRules.deptEvaluation]" rows="4" placeholder="请输入竞赛科评价"/>
         </a-form-item>
         <a-form-item label="竞赛科评价日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择竞赛科评价日期" v-decorator="[ 'deptEvaluationDate', validatorRules.deptEvaluationDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="校领导评价" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['schoolEvaluation']" rows="4" placeholder="请输入校领导评价"/>
+          <a-textarea v-decorator="['schoolEvaluation', validatorRules.schoolEvaluation]" rows="4" placeholder="请输入校领导评价"/>
         </a-form-item>
         <a-form-item label="校领导评价日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择校领导评价日期" v-decorator="[ 'schoolEvaluationDate', validatorRules.schoolEvaluationDate]" :trigger-change="true" style="width: 100%"/>
@@ -258,10 +258,10 @@
         validatorRules:{
           sportClassId:{rules: [{ required: true, message: '请输入训练队!' }]},
           planName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
-          teamSituation:{},
-          yearGoal:{},
-          prepareStartDate:{},
-          prepareEndDate:{},
+          teamSituation:{trigger:'input', rules: [{ required: true, message: '请输入初始情况!' }]},
+          yearGoal:{trigger:'input', rules: [{ required: true, message: '请输入全年任务!' }]},
+          prepareStartDate:{rules: [{ required: true, message: '请输入准备期开始日期!' }]},
+          prepareEndDate:{rules: [{ required: true, message: '请输入准备期结束日期!' }]},
           prepareWeeks:{},
           prepareDays:{},
           prepareGoal:{},

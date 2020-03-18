@@ -16,13 +16,13 @@
           <a-input v-decorator="[ 'className', validatorRules.className]" placeholder="请输入训练队名称"></a-input>
         </a-form-item>
         <a-form-item label="教练员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['coachId']" dict="tb_edu_coach,coach_name,id" />
+          <j-search-select-tag v-decorator="['coachId', validatorRules.coachId]" dict="tb_edu_coach,coach_name,id" />
         </a-form-item>
         <a-form-item label="运动项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportCode']" dict="tb_edu_sport,sport_name,sport_code" />
+          <j-search-select-tag v-decorator="['sportCode', validatorRules.sportCode]" dict="tb_edu_sport,sport_name,sport_code" />
         </a-form-item>
         <a-form-item label="训练形式" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['trainingType']" :trigger-change="true" dictCode="training_type" placeholder="请选择训练形式"/>
+          <j-dict-select-tag type="list" v-decorator="['trainingType', validatorRules.trainingType]" :trigger-change="true" dictCode="training_type" placeholder="请选择训练形式"/>
         </a-form-item>
         <a-form-item label="训练年度" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input-number v-decorator="[ 'trainingYear', validatorRules.trainingYear]" placeholder="请输入训练年度" style="width: 100%"/>
@@ -37,7 +37,7 @@
           <a-input v-decorator="[ 'trainingAddress', validatorRules.trainingAddress]" placeholder="请输入训练地点"></a-input>
         </a-form-item>
         <a-form-item label="训练任务" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-textarea v-decorator="['trainingContent']" rows="4" placeholder="请输入训练任务"/>
+          <a-textarea v-decorator="['trainingContent', validatorRules.trainingContent]" rows="4" placeholder="请输入训练任务"/>
         </a-form-item>
 
       </a-form>
@@ -87,15 +87,15 @@
 
         confirmLoading: false,
         validatorRules:{
-          className:{rules: [{ required: true, message: '请输入训练队名称!' }]},
-          coachId:{rules: [{ required: true, message: '请输入教练员!' }]},
-          sportCode:{rules: [{ required: true, message: '请输入运动项目!' }]},
-          trainingType:{rules: [{ required: true, message: '请输入训练形式!' }]},
-          trainingYear:{rules: [{ required: true, message: '请输入训练年度!' }]},
-          startDate:{},
-          endDate:{},
-          trainingAddress:{},
-          trainingContent:{},
+          className: {rules: [{ required: true, message: '请输入训练队名称!' }]},
+          coachId: {rules: [{ required: true, message: '请选择教练员!' }]},
+          sportCode: {rules: [{ required: true, message: '请选择运动项目!' }]},
+          trainingType: {rules: [{ required: true, message: '请选择训练形式!' }]},
+          trainingYear: {rules: [{ required: true, message: '请输入训练年度!' }]},
+          startDate: {rules: [{ required: true, message: '请输入开始日期!' }]},
+          // endDate: {rules: [{ required: true, message: '请输入结束日期!' }]},
+          // trainingAddress: {rules: [{ required: true, message: '请输入训练地点!' }]},
+          // trainingContent: {rules: [{ required: true, message: '请输入训练任务!' }]},
         },
         url: {
           add: "/edusport/sportClass/add",

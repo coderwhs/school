@@ -9,26 +9,33 @@
               <a-input placeholder="请输入训练队名" v-model="queryParam.className"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="8">
+          <a-col :md="4" :sm="8">
             <a-form-item label="教练员">
               <j-search-select-tag placeholder="请选择教练员" v-model="queryParam.coachId" dict="tb_edu_coach,coach_name,id" />
             </a-form-item>
           </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
+<!--          <template v-if="toggleSearchStatus">-->
+            <a-col :md="4" :sm="8">
               <a-form-item label="运动项目">
                 <j-search-select-tag placeholder="请选择运动项目" v-model="queryParam.sportCode" dict="tb_edu_sport,sport_name,sport_code" />
               </a-form-item>
             </a-col>
-          </template>
-          <a-col :md="6" :sm="8" >
+<!--          </template>-->
+          <a-col :md="6" :sm="8">
+            <a-form-item label="训练年度">
+              <a-input placeholder="开始年度" v-model="queryParam.trainingYear_begin" style="width:45%"></a-input>
+              <span style="width: 10px;">~</span>
+              <a-input placeholder="结束年度" v-model="queryParam.trainingYear_begin" style="width:45%"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
             </span>
           </a-col>
 
@@ -120,15 +127,17 @@
 
 <script>
 
+  import { getAction } from '@/api/manage'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import JDate from '@/components/jeecg/JDate'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag.vue'
+  import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   // import SportClassModal from './modules/SportClassModal'
   import SportClassModal from './modules/SportClassModal__Style#Drawer'
   import SportClassAthleteAttendList from './SportClassAthleteAttendList'
   import SportClassAthleteAttendModal from './modules/SportClassAthleteAttendModal'
   import SportClassAthleteLeaveList from './SportClassAthleteLeaveList'
   import SportClassAthleteLeaveModal from './modules/SportClassAthleteLeaveModal'
-  import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-  import JSearchSelectTag from '@/components/dict/JSearchSelectTag.vue'
   import AthleteSportClassList from './AthleteSportClassList'
   import AthleteSportClassModal from './modules/AthleteSportClassModal__Style#Drawer'
 
@@ -136,6 +145,8 @@
     name: "SportClassList",
     mixins:[JeecgListMixin],
     components: {
+      JDate,
+      JSearchSelectTag,
       SportClassModal,
       SportClassAthleteAttendList,
       SportClassAthleteAttendModal,
@@ -143,7 +154,6 @@
       SportClassAthleteLeaveModal,
       AthleteSportClassList,
       AthleteSportClassModal,
-      JSearchSelectTag
     },
     data () {
       return {
@@ -264,6 +274,11 @@
         },
       }
     },
+    created() {
+      // this.loadData();
+      // //初始化字典配置 在自己页面定义
+      // this.initDictConfig();
+    },
     computed: {
       importExcelUrl: function(){
         return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
@@ -301,6 +316,7 @@
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
         let sportClassId = this.selectedRowKeys[0];
+
         this.$refs.SportClassAthleteAttendList.getListBySportClassId(sportClassId);
         this.$refs.SportClassAthleteLeaveList.getListBySportClassId(sportClassId);
         this.$refs.AthleteSportClassList.getListBySportClassId(sportClassId);
@@ -310,43 +326,28 @@
         this.selectedRowKeys = [];
         this.selectionRows = [];
 
+        // 重新初始化子Tab区域数据
         this.$refs.SportClassAthleteAttendList.queryParam.sportClassId = null;
-        this.$refs.SportClassAthleteAttendList.loadData();
-        this.$refs.SportClassAthleteAttendList.selectedRowKeys = [];
-        this.$refs.SportClassAthleteAttendList.selectionRows = [];
+        this.$refs.SportClassAthleteAttendList.loadData(1);
+        this.$refs.SportClassAthleteAttendList.onClearSelected();
 
         this.$refs.SportClassAthleteLeaveList.queryParam.sportClassId = null;
-        this.$refs.SportClassAthleteLeaveList.loadData();
-        this.$refs.SportClassAthleteLeaveList.selectedRowKeys = [];
-        this.$refs.SportClassAthleteLeaveList.selectionRows = [];
+        this.$refs.SportClassAthleteLeaveList.loadData(1);
+        this.$refs.SportClassAthleteLeaveList.onClearSelected();
 
         this.$refs.AthleteSportClassList.queryParam.sportClassId = null;
-        this.$refs.AthleteSportClassList.loadData();
-        this.$refs.AthleteSportClassList.selectedRowKeys = [];
-        this.$refs.AthleteSportClassList.selectionRows = [];
+        this.$refs.AthleteSportClassList.loadData(1);
+        this.$refs.AthleteSportClassList.onClearSelected();
       },
-
-      searchQuery:function(){
-        this.selectedRowKeys = [];
-        this.selectionRows = [];
-
-        this.$refs.SportClassAthleteAttendList.queryParam.sportClassId = null;
-        this.$refs.SportClassAthleteAttendList.loadData();
-        this.$refs.SportClassAthleteAttendList.selectedRowKeys = [];
-        this.$refs.SportClassAthleteAttendList.selectionRows = [];
-
-        this.$refs.SportClassAthleteLeaveList.queryParam.sportClassId = null;
-        this.$refs.SportClassAthleteLeaveList.loadData();
-        this.$refs.SportClassAthleteLeaveList.selectedRowKeys = [];
-        this.$refs.SportClassAthleteLeaveList.selectionRows = [];
-
-        this.$refs.AthleteSportClassList.queryParam.sportClassId = null;
-        this.$refs.AthleteSportClassList.loadData();
-        this.$refs.AthleteSportClassList.selectedRowKeys = [];
-        this.$refs.AthleteSportClassList.selectionRows = [];
-        this.loadData();
+      searchQuery: function() {
+        this.loadData(1);
+        this.onClearSelected();
+      },
+      searchReset: function() {
+        this.queryParam = {};
+        this.loadData(1);
+        this.onClearSelected();
       }
-       
     }
   }
 </script>

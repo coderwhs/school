@@ -30,9 +30,6 @@ public class SportVenue implements Serializable {
 	/**运动项目*/
 	@Excel(name = "运动项目", width = 15)
     private java.lang.String sportCode;
-	/**运动项目*/
-	@Excel(name = "运动项目", width = 15)
-    private java.lang.String sportName;
 	/**场馆名称*/
 	@Excel(name = "场馆名称", width = 15)
     private java.lang.String venueName;
@@ -48,6 +45,18 @@ public class SportVenue implements Serializable {
 	/**管理员*/
 	@Excel(name = "管理员", width = 15)
     private java.lang.String venueAdmin;
+	/**所有权*/
+	@Excel(name = "所有权", width = 15)
+    private java.lang.String venueOwnership;
+	/**使用权*/
+	@Excel(name = "使用权", width = 15)
+    private java.lang.String venueUseRight;
+	/**附件*/
+	@Excel(name = "附件", width = 15)
+    private java.lang.String venueDoc;
+	/**备注*/
+	@Excel(name = "备注", width = 15)
+    private java.lang.String venueRemark;
 	/**联系电话*/
 	@Excel(name = "联系电话", width = 15)
     private java.lang.String venueAdminTel;

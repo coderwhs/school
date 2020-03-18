@@ -82,7 +82,7 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportClassYearSummaryModal from './modules/SportClassYearSummaryModal'
+  import SportClassYearSummaryModal from './modules/SportClassYearSummaryModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
@@ -196,7 +196,10 @@
         this.$refs.modalForm.title = "添加年度工作总结";
         this.$refs.modalForm.disableSubmit = false;
       },
-       
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+      }
     }
   }
 </script>

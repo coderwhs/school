@@ -20,7 +20,7 @@
           <j-date placeholder="请选择周开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="周结束日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-date placeholder="请选择周结束日期" v-decorator="[ 'endTime', validatorRules.endTime]" :trigger-change="true" style="width: 100%"/>
+          <j-date placeholder="请选择周结束日期" v-decorator="[ 'endDate', validatorRules.endDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="目的任务" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-textarea v-decorator="['taskGoal']" rows="4" placeholder="请输入目的任务"/>
@@ -164,7 +164,7 @@
         sportClassId:{rules: [{ required: true, message: '请输入训练队!' }]},
         planName:{rules: [{ required: true, message: '请输入训练计划名称!' }]},
         startDate:{rules: [{ required: true, message: '请输入周开始日期!' }]},
-        endTime:{rules: [{ required: true, message: '请输入周结束日期!' }]},
+        endDate:{rules: [{ required: true, message: '请输入周结束日期!' }]},
         taskGoal:{rules: [{ required: true, message: '请输入目的任务!' }]},
         monWorkload:{},
         monIntensity:{},
@@ -218,7 +218,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'sportClassId','planName','startDate','endTime','taskGoal','monWorkload','monIntensity','monTime','monContent','tueWorkload','tueIntensity','tueTime','tueContent','wedWorkload','wedIntensity','wedTime','wedContent','thuWorkload','thuIntensity','thuTime','thuContent','friWorkload','friIntensity','friTime','friContent','satWorkload','satIntensity','satTime','satContent','sunWorkload','sunIntensity','sunTime','sunContent','weekDays','weekCourses','weekHours','weekWorkload','weekSummary'))
+          this.form.setFieldsValue(pick(this.model,'sportClassId','planName','startDate','endDate','taskGoal','monWorkload','monIntensity','monTime','monContent','tueWorkload','tueIntensity','tueTime','tueContent','wedWorkload','wedIntensity','wedTime','wedContent','thuWorkload','thuIntensity','thuTime','thuContent','friWorkload','friIntensity','friTime','friContent','satWorkload','satIntensity','satTime','satContent','sunWorkload','sunIntensity','sunTime','sunContent','weekDays','weekCourses','weekHours','weekWorkload','weekSummary'))
         })
       },
       close () {
@@ -261,7 +261,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'sportClassId','planName','startDate','endTime','taskGoal','monWorkload','monIntensity','monTime','monContent','tueWorkload','tueIntensity','tueTime','tueContent','wedWorkload','wedIntensity','wedTime','wedContent','thuWorkload','thuIntensity','thuTime','thuContent','friWorkload','friIntensity','friTime','friContent','satWorkload','satIntensity','satTime','satContent','sunWorkload','sunIntensity','sunTime','sunContent','weekDays','weekCourses','weekHours','weekWorkload','weekSummary'))
+        this.form.setFieldsValue(pick(row,'sportClassId','planName','startDate','endDate','taskGoal','monWorkload','monIntensity','monTime','monContent','tueWorkload','tueIntensity','tueTime','tueContent','wedWorkload','wedIntensity','wedTime','wedContent','thuWorkload','thuIntensity','thuTime','thuContent','friWorkload','friIntensity','friTime','friContent','satWorkload','satIntensity','satTime','satContent','sunWorkload','sunIntensity','sunTime','sunContent','weekDays','weekCourses','weekHours','weekWorkload','weekSummary'))
       },
 
       

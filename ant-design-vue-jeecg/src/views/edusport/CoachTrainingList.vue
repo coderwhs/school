@@ -13,8 +13,8 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button @click="handleSearch(8)" type="primary" icon="search">近8年</a-button>
-      <a-button @click="handleSearch(0)" type="primary" icon="search">全部</a-button>
+      <a-button @click="handleSearchByStartDateBegin(8)" type="primary" icon="search">近8年</a-button>
+      <a-button @click="handleSearchByStartDateBegin(100)" type="primary" icon="search">全部</a-button>
 <!--      <a-button type="primary" icon="download" @click="handleExportXls('冬训阶段训练计划信息表')">导出</a-button>-->
 <!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
 <!--        <a-button type="primary" icon="import">导入</a-button>-->
@@ -32,7 +32,7 @@
       <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
         <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
         <a style="margin-left: 24px" @click="onClearSelected">清空</a>
-        <span style="margin-left: 48px">默认显示近8年培训经历</span>
+        <span style="margin-left: 48px">默认显示近8年培训经历 </span>
       </div>
 
       <a-table
@@ -97,6 +97,7 @@
   // import CoachTrainingModal from './modules/CoachTrainingModal'
   import CoachTrainingModal from './modules/CoachTrainingModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import moment from 'moment'
 
   export default {
     name: "CoachTrainingList",
@@ -109,6 +110,7 @@
         description: '教练员学习培训经历表管理页面',
         /* 查询条件 */
         queryParam: {
+          startDate_begin: moment().subtract(8, 'years').format('YYYY-MM-DD'),
         },
         /* 分页参数 */
         ipagination:{
@@ -224,7 +226,11 @@
         this.$refs.modalForm.title = "添加培训经历";
         this.$refs.modalForm.disableSubmit = false;
       },
-
+      handleSearchByStartDateBegin: function (year) {
+        // 近8年培训经历，近100年培训经历表示查询全部
+        this.queryParam.startDate_begin = moment().subtract(year, 'years').format('YYYY-MM-DD');
+        this.loadData(1);
+      },
     }
   }
 </script>

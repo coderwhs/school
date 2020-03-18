@@ -13,8 +13,8 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button @click="handleSearch(1)" type="primary" icon="search">奥运周期</a-button>
-      <a-button @click="handleSearch(0)" type="primary" icon="search">全部</a-button>
+      <a-button @click="handleSearchByPublishDateBegin(1)" type="primary" icon="search">奥运周期</a-button>
+      <a-button @click="handleSearchByPublishDateBegin(0)" type="primary" icon="search">全部</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -28,7 +28,7 @@
       <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
         <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
         <a style="margin-left: 24px" @click="onClearSelected">清空</a>
-        <span style="margin-left: 48px">默认显示上个奥运以来的论文发表</span>
+        <span style="margin-left: 48px">默认显示上个奥运年以来的论文发表</span>
       </div>
 
       <a-table
@@ -93,6 +93,7 @@
   // import CoachPaperModal from './modules/CoachPaperModal'
   import CoachPaperModal from './modules/CoachPaperModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import moment from 'moment'
 
   export default {
     name: "CoachPaperList",
@@ -105,6 +106,7 @@
         description: '教练员论文发表信息表管理页面',
         /* 查询条件 */
         queryParam: {
+          publishDate_begin: Number(moment().year()) - Number(((moment().year()-1896)%4) == 0 ? 4: (moment().year()-1896)%4) + "-06-01",
         },
         /* 分页参数 */
         ipagination:{
@@ -225,7 +227,15 @@
         this.$refs.modalForm.title = "添加论文发表";
         this.$refs.modalForm.disableSubmit = false;
       },
-
+      handleSearchByPublishDateBegin: function (useLastOlympicYear) {
+        // 近8年培训经历，近100年培训经历表示查询全部
+        if (useLastOlympicYear) {
+          this.queryParam.publishDate_begin = Number(moment().year()) - Number(((moment().year()-1896)%4) == 0 ? 4: (moment().year()-1896)%4) + "-06-01";
+        } else {
+          this.queryParam.publishDate_begin = moment().subtract(100, 'years').format('YYYY-MM-DD');
+        }
+        this.loadData(1);
+      },
     }
   }
 </script>

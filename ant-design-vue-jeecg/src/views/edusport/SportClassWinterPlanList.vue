@@ -6,17 +6,29 @@
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
             <a-form-item label="训练队">
-              <a-input placeholder="请输入训练队" v-model="queryParam.sportClassId"></a-input>
+              <j-search-select-tag placeholder="请选择训练队" v-model="queryParam.sportClassId" dict="tb_edu_sport_class,class_name,id" />
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="8" >
+          <a-col :md="6" :sm="8">
+            <a-form-item label="训练计划名">
+              <a-input placeholder="请输入训练计划名" v-model="queryParam.planName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :md="8" :sm="12">
+            <a-form-item label="计划日期">
+              <j-date v-model="queryParam.prepareStartDate_begin" date-format="YYYY-MM-DD" style="width:45%" placeholder="请选择开始时间" ></j-date>
+              <span style="width: 10px;">~</span>
+              <j-date v-model="queryParam.prepareStartDate_end" date-format="YYYY-MM-DD" style="width:45%" placeholder="请选择结束时间"></j-date>
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="24" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
             </span>
           </a-col>
 
@@ -45,6 +57,7 @@
       <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
         <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
         <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+        <span style="margin-left: 48px">默认显示近一年的训练计划</span>
       </div>
 
       <a-table
@@ -106,14 +119,19 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import JDate from '@/components/jeecg/JDate'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
   // import SportClassWinterPlanModal from './modules/SportClassWinterPlanModal'
   import SportClassWinterPlanModal from './modules/SportClassWinterPlanModal__Style#Drawer'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import moment from 'moment'
 
   export default {
     name: "SportClassWinterPlanList",
     mixins:[JeecgListMixin],
     components: {
+      JDate,
+      JSearchSelectTag,
       SportClassWinterPlanModal
     },
     data () {
@@ -121,6 +139,7 @@
         description: '冬训阶段训练计划信息表管理页面',
         /* 查询条件 */
         queryParam: {
+          prepareStartDate_begin:  Number(moment().subtract(365, 'days').year()) + "-01-01",
         },
         /* 分页参数 */
         ipagination:{
@@ -248,6 +267,14 @@
             this.$set(this.dictOptions, 'sportClassId', res.result)
           }
         })
+      },
+      searchReset: function() {
+        /* 默认查询条件 */
+        this.queryParam = {
+          prepareStartDate_begin:  Number(moment().subtract(365, 'days').year()) + "-01-01",
+        };
+        this.loadData(1);
+        this.onClearSelected();
       }
        
     }

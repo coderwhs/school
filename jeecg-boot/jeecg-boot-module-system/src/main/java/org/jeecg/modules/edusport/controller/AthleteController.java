@@ -26,6 +26,7 @@ import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -231,11 +232,15 @@ public class AthleteController extends JeecgController<Athlete, IAthleteService>
 		String selectedRoles = "";
 		String selectedDeparts = "";
 		
-		SysUser user = sysUserService.getUserByName(athlete.getAthleteNo());
+		if (athlete == null || StringUtils.isEmpty(athlete.getMobile())) {
+			return Result.error("请先设置手机号！");
+		}
+		
+		SysUser user = sysUserService.getUserByName(athlete.getMobile());
 		if (user == null) {
 			user = new SysUser();
 			
-			user.setUsername(athlete.getAthleteNo());
+			user.setUsername(athlete.getMobile());
 			user.setUserType(3); //运动员账号
 			user.setPassword("123456");
 			user.setWorkNo("");
@@ -273,7 +278,7 @@ public class AthleteController extends JeecgController<Athlete, IAthleteService>
 	 */
 	@PutMapping(value = "/signLock")
 	public Result<?> signLock(@RequestBody Athlete athlete) {	
-		SysUser user = sysUserService.getUserByName(athlete.getAthleteNo());
+		SysUser user = sysUserService.getUserByName(athlete.getMobile());
 		if (user != null) {
 			user.setStatus(2); //冻结账号
 			this.sysUserService.update(new SysUser().setStatus(user.getStatus()),

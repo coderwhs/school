@@ -14,13 +14,13 @@
           <j-search-select-tag v-decorator="['yearPlanId']" dict="tb_edu_sport_class_year_plan,plan_name,id" />
         </a-form-item>
         <a-form-item label="执行情况" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-editor v-decorator="['yearPerformance',{trigger:'input'}]"/>
+          <j-editor v-decorator="['yearPerformance', validatorRules.yearPerformance]"/>
         </a-form-item>
         <a-form-item label="全年任务" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-editor v-decorator="['yearWeakness',{trigger:'input'}]"/>
+          <j-editor v-decorator="['yearWeakness', validatorRules.yearWeakness]"/>
         </a-form-item>
         <a-form-item label="改进方向" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-editor v-decorator="['improvement',{trigger:'input'}]"/>
+          <j-editor v-decorator="['improvement', validatorRules.improvement]"/>
         </a-form-item>
         <a-form-item label="竞赛科评价" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-textarea v-decorator="['deptEvaluation']" rows="4" placeholder="请输入竞赛科评价"/>
@@ -74,7 +74,7 @@
         confirmLoading: false,
         validatorRules:{
         yearPlanId:{rules: [{ required: true, message: '请输入年度计划!' }]},
-        yearPerformance:{},
+        yearPerformance:{trigger:'input', rules: [{ required: true, message: '请输入年度计划!' }]},
         yearWeakness:{},
         improvement:{},
         deptEvaluation:{rules: [{ required: true, message: '请输入竞赛科评价!' }]},

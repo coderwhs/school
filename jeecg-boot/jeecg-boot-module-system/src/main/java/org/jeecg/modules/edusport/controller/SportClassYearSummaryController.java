@@ -61,6 +61,31 @@ public class SportClassYearSummaryController extends JeecgController<SportClassY
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
 		QueryWrapper<SportClassYearSummary> queryWrapper = QueryGenerator.initQueryWrapper(sportClassYearSummary, req.getParameterMap());
+		// 年度训练计划查询参数
+		StringBuffer inSql = new StringBuffer();
+		inSql.append(" SELECT id FROM tb_edu_sport_class_year_plan ");
+		inSql.append(" WHERE 1=1 ");
+		// 训练队
+		if (req.getParameterMap() != null && req.getParameterMap().containsKey("sportClassId")) {
+			String sportClassId = req.getParameterMap().get("sportClassId")[0];
+			inSql.append(" AND sport_class_id = '" + sportClassId + "'");
+		}
+		// 训练计划名
+		if (req.getParameterMap() != null && req.getParameterMap().containsKey("planName")) {
+			String planName = req.getParameterMap().get("planName")[0];
+			inSql.append(" AND plan_name like '%" + planName.replace("*", "") + "%'");
+		}
+		// 计划日期
+		if (req.getParameterMap() != null && req.getParameterMap().containsKey("prepareStartDate_begin")) {
+			String prepareStartDateBegin = req.getParameterMap().get("prepareStartDate_begin")[0];
+			inSql.append(" AND prepare_start_date >= '" + prepareStartDateBegin + "'");
+		}
+		if (req.getParameterMap() != null && req.getParameterMap().containsKey("prepareStartDate_end")) {
+			String prepareStartDateEnd = req.getParameterMap().get("prepareStartDate_end")[0];
+			inSql.append(" AND prepare_start_date <= '" + prepareStartDateEnd + "'");
+		}
+		queryWrapper.inSql("year_plan_id", inSql.toString());
+		
 		Page<SportClassYearSummary> page = new Page<SportClassYearSummary>(pageNo, pageSize);
 		IPage<SportClassYearSummary> pageList = sportClassYearSummaryService.page(page, queryWrapper);
 		return Result.ok(pageList);

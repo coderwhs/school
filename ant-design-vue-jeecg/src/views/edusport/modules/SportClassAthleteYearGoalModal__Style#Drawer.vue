@@ -13,10 +13,10 @@
       <a-form :form="form">
 
         <a-form-item label="年度计划" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['yearPlanId']" dict="tb_edu_sport_class_year_plan,plan_name,id" />
+          <j-search-select-tag v-decorator="['yearPlanId', validatorRules.yearPlanId]" dict="tb_edu_sport_class_year_plan,plan_name,id" />
         </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+          <j-search-select-tag v-decorator="['athleteId', validatorRules.athleteId]" dict="tb_edu_athlete,athlete_name,id" />
         </a-form-item>
         <a-form-item label="小项" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="[ 'eventCode', validatorRules.eventCode]" placeholder="请输入小项"></a-input>
@@ -90,7 +90,7 @@
         this.hiding = true;
         if (yearPlanId) {
           this.yearPlanId = yearPlanId;
-          this.edit({yearPlanId}, '');
+          this.edit({yearPlanId: yearPlanId});
         } else {
           this.$message.warning("请选择一个年度训练计划信息");
         }

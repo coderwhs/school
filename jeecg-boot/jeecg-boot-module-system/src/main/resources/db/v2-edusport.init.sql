@@ -187,7 +187,8 @@ CREATE TABLE tb_edu_athlete_transport(
 DROP TABLE IF EXISTS tb_edu_athlete_coach_evaluation;;/*SkipError*/
 CREATE TABLE tb_edu_athlete_coach_evaluation(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
-    athlete_sport_class_id VARCHAR(32) NOT NULL   COMMENT '训练队成员' ,
+    athlete_sport_class_id VARCHAR(32) NOT NULL   COMMENT '训练队成员记录id' ,
+    athlete_id VARCHAR(32)    COMMENT '运动员' ,
     start_date DATE    COMMENT '开始日期' ,
     end_date DATE    COMMENT '结束日期' ,
     evaluation VARCHAR(512) NOT NULL  DEFAULT '' COMMENT '总体评价' ,
@@ -197,8 +198,7 @@ CREATE TABLE tb_edu_athlete_coach_evaluation(
     update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
     update_time DATETIME    COMMENT '更新时间' ,
     PRIMARY KEY (id)
-) COMMENT = '运动员评价信息表 ';;
-
+) COMMENT = '训练队成员评价信息表 ';;
 
 
 DROP TABLE IF EXISTS tb_edu_athlete_other_trianning_info;;/*SkipError*/
@@ -429,6 +429,19 @@ CREATE TABLE tb_edu_sport(
 
 
 
+DROP TABLE IF EXISTS `tb_edu_sport_disciplines`;
+CREATE TABLE `tb_edu_sport_disciplines` (
+  `id` varchar(32) NOT NULL COMMENT '主键id',
+  `disciplines_code` varchar(32) NOT NULL COMMENT '分项代码',
+  `disciplines_name` varchar(128) NOT NULL DEFAULT '' COMMENT '分项名称',
+  `create_by` varchar(32) NOT NULL DEFAULT '' COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(32) NOT NULL DEFAULT '' COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='运动项目分项表 ';
+
+
 DROP TABLE IF EXISTS tb_edu_sport_event;;/*SkipError*/
 CREATE TABLE tb_edu_sport_event(
     id VARCHAR(32) NOT NULL   COMMENT '主键id' ,
@@ -456,15 +469,16 @@ CREATE TABLE tb_edu_sport_venue(
     venue_address VARCHAR(256) NOT NULL  DEFAULT '' COMMENT '场馆地址' ,
     venue_admin VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '管理员' ,
     venue_admin_tel VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '联系电话' ,
+    venue_ownership VARCHAR(256)    COMMENT '所有权' ,
+    venue_use_right VARCHAR(256)    COMMENT '使用权' ,
+    venue_doc TEXT    COMMENT '附件' ,
+    venue_remark TEXT    COMMENT '备注' ,
     create_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '创建人' ,
     create_time DATETIME    COMMENT '创建时间' ,
     update_by VARCHAR(32) NOT NULL  DEFAULT '' COMMENT '更新人' ,
     update_time DATETIME    COMMENT '更新时间' ,
     PRIMARY KEY (id)
 ) COMMENT = '运动场馆信息表 ';;
-
-
-
 
 
 DROP TABLE IF EXISTS tb_edu_sport_equipment;;/*SkipError*/

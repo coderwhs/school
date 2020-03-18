@@ -155,6 +155,7 @@
   import CoachPaperModal from './modules/CoachPaperModal'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import {deleteAction, putAction} from '@/api/manage'
+  import moment from 'moment'
 
   export default {
     name: "CoachList",
@@ -227,26 +228,6 @@
               }else{
                 return filterMultiDictText(this.dictOptions['gender'], text+"")
               }
-            }
-          },
-          {
-            title:'民族',
-            align:"center",
-            dataIndex: 'nation',
-            customRender:(text)=>{
-              if(!text){
-                return ''
-              }else{
-                return filterMultiDictText(this.dictOptions['nation'], text+"")
-              }
-            }
-          },
-          {
-            title:'出生日期',
-            align:"center",
-            dataIndex: 'birthDate',
-            customRender:function (text) {
-              return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
           {
@@ -402,7 +383,13 @@
         this.$refs.CoachEduResumeList.queryParam.coachNo = null;
         this.$refs.CoachSportResumeList.queryParam.coachNo = null;
         this.$refs.CoachTrainingList.queryParam.coachNo = null;
+        // this.$refs.CoachTrainingList.queryParam.startDate_begin = moment().subtract(8, 'years').format('YYYY-MM-DD');
         this.$refs.CoachPaperList.queryParam.coachNo = null;
+        // let lastOlympicYearMod = ((moment().year()-1896)%4) == 0 ? 4: (moment().year()-1896)%4;
+        // let lastOlympicYear = Number(moment().year()) - Number(lastOlympicYearMod);
+        // console.log("lastOlympicYearMod: ", lastOlympicYearMod);
+        // console.log("lastOlympicYear: ", lastOlympicYear);
+        // this.$refs.CoachPaperList.queryParam.publishDate_begin = "" + lastOlympicYear + "-06-01";
 
         this.$refs.CoachEduResumeList.loadData(1);
         this.$refs.CoachSportResumeList.loadData(1);

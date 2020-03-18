@@ -4,7 +4,33 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-
+          <a-col :md="6" :sm="8">
+            <a-form-item label="训练队">
+              <j-search-select-tag placeholder="请选择训练队" v-model="queryParam.sportClassId" dict="tb_edu_sport_class,class_name,id" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="训练计划名">
+              <a-input placeholder="请输入训练计划名" v-model="queryParam.planName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :md="8" :sm="12">
+            <a-form-item label="计划日期">
+              <j-date v-model="queryParam.startDate_begin" date-format="YYYY-MM-DD" style="width:45%" placeholder="请选择开始时间" ></j-date>
+              <span style="width: 10px;">~</span>
+              <j-date v-model="queryParam.startDate_end" date-format="YYYY-MM-DD" style="width:45%" placeholder="请选择结束时间"></j-date>
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="24" >
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
+            </span>
+          </a-col>
         </a-row>
       </a-form>
     </div>
@@ -30,6 +56,7 @@
       <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
         <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
         <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+        <span style="margin-left: 48px">默认显示过去一周，及未来一周内的训练计划</span>
       </div>
 
       <a-table
@@ -99,17 +126,21 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import JDate from '@/components/jeecg/JDate'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag'
+  import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   // import SportClassWeekPlanModal from './modules/SportClassWeekPlanModal'
   import SportClassWeekPlanModal from './modules/SportClassWeekPlanModal__Style#Drawer'
   import SportClassCoursePlanModal from './modules/SportClassCoursePlanModal'
   import SportClassCoursePlanList from './SportClassCoursePlanList'
-
-  import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import moment from 'moment'
 
   export default {
     name: "SportClassWeekPlanList",
     mixins:[JeecgListMixin],
     components: {
+      JDate,
+      JSearchSelectTag,
       SportClassWeekPlanModal,
       SportClassCoursePlanList,
       SportClassCoursePlanModal
@@ -121,6 +152,8 @@
         tabSelectType: "radio",
         /* 查询条件 */
         queryParam: {
+          startDate_begin:  moment().subtract(parseInt(moment().format('d')) + 6, 'days').format('YYYY-MM-DD') ,
+          startDate_end: moment().add(14 - parseInt(moment().format('d')), 'days').format('YYYY-MM-DD') ,
         },
         /* 分页参数 */
         ipagination:{
@@ -181,7 +214,7 @@
           {
             title:'周结束日期',
             align:"center",
-            dataIndex: 'endTime',
+            dataIndex: 'endDate',
             customRender:function (text) {
               return !text?"":(text.length>10?text.substr(0,10):text)
             }
@@ -236,7 +269,7 @@
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
         // 训练队
-        let sportClassId = this.selectedRowKeys[0];
+        let sportClassId = this.selectionRows[0].sportClassId;
         // 周开始日期
         let startDate = this.selectionRows[0].startDate;
         // 周结束日期
@@ -249,22 +282,26 @@
         this.selectedRowKeys = [];
         this.selectionRows = [];
 
-        this.$refs.SportClassCoursePlanList.queryParam.sportClassId = null;
-        this.$refs.SportClassCoursePlanList.loadData();
-        this.$refs.SportClassCoursePlanList.selectedRowKeys = [];
-        this.$refs.SportClassCoursePlanList.selectionRows = [];
+        // 重新初始化子Tab区域数据
+        this.$refs.SportClassCoursePlanList.queryParam.sportClassId = this.queryParam.sportClassId;
+        this.$refs.SportClassCoursePlanList.queryParam.planName = this.queryParam.planName;
+        this.$refs.SportClassCoursePlanList.queryParam.courseDate_begin = this.queryParam.startDate_begin;
+        this.$refs.SportClassCoursePlanList.queryParam.courseDate_end = this.queryParam.startDate_end;
+        this.$refs.SportClassCoursePlanList.loadData(1);
+        this.$refs.SportClassCoursePlanList.onClearSelected();
       },
-
-      searchQuery:function(){
-        this.selectedRowKeys = [];
-        this.selectionRows = [];
-
-        this.$refs.SportClassCoursePlanList.queryParam.sportClassId = null;
-        this.$refs.SportClassCoursePlanList.loadData();
-        this.$refs.SportClassCoursePlanList.selectedRowKeys = [];
-        this.$refs.SportClassCoursePlanList.selectionRows = [];
-
-        this.loadData();
+      searchQuery: function() {
+        this.loadData(1);
+        this.onClearSelected();
+      },
+      searchReset: function() {
+        /* 查询条件 */
+        this.queryParam = {
+          startDate_begin:  moment().subtract(parseInt(moment().format('d')) + 6, 'days').format('YYYY-MM-DD') ,
+            startDate_end: moment().add(14 - parseInt(moment().format('d')), 'days').format('YYYY-MM-DD') ,
+        };
+        this.loadData(1);
+        this.onClearSelected();
       }
        
     }

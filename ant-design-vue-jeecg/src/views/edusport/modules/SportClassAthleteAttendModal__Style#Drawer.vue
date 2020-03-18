@@ -12,14 +12,16 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练班" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['sportClassId']" dict="tb_edu_sport_class,class_name,id" />
+        <a-form-item label="训练队" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-form-container disabled>
+            <j-search-select-tag v-decorator="['sportClassId', validatorRules.sportClassId]" :dict="fnDictCodeSportClass" />
+          </j-form-container>
         </a-form-item>
         <a-form-item label="运动员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-search-select-tag v-decorator="['athleteId']" dict="tb_edu_athlete,athlete_name,id" />
+            <j-search-select-tag v-decorator="['athleteId', validatorRules.athleteId]" dict="tb_edu_athlete, athlete_name, id" />
         </a-form-item>
         <a-form-item label="考勤状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['attendStatus']" :trigger-change="true" dictCode="attend_status" placeholder="请选择考勤状态"/>
+          <j-dict-select-tag type="list" v-decorator="['attendStatus', validatorRules.attendStatus]" :trigger-change="true" dictCode="attend_status" placeholder="请选择考勤状态"/>
         </a-form-item>
         <a-form-item label="考勤日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择考勤日期" v-decorator="[ 'attendTime', validatorRules.attendTime]" :trigger-change="true" style="width: 100%"/>
@@ -72,6 +74,9 @@
         },
 
         confirmLoading: false,
+        dictCodeSportClass: '',
+        dictCodeAthlete: '',
+
         validatorRules:{
           sportClassId:{rules: [{ required: true, message: '请输入训练班!' }]},
           athleteId:{rules: [{ required: true, message: '请输入运动员!' }]},
@@ -87,6 +92,14 @@
     },
     created () {
     },
+    computed: {
+      fnDictCodeSportClass: function() {
+        return this.dictCodeSportClass;
+      },
+      fnDictCodeAthlete: function() {
+        return this.dictCodeAthlete;
+      }
+    },
     methods: {
       add () {
         this.edit({});
@@ -95,7 +108,7 @@
         this.hiding = true;
         if (sportClassId) {
           this.sportClassId = sportClassId;
-          this.edit({sportClassId}, '');
+          this.edit({sportClassId: sportClassId});
         } else {
           this.$message.warning("请选择一个训练队信息");
         }
@@ -108,6 +121,18 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'sportClassId','athleteId','attendStatus','attendTime'))
         })
+
+        // 初始化训练队字典
+        if (this.model.sportClassId) {
+          this.dictCodeSportClass = "tb_edu_sport_class, class_name, id, id = '" + this.model.sportClassId + "'";
+        }
+
+        // 初始化运动员字典
+        if (this.model.athleteId) {
+          this.dictCodeAthlete = "tb_edu_athlete, athlete_name, id, id = '" + this.model.athleteId + "'";
+        } else {
+          this.dictCodeAthlete = "tb_edu_athlete, athlete_name, id";
+        }
       },
       close () {
         this.$emit('close');

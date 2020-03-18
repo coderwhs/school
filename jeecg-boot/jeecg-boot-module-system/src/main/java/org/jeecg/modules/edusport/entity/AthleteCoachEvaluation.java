@@ -30,6 +30,9 @@ public class AthleteCoachEvaluation implements Serializable {
 	/**训练队成员*/
 	@Excel(name = "训练队成员", width = 15)
     private java.lang.String athleteSportClassId;
+	/**运动员*/
+	@Excel(name = "运动员", width = 15)
+    private java.lang.String athleteId;
 	/**开始日期*/
 	@Excel(name = "开始日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")

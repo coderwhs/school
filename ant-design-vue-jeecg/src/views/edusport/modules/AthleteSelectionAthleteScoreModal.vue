@@ -110,8 +110,8 @@
     methods: {
       add(testId,groupId){
         this.hiding = true;
-        if (testId) {
-          this.edit({testId,groupId}, '');
+        if (testId && groupId) {
+          this.edit({testId: testId, groupId: groupId});
         } else {
           this.$message.warning("请选择一条测试记录信息");
         }

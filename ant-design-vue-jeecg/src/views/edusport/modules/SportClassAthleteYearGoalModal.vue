@@ -79,7 +79,7 @@
         this.hiding = true;
         if (yearPlanId) {
           this.yearPlanId = yearPlanId;
-          this.edit({yearPlanId}, '');
+          this.edit({yearPlanId: yearPlanId});
         } else {
           this.$message.warning("请选择一个年度训练计划信息");
         }

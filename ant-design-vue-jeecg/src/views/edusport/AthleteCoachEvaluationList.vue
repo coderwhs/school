@@ -113,6 +113,9 @@
           order: ''
         },
 
+        //选择记录的运动员ID
+        selectedAthleteId:'',
+
         // 表头
         columns: [
           {
@@ -212,12 +215,25 @@
           }
         })
       },
-      getListByAthleteSportClassId(athleteSportClassId) {
+      // onSelectChange(selectedRowKeys, selectionRows) {
+      //   this.selectedRowKeys = selectedRowKeys;
+      //   this.selectionRows = selectionRows;
+      //   this.selectedAthleteId = this.selectionRows[0].athleteId;
+      //   console.log("this.selectionRows: ", this.selectionRows);
+      //   console.log("selectedAthleteId: ", this.selectionRows[0].athleteId);
+      //
+      // },
+      getListByAthleteSportClassId(athleteSportClassId, athleteId) {
         this.queryParam.athleteSportClassId = athleteSportClassId;
+        this.queryParam.athleteId = athleteId;
+
+        console.log("--evaluationList.queryParam.athleteId: ", this.queryParam.athleteId);
         this.loadData(1);
       },
       handleAdd: function () {
-        this.$refs.modalForm.add(this.queryParam.athleteSportClassId);
+        console.log("--evaluationList.handleAdd.athleteSportClassId: ", this.queryParam.athleteSportClassId);
+        console.log("--evaluationList.handleAdd.athleteId: ", this.queryParam.athleteId);
+        this.$refs.modalForm.add(this.queryParam.athleteSportClassId, this.queryParam.athleteId );
         this.$refs.modalForm.title = "添加带训教练员评价";
         this.$refs.modalForm.disableSubmit = false;
       },

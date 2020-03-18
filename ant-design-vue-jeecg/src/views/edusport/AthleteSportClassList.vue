@@ -38,7 +38,7 @@
     <!-- 查询区域-END -->
 
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
+    <div class="table-operator" :md="24" :sm="24" style="margin: -25px 0px 10px 0px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('训练队成员表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
@@ -162,8 +162,8 @@
         /* 排序参数 */
         isorter: {
           // 排序由后端处理
-          column: '',
-          order: ''
+          column: 'attend_date',
+          order: 'asc'
         },
 
         // 表头
@@ -278,31 +278,22 @@
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
         let athleteSportClassId = this.selectedRowKeys[0];
+        let selectedAthleteId = this.selectionRows[0].athleteId;
 
-        this.$refs.AthleteCoachEvaluationList.getListByAthleteSportClassId(athleteSportClassId);
+        this.$refs.AthleteCoachEvaluationList.getListByAthleteSportClassId(athleteSportClassId, selectedAthleteId);
       },
 
       onClearSelected() {
         this.selectedRowKeys = [];
         this.selectionRows = [];
 
+        // 重新初始化子Tab区域数据
         this.$refs.AthleteCoachEvaluationList.queryParam.athleteSportClassId = null;
-        this.$refs.AthleteCoachEvaluationList.loadData();
-        this.$refs.AthleteCoachEvaluationList.selectedRowKeys = [];
-        this.$refs.AthleteCoachEvaluationList.selectionRows = [];
+        this.$refs.AthleteCoachEvaluationList.queryParam.athleteId = null;
+        this.$refs.AthleteCoachEvaluationList.loadData(1);
+        this.$refs.AthleteCoachEvaluationList.onClearSelected();
       },
 
-      searchQuery:function(){
-        this.selectedRowKeys = [];
-        this.selectionRows = [];
-
-        this.$refs.AthleteCoachEvaluationList.queryParam.athleteSportClassId = null;
-        this.$refs.AthleteCoachEvaluationList.loadData();
-        this.$refs.AthleteCoachEvaluationList.selectedRowKeys = [];
-        this.$refs.AthleteCoachEvaluationList.selectionRows = [];
-
-        this.loadData();
-      },
       getListBySportClassId(sportClassId) {
         this.queryParam.sportClassId = sportClassId;
         this.loadData(1);
@@ -317,4 +308,11 @@
 </script>
 <style scoped>
   @import '~@assets/less/common.less'
+</style>
+
+<style scoped>
+  .ant-card {
+    margin-left: -30px;
+    margin-right: -30px;
+  }
 </style>

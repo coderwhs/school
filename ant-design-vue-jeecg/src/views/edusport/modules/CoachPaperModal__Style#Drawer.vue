@@ -97,7 +97,7 @@
         this.hiding = true;
         if (coachId) {
           this.coachId = coachId;
-          this.edit({coachId}, '');
+          this.edit({coachId: coachId});
         } else {
           this.$message.warning("请选择一个教练员信息");
         }

@@ -12,12 +12,13 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
-        <a-form-item label="训练队成员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          {{athleteName}}
+        <a-form-item label="训练队成员记录Id" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="false">
+          <j-search-select-tag v-decorator="['athleteSportClassId']" />
         </a-form-item>
-
-        <a-form-item label="训练队成员" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="false">
-          <j-search-select-tag v-decorator="['athleteSportClassId']" dict="tb_edu_athlete_sport_class,athlete_id,id" />
+        <a-form-item label="训练队成员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-form-container disabled>
+            <j-search-select-tag v-decorator="['athleteId', validatorRules.athleteId]" :dict="fnDictCodeAthlete" />
+          </j-form-container>
         </a-form-item>
         <a-form-item label="开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
@@ -76,8 +77,8 @@
           sm: { span: 16 },
         },
 
-        athleteName:'',
         confirmLoading: false,
+        dictCodeAthlete:'',
         validatorRules:{
           athleteSportClassId:{rules: [{ required: true, message: '请输入训练队成员!' }]},
           startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
@@ -95,41 +96,50 @@
     },
     created () {
     },
+    computed: {
+      fnDictCodeAthlete: function() {
+        return this.dictCodeAthlete;
+      }
+    },
     methods: {
       // 初始化字典并获取训练队成员
-      initDictConfig(){
-        initDictOptions('tb_edu_athlete_sport_class,athlete_id,id').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'athleteSportClassId', res.result)
-          }
-        })
-        initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
-          if (res.success) {
-            this.$set(this.dictOptions, 'athlete_id', res.result)
-          }
-        })
-
-        // initDictOptions 因方法耗时，因此延时500ms获取 训练队成员姓名
-        // 最稳妥的方法
-        let callback = (function ()  {
-          let athleteSportClassId = this.model.athleteSportClassId
-          if(!athleteSportClassId){
-            return ''
-          }else {
-            let athlete_id = filterMultiDictText(this.dictOptions['athleteSportClassId'], athleteSportClassId+"")
-            this.athleteName = filterMultiDictText(this.dictOptions['athlete_id'], athlete_id + "")
-          }
-        }).bind(this)
-        setTimeout(callback, 500)
-      },
+      // initDictConfig(){
+      //   initDictOptions('tb_edu_athlete_sport_class,athlete_id,id').then((res) => {
+      //     if (res.success) {
+      //       this.$set(this.dictOptions, 'athleteSportClassId', res.result)
+      //     }
+      //   })
+      //   initDictOptions('tb_edu_athlete,athlete_name,id').then((res) => {
+      //     if (res.success) {
+      //       this.$set(this.dictOptions, 'athlete_id', res.result)
+      //     }
+      //   })
+      //
+      //   // initDictOptions 因方法耗时，因此延时500ms获取 训练队成员姓名
+      //   // 最稳妥的方法
+      //   let callback = (function ()  {
+      //     let athleteSportClassId = this.model.athleteSportClassId
+      //     if(!athleteSportClassId){
+      //       return ''
+      //     }else {
+      //       let athlete_id = filterMultiDictText(this.dictOptions['athleteSportClassId'], athleteSportClassId+"")
+      //       this.athleteName = filterMultiDictText(this.dictOptions['athlete_id'], athlete_id + "")
+      //     }
+      //   }).bind(this)
+      //   setTimeout(callback, 500)
+      // },
       add () {
         this.edit({});
       },
-      add(athleteSportClassId) {
+      add(athleteSportClassId, athleteId) {
+        console.log("athleteSportClassId: ", athleteSportClassId)
+        console.log("athleteId: ", athleteId)
+
         this.hiding = true;
-        if (athleteSportClassId) {
+        if (athleteSportClassId && athleteId) {
           this.athleteSportClassId = athleteSportClassId;
-          this.edit({athleteSportClassId}, '');
+          this.athleteSportClassId = athleteSportClassId;
+          this.edit({athleteSportClassId: athleteSportClassId, athleteId: athleteId});
         } else {
           this.$message.warning("请选择一个训练队成员信息");
         }
@@ -140,11 +150,13 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteSportClassId','startDate','endDate','evaluation','evaluator'))
+          this.form.setFieldsValue(pick(this.model,'athleteSportClassId','athleteId','startDate','endDate','evaluation','evaluator'))
         })
 
-        // 初始化字典并获取训练队成员
-        this.initDictConfig()
+        // 初始化运动员字典
+        if (this.model.athleteId) {
+          this.dictCodeAthlete = "tb_edu_athlete, athlete_name, id, id = '" + this.model.athleteId + "'";
+        }
       },
       close () {
         this.$emit('close');
@@ -187,7 +199,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteSportClassId','startDate','endDate','evaluation','evaluator'))
+        this.form.setFieldsValue(pick(row,'athleteSportClassId','athleteId','startDate','endDate','evaluation','evaluator'))
       },
       // 根据屏幕变化,设置抽屉尺寸
       resetScreenSize(){

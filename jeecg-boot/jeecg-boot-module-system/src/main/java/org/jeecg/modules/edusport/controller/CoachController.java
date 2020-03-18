@@ -32,6 +32,7 @@ import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -170,11 +171,15 @@ public class CoachController extends JeecgController<Coach, ICoachService> {
 		String selectedRoles = "";
 		String selectedDeparts = "";
 		
-		SysUser user = sysUserService.getUserByName(coach.getCoachNo());
+		if (coach == null || StringUtils.isEmpty(coach.getMobile())) {
+			return Result.error("请先设置手机号！");
+		}
+		
+		SysUser user = sysUserService.getUserByName(coach.getMobile());
 		if (user == null) {
 			user = new SysUser();
 			
-			user.setUsername(coach.getCoachNo());
+			user.setUsername(coach.getMobile());
 			user.setUserType(2); //教练账号
 			user.setPassword("123456");
 			user.setWorkNo(coach.getCoachNo());
@@ -212,7 +217,7 @@ public class CoachController extends JeecgController<Coach, ICoachService> {
 	 */
 	@PutMapping(value = "/signLock")
 	public Result<?> signLock(@RequestBody Coach coach) {
-		SysUser user = sysUserService.getUserByName(coach.getCoachNo());
+		SysUser user = sysUserService.getUserByName(coach.getMobile());
 		if (user != null) {
 			user.setStatus(2); //冻结账号
 			this.sysUserService.update(new SysUser().setStatus(user.getStatus()),

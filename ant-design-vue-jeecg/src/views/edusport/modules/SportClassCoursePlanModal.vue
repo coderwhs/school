@@ -130,7 +130,7 @@
         this.hiding = true;
         if (sportClassId) {
           this.sportClassId = sportClassId;
-          this.edit({sportClassId}, '');
+          this.edit({sportClassId: sportClassId});
         } else {
           this.$message.warning("请选择课训练计划");
         }
