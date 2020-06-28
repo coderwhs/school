@@ -45,7 +45,10 @@ public class SportClassAthleteLeave implements Serializable {
     private java.util.Date endDate;
 	/**请假原因*/
 	@Excel(name = "请假原因", width = 15)
-    private java.lang.String leaveCause;
+    private java.lang.String reason;
+	/**流程状态*/
+	@Excel(name = "流程状态", width = 15)
+    private java.lang.String workflowStatus;
 	/**创建人*/
 	@Excel(name = "创建人", width = 15)
     private java.lang.String createBy;

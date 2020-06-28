@@ -6,7 +6,7 @@
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
             <a-form-item label="运动项目">
-              <a-input placeholder="请输入运动项目" v-model="queryParam.sportCode"></a-input>
+              <j-search-select-tag placeholder="请选择运动项目" v-model="queryParam.sportCode" dict="tb_edu_sport,sport_name,sport_code" />
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
@@ -14,21 +14,19 @@
               <a-input placeholder="请输入场馆名称" v-model="queryParam.venueName"></a-input>
             </a-form-item>
           </a-col>
-          <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
               <a-form-item label="场馆类型">
                 <j-dict-select-tag placeholder="请选择场馆类型" v-model="queryParam.venueType" dictCode="venue_type"/>
               </a-form-item>
             </a-col>
-          </template>
           <a-col :md="6" :sm="8" >
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
             </span>
           </a-col>
 
@@ -118,8 +116,9 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportVenueModal from './modules/SportVenueModal'
+  import SportVenueModal from './modules/SportVenueModal__Style#Drawer'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
@@ -127,6 +126,7 @@
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
+      JSearchSelectTag,
       SportVenueModal
     },
     data () {

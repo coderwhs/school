@@ -5,29 +5,24 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
-            <a-form-item label="大项代码">
-              <a-input placeholder="请输入大项代码" v-model="queryParam.sportCode"></a-input>
+            <a-form-item label="大项">
+              <j-search-select-tag placeholder="请选择大项" v-model="queryParam.sportCode" :dictOptions="dictOptions.sportCode" />
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
-            <a-form-item label="分项代码">
-              <a-input placeholder="请输入分项代码" v-model="queryParam.disciplinesCode"></a-input>
+            <a-form-item label="分项">
+              <j-search-select-tag placeholder="请选择分项" v-model="queryParam.disciplinesCode" :dictOptions="dictOptions.disciplinesCode" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="小项名称">
+              <a-input placeholder="请输入小项名称" v-model="queryParam.eventName"></a-input>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :md="6" :sm="8">
-              <a-form-item label="小项代码">
-                <a-input placeholder="请输入小项代码" v-model="queryParam.eventCode"></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="8">
-              <a-form-item label="小项名称">
-                <a-input placeholder="请输入小项名称" v-model="queryParam.eventName"></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="8">
               <a-form-item label="启用状态">
-                <a-input placeholder="请输入启用状态" v-model="queryParam.enableStatus"></a-input>
+                <j-dict-select-tag placeholder="请选择启用状态" v-model="queryParam.enableStatus" dictCode="enable_status"/>
               </a-form-item>
             </a-col>
           </template>
@@ -50,10 +45,10 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('运动项目小项表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+<!--      <a-button type="primary" icon="download" @click="handleExportXls('运动项目小项表')">导出</a-button>-->
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -128,8 +123,9 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportEventModal from './modules/SportEventModal'
+  import SportEventModal from './modules/SportEventModal__Style#Drawer'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
@@ -137,6 +133,7 @@
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
+      JSearchSelectTag,
       SportEventModal
     },
     data () {
@@ -177,7 +174,7 @@
             }
           },
           {
-            title:'大项代码',
+            title:'大项',
             align:"center",
             dataIndex: 'sportCode',
             customRender:(text)=>{
@@ -189,7 +186,7 @@
             }
           },
           {
-            title:'分项代码',
+            title:'分项',
             align:"center",
             dataIndex: 'disciplinesCode',
             customRender:(text)=>{
@@ -237,8 +234,9 @@
           importExcelUrl: "edusport/sportEvent/importExcel",
         },
         dictOptions:{
-         disciplinesCode:[],
-         enableStatus:[],
+          sportCode:[],
+          disciplinesCode:[],
+          enableStatus:[],
         },
       }
     },
@@ -254,7 +252,7 @@
             this.$set(this.dictOptions, 'sportCode', res.result)
           }
         })
-        initDictOptions('').then((res) => {
+        initDictOptions('tb_edu_sport_disciplines,disciplines_name,disciplines_code').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, 'disciplinesCode', res.result)
           }

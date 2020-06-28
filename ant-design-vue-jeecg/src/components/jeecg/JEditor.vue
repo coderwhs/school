@@ -13,6 +13,8 @@
   import tinymce from 'tinymce/tinymce'
   import Editor from '@tinymce/tinymce-vue'
   import 'tinymce/themes/silver/theme'
+  import 'tinymce/plugins/code'
+  import 'tinymce/plugins/link'
   import 'tinymce/plugins/image'
   import 'tinymce/plugins/media'
   import 'tinymce/plugins/table'
@@ -42,11 +44,11 @@
       },
       plugins: {
         type: [String, Array],
-        default: 'lists image media table textcolor wordcount contextmenu fullscreen'
+        default: 'code link lists image media table textcolor wordcount contextmenu fullscreen'
       },
       toolbar: {
         type: [String, Array],
-        default: 'undo redo |  formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | lists image media table | removeformat | fullscreen'
+        default: 'undo redo | formatselect fontsizeselect forecolor | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | removeformat | code | fullscreen'
       }
     },
     data() {
@@ -61,6 +63,7 @@
           toolbar: this.toolbar,
           branding: false,
           menubar: false,
+          toolbar_drawer: false,
           images_upload_handler: (blobInfo, success) => {
             const img = 'data:image/jpeg;base64,' + blobInfo.base64()
             success(img)

@@ -37,11 +37,30 @@
 			<groupId>org.jeecgframework.boot</groupId>
 			<artifactId>jeecg-boot-base-common</artifactId>
 		</dependency>
+		
+		<!-- flowable 全家桶 -->
+		<!-- https://mvnrepository.com/artifact/org.flowable/flowable-spring -->
+<!-- 
 		<dependency>
 			<groupId>org.flowable</groupId>
 			<artifactId>flowable-spring-boot-starter</artifactId>
 			<version>6.4.2</version>
 		</dependency>
+ -->		
+ 		<!-- flowable 流程处理相关 -->
+		<!-- https://mvnrepository.com/artifact/org.flowable/flowable-spring-boot-starter-process -->
+		<dependency>
+		    <groupId>org.flowable</groupId>
+		    <artifactId>flowable-spring-boot-starter-process</artifactId>
+		    <version>6.5.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.flowable/flowable-json-converter -->
+		<dependency>
+		    <groupId>org.flowable</groupId>
+		    <artifactId>flowable-json-converter</artifactId>
+		    <version>6.5.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>

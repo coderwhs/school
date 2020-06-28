@@ -6,7 +6,7 @@
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
             <a-form-item label="运动项目">
-              <a-input placeholder="请输入运动项目" v-model="queryParam.sportCode"></a-input>
+              <j-search-select-tag placeholder="请输入运动项目" v-model="queryParam.sportCode" :dictOptions="dictOptions.sportCode" />
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
@@ -125,6 +125,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SportEquipmentModal from './modules/SportEquipmentModal'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
+  import JSearchSelectTag from '@/components/dict/JSearchSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
@@ -132,6 +133,7 @@
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
+      JSearchSelectTag,
       SportEquipmentModal
     },
     data () {

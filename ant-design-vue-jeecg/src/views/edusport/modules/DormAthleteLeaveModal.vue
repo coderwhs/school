@@ -23,7 +23,7 @@
           <j-date placeholder="请选择结束日期" v-decorator="[ 'endDate', validatorRules.endDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['workflowState']" :trigger-change="true" dictCode="workflow_state" placeholder="请选择状态"/>
+          <j-dict-select-tag type="list" v-decorator="['workflowStatus']" :trigger-change="true" dictCode="workflow_state" placeholder="请选择状态"/>
         </a-form-item>
         <a-form-item label="单据类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-dict-select-tag type="list" v-decorator="['billType']" :trigger-change="true" dictCode="bill_type" placeholder="请选择单据类型"/>
@@ -71,7 +71,7 @@
         leaveCause:{rules: [{ required: true, message: '请输入请假原因!' }]},
         startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
         endDate:{rules: [{ required: true, message: '请输入结束日期!' }]},
-        workflowState:{rules: [{ required: true, message: '请输入状态!' }]},
+        workflowStatus:{rules: [{ required: true, message: '请输入状态!' }]},
         billType:{rules: [{ required: true, message: '请输入单据类型!' }]},
         },
         url: {
@@ -92,7 +92,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'athleteId','leaveCause','startDate','endDate','workflowState','billType'))
+          this.form.setFieldsValue(pick(this.model,'athleteId','leaveCause','startDate','endDate','workflowStatus','billType'))
         })
       },
       close () {
@@ -135,7 +135,7 @@
         this.close()
       },
       popupCallback(row){
-        this.form.setFieldsValue(pick(row,'athleteId','leaveCause','startDate','endDate','workflowState','billType'))
+        this.form.setFieldsValue(pick(row,'athleteId','leaveCause','startDate','endDate','workflowStatus','billType'))
       },
 
       

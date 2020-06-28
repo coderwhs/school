@@ -59,6 +59,8 @@ public interface ISysUserService extends IService<SysUser> {
 	
 	public SysUser getUserByName(String username);
 	
+	public SysUser getUserByNameAndType(String username, String userType);
+	
 	/**
 	 * 添加用户和用户角色关系
 	 * @param user

@@ -119,6 +119,9 @@
       <a-tab-pane tab="训练队成员" key="3" forceRender>
         <Athlete-Sport-Class-List ref="AthleteSportClassList"></Athlete-Sport-Class-List>
       </a-tab-pane>
+      <a-tab-pane tab="训练报告" key="4" forceRender>
+        <Sport-Class-Report ref="SportClassReport"></Sport-Class-Report>
+      </a-tab-pane>
     </a-tabs>
 
     <sportClass-modal ref="modalForm" @ok="modalFormOk"></sportClass-modal>
@@ -132,7 +135,6 @@
   import JDate from '@/components/jeecg/JDate'
   import JSearchSelectTag from '@/components/dict/JSearchSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-  // import SportClassModal from './modules/SportClassModal'
   import SportClassModal from './modules/SportClassModal__Style#Drawer'
   import SportClassAthleteAttendList from './SportClassAthleteAttendList'
   import SportClassAthleteAttendModal from './modules/SportClassAthleteAttendModal'
@@ -140,6 +142,7 @@
   import SportClassAthleteLeaveModal from './modules/SportClassAthleteLeaveModal'
   import AthleteSportClassList from './AthleteSportClassList'
   import AthleteSportClassModal from './modules/AthleteSportClassModal__Style#Drawer'
+  import SportClassReport from './modules/SportClassReport'
 
   export default {
     name: "SportClassList",
@@ -154,6 +157,7 @@
       SportClassAthleteLeaveModal,
       AthleteSportClassList,
       AthleteSportClassModal,
+      SportClassReport
     },
     data () {
       return {

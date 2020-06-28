@@ -33,6 +33,13 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 	public SysUser getUserByName(@Param("username") String username);
 
 	/**
+	  * 通过用户账号和账号类型查询用户信息
+	 * @param username
+	 * @return
+	 */
+	public SysUser getUserByNameAndType(@Param("username") String username, @Param("user_type") String userType);
+	
+	/**
 	  * 通过用户账号查询用户角色信息
 	 * @param username
 	 * @return

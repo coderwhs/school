@@ -6,13 +6,13 @@
         :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
         @change="handleTabClick">
 
-        <a-tab-pane key="tab1" tab="教务登陆">
+        <a-tab-pane key="tab1" tab="教务登录">
           <a-form-item>
             <a-input
               size="large"
               v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
               type="text"
-              placeholder="请输入帐户名 / demo">
+              placeholder="请输入用户名 / demo">
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -31,7 +31,7 @@
         </a-tab-pane>
 
 
-        <a-tab-pane key="tab2" tab="教练登陆">
+        <a-tab-pane key="tab2" tab="教练登录">
           <a-form-item>
             <a-input
               size="large"
@@ -56,7 +56,7 @@
         </a-tab-pane>
 
 
-        <a-tab-pane key="tab3" tab="学生登陆">
+        <a-tab-pane key="tab3" tab="学生登录">
           <a-form-item>
             <a-input
               size="large"
@@ -103,7 +103,7 @@
       </a-form-item>
 
       <a-form-item>
-        <a-checkbox v-model="formLogin.rememberMe">自动登陆</a-checkbox>
+        <a-checkbox v-model="formLogin.rememberMe">自动登录</a-checkbox>
 <!--
         <router-link :to="{ name: 'alteration'}" class="forge-password" style="float: right;">
           忘记密码
@@ -127,7 +127,7 @@
       </a-form-item>
 
       <!-- <div class="user-login-other">
-        <span>其他登陆方式</span>
+        <span>其他登录方式</span>
         <a><a-icon class="item-icon" type="alipay-circle"></a-icon></a>
         <a><a-icon class="item-icon" type="taobao-circle"></a-icon></a>
         <a><a-icon class="item-icon" type="weibo-circle"></a-icon></a>
@@ -278,13 +278,13 @@
         that.loginBtn = true;
 
         if (that.customActiveKey === 'tab1') {
-          // 使用账户密码登陆（教务登录）
+          // 使用账户密码登录（教务登录）
           loginParams.userType = 1
         } else if (that.customActiveKey === 'tab2') {
-          // 使用工号密码登陆（教练登录）
+          // 使用工号密码登录（教练登录）
           loginParams.userType = 2
         } else if (that.customActiveKey === 'tab3') {
-          // 使用学号登陆（学生登录）
+          // 使用学号登录（学生登录）
           loginParams.userType = 3
         }
 

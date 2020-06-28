@@ -6,13 +6,13 @@
         :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
         @change="handleTabClick">
 
-        <a-tab-pane key="tab1" tab="教务登陆">
+        <a-tab-pane key="tab1" tab="教务登录">
           <a-form-item>
             <a-input
               size="large"
               v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
               type="text"
-              placeholder="请输入帐户名">
+              placeholder="请输入用户名">
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -27,17 +27,36 @@
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
+
+          <a-row :gutter="0" v-if="customActiveKey=='tab1'">
+            <a-col :span="14">
+              <a-form-item>
+                <a-input
+                  v-decorator="['inputCode',validatorRules.inputCode]"
+                  size="large"
+                  type="text"
+                  @change="inputCodeChange"
+                  placeholder="请输入验证码">
+                  <a-icon slot="prefix" v-if=" inputCodeContent==verifiedCode " type="smile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+                  <a-icon slot="prefix" v-else type="frown" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+                </a-input>
+              </a-form-item>
+            </a-col>
+            <a-col  :span="10">
+              <j-graphic-code @success="generateCode" ref="jgraphicCodeRef" style="float: right" remote></j-graphic-code>
+            </a-col>
+          </a-row>
 
         </a-tab-pane>
 
 
-        <a-tab-pane key="tab2" tab="教练登陆">
+        <a-tab-pane key="tab2" tab="教练登录">
           <a-form-item>
             <a-input
               size="large"
-              v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
+              v-decorator="['username', validatorRules.username, { validator: this.handleUsernameOrEmail }]"
               type="text"
-              placeholder="请输入工号">
+              placeholder="请输入手机号">
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -52,17 +71,36 @@
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
+
+          <a-row :gutter="0" v-if="customActiveKey=='tab2'">
+            <a-col :span="14">
+              <a-form-item>
+                <a-input
+                  v-decorator="['inputCode',validatorRules.inputCode]"
+                  size="large"
+                  type="text"
+                  @change="inputCodeChange"
+                  placeholder="请输入验证码">
+                  <a-icon slot="prefix" v-if=" inputCodeContent==verifiedCode " type="smile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+                  <a-icon slot="prefix" v-else type="frown" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+                </a-input>
+              </a-form-item>
+            </a-col>
+            <a-col  :span="10">
+              <j-graphic-code @success="generateCode" ref="jgraphicCodeRef" style="float: right" remote></j-graphic-code>
+            </a-col>
+          </a-row>
 
         </a-tab-pane>
 
 
-        <a-tab-pane key="tab3" tab="运动员登陆">
+        <a-tab-pane key="tab3" tab="运动员登录">
           <a-form-item>
             <a-input
               size="large"
-              v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
+              v-decorator="['username', validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
               type="text"
-              placeholder="请输入学号">
+              placeholder="请输入手机号">
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -78,34 +116,52 @@
             </a-input>
           </a-form-item>
 
+          <a-row :gutter="0" v-if="customActiveKey=='tab3'">
+            <a-col :span="14">
+              <a-form-item>
+                <a-input
+                  v-decorator="['inputCode',validatorRules.inputCode]"
+                  size="large"
+                  type="text"
+                  @change="inputCodeChange"
+                  placeholder="请输入验证码">
+                  <a-icon slot="prefix" v-if=" inputCodeContent==verifiedCode " type="smile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+                  <a-icon slot="prefix" v-else type="frown" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+                </a-input>
+              </a-form-item>
+            </a-col>
+            <a-col  :span="10">
+              <j-graphic-code @success="generateCode" ref="jgraphicCodeRef" style="float: right" remote></j-graphic-code>
+            </a-col>
+          </a-row>
         </a-tab-pane>
 
       </a-tabs>
 
-      <a-form-item>
-        <a-row :gutter="0">
-          <a-col :span="14">
-            <a-form-item>
-              <a-input
-                v-decorator="['inputCode',validatorRules.inputCode]"
-                size="large"
-                type="text"
-                @change="inputCodeChange"
-                placeholder="请输入验证码">
-                <a-icon slot="prefix" v-if=" inputCodeContent==verifiedCode " type="smile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
-                <a-icon slot="prefix" v-else type="frown" :style="{ color: 'rgba(0,0,0,.25)' }"/>
-              </a-input>
-            </a-form-item>
-          </a-col>
-          <a-col  :span="10">
-            <j-graphic-code @success="generateCode" ref="jgraphicCodeRef" style="float: right" remote></j-graphic-code>
-          </a-col>
-        </a-row>
-      </a-form-item>
+<!--      <a-form-item>-->
+<!--        <a-row :gutter="0">-->
+<!--          <a-col :span="14">-->
+<!--            <a-form-item>-->
+<!--              <a-input-->
+<!--                v-decorator="['inputCode',validatorRules.inputCode]"-->
+<!--                size="large"-->
+<!--                type="text"-->
+<!--                @change="inputCodeChange"-->
+<!--                placeholder="请输入验证码">-->
+<!--                <a-icon slot="prefix" v-if=" inputCodeContent==verifiedCode " type="smile" :style="{ color: 'rgba(0,0,0,.25)' }"/>-->
+<!--                <a-icon slot="prefix" v-else type="frown" :style="{ color: 'rgba(0,0,0,.25)' }"/>-->
+<!--              </a-input>-->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--          <a-col  :span="10">-->
+<!--            <j-graphic-code @success="generateCode" ref="jgraphicCodeRef" style="float: right" remote></j-graphic-code>-->
+<!--          </a-col>-->
+<!--        </a-row>-->
+<!--      </a-form-item>-->
 
 
       <a-form-item>
-        <a-checkbox v-model="formLogin.rememberMe">自动登陆</a-checkbox>
+        <a-checkbox v-model="formLogin.rememberMe">自动登录</a-checkbox>
         <!--
         <router-link :to="{ name: 'alteration'}" class="forge-password" style="float: right;">
           忘记密码
@@ -129,7 +185,7 @@
       </a-form-item>
 
       <!-- <div class="user-login-other">
-        <span>其他登陆方式</span>
+        <span>其他登录方式</span>
         <a><a-icon class="item-icon" type="alipay-circle"></a-icon></a>
         <a><a-icon class="item-icon" type="taobao-circle"></a-icon></a>
         <a><a-icon class="item-icon" type="weibo-circle"></a-icon></a>
@@ -280,13 +336,13 @@
         that.loginBtn = true;
 
         if (that.customActiveKey === 'tab1') {
-          // 使用账户密码登陆（教务登录）
+          // 使用账户密码登录（教务登录）
           loginParams.userType = 1
         } else if (that.customActiveKey === 'tab2') {
-          // 使用工号密码登陆（教练登录）
+          // 使用工号密码登录（教练登录）
           loginParams.userType = 2
         } else if (that.customActiveKey === 'tab3') {
-          // 使用学号登陆（学生登录）
+          // 使用学号登录（学生登录）
           loginParams.userType = 3
         }
 

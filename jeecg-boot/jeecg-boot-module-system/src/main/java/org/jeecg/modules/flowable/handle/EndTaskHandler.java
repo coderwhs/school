@@ -18,7 +18,7 @@ public class EndTaskHandler  implements JavaDelegate{
 		String billId = "" + execution.getVariable("billId");
 		System.out.println(">>>>>>>>>>billId>>>>>>>>>>>>>" + billId);
 		DormAthleteLeave dormAthleteLeave = dormAthleteLeaveService.getById(billId);
-		dormAthleteLeave.setWorkflowState("3");
+		dormAthleteLeave.setWorkflowStatus("3");
 		dormAthleteLeaveService.saveOrUpdate(dormAthleteLeave);
 		
 	}

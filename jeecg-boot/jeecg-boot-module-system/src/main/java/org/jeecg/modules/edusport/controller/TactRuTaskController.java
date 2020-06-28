@@ -126,9 +126,9 @@ public class TactRuTaskController extends JeecgController<TactRuTask, ITactRuTas
 //	        	System.out.println("单据ID：" + processInstance.getBusinessKey());
 	        	
 		        // 申请理由.
-	        	t.setDelegation(dormAthleteLeave.getLeaveCause());
+	        	t.setDelegation(dormAthleteLeave.getReason());
 		        // 任务描述.
-		        t.setOwner("【任务】请审批【" + athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName() + "】的请假申请！" + "【请假原因】：" + dormAthleteLeave.getLeaveCause());
+		        t.setOwner("【任务】请审批【" + athleteService.getById(dormAthleteLeave.getAthleteId()).getAthleteName() + "】的请假申请！" + "【请假原因】：" + dormAthleteLeave.getReason());
 		        // 审批意见.
 //		        t.setDescription("");
 		        // 运动员ID.

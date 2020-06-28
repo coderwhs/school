@@ -11,9 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.edusport.entity.AthleteSportClass;
 import org.jeecg.modules.edusport.entity.SportClass;
 import org.jeecg.modules.edusport.service.ISportClassService;
+import org.jeecg.modules.shiro.vo.DefContants;
+import org.jeecg.modules.system.entity.SysUser;
+import org.jeecg.modules.system.service.ISysUserService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -46,6 +51,9 @@ public class SportClassController extends JeecgController<SportClass, ISportClas
 	@Autowired
 	private ISportClassService sportClassService;
 	
+	@Autowired
+	private ISysUserService sysUserService;
+	
 	/**
 	 * 分页列表查询
 	 *
@@ -60,7 +68,45 @@ public class SportClassController extends JeecgController<SportClass, ISportClas
 								   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 								   HttpServletRequest req) {
+		
+		//1.获取用户
+		String token = req.getHeader(DefContants.X_ACCESS_TOKEN);
+		if(oConvertUtils.isEmpty(token)) {
+			return Result.error("Token失效!");
+		}
+		
 		QueryWrapper<SportClass> queryWrapper = QueryGenerator.initQueryWrapper(sportClass, req.getParameterMap());
+		String userName = JwtUtil.getUsername(token);
+		SysUser sysUser = sysUserService.getUserByName(userName);
+	    if(sysUser == null) {
+	    	return Result.error("Token无效!");
+	    }
+	    
+    	// 教务人员, 看到所有训练队
+    	if (1 == sysUser.getUserType()) {
+    		// Skip
+    		
+    		// 教练员, 教练员只能看到所带班级运动员，只能看到自己所在队及
+    	} else if (2 == sysUser.getUserType()) {
+			StringBuffer coachSql = new StringBuffer();
+			coachSql.append("select id from tb_edu_coach t where mobile = '");
+			coachSql.append(userName);
+			coachSql.append("'");
+			queryWrapper.inSql("coach_id", coachSql.toString());
+			
+    		// 运动员, 运动员只能看到自己，只能看到自己所在队及所在队的教练
+    	} else if (3 == sysUser.getUserType()) {
+			StringBuffer athleteSql = new StringBuffer();
+			athleteSql.append("select sport_class_id from tb_edu_athlete_sport_class where athlete_id in ");
+			athleteSql.append("(select id from tb_edu_athlete t where mobile = '");
+			athleteSql.append(userName);
+			athleteSql.append("')");
+			queryWrapper.inSql("id", athleteSql.toString());
+    	}
+
+		
+		
+		
 		Page<SportClass> page = new Page<SportClass>(pageNo, pageSize);
 		IPage<SportClass> pageList = sportClassService.page(page, queryWrapper);
 		return Result.ok(pageList);

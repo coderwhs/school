@@ -94,7 +94,7 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 
 			// 更改状态.
 			dormAthleteLeave = dormAthleteLeaveService.getById(dormAthleteLeave.getId());
-			dormAthleteLeave.setWorkflowState("2");
+			dormAthleteLeave.setWorkflowStatus("2");
 			dormAthleteLeaveService.saveOrUpdate(dormAthleteLeave);
 			System.out.println("==============" + dormAthleteLeave.getId());
 
@@ -210,7 +210,7 @@ public class FlowableController extends JeecgController<JeecgDemo, IJeecgDemoSer
 	public String reject(HttpServletRequest request, @RequestBody TactRuTask tactRuTask) {
 		// 更改状态.
 		DormAthleteLeave dormAthleteLeave = dormAthleteLeaveService.getById(tactRuTask.getParentTaskId());
-		dormAthleteLeave.setWorkflowState("4");// 驳回.
+		dormAthleteLeave.setWorkflowStatus("4");// 驳回.
 		dormAthleteLeaveService.saveOrUpdate(dormAthleteLeave);
 		System.out.println("==============" + dormAthleteLeave.getId());
 		SysUser user = UserUtil.getSystemUser(request, sysUserService);

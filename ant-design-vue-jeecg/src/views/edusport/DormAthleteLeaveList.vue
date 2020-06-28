@@ -181,12 +181,12 @@
           {
             title:'状态',
             align:"center",
-            dataIndex: 'workflowState',
+            dataIndex: 'workflowStatus',
             customRender:(text)=>{
               if(!text){
                 return ''
               }else{
-                return filterMultiDictText(this.dictOptions['workflowState'], text+"")
+                return filterMultiDictText(this.dictOptions['workflowStatus'], text+"")
               }
             }
           },
@@ -219,7 +219,7 @@
           importExcelUrl: "edusport/dormAthleteLeave/importExcel",
         },
         dictOptions:{
-          workflowState:[],
+          workflowStatus:[],
           billType:[],
         },
       }
@@ -238,7 +238,7 @@
         })
         initDictOptions('workflow_state').then((res) => {
           if (res.success) {
-            this.$set(this.dictOptions, 'workflowState', res.result)
+            this.$set(this.dictOptions, 'workflowStatus', res.result)
           }
         })
         initDictOptions('bill_type').then((res) => {
@@ -275,7 +275,7 @@
       },
 
       handleDelete: function (record) {/* Tab修改@2019-12-12 */
-        if(record.workflowState == '1'){
+        if(record.workflowStatus == '1'){
           var that = this;
           deleteAction(that.url.delete, {id: record.id}).then((res) => {
             if (res.success) {
@@ -293,7 +293,7 @@
       },
 
       handleSubmit: function (record) {
-        if(record.workflowState == '2' || record.workflowState == '3'){
+        if(record.workflowStatus == '2' || record.workflowStatus == '3'){
           alert("已经提交工作流，不能再次提交！");
         } else{
           let httpurl = '';

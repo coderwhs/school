@@ -34,7 +34,7 @@
         <a-step title="创建项目">
         </a-step>
         <a-step title="部门初审">
-        </a-step>
+        </a-step>多层信息组
         <a-step title="财务复核">
         </a-step>
         <a-step title="完成">

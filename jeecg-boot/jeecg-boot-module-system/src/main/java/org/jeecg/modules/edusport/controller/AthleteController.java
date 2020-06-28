@@ -106,16 +106,14 @@ public class AthleteController extends JeecgController<Athlete, IAthleteService>
     		// 教练员, 教练员只能看到所带班级运动员，只能看到自己所在队及
     	} else if (2 == sysUser.getUserType()) {
 			StringBuffer coachSql = new StringBuffer();
-			coachSql.append("select athlete_id from tb_edu_athlete_sport_class WHERE sport_class_id in ");
-			coachSql.append("(select id from tb_edu_sport_class where coach_id in ");
-			coachSql.append("(select id from tb_edu_coach t where coach_no = '");
+			coachSql.append("select id from tb_edu_coach t where mobile = '");
 			coachSql.append(userName);
-			coachSql.append("'))");
-			queryWrapper.inSql("id", coachSql.toString());
+			coachSql.append("'");
+			queryWrapper.inSql("coach_id", coachSql.toString());
 			
     		// 运动员, 运动员只能看到自己，只能看到自己所在队及所在队的教练
     	} else if (3 == sysUser.getUserType()) {
-    		queryWrapper.eq("athlete_no", userName);
+    		queryWrapper.eq("mobile", userName);
     	}
 	    
 		Page<Athlete> page = new Page<Athlete>(pageNo, pageSize);
@@ -228,7 +226,7 @@ public class AthleteController extends JeecgController<Athlete, IAthleteService>
 	 * @return
 	 */
 	@PutMapping(value = "/signUp")
-	public Result<?> coachSignUp(@RequestBody Athlete athlete) {
+	public Result<?> athleteSignUp(@RequestBody Athlete athlete) {
 		String selectedRoles = "";
 		String selectedDeparts = "";
 		

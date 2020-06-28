@@ -24,7 +24,7 @@
           <j-date placeholder="请选择结束日期" v-decorator="[ 'endDate', validatorRules.endDate]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
         <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag type="list" v-decorator="['workflowState']" :trigger-change="true" dictCode="workflow_state" disabled="disabled" placeholder="请选择状态"/>
+          <j-dict-select-tag type="list" v-decorator="['workflowStatus']" :trigger-change="true" dictCode="workflow_state" disabled="disabled" placeholder="请选择状态"/>
         </a-form-item>
 <!--        <a-form-item label="单据类型" :labelCol="labelCol" :wrapperCol="wrapperCol">-->
 <!--          <j-dict-select-tag type="list" v-decorator="['billType']" :trigger-change="true" dictCode="bill_type" placeholder="请选择单据类型"/>-->
@@ -80,9 +80,9 @@
           leaveCause:{rules: [{ required: true, message: '请输入请假原因!' }]},
           startDate:{rules: [{ required: true, message: '请输入开始日期!' }]},
           endDate:{rules: [{ required: true, message: '请输入结束日期!' }]},
-          workflowState:{},
+          workflowStatus:{},
           billType:{},
-          // workflowState:{rules: [{ required: true, message: '请输入状态!' }]},
+          // workflowStatus:{rules: [{ required: true, message: '请输入状态!' }]},
           // billType:{rules: [{ required: true, message: '请输入单据类型!' }]},
         },
         url: {
@@ -108,7 +108,7 @@
         // }
       },
       edit (record) {// 如果是编辑，状态
-        if(record.id && (record.workflowState == '2' || record.workflowState == '3')){
+        if(record.id && (record.workflowStatus == '2' || record.workflowStatus == '3')){
           this.$message.warning("已经提交工作流，不允许修改!");
         } else {
           this.form.resetFields();

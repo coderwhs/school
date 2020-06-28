@@ -1,7 +1,7 @@
 <template>
   <div class="page-header">
     <div class="page-header-index-wide">
-      <a-breadcrumb class="breadcrumb">
+      <a-breadcrumb v-if="breadcrumb" class="breadcrumb">
         <a-breadcrumb-item v-for="(item, index) in breadList" :key="index">
           <router-link v-if="item.name != name" :to="{ path: item.path }">
             {{ item.meta.title }}
@@ -55,7 +55,7 @@
         required: false
       },
       breadcrumb: {
-        type: Array,
+        type: Boolean,
         default: null,
         required: false
       },

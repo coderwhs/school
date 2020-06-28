@@ -35,7 +35,7 @@ public class DormAthleteLeave implements Serializable {
     private java.lang.String athleteId;
 	/**请假原因*/
 	@Excel(name = "请假原因", width = 15)
-    private java.lang.String leaveCause;
+    private java.lang.String reason;
 	/**开始日期*/
 	@Excel(name = "开始日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
@@ -46,9 +46,12 @@ public class DormAthleteLeave implements Serializable {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private java.util.Date endDate;
-	/**状态*/
-	@Excel(name = "状态", width = 15)
-    private java.lang.String workflowState;
+	/**流程id*/
+	@Excel(name = "流程id", width = 15)
+    private java.lang.String workflowId;
+	/**流程状态*/
+	@Excel(name = "流程状态", width = 15)
+    private java.lang.String workflowStatus;
 	/**单据类型*/
 	@Excel(name = "单据类型", width = 15)
     private java.lang.String billType;

@@ -18,10 +18,10 @@
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
             </span>
           </a-col>
 
@@ -111,7 +111,7 @@
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SportModal from './modules/SportModal'
+  import SportModal from './modules/SportModal__Style#Drawer'
 
   export default {
     name: "SportList",

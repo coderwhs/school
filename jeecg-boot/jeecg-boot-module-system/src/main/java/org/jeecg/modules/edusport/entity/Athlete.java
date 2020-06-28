@@ -103,6 +103,9 @@ public class Athlete implements Serializable {
 	/**就读年级*/
 	@Excel(name = "就读年级", width = 15)
     private java.lang.String grade;
+	/**班主任*/
+	@Excel(name = "班主任", width = 15)
+    private java.lang.String classTeacherId;
 	/**入队时间*/
 	@Excel(name = "入队时间", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
