@@ -84,7 +84,7 @@
           </a-button>
         </template>
 
-        <span slot="action" slot-scope="text, record">
+        <span slot="action" slot-scope="text,record">
           <a @click="handleEdit(record)">审批</a>
           <a-divider type="vertical" />
           <a-dropdown>
@@ -110,6 +110,7 @@
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import LeaveRequestModal from './modules/LeaveRequestModal__Style#Drawer'
+  // import CoachLeaveRequestModal from './modules/CoachLeaveRequestModal__Style#Drawer'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
@@ -118,7 +119,8 @@
     mixins:[JeecgListMixin],
     components: {
       JDictSelectTag,
-      LeaveRequestModal
+      LeaveRequestModal,
+      // CoachLeaveRequestModal,
     },
     data () {
       return {
@@ -173,7 +175,7 @@
           {
             title:'申请人',
             align:"center",
-            dataIndex: 'athleteName'
+            dataIndex: 'coachName'
           },
           {
             title:'申请日期',
@@ -208,15 +210,16 @@
           }
         ],
         url: {
-          list: "/edusport/leaveRequest/taskList",
-          add: "/edusport/leaveRequest/add",
+          list: "/edusport/coachLeaveRequest/taskList",
+          add: "/edusport/coachLeaveRequest/add",
           delete: "/edusport/athleteSelectionIndex/delete",
           deleteBatch: "/edusport/athleteSelectionIndex/deleteBatch",
           exportXlsUrl: "/edusport/athleteSelectionIndex/exportXls",
           importExcelUrl: "edusport/athleteSelectionIndex/importExcel",
         },
         dictOptions:{
-          requestType:[{text:"宿舍请假", title:"宿舍请假", value:"dormLeaveRequest"}, {text:"训练请假", title:"训练请假", value:"classLeaveRequest"}],
+          requestType:[{text:"事假", title:"事假", value:"thingsLeaveRequest"}, {text:"病假", title:"病假", value:"sickLeaveRequest"},
+            {text:"培训", title:"培训", value:"trainLeaveRequest"}, {text:"赛事", title:"赛事", value:"matchLeaveRequest"}],
           approvalResult:[{text:"同意", title:"同意", value:"agree"}, {text:"驳回", title:"驳回", value:"reject"}],
           indexCatCode:[],
           isLeaf:[],

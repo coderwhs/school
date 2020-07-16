@@ -12,21 +12,16 @@
 
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
+        <a-form-item label="申请人" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input placeholder="请填写申请人姓名" v-decorator="['writeNameType', validatorRules.writeNameType]"></a-input>
+        </a-form-item>
+
         <a-form-item label="请假类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-form-container :disabled="!isNewRequest">
             <j-search-select-tag placeholder="请选择请假类型"  v-decorator="['requestType', validatorRules.requestType]" :dictOptions="dictOptions.requestType" />
           </j-form-container>
         </a-form-item>
-        <a-form-item label="宿舍" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-form-container :disabled="!isNewRequest">
-            <j-search-select-tag v-decorator="['dormId', validatorRules.dormId]" :dict="fnDictCodeDorm" />
-          </j-form-container>
-        </a-form-item>
-        <a-form-item label="选择训练队" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-form-container :disabled="!isNewRequest">
-            <j-search-select-tag v-decorator="['sportClassId', validatorRules.sportClassId]" :dict="fnDictCodeSportClass" />
-          </j-form-container>
-        </a-form-item>
+
         <a-form-item label="开始日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-form-container :disabled="!isNewRequest">
             <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
@@ -75,18 +70,18 @@
           <a-step status="wait" :title="currentWorkflow" description="待审批"/>
         </a-steps>
 
-<!--        <a-steps direction="vertical" size="small" :current="workflowLogList.length - 1" v-for="(item, index) in workflowLogList" :key="index">-->
-<!--          <a-step status="finish" :title="item.workflowNode" :sub-title="item.approvalResult" :description="item.approvalComment" />-->
-<!--        </a-steps>-->
+        <!--        <a-steps direction="vertical" size="small" :current="workflowLogList.length - 1" v-for="(item, index) in workflowLogList" :key="index">-->
+        <!--          <a-step status="finish" :title="item.workflowNode" :sub-title="item.approvalResult" :description="item.approvalComment" />-->
+        <!--        </a-steps>-->
       </p>
       <p v-else-if="noTitleKey === 'processDiagram'">
-        <img alt="请假流程图" style="width: 50% height: 50%" :src="previewImage"/>
+        <img alt="请假流程图" style="width: 50%; height: 50%" :src="previewImage"/>
       </p>
     </a-card>
 
-<!--    <a-divider orientation="left">-->
-<!--      审批日志-->
-<!--    </a-divider>-->
+    <!--    <a-divider orientation="left">-->
+    <!--      审批日志-->
+    <!--    </a-divider>-->
 
 
     <div class="drawer-bootom-button" v-show="!disableSubmit">
@@ -108,7 +103,7 @@
   import JTreeSelect from '@/components/jeecg/JTreeSelect'
 
   export default {
-    name: "LeaveRequestModal",
+    name: "CoachLeaveRequestModal",
     components: {
       JDate,
       JDictSelectTag,
@@ -139,6 +134,7 @@
         dictCodeSportClass: '',
         dictCodeDorm: '',
         validatorRules:{
+          writeNameType:{rules: [{ required: true, message: '请填写申请人姓名!' }]},
           requestType:{rules: [{ required: true, message: '请选择请假类型!' }]},
           startDate:{rules: [{ required: true, message: '请选择开始日期!' }]},
           endDate:{rules: [{ required: true, message: '请选择结束日期!' }]},
@@ -161,16 +157,17 @@
         currentWorkflow: '',
         previewImage: '',
         url: {
-          add: "/edusport/leaveRequest/add",
-          edit: "/edusport/leaveRequest/update",
-          queryByProcessId: "/edusport/leaveRequest/queryByProcessId",
-          processDiagram:"/edusport/leaveRequest/processDiagram",
+          add: "/edusport/coachLeaveRequest/add",
+          edit: "/edusport/coachLeaveRequest/update",
+          queryByProcessId: "/edusport/coachLeaveRequest/queryByProcessId",
+          processDiagram:"/edusport/coachLeaveRequest/processDiagram",
         },
         dictOptions:{
-          requestType:[{text:"宿舍请假", title:"宿舍请假", value:"dormLeaveRequest"}, {text:"训练请假", title:"训练请假", value:"classLeaveRequest"}],
+          requestType:[{text:"事假", title:"事假", value:"thingsLeaveRequest"}, {text:"病假", title:"病假", value:"sickLeaveRequest"},
+            {text:"培训", title:"培训", value:"trainLeaveRequest"}, {text:"赛事", title:"赛事", value:"matchLeaveRequest"}],
           approvalResult:[{text:"同意", title:"同意", value:"agree"}, {text:"驳回", title:"驳回", value:"reject"}],
         },
-     
+
       }
     },
     created () {
@@ -202,7 +199,7 @@
 
         // 初始化训练队字典
         // if (this.model.sportClassId) {
-          this.dictCodeSportClass = "tb_edu_sport_class, class_name, id";
+        this.dictCodeSportClass = "tb_edu_sport_class, class_name, id";
         // }
 
         // 初始化宿舍字典
@@ -264,7 +261,7 @@
               method = 'post';
             }else{
               httpurl+=this.url.edit;
-               method = 'put';
+              method = 'put';
             }
             let formData = Object.assign(this.model, values);
             console.log("表单提交数据",formData)
@@ -275,12 +272,13 @@
               }else{
                 that.$message.warning(res.message);
               }
+              console.log("res:",res)
             }).finally(() => {
               that.confirmLoading = false;
               that.close();
             })
           }
-         
+
         })
       },
       handleCancel () {
@@ -289,7 +287,7 @@
       popupCallback(row){
         this.form.setFieldsValue(pick(row,'requestType', 'dormId', 'sportClassId', 'startDate','endDate','reason'))
       }
-      
+
     }
   }
 </script>

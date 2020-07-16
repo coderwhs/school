@@ -50,6 +50,25 @@ CREATE TABLE tb_edu_dorm_student_leave(
 ) COMMENT = '宿舍学生请假表 ';;
 
 
+-- 修改地方
+DROP TABLE IF EXISTS `tb_edu_dorm_athlete_leave`;
+CREATE TABLE `tb_edu_dorm_athlete_leave` (
+  `id` varchar(32) NOT NULL COMMENT '主键id',
+  `coach_id` varchar(32) NOT NULL DEFAULT '' COMMENT '教练员id',
+  `reason` varchar(512) DEFAULT NULL COMMENT '请假原因',
+  `start_date` datetime DEFAULT NULL COMMENT '开始日期',
+  `end_date` datetime DEFAULT NULL COMMENT '结束日期',
+  `create_by` varchar(32) DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `workflow_id` varchar(32) DEFAULT NULL COMMENT '流程id',
+  `workflow_status` varchar(32) DEFAULT NULL COMMENT '流程状态 待审批、审批中、已通过、已拒绝、已挂起、已中止',
+  `task_status` varchar(32) DEFAULT NULL COMMENT '任务状态 审批中、已通过、已驳回、已拒绝、已转办、意见征询',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='教练员请假表 ';
+
+
 
 DROP TABLE tb_edu_student;;/*SkipError*/
 CREATE TABLE tb_edu_student(

@@ -1,9 +1,10 @@
 package org.jeecg.modules.edusport.mapper;
 
 import org.apache.ibatis.annotations.Param;
-import org.jeecg.modules.edusport.entity.DormAthleteLeave;
+
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.jeecg.modules.edusport.entity.DormAthleteLeave;
 
 /**
  * @Description: 宿舍运动员请假表

@@ -113,7 +113,7 @@ public class LeaveRequestFlowableController {
 	public Result<?> add(@RequestBody LeaveRequestTaskVo leaveRequestTaskVo, HttpServletRequest req) {
 		// 设置请假流程参数
 //		Map<String, Object> variables = JSON.parseObject(JSON.toJSONString(leaveRequestTaskVo), Map.class);
-		
+		System.out.println(req);
 		// 获取申请人：运动员
 		String userName = JwtUtil.getUserNameByToken(req);
 		SysUser sysUserAthlete = sysUserService.getUserByNameAndType("18621966866", "3");
