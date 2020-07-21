@@ -52,11 +52,9 @@ public class CoachLeaveRequestFlowableController {
 
     @Autowired
     private ICoachService coachService;
-
     // 教练请假
     @Autowired
     private ICoachLeaveService coachLeaveService;
-
     @Autowired
     private RuntimeService runtimeService;
     @Autowired
@@ -77,7 +75,7 @@ public class CoachLeaveRequestFlowableController {
     @PostMapping(value = "/add")
     public Result<?> add(@RequestBody CoachLeaveRequestTaskVo coachleaveRequestTaskVo, HttpServletRequest req) {
         // 获取申请人：教练
-        System.out.println("req:"+req);
+        System.out.println(req);
         String userName = JwtUtil.getUserNameByToken(req);
         SysUser sysUserCoach = sysUserService.getUserByNameAndType("13576976968", "2");
         if(sysUserCoach == null) {
@@ -97,52 +95,29 @@ public class CoachLeaveRequestFlowableController {
         coachleaveRequestTaskVo.setRequestDate(new Date());
         coachleaveRequestTaskVo.setCoachUserId(sysUserCoach.getId());
 
-        if ("thingsLeaveRequest".equals(coachleaveRequestTaskVo.getRequestType())) {
+        if ("thingsLeaveRequest".equals(coachleaveRequestTaskVo.getRequestType())
+            || "sickLeaveRequest".equals(coachleaveRequestTaskVo.getRequestType())
+            || "trainLeaveRequest".equals(coachleaveRequestTaskVo.getRequestType())
+            || "matchLeaveRequest" .equals(coachleaveRequestTaskVo.getRequestType())) {
             CoachLeave coachLeave = new CoachLeave();
             coachLeave.setId(requestId);
+            coachLeave.setCoach_id(coachleaveRequestTaskVo.getCoachUserId());
             coachLeave.setStartDate(coachleaveRequestTaskVo.getStartDate());
             coachLeave.setEndDate(coachleaveRequestTaskVo.getEndDate());
             coachLeave.setReason(coachleaveRequestTaskVo.getReason());
             coachLeave.setWorkflowStatus("待审批");
             coachLeaveService.save(coachLeave);
-
-        } else if ("sickLeaveRequest".equals(coachleaveRequestTaskVo.getRequestType())) {
-            CoachLeave coachLeave = new CoachLeave();
-            coachLeave.setId(requestId);
-            coachLeave.setStartDate(coachleaveRequestTaskVo.getStartDate());
-            coachLeave.setEndDate(coachleaveRequestTaskVo.getEndDate());
-            coachLeave.setReason(coachleaveRequestTaskVo.getReason());
-            coachLeave.setWorkflowStatus("待审批");
-            coachLeaveService.save(coachLeave);
-
-        } else if ("trainLeaveRequest".equals(coachleaveRequestTaskVo.getRequestType())){
-            CoachLeave coachLeave = new CoachLeave();
-            coachLeave.setId(requestId);
-            coachLeave.setStartDate(coachleaveRequestTaskVo.getStartDate());
-            coachLeave.setEndDate(coachleaveRequestTaskVo.getEndDate());
-            coachLeave.setReason(coachleaveRequestTaskVo.getReason());
-            coachLeave.setWorkflowStatus("待审批");
-            coachLeaveService.save(coachLeave);
-
-        } else if ("matchLeaveRequest".equals(coachleaveRequestTaskVo.getRequestType())) {
-            CoachLeave coachLeave = new CoachLeave();
-            coachLeave.setId(requestId);
-            coachLeave.setStartDate(coachleaveRequestTaskVo.getStartDate());
-            coachLeave.setEndDate(coachleaveRequestTaskVo.getEndDate());
-            coachLeave.setReason(coachleaveRequestTaskVo.getReason());
-            coachLeave.setWorkflowStatus("待审批");
-            coachLeaveService.save(coachLeave);
-
         }else {
             return Result.error("请假类型设置错误");
         }
+
+
 
 
         // 处理工作流任务
         // 设置请假流程参数
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("requestCoach", coachleaveRequestTaskVo.getCoachUserId());
-        // 请假类型
         variables.put("requestType", coachleaveRequestTaskVo.getRequestType());
         variables.put("requestId", coachleaveRequestTaskVo.getRequestId());
         variables.put("requestDate", coachleaveRequestTaskVo.getRequestDate());
@@ -170,17 +145,19 @@ public class CoachLeaveRequestFlowableController {
         // 创建请假流程，并设置流程发起人
         String businessKey = coachleaveRequestTaskVo.getRequestType() + ":" + requestId;
         Authentication.setAuthenticatedUserId(coachleaveRequestTaskVo.getCoachUserId());
+        //下面这一行coachLeave参数是和流程图连接关键
         ProcessInstance pi = runtimeService.startProcessInstanceByKey("coachLeave", businessKey, variables);
         Authentication.setAuthenticatedUserId(null);
 
         Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).singleResult();
         if (task.getTaskDefinitionKey().equals("coachRequest")) {
+            //上面这一行括号里的数据要和流程图userTask的一样
             taskService.setVariable(task.getId(), "approvalResult", "申请");
-            taskService.setVariable(task.getId(), "requestCocahName", coach.getCoachName());
+            taskService.setVariable(task.getId(), "requestCoachName", coach.getCoachName());
             taskService.setVariableLocal(task.getId(), "approvalResult", "申请");
             taskService.setVariableLocal(task.getId(), "assigneeName",  coach.getCoachName());
             taskService.addComment(task.getId(), pi.getId(), coachleaveRequestTaskVo.getReason());
-            taskService.claim(task.getId(), Convert.toStr(variables.get("requestCocah")));
+            taskService.claim(task.getId(), Convert.toStr(variables.get("requestCoach")));
             taskService.complete(task.getId());
         }
         return Result.ok("添加成功！");
@@ -189,7 +166,7 @@ public class CoachLeaveRequestFlowableController {
     /**
      * 通过id查询任务详情
      *
-//     * @param id
+     //     * @param id
      * @return
      */
     @GetMapping(value = "/queryByProcessId")
@@ -272,7 +249,7 @@ public class CoachLeaveRequestFlowableController {
     /**
      * 分页列表查询（我的待办任务/我的所有任务）
      *
-//     * @param coachleaveRequestTaskVo
+     //     * @param coachleaveRequestTaskVo
      * @param pageNo
      * @param pageSize
      * @param req
@@ -299,7 +276,6 @@ public class CoachLeaveRequestFlowableController {
         roles.forEach(role -> {
             switch (role) {
                 case "coach":
-//                    candidateUsers.add("requestCoach")
                     break;
                 case "training":
                     candidateGroup.add("trainingApprovalGroup");
@@ -346,13 +322,18 @@ public class CoachLeaveRequestFlowableController {
                     variables.put(hisVariable.getVariableName(), hisVariable.getValue());
                 });
 
+                //这里提供页面显示的信息
                 CoachLeaveRequestTaskVo coachleaveRequestTaskVo = new CoachLeaveRequestTaskVo();
                 coachleaveRequestTaskVo.setCoachUserId(Convert.toStr(variables.get("requestCoach")));
+                coachleaveRequestTaskVo.setCoachName(Convert.toStr(variables.get("requestCoachName")));
                 coachleaveRequestTaskVo.setRequestType(Convert.toStr(variables.get("requestType")));
                 coachleaveRequestTaskVo.setRequestId(Convert.toStr(variables.get("requestId")));
                 coachleaveRequestTaskVo.setRequestDate(Convert.toDate(variables.get("requestDate")));
                 coachleaveRequestTaskVo.setStartDate(Convert.toDate(variables.get("startDate")));
                 coachleaveRequestTaskVo.setEndDate(Convert.toDate(variables.get("endDate")));
+
+                coachleaveRequestTaskVo.setWorkflowStatus(Convert.toStr(variables.get("workflowStatus")));
+
                 coachleaveRequestTaskVo.setRequestDays(Convert.toStr(variables.get("requestDays")));
                 coachleaveRequestTaskVo.setReason(Convert.toStr(variables.get("reason")));
                 coachleaveRequestTaskVo.setProcessId(hisPI.getId());

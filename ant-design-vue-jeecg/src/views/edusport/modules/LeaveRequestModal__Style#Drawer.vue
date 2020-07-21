@@ -12,8 +12,10 @@
 
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
+
         <a-form-item label="申请人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input placeholder="请填写申请人姓名" v-decorator="['writeNameType', validatorRules.writeNameType]"></a-input>
+          <a-input v-if="isNewRequest" v-decorator="[ 'coachName', validatorRules.coachName]" placeholder="请填写您的姓名"></a-input>
+          <a-input v-else v-decorator="[ 'coachName', validatorRules.coachName]" placeholder="请填写您的姓名" readonly="readonly"></a-input>
         </a-form-item>
 
         <a-form-item label="请假类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -70,18 +72,12 @@
           <a-step status="wait" :title="currentWorkflow" description="待审批"/>
         </a-steps>
 
-        <!--        <a-steps direction="vertical" size="small" :current="workflowLogList.length - 1" v-for="(item, index) in workflowLogList" :key="index">-->
-        <!--          <a-step status="finish" :title="item.workflowNode" :sub-title="item.approvalResult" :description="item.approvalComment" />-->
-        <!--        </a-steps>-->
       </p>
       <p v-else-if="noTitleKey === 'processDiagram'">
         <img alt="请假流程图" style="width: 50%; height: 50%" :src="previewImage"/>
       </p>
     </a-card>
 
-    <!--    <a-divider orientation="left">-->
-    <!--      审批日志-->
-    <!--    </a-divider>-->
 
 
     <div class="drawer-bootom-button" v-show="!disableSubmit">
@@ -134,7 +130,7 @@
         dictCodeSportClass: '',
         dictCodeDorm: '',
         validatorRules:{
-          writeNameType:{rules: [{ required: true, message: '请填写申请人姓名!' }]},
+          coachName:{rules: [{ required: true, message: '请填写您的姓名!' }]},
           requestType:{rules: [{ required: true, message: '请选择请假类型!' }]},
           startDate:{rules: [{ required: true, message: '请选择开始日期!' }]},
           endDate:{rules: [{ required: true, message: '请选择结束日期!' }]},
@@ -158,7 +154,7 @@
         previewImage: '',
         url: {
           add: "/edusport/coachLeaveRequest/add",
-          edit: "/edusport/coachLeaveRequest/update",
+          update: "/edusport/coachLeaveRequest/update",
           queryByProcessId: "/edusport/coachLeaveRequest/queryByProcessId",
           processDiagram:"/edusport/coachLeaveRequest/processDiagram",
         },
@@ -173,12 +169,12 @@
     created () {
     },
     computed: {
-      fnDictCodeSportClass: function() {
-        return this.dictCodeSportClass;
-      },
-      fnDictCodeDorm: function() {
-        return this.dictCodeDorm;
-      }
+      // fnDictCodeSportClass: function() {
+      //   return this.dictCodeSportClass;
+      // },
+      // fnDictCodeDorm: function() {
+      //   return this.dictCodeDorm;
+      // }
     },
     methods: {
       add () {
@@ -193,18 +189,11 @@
         console.log("this.requestId: ", this.model.requestId);
         console.log("this.isNewRequest: ", this.isNewRequest);
         this.visible = true;
+        //没看懂
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'requestType', 'dormId', 'sportClassId', 'startDate','endDate','reason'))
+          // this.form.setFieldsValue(pick(this.model,'requestType',  'startDate','endDate','reason'))
+          this.form.setFieldsValue(pick(this.model,'coachName','requestType',  'startDate','endDate','reason'))
         })
-
-        // 初始化训练队字典
-        // if (this.model.sportClassId) {
-        this.dictCodeSportClass = "tb_edu_sport_class, class_name, id";
-        // }
-
-        // 初始化宿舍字典
-        this.dictCodeDorm = "tb_edu_dorm, dorm_no, id";
-
 
 
         // 获取审批日志 & 初始化流程图url

@@ -26,7 +26,8 @@ public class CoachLeave implements Serializable {
     private java.lang.String id;
     /**教练员代码*/
     @Excel(name = "教练员id", width = 15)
-    private java.lang.String coachId;
+    private java.lang.String coachName;
+    private java.lang.String coach_id;
     /**请假原因*/
     @Excel(name = "请假原因", width = 15)
     private java.lang.String reason;

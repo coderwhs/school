@@ -19,7 +19,7 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ requestDays >= 1 }]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-8DDC80BE-35B0-433E-BEDF-6E2621D63338" name="请假天数大于等于3天" sourceRef="sid-8B7E7235-192C-473D-9C7F-5D3F94E9AC52" targetRef="viceHeadmasterApprovalTask">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ requestDays >= 3 }]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${  requestDays >= 3 }]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-DC4F5DE0-7837-484A-94FF-BBD878E274F9" name="请假天数大于等于7天" sourceRef="sid-8B7E7235-192C-473D-9C7F-5D3F94E9AC52" targetRef="headmasterApprovalTask">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ requestDays >= 7 }]]></conditionExpression>

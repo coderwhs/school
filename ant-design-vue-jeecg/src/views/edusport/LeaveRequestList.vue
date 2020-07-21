@@ -6,12 +6,13 @@
         <a-row :gutter="24">
           <a-col :md="6" :sm="8">
             <a-form-item label="请假类型">
-              <j-dict-select-tag placeholder="请选择请假类型" v-model="queryParam.requestType" dictCode=""/>
+              <j-dict-select-tag placeholder="请选择请假类型" v-model="queryParam.requestType" dictCode="" :dictOptions="dictOptions.requestType"/>
             </a-form-item>
+
           </a-col>
           <a-col :md="6" :sm="8">
             <a-form-item label="流程状态">
-              <j-dict-select-tag placeholder="请选择流程状态" v-model="queryParam.workflowStatus" dictCode=""/>
+              <j-dict-select-tag placeholder="请选择流程状态" v-model="queryParam.workflowStatus" dictCode="" :dictOptions="dictOptions.approvalResult"/>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">
@@ -212,10 +213,10 @@
         url: {
           list: "/edusport/coachLeaveRequest/taskList",
           add: "/edusport/coachLeaveRequest/add",
-          delete: "/edusport/athleteSelectionIndex/delete",
-          deleteBatch: "/edusport/athleteSelectionIndex/deleteBatch",
-          exportXlsUrl: "/edusport/athleteSelectionIndex/exportXls",
-          importExcelUrl: "edusport/athleteSelectionIndex/importExcel",
+          delete: "/edusport/coachLeaveRequest/delete",
+          deleteBatch: "/edusport/coachLeaveRequest/deleteBatch",
+          exportXlsUrl: "/edusport/coachLeaveRequest/exportXls",
+          importExcelUrl: "edusport/coachLeaveRequest/importExcel",
         },
         dictOptions:{
           requestType:[{text:"事假", title:"事假", value:"thingsLeaveRequest"}, {text:"病假", title:"病假", value:"sickLeaveRequest"},
