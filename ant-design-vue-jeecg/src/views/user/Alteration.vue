@@ -1,11 +1,11 @@
 <template>
   <a-card :bordered="false" style="width: 160%;text-align: center;margin-left:-25%">
     <a-steps class="steps" :current="currentTab">
-      <a-step title="账户信息" />
-      <a-step title="身份验证" />
-      <a-step title="更改密码" />
-      <a-step title="完成" />
-    </a-steps>
+    <a-step title="账户信息" />
+    <a-step title="身份验证" />
+    <a-step title="更改密码" />
+    <a-step title="完成" />
+  </a-steps>
     <div class="content">
       <step1 v-if="currentTab === 0" @nextStep="nextStep"  />
       <step2 v-if="currentTab === 1" @nextStep="nextStep" @prevStep="prevStep" :userList="userList"/>

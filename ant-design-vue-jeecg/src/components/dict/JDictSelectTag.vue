@@ -1,9 +1,9 @@
 <template>
-  <a-radio-group v-if="tagType=='radio'" @change="handleInput" :value="value" :disabled="disabled">
+  <a-radio-group v-if="tagType==='radio'" @change="handleInput" :value="value" :disabled="disabled">
     <a-radio v-for="(item, key) in dictOptions" :key="key" :value="item.value">{{ item.text }}</a-radio>
   </a-radio-group>
 
-  <a-select v-else-if="tagType=='select'" :placeholder="placeholder" :disabled="disabled" :value="value" @change="handleInput">
+  <a-select v-else-if="tagType==='select'" :placeholder="placeholder" :disabled="disabled" :value="value" @change="handleInput">
     <a-select-option value="">请选择</a-select-option>
     <a-select-option v-for="(item, key) in dictOptions" :key="key" :value="item.value">
       <span style="display: inline-block;width: 100%" :title=" item.text || item.label ">
@@ -57,7 +57,6 @@
         if (this.dictCode) {
           ajaxGetDictItems(this.dictCode, null).then((res) => {
             if (res.success) {
-
 //                console.log("", res.result);
               this.dictOptions = res.result;
             }
@@ -66,12 +65,12 @@
       },
       handleInput(e) {
         let val;
-        if(this.tagType=="radio"){
+        if(this.tagType==="radio"){
           val = e.target.value
         }else{
           val = e
         }
-        console.log(val);
+        // console.log(val);
         if(this.triggerChange){
           this.$emit('change', val);
         }else{

@@ -131,6 +131,7 @@ public class SysDictController {
 		Result<List<DictModel>> result = new Result<List<DictModel>>();
 		List<DictModel> ls = null;
 		try {
+//			if(dictCode.contains("|")) {
 			if(dictCode.indexOf("|")!=-1) {
 				// 查询指定单表（及联合表）的字典
 				//关联表字典（举例：t1, t1_name, t1_code, t1_condition; t2, t2_name, t2_code; t3, t3_name, t3_code）
@@ -231,6 +232,7 @@ public class SysDictController {
 	@RequestMapping(value = "/getDictText/{dictCode}/{key}", method = RequestMethod.GET)
 	public Result<String> getDictItems(@PathVariable("dictCode") String dictCode, @PathVariable("key") String key) {
 		log.info(" dictCode : "+ dictCode);
+		System.out.println(dictCode);
 		Result<String> result = new Result<String>();
 		String text = null;
 		try {
@@ -242,6 +244,7 @@ public class SysDictController {
 			result.error500("操作失败");
 			return result;
 		}
+		System.out.println(result);
 		return result;
 	}
 

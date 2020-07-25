@@ -34,10 +34,12 @@ public class Athlete implements Serializable {
 	@Excel(name = "姓名", width = 15)
     private java.lang.String athleteName;
 	/**性别*/
-	@Excel(name = "性别", width = 15)
+	@Excel(name = "性别", width = 15,dicCode="sex")
+	@Dict(dicCode = "sex")
     private java.lang.String gender;
 	/**民族*/
-	@Excel(name = "民族", width = 15)
+	@Excel(name = "民族", width = 15,dicCode = "nation")
+	@Dict(dicCode = "nation")
     private java.lang.String nation;
 	/**出生日期*/
 	@Excel(name = "出生日期", width = 15, format = "yyyy-MM-dd")

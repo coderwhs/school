@@ -108,6 +108,7 @@
           title: '性别',
           align:"center",
           dataIndex: 'sex',
+          //***************************************************************
           customRender:function (text) {
             if(text==1){
               return "男";

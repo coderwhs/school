@@ -10,7 +10,6 @@
           <a-col :span="12">
             <a-form-item label="性别">
               <j-dict-select-tag v-model="formData.sex" title="性别" dictCode="sex"/>
-            <!--  <j-dict-select-tag title="性别" dictCode="sex" disabled/>-->
             </a-form-item>
           </a-col>
           <a-col :span="12">选中值：{{ formData.sex}}</a-col>

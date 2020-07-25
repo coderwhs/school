@@ -125,39 +125,18 @@
                   type="text"
                   @change="inputCodeChange"
                   placeholder="请输入验证码">
-                  <a-icon slot="prefix" v-if=" inputCodeContent==verifiedCode " type="smile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+                  <a-icon slot="prefix" v-if=" inputCodeContent==verifiedCode " type="smile" :style="{ color: 'rgba(0,0,0,0.25)' }"/>
                   <a-icon slot="prefix" v-else type="frown" :style="{ color: 'rgba(0,0,0,.25)' }"/>
                 </a-input>
               </a-form-item>
             </a-col>
-            <a-col  :span="10">
+            <a-col :span="10">
               <j-graphic-code @success="generateCode" ref="jgraphicCodeRef" style="float: right" remote></j-graphic-code>
             </a-col>
           </a-row>
         </a-tab-pane>
 
       </a-tabs>
-
-<!--      <a-form-item>-->
-<!--        <a-row :gutter="0">-->
-<!--          <a-col :span="14">-->
-<!--            <a-form-item>-->
-<!--              <a-input-->
-<!--                v-decorator="['inputCode',validatorRules.inputCode]"-->
-<!--                size="large"-->
-<!--                type="text"-->
-<!--                @change="inputCodeChange"-->
-<!--                placeholder="请输入验证码">-->
-<!--                <a-icon slot="prefix" v-if=" inputCodeContent==verifiedCode " type="smile" :style="{ color: 'rgba(0,0,0,.25)' }"/>-->
-<!--                <a-icon slot="prefix" v-else type="frown" :style="{ color: 'rgba(0,0,0,.25)' }"/>-->
-<!--              </a-input>-->
-<!--            </a-form-item>-->
-<!--          </a-col>-->
-<!--          <a-col  :span="10">-->
-<!--            <j-graphic-code @success="generateCode" ref="jgraphicCodeRef" style="float: right" remote></j-graphic-code>-->
-<!--          </a-col>-->
-<!--        </a-row>-->
-<!--      </a-form-item>-->
 
 
       <a-form-item>
@@ -166,10 +145,11 @@
         <router-link :to="{ name: 'alteration'}" class="forge-password" style="float: right;">
           忘记密码
         </router-link>
+        -->
         <router-link :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px" >
           注册账户
         </router-link>
-        -->
+
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
@@ -297,7 +277,6 @@
         verifiedCode:"",
         inputCodeContent:"",
         inputCodeNull:true,
-
         departList:[],
         departVisible:false,
         departSelected:"",

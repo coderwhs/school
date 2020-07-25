@@ -92,7 +92,7 @@
     methods:{
       initSelectValue(){
         if(this.async){
-          if(!this.selectedAsyncValue || !this.selectedAsyncValue.key || this.selectedAsyncValue.key!=this.value){
+          if(!this.selectedAsyncValue || !this.selectedAsyncValue.key || this.selectedAsyncValue.key!==this.value){
             console.log("这才请求后台")
             getAction(`/sys/dict/loadDictItem/${this.dict}`,{key:this.value}).then(res=>{
               if(res.success){
@@ -118,11 +118,12 @@
         getAction(`/sys/dict/loadDict/${this.dict}`,{keyword:value}).then(res=>{
           this.loading=false
           if(res.success){
-            if(currentLoad!=this.lastLoad){
+            if(currentLoad!==this.lastLoad){
               return
             }
             this.options = res.result
-            console.log("我是第一个",res)
+            // console.log("this.options:",this.options)
+            // console.log("我是第一个",res)
           }else{
             this.$message.warning(res.message)
           }
@@ -136,12 +137,13 @@
           if(this.dictOptions && this.dictOptions.length>0){
             this.options = [...this.dictOptions]
           }else{
-            console.log("jSearchSelectTag.initDictData.dict: ", this.dict);
+            console.log("dict: ", this.dict);
             if (this.dict) {
               //根据字典Code, 初始化字典数组
               ajaxGetDictItems(this.dict, null).then((res) => {
                 if (res.success) {
                   this.options = res.result;
+                  // conslog.log("这里this.options:",this.options)
                 }
               })
             }
