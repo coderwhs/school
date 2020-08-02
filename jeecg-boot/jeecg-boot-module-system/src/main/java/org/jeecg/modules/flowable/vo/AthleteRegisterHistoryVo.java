@@ -1,6 +1,7 @@
 package org.jeecg.modules.flowable.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Date;
  * @author:whs
  * @date: 2020/7/25 15:52
  */
+@Data
 public class AthleteRegisterHistoryVo {
     private static final long serialVersionUID = 1L;
 

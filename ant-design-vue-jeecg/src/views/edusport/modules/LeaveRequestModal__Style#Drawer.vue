@@ -29,6 +29,7 @@
             <j-date placeholder="请选择开始日期" v-decorator="[ 'startDate', validatorRules.startDate]" :trigger-change="true" style="width: 100%"/>
           </j-form-container>
         </a-form-item>
+
         <a-form-item label="结束日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-form-container :disabled="!isNewRequest">
             <j-date placeholder="请选择结束日期" v-decorator="[ 'endDate', validatorRules.endDate]" :trigger-change="true" style="width: 100%"/>
@@ -189,7 +190,7 @@
         console.log("this.requestId: ", this.model.requestId);
         console.log("this.isNewRequest: ", this.isNewRequest);
         this.visible = true;
-        //没看懂
+        //对应弹出审批栏的数据
         this.$nextTick(() => {
           // this.form.setFieldsValue(pick(this.model,'requestType',  'startDate','endDate','reason'))
           this.form.setFieldsValue(pick(this.model,'coachName','requestType',  'startDate','endDate','reason'))
@@ -274,6 +275,7 @@
         this.close()
       },
       popupCallback(row){
+        //对应表格的数据
         this.form.setFieldsValue(pick(row,'requestType', 'dormId', 'sportClassId', 'startDate','endDate','reason'))
       }
 

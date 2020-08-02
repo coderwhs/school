@@ -1,9 +1,6 @@
 package org.jeecg.modules.edusport.entity;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -23,7 +20,7 @@ import org.jeecg.common.aspect.annotation.Dict;
 @TableName("tb_edu_athlete")
 public class Athlete implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
 	/**主键id*/
 	@TableId(type = IdType.ID_WORKER_STR)
     private java.lang.String id;
@@ -49,6 +46,9 @@ public class Athlete implements Serializable {
 	/**身高(cm)*/
 	@Excel(name = "身高(cm)", width = 15)
     private java.lang.Integer athleteHeight;
+//	/**密码*/
+//	@Excel(name = "身高(cm)", width = 15)
+//	private java.lang.String password;
 	/**体重(kg)*/
 	@Excel(name = "体重(kg)", width = 15)
     private java.math.BigDecimal athleteWeight;
@@ -76,18 +76,18 @@ public class Athlete implements Serializable {
 	/**父亲姓名*/
 	@Excel(name = "父亲姓名", width = 15)
     private java.lang.String father;
-	/**父亲身高*/
-	@Excel(name = "父亲身高", width = 15)
-    private java.lang.Integer fatherHeight;
+//	/**父亲身高*/
+//	@Excel(name = "父亲身高", width = 15)
+//    private java.lang.Integer fatherHeight;
 	/**父亲电话*/
 	@Excel(name = "父亲电话", width = 15)
     private java.lang.String fatherMobile;
 	/**母亲姓名*/
 	@Excel(name = "母亲姓名", width = 15)
     private java.lang.String mother;
-	/**母亲身高*/
-	@Excel(name = "母亲身高", width = 15)
-    private java.lang.Integer motherHeight;
+//	/**母亲身高*/
+//	@Excel(name = "母亲身高", width = 15)
+//    private java.lang.Integer motherHeight;
 	/**母亲电话*/
 	@Excel(name = "母亲电话", width = 15)
     private java.lang.String motherMobile;
@@ -164,4 +164,7 @@ public class Athlete implements Serializable {
 	/**删除标志*/
 	@Excel(name = "删除标志", width = 15)
     private java.lang.String delFlag;
+	/**processsId*/
+	@Excel(name = "删除标志", width = 15)
+    private java.lang.String processId;
 }

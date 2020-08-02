@@ -50,7 +50,7 @@ public class SysUser implements Serializable {
     @Excel(name = "用户账号类型", width = 15,dicCode="user_type")
     @Dict(dicCode = "user_type")
     private Integer userType;
-    
+
     /**
      * 真实姓名
      */
@@ -162,4 +162,30 @@ public class SysUser implements Serializable {
     private String activitiSync;
 
 
+    public void setNation(String nation) {
+    }
+
+    public void setIdNo(String idNo) {
+    }
+
+    public void setSportCode(String sportCode) {
+    }
+
+    public void setCoachId(String coachId) {
+    }
+
+    public void setHomeAddress(String homeAddress) {
+    }
+
+    public void setFather(String father) {
+    }
+
+    public void setFatherMobile(String fatherMobile) {
+    }
+
+    public void setMother(String mother) {
+    }
+
+    public void setMotherMobile(String motherMobile) {
+    }
 }

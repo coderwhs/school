@@ -16,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface AthleteMapper extends BaseMapper<Athlete> {
 	Map getAthleteAgeById(@Param("id") String id);
 	Athlete getAthleteByNo(@Param("athleteNo") String athleteNo);
+//	Athlete getCoachById(@Param("coachId") String coachId);
 }

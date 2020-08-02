@@ -27,7 +27,7 @@ public class CoachLeaveRequestTaskVo implements Serializable {
     /** 申请类型 */
     private String requestType;
 
-
+//    这是啥？
     private String coachUserId;
 
     /** 教练员 */

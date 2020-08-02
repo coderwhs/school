@@ -33,7 +33,7 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-    
+
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">我要请假</a-button>
@@ -62,7 +62,7 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{fixed:true,selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        
+
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -84,7 +84,6 @@
             下载
           </a-button>
         </template>
-
         <span slot="action" slot-scope="text,record">
           <a @click="handleEdit(record)">审批</a>
           <a-divider type="vertical" />
@@ -99,22 +98,17 @@
             </a-menu>
           </a-dropdown>
         </span>
-
       </a-table>
     </div>
-
     <leaveRequest-modal ref="modalForm" @ok="modalFormOk"></leaveRequest-modal>
   </a-card>
 </template>
-
 <script>
-
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import LeaveRequestModal from './modules/LeaveRequestModal__Style#Drawer'
   // import CoachLeaveRequestModal from './modules/CoachLeaveRequestModal__Style#Drawer'
   import JDictSelectTag from '@/components/dict/JDictSelectTag.vue'
   import {initDictOptions, filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-
   export default {
     name: "LeaveRequestList",
     mixins:[JeecgListMixin],
@@ -148,7 +142,6 @@
           column: '',
           order: ''
         },
-
         // 表头
         columns: [
           {
@@ -241,7 +234,6 @@
           }
         })
       },
-
     }
   }
 </script>

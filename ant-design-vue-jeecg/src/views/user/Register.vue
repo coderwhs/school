@@ -54,7 +54,7 @@
         label="性别"
         fieldDecoratorId="sex"
         :fieldDecoratorOptions="{rules: [{ required: true}],validateTrigger: ['change', 'blur']}">
-        <j-dict-select-tag v-decorator="['sex', {}]" :triggerChange="true" placeholder="请选择性别" dictCode="sex"/>
+        <j-dict-select-tag size="large" v-decorator="['sex', {}]" :triggerChange="true" placeholder="请选择性别" dictCode="sex"/>
       </a-form-item>
 
       <!--      民族：select，必填，字典下拉框-->
@@ -62,22 +62,22 @@
         label="民族"
         fieldDecoratorId="nation"
         :fieldDecoratorOptions="{rules: [{ required: true}],validateTrigger: ['change', 'blur']}">
-        <j-dict-select-tag v-decorator="['nation', {}]" :triggerChange="true" placeholder="请输入民族" dictCode="nation"/>
+        <j-dict-select-tag size="large" v-decorator="['nation', {}]" :triggerChange="true" placeholder="请输入民族" dictCode="nation"/>
       </a-form-item>
 
       <!--      身份证号: input，必填-->
       <a-form-item
         label="身份证号"
         fieldDecoratorId="idNo"
-        :fieldDecoratorOptions="{rules: [{ required: true}]}">
-        <a-input size="large" v-decorator="['idNo', {validateTrigger: ['change', 'blur']}]" placeholder="请输入身份证号码"></a-input>
+        :fieldDecoratorOptions="{rules: [{ required: true, message: '请正确输入身份证号码'}], validateTrigger: ['change', 'blur']}">
+        <a-input size="large" placeholder="请输入身份证号码"></a-input>
+<!--        <a-input size="large" v-decorator="['idNo', {validateTrigger: ['change', 'blur']}]" placeholder="请输入身份证号码"></a-input>-->
       </a-form-item>
 
       <!--带训教练-->
-      <a-form-item label="带训教练">
+      <a-form-item label="带训教练" fieldDecoratorId="coachId">
         <j-search-select-tag
           placeholder="请选择带训教练"
-          v-model="asyncSelectValue"
           dict="tb_edu_coach,coach_name,id"
           :async="true">
         </j-search-select-tag>
@@ -91,7 +91,6 @@
         :fieldDecoratorOptions="{rules: [{ required: true}],validateTrigger: ['change', 'blur']}">
         <j-search-select-tag
           placeholder="请选择专业项目"
-          v-model="asyncSelectValue"
           dict="tb_edu_sport,sport_name,id"
           :async="true">
         </j-search-select-tag>
@@ -109,7 +108,7 @@
       <!--      父亲姓名: input，校验汉字（父亲和母亲的姓名手机必填其一）-->
       <a-form-item
         label="父亲姓名"
-        fieldDecoratorId="fatherName"
+        fieldDecoratorId="father"
         :fieldDecoratorOptions="{rules: [{ required: true, message: '用户名不能为空且只能汉字'}, { validator: this.checkUsername }], validateTrigger: ['change', 'blur']}">
         <a-input size="large" type="text" name="fatherName" autocomplete="false" placeholder="请输入您父亲的名字"></a-input>
       </a-form-item>
@@ -130,9 +129,9 @@
       <!--      母亲姓名-->
       <a-form-item
         label="母亲姓名"
-        fieldDecoratorId="monther"
+        fieldDecoratorId="mother"
         :fieldDecoratorOptions="{rules: [{ required: true, message: '用户名不能为空且只能汉字'}, { validator: this.checkUsername }], validateTrigger: ['change', 'blur']}">
-        <a-input size="large" type="text" name="motherName" autocomplete="false" placeholder="请输入您母亲的名字"></a-input>
+        <a-input size="large" type="text" name="mother" autocomplete="false" placeholder="请输入您母亲的名字"></a-input>
       </a-form-item>
 
       <!--      母亲电话-->
@@ -180,17 +179,7 @@
           :disabled="registerBtn">注册
         </a-button>
 
-        <a-button
-          size="large"
-          style="float:right"
-          type="primary"
-          htmlType="submit"
-          class="register-button"
-          :loading="registerBtn"
-          @click.stop.prevent="inquireHandleSubmit"
-          :disabled="registerBtn">查询
-        </a-button>
-        <!--        <router-link class="login" :to="{ name: 'login' }">使用已有账户登录</router-link>-->
+                <router-link class="login" :to="{ name: 'login' }">使用已有账户登录</router-link>
       </a-form-item>
 
     </a-form>
@@ -264,9 +253,6 @@
       }
     },
     created() {
-      console.log(this.dictCode);
-      //获取字典数据
-      // this.initDictData();
     },
     computed: {
       passwordLevelClass() {
@@ -381,11 +367,12 @@
         this.form.validateFields((err, values) => {
           if (!err) {
             var register = {
-              username: values.username,
+              // 左边的数据要和后端数据名称一样
+              athleteName: values.username,
               password: values.password,
               mobile: values.mobile,
               nation: values.nation,
-              sex: values.sex,
+              gender: values.sex,
               idNo: values.idNo,
               coachId: values.coachId,
               sportCode: values.sportCode,
@@ -394,11 +381,13 @@
               fatherMobile: values.fatherMobile,
               mother: values.mother,
               motherMobile: values.motherMobile,
+              smscode: values.captcha//验证码
             };
-            postAction("/sys/user/register", register).then((res) => {
+            postAction("/athleteRegister/add", register).then((res) => {
               if (!res.success) {
                 this.registerFailed(res.message)
               } else {
+                console.log("register的值:",register)
                 this.$router.push({ name: 'registerResult', params: { ...values } })
               }
             })
@@ -457,7 +446,11 @@
         });
         this.registerBtn = false;
       },
-
+//实现字段的customRender方法
+      customRender: (text) => {
+        //字典值替换通用方法
+        return filterDictText(this.dictOptions, text);
+      },
       inputCodeChange(e){
         this.inputCodeContent = e.target.value
         if(!e.target.value||0==e.target.value){
@@ -597,7 +590,7 @@
     }
 
     .register-button {
-      width: 43%;
+      width: 50%;
     }
 
     .login {

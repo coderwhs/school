@@ -146,6 +146,11 @@
           忘记密码
         </router-link>
         -->
+
+        <router-link :to="{ name: 'queryRegister'}" class="forge-password" style="float: right;margin-right: 10px" >
+          审批查询
+        </router-link>
+
         <router-link :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px" >
           注册账户
         </router-link>

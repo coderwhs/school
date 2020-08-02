@@ -48,8 +48,8 @@ public class ShiroConfig {
     private String redisPassword;
 
 	/**
-	 * Filter Chain定义说明 
-	 * 
+	 * Filter Chain定义说明
+	 *
 	 * 1、一个URL可以配置多个Filter，使用逗号分隔
 	 * 2、当设置多个过滤器时，全部验证通过，才视为通过
 	 * 3、部分过滤器可指定参数，如perms，roles
@@ -75,9 +75,15 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/sys/logout", "anon"); //登出接口排除
 		filterChainDefinitionMap.put("/sys/getEncryptedString", "anon"); //获取加密串
 		filterChainDefinitionMap.put("/sys/sms", "anon");//短信验证码
-		filterChainDefinitionMap.put("/sys/phoneLogin", "anon");//手机登录		
+		filterChainDefinitionMap.put("/sys/phoneLogin", "anon");//手机登录
 		filterChainDefinitionMap.put("/sys/user/checkOnlyUser", "anon");//校验用户是否存在
 		filterChainDefinitionMap.put("/sys/user/register", "anon");//用户注册
+		filterChainDefinitionMap.put("/athleteRegister/add", "anon");//前端注册信息提交到工作流
+		filterChainDefinitionMap.put("/athleteRegister/queryByProcessId", "anon");//通过id查询任务详情
+		filterChainDefinitionMap.put("/athleteRegister//taskList", "anon");//分页列表查询（我的待办任务/我的所有任务）
+		filterChainDefinitionMap.put("/athleteRegister/processDiagram", "anon");//前端审批页面显示流程图
+		filterChainDefinitionMap.put("/athleteRegister/update", "anon");//前端审批页面点击提交更新工作流
+		filterChainDefinitionMap.put("/athleteRegister/queryRegister", "anon");//前端运动员查询注册进度
 
 //		filterChainDefinitionMap.put("/sys/dict/getDictItems/sex", "anon");//使用数据字典查找性别
 		filterChainDefinitionMap.put("/sys/dict/getDictItems/sex", "anon");//使用数据字典查找性别
@@ -116,7 +122,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/webjars/**", "anon");
 		filterChainDefinitionMap.put("/v2/**", "anon");
 		filterChainDefinitionMap.put("/process/**", "anon");
-		
+
 		//性能监控
 		filterChainDefinitionMap.put("/actuator/metrics/**", "anon");
 		filterChainDefinitionMap.put("/actuator/httptrace/**", "anon");
@@ -125,13 +131,13 @@ public class ShiroConfig {
 		//测试示例
 		filterChainDefinitionMap.put("/test/jeecgDemo/html", "anon"); //模板页面
 		filterChainDefinitionMap.put("/test/jeecgDemo/redis/**", "anon"); //redis测试
-		
+
 		//websocket排除
 		filterChainDefinitionMap.put("/websocket/**", "anon");
 
 		// 功能模块
 		filterChainDefinitionMap.put("/edusport/**", "anon");
-		
+
 		// 添加自己的过滤器并且取名为jwt
 		Map<String, Filter> filterMap = new HashMap<String, Filter>(1);
 		filterMap.put("jwt", new JwtFilter());

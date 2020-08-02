@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="athleteRegister" name="AthleteRegister" isExecutable="true">
+    <documentation>运动员注册流程图</documentation>
+    <startEvent id="startEvent" name="开始" flowable:formFieldValidation="true"></startEvent>
+    <userTask id="athleteRequest" name="运动员申请" flowable:candidateUsers="${requestAthlete}" flowable:formFieldValidation="true"></userTask>
+    <sequenceFlow id="sid-2D0B18BE-040D-4D0B-9F77-975833ABBF07" sourceRef="startEvent" targetRef="athleteRequest"></sequenceFlow>
+    <userTask id="coachApprovalTask" name="教练员审批" flowable:candidateUsers="${approvalCoach}" flowable:formFieldValidation="true"></userTask>
+    <sequenceFlow id="sid-8B35301B-26C7-40F0-B632-059838C45273" sourceRef="athleteRequest" targetRef="coachApprovalTask"></sequenceFlow>
+    <userTask id="adminApprovalTask" name="管理员审批" flowable:candidateGroups="adminApprovalGroup" flowable:formFieldValidation="true"></userTask>
+    <endEvent id="endEvent" name="结束"></endEvent>
+    <sequenceFlow id="sid-9C830DBC-C554-4FC6-BB7C-1FBFF98D763A" name="通过" sourceRef="coachApprovalTask" targetRef="adminApprovalTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ approvalResult == '通过' }]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-E336E0B2-5FD9-4E58-B525-DBC3ADAFEFB6" name="通过" sourceRef="adminApprovalTask" targetRef="endEvent">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ approvalResult == '通过' }]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-847AF5A0-1149-461A-AF3D-45380285643D" name="驳回" sourceRef="adminApprovalTask" targetRef="endEvent">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ approvalResult == '驳回' }]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-9A1DC9FD-A9CC-462D-A1F4-02D822711313" name="驳回" sourceRef="coachApprovalTask" targetRef="endEvent">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ approvalResult == '驳回' }]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_athleteRegister">
+    <bpmndi:BPMNPlane bpmnElement="athleteRegister" id="BPMNPlane_athleteRegister">
+      <bpmndi:BPMNShape bpmnElement="startEvent" id="BPMNShape_startEvent">
+        <omgdc:Bounds height="30.0" width="30.0" x="490.5" y="48.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="athleteRequest" id="BPMNShape_athleteRequest">
+        <omgdc:Bounds height="80.0" width="100.0" x="455.5" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="coachApprovalTask" id="BPMNShape_coachApprovalTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="455.5" y="255.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="adminApprovalTask" id="BPMNShape_adminApprovalTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="455.5" y="390.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endEvent" id="BPMNShape_endEvent">
+        <omgdc:Bounds height="28.0" width="28.0" x="491.5" y="525.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-8B35301B-26C7-40F0-B632-059838C45273" id="BPMNEdge_sid-8B35301B-26C7-40F0-B632-059838C45273">
+        <omgdi:waypoint x="505.5" y="199.95"></omgdi:waypoint>
+        <omgdi:waypoint x="505.5" y="255.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-847AF5A0-1149-461A-AF3D-45380285643D" id="BPMNEdge_sid-847AF5A0-1149-461A-AF3D-45380285643D">
+        <omgdi:waypoint x="555.449999999934" y="430.0"></omgdi:waypoint>
+        <omgdi:waypoint x="614.5" y="430.0"></omgdi:waypoint>
+        <omgdi:waypoint x="614.5" y="539.0"></omgdi:waypoint>
+        <omgdi:waypoint x="519.4499319339865" y="539.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-9A1DC9FD-A9CC-462D-A1F4-02D822711313" id="BPMNEdge_sid-9A1DC9FD-A9CC-462D-A1F4-02D822711313">
+        <omgdi:waypoint x="455.5" y="295.0"></omgdi:waypoint>
+        <omgdi:waypoint x="401.5" y="295.0"></omgdi:waypoint>
+        <omgdi:waypoint x="401.5" y="539.0"></omgdi:waypoint>
+        <omgdi:waypoint x="491.5" y="539.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-9C830DBC-C554-4FC6-BB7C-1FBFF98D763A" id="BPMNEdge_sid-9C830DBC-C554-4FC6-BB7C-1FBFF98D763A">
+        <omgdi:waypoint x="505.5" y="334.95000000000005"></omgdi:waypoint>
+        <omgdi:waypoint x="505.5" y="390.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E336E0B2-5FD9-4E58-B525-DBC3ADAFEFB6" id="BPMNEdge_sid-E336E0B2-5FD9-4E58-B525-DBC3ADAFEFB6">
+        <omgdi:waypoint x="505.5" y="469.95000000000005"></omgdi:waypoint>
+        <omgdi:waypoint x="505.5" y="525.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-2D0B18BE-040D-4D0B-9F77-975833ABBF07" id="BPMNEdge_sid-2D0B18BE-040D-4D0B-9F77-975833ABBF07">
+        <omgdi:waypoint x="505.5" y="77.94999805841907"></omgdi:waypoint>
+        <omgdi:waypoint x="505.5" y="120.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

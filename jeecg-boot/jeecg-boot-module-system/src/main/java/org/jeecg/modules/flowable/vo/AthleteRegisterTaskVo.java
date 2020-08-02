@@ -3,6 +3,7 @@ package org.jeecg.modules.flowable.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 import lombok.Data;
 
@@ -11,23 +12,33 @@ import lombok.Data;
  * @author:whs
  * @date: 2020/7/25 15:52
  */
+@Data
 public class AthleteRegisterTaskVo {
     private static final long serialVersionUID = 1L;
 
     /**申请Id：作为请假的主键*/
     private String registerId;
 
-    /** 注册人 */
-    private String username;
+    /** 注册日期 */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date registerDate;
+
+    //    运动员姓名
+    private String athleteName;
+    /** 密码 */
+    private String password;
     /** 手机号码 */
     private String mobile;
     /** 民族 */
     private String nation;
     /** 性别 */
-    private String sex;
+    private String gender;
     /** 身份证号码 */
     private String idNo;
     /** 带训教练员 */
+    private String coach;
+    /** 带训教练员id */
     private String coachId;
     /** 专业项目 */
     private String sportCode;
@@ -41,6 +52,7 @@ public class AthleteRegisterTaskVo {
     private String mother;
     /** 母亲电话 */
     private String motherMobile;
+
 
     /** 流程Id */
     private String processId;
